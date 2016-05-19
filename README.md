@@ -10,8 +10,9 @@ just change NEW_NAME in the expression below
 * Python 2.7
 * pip
 * [virtualenv](https://virtualenv.readthedocs.org/en/latest/installation.html)/[virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/)
-    - `pip install virtualenvwrapper`
+    - `sudo pip install virtualenvwrapper`
     - add `source /usr/local/bin/virtualenvwrapper.sh` to your shell config (.bashrs or .zshrs)
+    - restart your terminal
 
 ## Local Setting's 
 * copy settings/local_example.py to settings/local.py.

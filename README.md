@@ -1,0 +1,38 @@
+
+project_name
+===============
+
+## Requirements:
+* Python 2.7
+* pip
+* [virtualenv](https://virtualenv.readthedocs.org/en/latest/installation.html)/[virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/)
+    - `pip install virtualenvwrapper`
+    - add `source /usr/local/bin/virtualenvwrapper.sh` to your shell config (.bashrs or .zshrs)
+
+## Local Setting's 
+* copy settings/local_example.py to settings/local.py.
+    - `cp project_name/settings/local_example.py project_name/settings/local.py`
+    
+## Local setUp
+* `mkvirtualenv project_name` or `workon project_name`
+* `pip install -r requirements/local.txt`
+* `export DJANGO_SETTINGS_MODULE=project_name.settings.local`
+* `./manage.py migrate`
+* `./manage.py random_db_population`
+
+## Run server
+* `export DJANGO_SETTINGS_MODULE=project_name.settings.local`
+* `./manage.py runserver`
+
+## Run Lint/Style/CPD:
+* pep8: `bash ./git_hooks/pre-push/run_pep8`
+* pylint: `bash ./git_hooks/pre-push/run_pylint`
+* cpd: `bash ./scripts/cpd.sh`
+
+## Pycharm IDE
+* config virtualenv created before as the virtualenv of the project (settings -> python interpreter)
+* enable django support: settings -> django 
+    - django project root: /home/diego/dev/projects/python/project_name
+    - settings: project_name/settings/local.py
+    - manage script: manage.py
+* mark directory Templates as "Templates folder" (right-click over directory in the "Project view")

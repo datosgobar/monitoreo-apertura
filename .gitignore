@@ -1,0 +1,24 @@
+.idea/*
+*.sqlite
+*.pyc
+wks*.*
+project_name/settings/local.py
+cobertura-coverage.xml
+.coverage
+junit.xml
+nosetests.xml
+coverage.xml
+.directory
+
+#Media
+project_name/media/*
+
+#Autoenv files
+.autoenv.zsh
+.autoenv_leave.zsh
+
+#Workspaces
+wks.*
+
+cpd-report.xml
+npm-debug.log

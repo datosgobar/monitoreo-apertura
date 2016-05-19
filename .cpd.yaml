@@ -1,0 +1,9 @@
+languages:
+  - python
+files:
+  - "project_name/**/*.py"
+exclude:
+  - "**/migrations/*"
+  - "*/**/tests/**/*"
+  - "**/settings/*"
+  

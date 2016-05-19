@@ -1,8 +1,7 @@
-
 project_name
 ===============
 
-## Reaplcing project_name from all files
+## Replacing project_name from all files
 just change NEW_NAME in the expression below
 
 ` find -type f -name "*.*" -not -path "./.git/*" -exec sed -i 's/project_name/NEW_NAME/' {} \;`

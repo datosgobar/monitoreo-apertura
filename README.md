@@ -4,7 +4,7 @@ project_name
 ## Replacing project_name from all files
 just change NEW_NAME in the expression below
 
-` find -type f -name "*.*" -not -path "./.git/*" -exec sed -i 's/project_name/NEW_NAME/' {} \;`
+` find -type f -name "*.*" -not -path "./.git/*" -exec sed -i 's/project_name/NEW_NAME/' {} \; && mv project_name NEW_NAME`
 
 ## Requirements:
 * Python 2.7

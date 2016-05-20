@@ -23,7 +23,6 @@ just change NEW_NAME in the expression below
 * `pip install -r requirements/local.txt`
 * `export DJANGO_SETTINGS_MODULE=project_name.settings.local`
 * `./manage.py migrate`
-* `./manage.py random_db_population`
 
 ## Run server
 * `export DJANGO_SETTINGS_MODULE=project_name.settings.local`

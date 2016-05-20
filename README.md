@@ -25,7 +25,6 @@ just change NEW_NAME in the expression below
 * `./manage.py migrate`
 
 ## Run server
-* `export DJANGO_SETTINGS_MODULE=project_name.settings.local`
 * `./manage.py runserver`
 
 ## Run Lint/Style/CPD:

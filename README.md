@@ -1,6 +1,8 @@
 project_name
 ===============
 
+[![build status](http://gitlab.devartis.com/samples/django-sample/badges/master/build.svg)](http://gitlab.devartis.com/samples/django-sample/commits/master)
+
 ## Replacing project_name from all files
 just change NEW_NAME in the expression below
 

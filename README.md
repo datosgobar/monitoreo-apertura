@@ -3,6 +3,10 @@ project_name
 
 [![build status](http://gitlab.devartis.com/samples/django-sample/badges/master/build.svg)](http://gitlab.devartis.com/samples/django-sample/commits/master)
 
+## Rebranding your project
+
+After cloningforking the project you might want to rename both yout project's URL and the URL of the git repo. To do this you need to go to the project settings and on the *Rename repository* section rename both fields.
+
 ## Replacing project_name from all files
 just change NEW_NAME in the expression below
 

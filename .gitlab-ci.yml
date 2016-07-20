@@ -1,3 +1,4 @@
+image: python-jscpd
 build:
     cache:
       paths:

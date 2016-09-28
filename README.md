@@ -12,6 +12,10 @@ just change NEW_NAME in the expression below
 
 ` find -type f -name "*.*" -not -path "./.git/*" -exec sed -i 's/project_name/NEW_NAME/g' {} \; && mv project_name NEW_NAME`
 
+## Remove branch relation
+
+To be able to use the "New branch" button from an issue, you need to go to project's settings and remove the "Fork relationship" with the sample project. See https://gitlab.com/gitlab-org/gitlab-ce/issues/20704
+
 ## Requirements:
 * Python 2.7
 * pip

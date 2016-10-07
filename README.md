@@ -1,7 +1,7 @@
 project_name
 ===============
 
-[![build status](http://gitlab.devartis.com/samples/django-sample/badges/master/build.svg)](http://gitlab.devartis.com/samples/django-sample/commits/master)
+[![build status](//gitlab.devartis.com/samples/django-sample/badges/master/build.svg)](http://gitlab.devartis.com/samples/django-sample/commits/master)
 
 ## Rebranding your project
 

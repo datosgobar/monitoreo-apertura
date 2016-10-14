@@ -17,6 +17,11 @@ build:
     - pylint -f parseable project_name --rcfile=.pylintrc
     - python manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
 
+pep8:
+  image: gitlab.devartis.com:4567/devops/devops:pep8
+  stage: test
+  script: pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
+
 jscpd:
   image: gitlab.devartis.com:4567/devops/devops:jscpd
   stage: test

@@ -1,12 +1,23 @@
 image: python-jscpd
+
+stages:
+  - build
+  - test
+#  - deploy
+
 build:
-    cache:
-      paths:
-        - ./pip-cache-django-sample
-    script:
-      - pip install -r requirements/local.txt --cache-dir ./pip-cache-django-sample
-      - python manage.py migrate --settings=project_name.settings.testing
-      - pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
-      - pylint -f parseable project_name --rcfile=.pylintrc
-      - jscpd --verbose --o /dev/null --limit 1
-      - python manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
+  stage: build
+  cache:
+    paths:
+      - ./pip-cache-django-sample
+  script:
+    - pip install -r requirements/local.txt --cache-dir ./pip-cache-django-sample
+    - python manage.py migrate --settings=project_name.settings.testing
+    - pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
+    - pylint -f parseable project_name --rcfile=.pylintrc
+    - python manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
+
+jscpd:
+  image: gitlab.devartis.com:4567/devops/devops:jscpd
+  stage: test
+  script: jscpd --verbose --o /dev/null --limit 1

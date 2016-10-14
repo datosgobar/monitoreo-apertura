@@ -1,4 +1,4 @@
-image: python-jscpd
+image: gitlab.devartis.com:4567/devops/devops:latest
 
 stages:
   - build
@@ -8,6 +8,7 @@ stages:
 variables:
   PIP_CACHE_DIR: ./.pip-cache
   DJANGO_SETTINGS_MODULE: project_name.settings.testing
+  PYTHON_SCRIPT: python3
 
 build:
   stage: build
@@ -28,9 +29,9 @@ tests:
   before_script:
     - pip install -r requirements/testing.txt --cache-dir $PIP_CACHE_DIR
   script:
-    - python manage.py migrate --settings=$DJANGO_SETTINGS_MODULE
-    - pylint -f parseable project_name --rcfile=.pylintrc
-    - python manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
+    - $PYTHON_SCRIPT manage.py migrate --settings=$DJANGO_SETTINGS_MODULE
+    - $PYTHON_SCRIPT -m pylint -f parseable project_name --rcfile=.pylintrc
+    - $PYTHON_SCRIPT manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
 
 pep8:
   image: gitlab.devartis.com:4567/devops/devops:pep8

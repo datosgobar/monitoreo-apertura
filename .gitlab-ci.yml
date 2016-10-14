@@ -25,6 +25,8 @@ tests:
   cache:
     paths:
       - $PIP_CACHE_DIR
+  before_script:
+    - pip install -r requirements/testing.txt --cache-dir $PIP_CACHE_DIR
   script:
     - python manage.py migrate --settings=$DJANGO_SETTINGS_MODULE
     - pylint -f parseable project_name --rcfile=.pylintrc

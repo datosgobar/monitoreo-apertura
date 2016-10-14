@@ -5,15 +5,28 @@ stages:
   - test
 #  - deploy
 
+variables:
+  PIP_CACHE_DIR: ./.pip-cache
+  DJANGO_SETTINGS_MODULE: project_name.settings.testing
+
 build:
   stage: build
   cache:
     paths:
-      - ./pip-cache-django-sample
+      - $PIP_CACHE_DIR
+  artifacts:
+    paths:
+      - $PIP_CACHE_DIR
   script:
-    - pip install -r requirements/local.txt --cache-dir ./pip-cache-django-sample
-    - python manage.py migrate --settings=project_name.settings.testing
-    - pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
+    - pip install -r requirements/testing.txt --cache-dir $PIP_CACHE_DIR
+
+tests:
+  stage: test
+  cache:
+    paths:
+      - $PIP_CACHE_DIR
+  script:
+    - python manage.py migrate --settings=$DJANGO_SETTINGS_MODULE
     - pylint -f parseable project_name --rcfile=.pylintrc
     - python manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
 

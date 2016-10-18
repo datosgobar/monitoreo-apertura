@@ -22,7 +22,7 @@ build:
       - $PIP_CACHE_DIR
       - $PYTHON_VENV_DIR
   script:
-    - $PYTHON_SCRIPT -m pyvenv $PYTHON_ENV_DIR
+    - $PYTHON_SCRIPT -m venv $PYTHON_ENV_DIR
     - source $PYTHON_ENV_DIR/bin/activate
     - pip install -r requirements/testing.txt --cache-dir $PIP_CACHE_DIR
 

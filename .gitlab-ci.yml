@@ -7,6 +7,7 @@ stages:
 
 variables:
   PIP_CACHE_DIR: ./.pip-cache
+  PYTHON_VENV_DIR: ./.env
   DJANGO_SETTINGS_MODULE: project_name.settings.testing
   PYTHON_SCRIPT: python3
 
@@ -15,22 +16,36 @@ build:
   cache:
     paths:
       - $PIP_CACHE_DIR
+      - $PYTHON_VENV_DIR
   artifacts:
     paths:
       - $PIP_CACHE_DIR
+      - $PYTHON_VENV_DIR
   script:
+    - pyvenv $PYTHON_ENV_DIR
+    - source $PYTHON_ENV_DIR/bin/activate
     - pip install -r requirements/testing.txt --cache-dir $PIP_CACHE_DIR
 
-tests:
+.test_template: &test_definition
   stage: test
-  cache:
-    paths:
-      - $PIP_CACHE_DIR
   before_script:
-    - pip install -r requirements/testing.txt --cache-dir $PIP_CACHE_DIR
+    - source $PYTHON_ENV_DIR/bin/activate
+  dependencies:
+    - build
+
+pylint:
+  <<: *test_definition
+  script:
+    - $PYTHON_SCRIPT -m pylint -f parseable project_name --rcfile=.pylintrc
+
+migration_test:
+  <<: *test_definition
   script:
     - $PYTHON_SCRIPT manage.py migrate --settings=$DJANGO_SETTINGS_MODULE
-    - $PYTHON_SCRIPT -m pylint -f parseable project_name --rcfile=.pylintrc
+
+django_tests:
+  <<: *test_definition
+  script:
     - $PYTHON_SCRIPT manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
 
 pep8:

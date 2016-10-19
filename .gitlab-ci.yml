@@ -3,7 +3,7 @@ image: gitlab.devartis.com:4567/devops/devops:latest
 stages:
   - build
   - test
-#  - deploy
+  - deploy
 
 variables:
   PIP_CACHE_DIR: ./.pip-cache
@@ -57,3 +57,21 @@ jscpd:
   image: gitlab.devartis.com:4567/devops/devops:jscpd
   stage: test
   script: jscpd --verbose --o /dev/null --limit 1
+
+deploy_testing:
+  image: boomtownroi/git
+  stage: deploy
+  script: sh deployment/configure_ci.sh
+  environment: testing
+  allow_failure: true
+  only:
+    - master # Or default branch :)
+
+deploy_staging:
+  image: boomtownroi/git
+  stage: deploy
+  script: sh deployment/configure_cd.sh
+  environment: staging
+  when: manual
+  only:
+    - master

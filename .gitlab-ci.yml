@@ -63,9 +63,8 @@ deploy_testing:
   stage: deploy
   script: sh deployment/configure_ci.sh
   environment: testing
-  allow_failure: true
-  only:
-    - master # Or default branch :)
+#  only:
+#    - master # Or default branch :)
 
 deploy_staging:
   image: boomtownroi/git

@@ -61,7 +61,7 @@ jscpd:
 deploy_testing:
   image: boomtownroi/git
   stage: deploy
-  script: sh deployment/configure_ci.sh
+  script: sh deployment/configure_cd_testing.sh
   environment: testing
   only:
     - master # Or default branch :)
@@ -69,7 +69,7 @@ deploy_testing:
 deploy_staging:
   image: boomtownroi/git
   stage: deploy
-  script: sh deployment/configure_cd.sh
+  script: sh deployment/configure_cd_staging.sh
   environment: staging
   when: manual
   only:

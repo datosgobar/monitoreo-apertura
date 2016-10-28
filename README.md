@@ -19,7 +19,7 @@ To be able to use the "New branch" button from an issue, you need to go to proje
 See https://gitlab.com/gitlab-org/gitlab-ce/issues/20704
 
 ## Requirements:
-* Python 2.7
+* Python >= 3.4 
 * pip
 * [virtualenv](https://virtualenv.readthedocs.org/en/latest/installation.html)/[virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/)
     - `sudo pip install virtualenvwrapper`

@@ -1,12 +1,76 @@
-image: python-jscpd
+image: gitlab.devartis.com:4567/devops/image-utils:python-base
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  PIP_CACHE_DIR: ./.pip-cache
+  PYTHON_VENV_DIR: ./.env
+  DJANGO_SETTINGS_MODULE: project_name.settings.testing
+  PYTHON_SCRIPT: python3
+
 build:
-    cache:
-      paths:
-        - ./pip-cache-django-sample
-    script:
-      - pip install -r requirements/local.txt --cache-dir ./pip-cache-django-sample
-      - python manage.py migrate --settings=project_name.settings.testing
-      - pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
-      - pylint -f parseable project_name --rcfile=.pylintrc
-      - jscpd --verbose --o /dev/null --limit 1
-      - python manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
+  stage: build
+  cache:
+    paths:
+      - $PIP_CACHE_DIR
+      - $PYTHON_VENV_DIR
+  artifacts:
+    paths:
+      - $PIP_CACHE_DIR
+      - $PYTHON_VENV_DIR
+  script:
+    - $PYTHON_SCRIPT -m venv $PYTHON_VENV_DIR
+    - source $PYTHON_VENV_DIR/bin/activate
+    - pip install -r requirements/testing.txt --cache-dir $PIP_CACHE_DIR
+
+.test_template: &test_definition
+  stage: test
+  before_script:
+    - source $PYTHON_VENV_DIR/bin/activate
+  dependencies:
+    - build
+
+pylint:
+  <<: *test_definition
+  script:
+    - $PYTHON_SCRIPT -m pylint -f parseable project_name --rcfile=.pylintrc
+
+migration_test:
+  <<: *test_definition
+  script:
+    - $PYTHON_SCRIPT manage.py migrate --settings=$DJANGO_SETTINGS_MODULE
+
+django_tests:
+  <<: *test_definition
+  script:
+    - $PYTHON_SCRIPT manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
+
+pep8:
+  image: gitlab.devartis.com:4567/devops/image-utils:pep8
+  stage: test
+  script: pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
+
+jscpd:
+  image: gitlab.devartis.com:4567/devops/image-utils:jscpd
+  stage: test
+  script: jscpd --verbose --o /dev/null --limit 1
+
+deploy_testing:
+  image: boomtownroi/git
+  stage: deploy
+  script: sh deployment/configure_cd_testing.sh
+  environment: testing
+  only:
+    - master # Or default branch :)
+
+deploy_staging:
+  image: boomtownroi/git
+  stage: deploy
+  script: sh deployment/configure_cd_staging.sh
+  environment: staging
+  when: manual
+  only:
+    - master # Or default branch :)

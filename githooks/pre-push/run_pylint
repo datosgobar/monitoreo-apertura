@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+echo "Running pylint"
+pylint -f parseable project_name --rcfile=.pylintrc
+echo "pylint OK :)"

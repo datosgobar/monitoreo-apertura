@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+echo "Running jscpd"
+jscpd --verbose --o /dev/null --limit 1
+echo "jscpd OK :)"
+

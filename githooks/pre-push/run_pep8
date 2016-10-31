@@ -2,6 +2,6 @@
 set -e
 
 echo "Running pep8"
-pep8 beeracademy --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
+pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
 
 echo "pep8 OK :)"

@@ -47,8 +47,7 @@ See https://gitlab.com/gitlab-org/gitlab-ce/issues/20704
 
 
 ## Git hooks
-* Instalar [Go Lang](https://golang.org/)
-* Compilar e instalar: [git-hooks](https://github.com/git-hooks/git-hooks)
+* Bajar binario de git-hooks [git-hooks](https://github.com/git-hooks/git-hooks/releases) y agregarlo al PATH.
 * Instalar hooks: `git hooks install`
 
 

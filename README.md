@@ -39,16 +39,18 @@ See https://gitlab.com/gitlab-org/gitlab-ce/issues/20704
 ## Run server
 * `./manage.py runserver`
 
-## Git hooks
+## Run Lint/Style/CPD:
 * Instalar `nodejs` y [jscpd](https://github.com/kucherenko/jscpd)
+* pep8: `sh scripts/pep8.sh`
+* pylint: `sh scripts/pylint.sh`
+* cpd: `sh scripts/jscpd.sh`
+
+
+## Git hooks
 * Instalar [Go Lang](https://golang.org/)
 * Compilar e instalar: [git-hooks](https://github.com/git-hooks/git-hooks)
 * Instalar hooks: `git hooks install`
 
-## Run Lint/Style/CPD:
-* pep8: `pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py`
-* pylint: `pylint -f parseable project_name --rcfile=.pylintrc`
-* cpd: `jscpd --verbose --limit 1`
 
 ## Pycharm IDE
 * config virtualenv created before as the virtualenv of the project (settings -> python interpreter)

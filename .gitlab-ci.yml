@@ -33,11 +33,6 @@ build:
   dependencies:
     - build
 
-pylint:
-  <<: *test_definition
-  script:
-    - $PYTHON_SCRIPT -m pylint -f parseable project_name --rcfile=.pylintrc
-
 migration_test:
   <<: *test_definition
   script:
@@ -45,18 +40,21 @@ migration_test:
 
 django_tests:
   <<: *test_definition
-  script:
-    - $PYTHON_SCRIPT manage.py test --stop --with-coverage --cover-branches  --cover-inclusive --cover-package=project_name --settings=project_name.settings.testing --exclude=settings --exclude=migrations
+  script: sh scripts/tests.sh
+
+pylint:
+  <<: *test_definition
+  script: sh scripts/pylint.sh
 
 pep8:
   image: gitlab.devartis.com:4567/devops/image-utils:pep8
   stage: test
-  script: pep8 project_name --max-line-length=140 --ignore=E731 --exclude=**/migrations/,__init__.py
+  script: sh scripts/pep8.sh
 
 jscpd:
   image: gitlab.devartis.com:4567/devops/image-utils:jscpd
   stage: test
-  script: jscpd --verbose --o /dev/null --limit 1
+  script: sh scripts/jscpd.sh
 
 deploy_testing:
   image: boomtownroi/git

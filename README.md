@@ -3,21 +3,6 @@ project_name
 
 [![build status](//gitlab.devartis.com/samples/django-sample/badges/master/build.svg)](http://gitlab.devartis.com/samples/django-sample/commits/master)
 
-## Rebranding your project
-
-After forking the project you might want to rename both yout project's URL and the URL of the git repo. To do this you need to go to the project settings and on the *Rename repository* section rename both fields.
-
-## Replacing project_name from all files
-just change NEW_NAME in the expression below
-
-` find -type f -name "*.*" -not -path "./.git/*" -exec sed -i 's/project_name/NEW_NAME/g' {} \; && mv project_name NEW_NAME`
-
-## Remove fork relation
-
-To be able to use the "New branch" button from an issue, you need to go to project's settings and remove the "Fork relationship" with the sample project. If this is not done, the button will be greyed out and read "New branch unavailable".
-
-See https://gitlab.com/gitlab-org/gitlab-ce/issues/20704
-
 ## Requirements:
 * Python >= 3.4 
 * pip
@@ -59,3 +44,29 @@ See https://gitlab.com/gitlab-org/gitlab-ce/issues/20704
     - manage script: manage.py
 * mark directory Templates as "Templates folder" (right-click over directory in the "Project view")
 
+## Project Management
+
+### Rebranding your project
+
+After forking the project you might want to rename both yout project's URL and the URL of the git repo. To do this you need to go to the project settings and on the *Rename repository* section rename both fields.
+
+### Replacing project_name from all files
+just change NEW_NAME in the expression below
+
+` find -type f -name "*.*" -not -path "./.git/*" -exec sed -i 's/project_name/NEW_NAME/g' {} \; && mv project_name NEW_NAME`
+
+### Remove fork relation
+
+To be able to use the "New branch" button from an issue, you need to go to project's settings and remove the "Fork relationship" with the sample project. If this is not done, the button will be greyed out and read "New branch unavailable".
+
+See https://gitlab.com/gitlab-org/gitlab-ce/issues/20704
+
+### Copy milestones, issues and labels
+
+We have a template for software development projects (technology agnostic) that specifies some tasks that we need to do in all the projects and labels to categorize issues.
+
+To copy this structure you have to:
+
+1. Install [gitlab-copy](https://github.com/gotsunami/gitlab-copy#download)
+1. Get a [Gitlab access token](https://gitlab.devartis.com/profile/personal_access_tokens) and put it on [.gitlab-copy.yml](/.gitlab-copy.yml)
+1. Run gitlab-copy: `gitlab-copy -y .gitlab-copy.yml`

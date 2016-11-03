@@ -23,3 +23,5 @@ wks.*
 
 cpd-report.xml
 npm-debug.log
+
+node_modules/

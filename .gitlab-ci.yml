@@ -19,6 +19,7 @@ build_js:
     paths:
       - $NODE_MODULES_DIR
   artifacts:
+    expire_in: "1 hrs"
     paths:
       - $NODE_MODULES_DIR
   script: npm install
@@ -30,6 +31,7 @@ build:
       - $PIP_CACHE_DIR
       - $PYTHON_VENV_DIR
   artifacts:
+    expire_in: "1 hrs"
     paths:
       - $PIP_CACHE_DIR
       - $PYTHON_VENV_DIR

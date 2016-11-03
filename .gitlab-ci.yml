@@ -14,6 +14,7 @@ variables:
 
 build_js:
   stage: build
+  image: mhart/alpine-node:6.8.0
   cache:
     paths:
       - $NODE_MODULES_DIR

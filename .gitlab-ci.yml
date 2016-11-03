@@ -10,6 +10,17 @@ variables:
   PYTHON_VENV_DIR: ./.env
   DJANGO_SETTINGS_MODULE: project_name.settings.testing
   PYTHON_SCRIPT: python3
+  NODE_MODULES_DIR: ./node_modules
+
+build_js:
+  stage: build
+  cache:
+    paths:
+      - $NODE_MODULES_DIR
+  artifacts:
+    paths:
+      - $NODE_MODULES_DIR
+  script: npm install
 
 build:
   stage: build
@@ -55,6 +66,13 @@ jscpd:
   image: gitlab.devartis.com:4567/devops/image-utils:jscpd
   stage: test
   script: sh scripts/jscpd.sh
+
+eslint:
+  stage: test
+  image: mhart/alpine-node:6.8.0
+  script: sh scripts/eslint.sh
+  dependencies:
+    - build_js
 
 deploy_testing:
   image: boomtownroi/git

@@ -25,3 +25,4 @@ cpd-report.xml
 npm-debug.log
 
 node_modules/
+.python-version

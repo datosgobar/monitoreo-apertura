@@ -14,6 +14,8 @@ project_name
 ## Local Setting's 
 * copy settings/local_example.py to settings/local.py.
     - `cp project_name/settings/local_example.py project_name/settings/local.py`
+* copy settings/.env.default_local to settings/.env
+    - `cp project_name/settings/.env.default_local project_name/settings/.env`
     
 ## Local setUp
 * `mkvirtualenv project_name` or `workon project_name`

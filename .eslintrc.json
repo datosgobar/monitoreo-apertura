@@ -5,6 +5,9 @@
     "standard",
     "promise"
   ],
+  "rules": {
+    "semi": "error"
+  },
   "env": {
     "browser": true,
     "jquery": true

@@ -8,7 +8,7 @@ stages:
 variables:
   PIP_CACHE_DIR: ./.pip-cache
   PYTHON_VENV_DIR: ./.env
-  DJANGO_SETTINGS_MODULE: project_name.settings.testing
+  DJANGO_SETTINGS_MODULE: conf.settings.testing
   PYTHON_SCRIPT: python3
   NODE_MODULES_DIR: ./node_modules
 

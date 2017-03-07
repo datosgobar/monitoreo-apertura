@@ -3,7 +3,7 @@
 *.sqlite
 *.pyc
 wks*.*
-project_name/settings/local.py
+conf/settings/local.py
 cobertura-coverage.xml
 .coverage
 junit.xml

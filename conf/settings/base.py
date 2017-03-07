@@ -138,7 +138,6 @@ DJANGO_BASE_APPS = (
 )
 
 VENDOR_APPS = (
-    'django_nose',
 )
 
 APPS = (

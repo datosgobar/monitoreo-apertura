@@ -3,6 +3,9 @@ import logging
 # noinspection PyUnresolvedReferences
 from .base import *
 
+
+INSTALLED_APPS += ("django_nose", )
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

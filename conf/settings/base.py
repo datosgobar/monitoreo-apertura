@@ -97,7 +97,7 @@ AUTHENTICATION_BACKENDS = (
 ROOT_URLCONF = 'project_name.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'project_name.wsgi.application'
+WSGI_APPLICATION = 'conf.wsgi.application'
 
 TEMPLATES = [
     {

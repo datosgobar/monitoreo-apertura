@@ -13,14 +13,14 @@ project_name
 
 ## Local Setting's 
 * copy settings/local_example.py to settings/local.py.
-    - `cp project_name/settings/local_example.py project_name/settings/local.py`
+    - `cp conf/settings/local_example.py conf/settings/local.py`
 * copy settings/.env.default_local to settings/.env
-    - `cp project_name/settings/.env.default_local project_name/settings/.env`
+    - `cp conf/settings/.env.default_local conf/settings/.env`
     
 ## Local setUp
 * `mkvirtualenv project_name` or `workon project_name`
 * `pip install -r requirements/local.txt`
-* `export DJANGO_SETTINGS_MODULE=project_name.settings.local`
+* `export DJANGO_SETTINGS_MODULE=conf.settings.local`
 * `./manage.py migrate`
 
 ## Run server
@@ -42,7 +42,7 @@ project_name
 * config virtualenv created before as the virtualenv of the project (settings -> python interpreter)
 * enable django support: settings -> django 
     - django project root: /home/diego/dev/projects/python/project_name
-    - settings: project_name/settings/local.py
+    - settings: conf/settings/local.py
     - manage script: manage.py
 * mark directory Templates as "Templates folder" (right-click over directory in the "Project view")
 

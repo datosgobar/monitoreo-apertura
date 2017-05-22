@@ -141,8 +141,7 @@ VENDOR_APPS = (
 )
 
 APPS = (
-    'monitoreo.apps.app_example',
-    'monitoreo.libs.lib_example',
+    'monitoreo.apps.dashboard',
 )
 
 INSTALLED_APPS = DJANGO_BASE_APPS + VENDOR_APPS + APPS

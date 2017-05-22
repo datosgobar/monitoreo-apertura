@@ -1,7 +1,7 @@
 languages:
   - python
 files:
-  - "monitoreo-apertura/**/*.py"
+  - "monitoreo/**/*.py"
 exclude:
   - "**/migrations/*"
   - "*/**/tests/**/*"

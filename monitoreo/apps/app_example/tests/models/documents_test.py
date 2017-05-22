@@ -2,7 +2,7 @@
 from django.test import TestCase
 from nose.tools import *
 
-from monitoreo-apertura.apps.app_example.models import Document
+from monitoreo.apps.app_example.models import Document
 
 
 class DocumentTests(TestCase):

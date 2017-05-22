@@ -1,11 +1,11 @@
 {
-  "name": "monitoreo-apertura",
+  "name": "monitoreo",
   "version": "1.0.0",
-  "description": "monitoreo-apertura ===============",
+  "description": "monitoreo ===============",
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint -c .eslintrc.json monitoreo-apertura/apps/**/*.js"
+    "lint": "eslint -c .eslintrc.json monitoreo/apps/**/*.js"
   },
   "repository": {
     "type": "git",

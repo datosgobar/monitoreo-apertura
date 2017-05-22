@@ -1,4 +1,4 @@
-# monitoreo-apertura contribution guide
+# monitoreo contribution guide
 
 ## Submitting code
 

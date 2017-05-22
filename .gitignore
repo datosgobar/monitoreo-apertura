@@ -13,7 +13,7 @@ coverage.xml
 .directory
 
 #Media
-project_name/media/*
+monitoreo-apertura/media/*
 
 #Autoenv files
 .autoenv.zsh

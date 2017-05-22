@@ -5,5 +5,5 @@ DIR=$(dirname "$0")
 cd ${DIR}/..
 
 echo "Running pylint"
-pylint -f parseable project_name --rcfile=.pylintrc
+pylint -f parseable monitoreo-apertura --rcfile=.pylintrc
 echo "pylint OK :)"

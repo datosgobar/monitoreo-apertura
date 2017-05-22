@@ -1,4 +1,4 @@
-# project_name contribution guide
+# monitoreo-apertura contribution guide
 
 ## Submitting code
 

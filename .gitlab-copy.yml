@@ -6,4 +6,4 @@ from:
 to:
     url: https://gitlab.devartis.com
 #    token: <TODO: put your token here>
-    project: group_name/project_name
+    project: group_name/monitoreo-apertura

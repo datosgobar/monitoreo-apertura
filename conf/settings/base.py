@@ -66,7 +66,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    str(ROOT_DIR.path('project_name/static')),
+    str(ROOT_DIR.path('monitoreo-apertura/static')),
 )
 
 # List of finder classes that know how to find static files in
@@ -94,7 +94,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-ROOT_URLCONF = 'project_name.urls'
+ROOT_URLCONF = 'monitoreo-apertura.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'conf.wsgi.application'
@@ -141,8 +141,8 @@ VENDOR_APPS = (
 )
 
 APPS = (
-    'project_name.apps.app_example',
-    'project_name.libs.lib_example',
+    'monitoreo-apertura.apps.app_example',
+    'monitoreo-apertura.libs.lib_example',
 )
 
 INSTALLED_APPS = DJANGO_BASE_APPS + VENDOR_APPS + APPS

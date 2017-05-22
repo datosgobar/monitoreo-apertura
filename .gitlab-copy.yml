@@ -1,9 +1,0 @@
-from:
-    url: https://gitlab.devartis.com
-#    token: <TODO: put your token here>
-    project: samples/software-development-project-template
-
-to:
-    url: https://gitlab.devartis.com
-#    token: <TODO: put your token here>
-    project: group_name/monitoreo

@@ -1,0 +1,2 @@
+# m h  dom mon dow   command
+* * * * * cd $ROOTDIR && $PYTHON manage.py indicadores

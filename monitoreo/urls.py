@@ -9,5 +9,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = [url(r'^admin/', include(admin.site.urls)),
-               url(r'', include('monitoreo.apps.dashboard.urls', namespace="dashboard"))] + static(
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+               url(r'', include('monitoreo.apps.dashboard.urls',
+                                namespace="dashboard"))]\
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

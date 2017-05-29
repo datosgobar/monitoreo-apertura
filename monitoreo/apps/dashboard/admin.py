@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import IndicadorRed, Indicador
+
+admin.site.register(Indicador)
+admin.site.register(IndicadorRed)

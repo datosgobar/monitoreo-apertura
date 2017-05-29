@@ -1,8 +1,6 @@
+# coding=utf-8
 from django.http import HttpResponse
-from django.shortcuts import render
-
-# Create your views here.
 
 
-def hello(request):
-    return HttpResponse("Hola")
+def test(request):
+    return HttpResponse("hola")

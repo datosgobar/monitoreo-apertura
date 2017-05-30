@@ -3,4 +3,5 @@ from django.http import HttpResponse
 
 
 def test(request):
-    return HttpResponse("hola")
+    return HttpResponse("Landing page del dashboard de monitoreo.")
+

@@ -3,5 +3,5 @@ from django.http import HttpResponse
 
 
 def test(request):
-    return HttpResponse("Landing page del dashboard de monitoreo.")
+    return HttpResponse("Landing page del dashboard de monitoreo del PAD de la República Argentina.")
 

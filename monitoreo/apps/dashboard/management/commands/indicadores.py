@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 import json
 from urllib2 import urlopen
 import yaml
-from django.core.management.base import BaseCommand
 from pydatajson import DataJson
+from django.core.management.base import BaseCommand
 from ...models import Indicador, IndicadorRed
 
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"

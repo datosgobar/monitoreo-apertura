@@ -1,7 +1,7 @@
 # coding=utf-8
 from django.http import HttpResponse
+from django.shortcuts import render
 
 
-def test(request):
-    return HttpResponse("Landing page del dashboard de monitoreo del PAD de la República Argentina.")
-
+def landing(request):
+    return render(request, 'dashboard/landing.html')

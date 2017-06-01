@@ -1,8 +1,8 @@
 #! coding: utf-8
 from django.conf.urls import url
 
-from monitoreo.apps.dashboard.views import test
+from monitoreo.apps.dashboard.views import landing
 
 urlpatterns = [
-    url(r'^$', test),
+    url(r'^$', landing),
 ]

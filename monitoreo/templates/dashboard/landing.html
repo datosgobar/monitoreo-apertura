@@ -1,26 +1,41 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
+{% extends "dashboard/base.html" %}
 
-    <!-- CSS de Poncho, y Morris (librería de graph charts -->
-    <link rel="stylesheet" href="{% static "poncho/css/roboto-fontface.css" %}"/>
-    <link rel="stylesheet" href="{% static "poncho/css/poncho.css" %}"/>
-    <link rel="stylesheet" href="{% static "morris/morris.css" %}"/>
+{% load static %}
+{% block content %}
 
-    <!-- Raphael - dependencia de Morris -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
-</head>
-<body>
-    <h1 class="title">Landing page del dashboard de monitoreo del PAD de la República Argentina</h1>
-    <!-- Placeholder! -->
-    <div id="graph"></div>
+<div class="container">
+    <div class="col-lg-12">
+        <h1 class="title">Dashboard de monitoreo del PAD de la República Argentina</h1>
+            <p>El <b>Plan de Apertura de Datos</b> está compuesto por XXX compromisos de apertura definidos por XXX jurisdicciones de la
+                Administración Pública Nacional al FECHA DE HOY, que marcan el piso de compromiso del gobierno con la apertura de datos.</p>
+            <p>Actualmente, se publican XXX datasets en XXX catálogos distintos que componen la
+                <b>Red de Nodos de Datos Abiertos de la República Argentina</b>, cumpliendo cada vez más de estos compromisos.</p>
+    </div>
 
-    <script src="{% static "js/jquery.min.js"%}"></script>
-    <script src="{% static "morris/morris.min.js"%}"></script>
-    <script src="{% static "js/landing.js" %}"></script>
+    <div class="col-lg-6">
+        <div class="col-lg-6">
+            <b class="subtitle">Items documentados</b>
+            <div id="donut-documentados" class="circle-progressbar"></div>
+        </div>
+        <div class="col-lg-6">
+            <b class="subtitle">Items descargables</b>
+            <div id="donut-descargables" class="circle-progressbar"></div>
+        </div>
+    </div>
 
-</body>
-</html>
+    <div class="col-lg-6">
+        <div class="col-lg-6">
+            <b class="subtitle">Catálogos</b>
+            <div id="donut-catalogos" class="circle-progressbar"></div>
+        </div>
+        <div class="col-lg-6">
+            <b class="subtitle">Datasets</b>
+            <div id="donut-datasets" class="circle-progressbar"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "js/monitoreo/landing.js" %}"></script>
+{% endblock %}

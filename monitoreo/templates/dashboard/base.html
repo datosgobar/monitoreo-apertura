@@ -1,0 +1,32 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+
+    <!-- CSS de Poncho, y Morris (librería de graph charts -->
+    <link rel="stylesheet" href="{% static "poncho/css/bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "poncho/css/roboto-fontface.css" %}"/>
+    <link rel="stylesheet" href="{% static "poncho/css/poncho.css" %}"/>
+    <link rel="stylesheet" href="{% static "css/landing.css" %}"/>
+</head>
+<body>
+
+{% include "dashboard/header.html" %}
+{% block content %}
+{% endblock %}
+
+{% include "dashboard/footer.html" %}
+
+
+<script src="{% static "js/libs/jquery.min.js"%}"></script>
+<script src="{% static "js/libs/bootstrap.min.js" %}"></script>
+<script src="{% static "js/libs/progressbar.min.js"%}"></script>
+
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

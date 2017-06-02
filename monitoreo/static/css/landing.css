@@ -1,0 +1,12 @@
+.subtitle {
+    margin: 40px;
+}
+.circle-progressbar {
+    margin: 10px;
+    height: 300px;
+}
+
+.circle-progressbar > svg {
+    height: 100%;
+    display: block;
+}

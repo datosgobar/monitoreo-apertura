@@ -1,16 +1,26 @@
-<!DOCTYPE html>
 {% load staticfiles %}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{% static "poncho/css/roboto-fontface.css" %}">
-    <link rel="stylesheet" href="{% static "poncho/css/poncho.css" %}">
+
+    <!-- CSS de Poncho, y Morris (librería de graph charts -->
+    <link rel="stylesheet" href="{% static "poncho/css/roboto-fontface.css" %}"/>
+    <link rel="stylesheet" href="{% static "poncho/css/poncho.css" %}"/>
+    <link rel="stylesheet" href="{% static "morris/morris.css" %}"/>
+
+    <!-- Raphael - dependencia de Morris -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
 </head>
 <body>
-<h1 class="title">Landing page del dashboard de monitoreo del PAD de la República Argentina</h1>
+    <h1 class="title">Landing page del dashboard de monitoreo del PAD de la República Argentina</h1>
+    <!-- Placeholder! -->
+    <div id="graph"></div>
 
+    <script src="{% static "js/jquery.min.js"%}"></script>
+    <script src="{% static "morris/morris.min.js"%}"></script>
+    <script src="{% static "js/landing.js" %}"></script>
 
-<script src="{% static "js/jquery.min.js"%}"></script>
 </body>
 </html>

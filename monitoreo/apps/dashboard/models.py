@@ -9,7 +9,7 @@ class Indicador(models.Model):
         # Nombre en plural para el admin panel de Django
         verbose_name_plural = "Indicadores"
 
-    fecha = models.DateTimeField()
+    fecha = models.DateField()
     catalogo_nombre = models.CharField(max_length=300)
     indicador_nombre = models.CharField(max_length=100)
     indicador_valor = models.CharField(max_length=300)

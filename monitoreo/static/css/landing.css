@@ -1,6 +1,7 @@
-.subtitle {
-    margin: 40px;
+b.subtitle {
+    text-align: center;
 }
+
 .circle-progressbar {
     margin: 10px;
     height: 300px;

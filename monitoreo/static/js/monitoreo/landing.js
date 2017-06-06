@@ -4,7 +4,7 @@ function chart(id, step_fn) {
     var pct = $(id).attr("data-pct")/100;
     var settings = {
         strokeWidth: 2,
-        duration: 1400 * pct,
+        duration: 2000 * pct,
         easing: 'easeInOut'
     };
     settings.step = step_fn ? step_fn : default_value;

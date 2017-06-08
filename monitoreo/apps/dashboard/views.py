@@ -5,6 +5,7 @@ from .models import IndicadorRed
 
 
 def landing(request):
+    # Obtengo indicadores de la red de ayer
     today = date.today()
     indicators = IndicadorRed.objects.filter(fecha=today)
 
@@ -14,23 +15,24 @@ def landing(request):
         yesterday = today - timedelta(days=1)
         indicators = IndicadorRed.objects.filter(fecha=yesterday)
 
+    # Valores para mocking, a ser calculados posteriormente
+    documentados_pct = 60
+    descargables_pct = 75
+    items = 0
+    jurisdicciones = 0
+
+    # Leo los valores de los inci
     catalogos_cant = indicators.get(
         indicador_nombre="catalogos_cant").indicador_valor
 
     datasets_cant = indicators.get(
         indicador_nombre="datasets_cant").indicador_valor
 
-    items = 0
-    jurisdicciones = 0
-
     ok_pct = indicators.get(
         indicador_nombre="datasets_meta_ok_pct").indicador_valor
 
     actualizados_pct = indicators.get(
         indicador_nombre="datasets_actualizados_pct").indicador_valor
-
-    documentados_pct = 60
-    descargables_pct = 75
 
     context = {
         'fecha': today,

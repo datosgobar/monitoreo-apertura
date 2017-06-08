@@ -21,18 +21,17 @@ def landing(request):
     items = 0
     jurisdicciones = 0
 
-    # Leo los valores de los inci
-    catalogos_cant = indicators.get(
-        indicador_nombre="catalogos_cant").indicador_valor
+    catalogos_cant = indicators.filter(
+        indicador_nombre="catalogos_cant")[0].indicador_valor
 
-    datasets_cant = indicators.get(
-        indicador_nombre="datasets_cant").indicador_valor
+    datasets_cant = indicators.filter(
+        indicador_nombre="datasets_cant")[0].indicador_valor
 
-    ok_pct = indicators.get(
-        indicador_nombre="datasets_meta_ok_pct").indicador_valor
+    ok_pct = indicators.filter(
+        indicador_nombre="datasets_meta_ok_pct")[0].indicador_valor
 
-    actualizados_pct = indicators.get(
-        indicador_nombre="datasets_actualizados_pct").indicador_valor
+    actualizados_pct = indicators.filter(
+        indicador_nombre="datasets_actualizados_pct")[0].indicador_valor
 
     context = {
         'fecha': today,

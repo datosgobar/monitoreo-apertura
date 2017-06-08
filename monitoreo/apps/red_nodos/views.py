@@ -1,3 +1,4 @@
+# coding=utf-8
 from datetime import date, timedelta
 from django.shortcuts import render
 from monitoreo.apps.dashboard.models import Indicador
@@ -13,16 +14,21 @@ def red_nodos(request):
     if not indicadores:  # Error, no hay indicadores cargados
         return render(request, '500.html')
 
-    # El template espera una lista de los indicadores en orden correcto
-    catalogs = {}
+    # Lista de indicadores a mostrar en la tabla (todo: pasarlo a modelos?)
     indicators_names = ['datasets_actualizados_pct', 'datasets_meta_ok_pct']
+
+    # El template espera una diccionario con listas de los indicadores en orden
+    # correcto como valores
+    catalogs = {}
     for indicador in indicadores:
         nombre = indicador.catalogo_nombre
 
         if nombre not in catalogs:
+            # Primer indicador con este nombre, lo agrego al diccionario
             catalogs[nombre] = []
 
         if indicador.indicador_nombre in indicators_names:
+            # Lo agrego en la posición correcta, 'index'
             index = indicators_names.index(indicador.indicador_nombre)
             catalogs[nombre].insert(index, indicador.indicador_valor)
 

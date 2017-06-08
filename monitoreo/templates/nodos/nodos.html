@@ -4,21 +4,23 @@
 {% block content %}
 
 <div class="container">
+    <h1>Indicadores de la Red de Nodos de Datos Abiertos</h1>
     <table class="table table-bordered">
         <tr>
-            <th>Institución</th>
-            <th>Indicador 1</th>
-            <th>Indicador 1</th>
-            <th>Indicador 1</th>
-            <th>Indicador 1</th>
+            <th>Ministerio</th>
+            {% for name in indicator_names %}
+                <th>{{ name }}</th>
+            {% endfor %}
         </tr>
-        <tr>
-            <td>Ministerio!</td>
-            <td>Valor 1</td>
-            <td>Valor 1</td>
-            <td>Valor 1.3131415192761</td>
-            <td>Valor </td>
-        </tr>
+        {% for catalog_name, indicators in catalogs.items %}
+            <tr>
+                <td>{{ catalog_name }}</td>
+                {% for value in indicators %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
     </table>
 </div>
 

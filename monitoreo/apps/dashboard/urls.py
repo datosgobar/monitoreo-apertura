@@ -4,5 +4,5 @@ from django.conf.urls import url
 from monitoreo.apps.dashboard.views import landing
 
 urlpatterns = [
-    url(r'^$', landing),
+    url(r'^$', landing, name='landing'),
 ]

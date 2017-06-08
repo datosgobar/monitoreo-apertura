@@ -1,4 +1,4 @@
-{% extends "dashboard/base.html" %}
+{% extends "base.html" %}
 
 {% load static %}
 {% block content %}
@@ -21,7 +21,7 @@
             <strong class="subtitle">Items descargables</strong>
             <div id="donut-descargables" class="circle-progressbar" data-pct="{{ descargables_pct }}"></div>
         </div>
-        <button type="button" class="btn btn-primary">Ver más</button>
+        <button type="button" class="btn btn-primary">Ver más datos del PAD</button>
 
     </div>
 
@@ -34,7 +34,9 @@
             <strong class="subtitle">Datasets actualizados</strong>
             <div id="donut-actualizados" class="circle-progressbar" data-pct="{{ actualizados_pct }}"></div>
         </div>
-        <button type="button" class="btn btn-primary">Ver más</button>
+        <form method="get" action="{% url 'nodos:nodos' %}">
+            <button type="submit" class="btn btn-primary">Ver más datos de la red de nodos</button>
+        </form>
     </div>
 </div>
 

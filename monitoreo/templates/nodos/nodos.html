@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <table class="table table-bordered">
+        <tr>
+            <th>Institución</th>
+            <th>Indicador 1</th>
+            <th>Indicador 1</th>
+            <th>Indicador 1</th>
+            <th>Indicador 1</th>
+        </tr>
+        <tr>
+            <td>Ministerio!</td>
+            <td>Valor 1</td>
+            <td>Valor 1</td>
+            <td>Valor 1.3131415192761</td>
+            <td>Valor </td>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "js/monitoreo/landing.js" %}"></script>
+{% endblock %}

@@ -12,5 +12,5 @@ urlpatterns = [url(r'^admin/', include(admin.site.urls)),
                url(r'', include('monitoreo.apps.dashboard.urls',
                                 namespace="dashboard")),
                url(r'', include('monitoreo.apps.red_nodos.urls',
-                                       namespace="nodos"))]\
+                                namespace="nodos"))]\
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

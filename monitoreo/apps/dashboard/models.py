@@ -29,11 +29,22 @@ class Indicador(models.Model):
         return self.__unicode__().encode('utf-8')
 
 
-class IndicadorRed(Indicador):
+class IndicadorRed(models.Model):
     class Meta:
         # Nombre en plural para el admin panel de Django
         verbose_name_plural = "Indicadores de red"
 
+    fecha = models.DateField()
+    indicador_nombre = models.CharField(max_length=100)
+    indicador_valor = models.CharField(max_length=300)
+
     def __init__(self, *args, **kwargs):
-        kwargs['catalogo_nombre'] = "Red de datos"
+        kwargs['fecha'] = timezone.now()
         super(IndicadorRed, self).__init__(*args, **kwargs)
+
+    def __unicode__(self):
+        string = 'Indicador "{0}" de la Red de Nodos, {1}'
+        return string.format(self.indicador_nombre, self.fecha)
+
+    def __str__(self):
+        return self.__unicode__().encode('utf-8')

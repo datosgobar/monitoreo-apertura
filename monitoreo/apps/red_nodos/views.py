@@ -17,11 +17,11 @@ def red_nodos(request):
 
     catalogs = {}
     columns = TableColumn.objects.all()
-    indicator_names = [column.indicator for column in columns]
+    indicator_names = [column.indicator.nombre for column in columns]
 
     for indicator in indicators:
         catalog_name = indicator.catalogo_nombre
-        indicator_name = indicator.indicador_nombre
+        indicator_name = indicator.indicador_tipo.nombre
 
         if catalog_name not in catalogs.keys():
             # Primer indicador con este nombre, lo agrego al diccionario

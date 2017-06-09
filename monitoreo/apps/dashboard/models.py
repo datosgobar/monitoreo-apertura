@@ -4,6 +4,16 @@ from django.utils import timezone
 from django.db import models
 
 
+class IndicatorType(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.nombre
+
+    def __str__(self):
+        return self.__unicode__().encode('utf-8')
+
+
 class Indicador(models.Model):
     class Meta:
         # Nombre en plural para el admin panel de Django
@@ -11,7 +21,7 @@ class Indicador(models.Model):
 
     fecha = models.DateField()
     catalogo_nombre = models.CharField(max_length=300)
-    indicador_nombre = models.CharField(max_length=100)
+    indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.CharField(max_length=300)
 
     def __init__(self, *args, **kwargs):
@@ -21,7 +31,7 @@ class Indicador(models.Model):
 
     def __unicode__(self):
         string = 'Indicador "{0}" del catalogo {1}, {2}'
-        return string.format(self.indicador_nombre,
+        return string.format(self.indicador_tipo.nombre,
                              self.catalogo_nombre,
                              self.fecha)
 
@@ -35,7 +45,7 @@ class IndicadorRed(models.Model):
         verbose_name_plural = "Indicadores de red"
 
     fecha = models.DateField()
-    indicador_nombre = models.CharField(max_length=100)
+    indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.CharField(max_length=300)
 
     def __init__(self, *args, **kwargs):
@@ -44,7 +54,9 @@ class IndicadorRed(models.Model):
 
     def __unicode__(self):
         string = 'Indicador "{0}" de la Red de Nodos, {1}'
-        return string.format(self.indicador_nombre, self.fecha)
+        return string.format(self.indicador_tipo.nombre, self.fecha)
 
     def __str__(self):
         return self.__unicode__().encode('utf-8')
+
+

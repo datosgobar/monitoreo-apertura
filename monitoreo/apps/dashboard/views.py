@@ -27,16 +27,16 @@ def landing(request):
     # Agarro el primer valor que devuelve los filters. El QuerySet no debería
     # estar vacío nunca, puesto que los indicadores se calculan todos juntos
     catalogos_cant = indicators.filter(
-        indicador_nombre="catalogos_cant")[0].indicador_valor
+        indicador_tipo__nombre="catalogos_cant")[0].indicador_valor
 
     datasets_cant = indicators.filter(
-        indicador_nombre="datasets_cant")[0].indicador_valor
+        indicador_tipo__nombre="datasets_cant")[0].indicador_valor
 
     ok_pct = indicators.filter(
-        indicador_nombre="datasets_meta_ok_pct")[0].indicador_valor
+        indicador_tipo__nombre="datasets_meta_ok_pct")[0].indicador_valor
 
     actualizados_pct = indicators.filter(
-        indicador_nombre="datasets_actualizados_pct")[0].indicador_valor
+        indicador_tipo__nombre="datasets_actualizados_pct")[0].indicador_valor
 
     context = {
         'fecha': today,

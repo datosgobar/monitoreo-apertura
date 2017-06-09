@@ -5,7 +5,7 @@ from urllib2 import urlopen
 import yaml
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
-from ...models import Indicador, IndicadorRed
+from ...models import Indicador, IndicadorRed, IndicatorType
 
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 INDEX_URL = URL + "indice.yml"
@@ -38,7 +38,9 @@ class Command(BaseCommand):
         # Itero sobre los indicadores de red, creando modelos y agregándolos
         # a 'network_indicators'
         for indic_name, value in network_indics.items():
-            network_indic = IndicadorRed(indicador_nombre=indic_name,
+            indic_type = IndicatorType.objects.get_or_create(
+                nombre=indic_name)[0]
+            network_indic = IndicadorRed(indicador_tipo=indic_type,
                                          indicador_valor=json.dumps(value))
 
             # Al ser los indicadores de red en cantidad reducida comparado con
@@ -61,8 +63,10 @@ class Command(BaseCommand):
             # Itero sobre los indicadores calculados, creando modelos y
             # agregándolos a la lista 'indicators'
             for indic_name, value in indicators.items():
+                indic_type = IndicatorType.objects.get_or_create(
+                    nombre=indic_name)[0]
                 indic = Indicador(catalogo_nombre=catalog_name,
-                                  indicador_nombre=indic_name,
+                                  indicador_tipo=indic_type,
                                   indicador_valor=json.dumps(value))
                 indic_models.append(indic)
 

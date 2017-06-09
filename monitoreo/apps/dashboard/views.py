@@ -15,12 +15,17 @@ def landing(request):
         yesterday = today - timedelta(days=1)
         indicators = IndicadorRed.objects.filter(fecha=yesterday)
 
+    if not indicators:  # Error, no hay indicadores cargados
+        return render(request, '500.html')
+
     # Valores para mocking, a ser calculados posteriormente
     documentados_pct = 60
     descargables_pct = 75
     items = 0
     jurisdicciones = 0
 
+    # Agarro el primer valor que devuelve los filters. El QuerySet no debería
+    # estar vacío nunca, puesto que los indicadores se calculan todos juntos
     catalogos_cant = indicators.filter(
         indicador_nombre="catalogos_cant")[0].indicador_valor
 

@@ -142,6 +142,7 @@ VENDOR_APPS = (
 
 APPS = (
     'monitoreo.apps.dashboard',
+    'monitoreo.apps.red_nodos'
 )
 
 INSTALLED_APPS = DJANGO_BASE_APPS + VENDOR_APPS + APPS

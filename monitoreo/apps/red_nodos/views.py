@@ -2,38 +2,39 @@
 from datetime import date, timedelta
 from django.shortcuts import render
 from monitoreo.apps.dashboard.models import Indicador
+from .models import TableColumn
 
 
 def red_nodos(request):
     today = date.today()
-    indicadores = Indicador.objects.filter(fecha=today)
-    if not indicadores:
+    indicators = Indicador.objects.filter(fecha=today)
+    if not indicators:
         yesterday = today - timedelta(days=1)
-        indicadores = Indicador.objects.filter(fecha=yesterday)
+        indicators = Indicador.objects.filter(fecha=yesterday)
 
-    if not indicadores:  # Error, no hay indicadores cargados
+    if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html')
 
-    # Lista de indicadores a mostrar en la tabla (todo: pasarlo a modelos?)
-    indicators_names = ['datasets_actualizados_pct', 'datasets_meta_ok_pct']
-
-    # El template espera una diccionario con listas de los indicadores en orden
-    # correcto como valores
     catalogs = {}
-    for indicador in indicadores:
-        nombre = indicador.catalogo_nombre
+    columns = TableColumn.objects.all()
+    indicator_names = [column.indicator for column in columns]
 
-        if nombre not in catalogs:
+    for indicator in indicators:
+        catalog_name = indicator.catalogo_nombre
+        indicator_name = indicator.indicador_nombre
+
+        if catalog_name not in catalogs.keys():
             # Primer indicador con este nombre, lo agrego al diccionario
-            catalogs[nombre] = []
+            catalogs[catalog_name] = []
 
-        if indicador.indicador_nombre in indicators_names:
+        if indicator_name in indicator_names:
             # Lo agrego en la posición correcta, 'index'
-            index = indicators_names.index(indicador.indicador_nombre)
-            catalogs[nombre].insert(index, indicador.indicador_valor)
+            index = indicator_names.index(indicator_name)
+            catalogs[catalog_name].insert(index, indicator.indicador_valor)
 
+    indicator_full_names = [column.full_name for column in columns]
     context = {
-        'indicator_names': indicators_names,
+        'indicator_names': indicator_full_names,
         'catalogs': catalogs
     }
 

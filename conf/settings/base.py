@@ -138,6 +138,7 @@ DJANGO_BASE_APPS = (
 )
 
 VENDOR_APPS = (
+    'ordered_model',
 )
 
 APPS = (

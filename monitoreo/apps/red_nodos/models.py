@@ -1,11 +1,12 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from ordered_model.models import OrderedModel
 from monitoreo.apps.dashboard.models import IndicatorType
 
 
-class TableColumn(models.Model):
-    class Meta:
+class TableColumn(OrderedModel):
+    class Meta(OrderedModel.Meta):
         verbose_name_plural = "Columnas de la tabla de indicadores de red"
 
     indicator = models.ForeignKey(IndicatorType, models.CASCADE)

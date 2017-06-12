@@ -1,7 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
-import requests
 from urllib2 import urlopen, HTTPError
 import yaml
 from pydatajson import DataJson
@@ -80,7 +79,7 @@ class Command(BaseCommand):
         """Lee el archivo 'indice.yml' en el directorio raíz, recolecta las
         rutas a los data.json, las lee y parsea a diccionarios. Devuelve una
         lista con los diccionarios parseados.
-        Se asume que los data.json siguen una ruta del tipo 
+        Se asume que los data.json siguen una ruta del tipo
         "<nombre-catalogo>/data.json"
         """
         catalogs = []

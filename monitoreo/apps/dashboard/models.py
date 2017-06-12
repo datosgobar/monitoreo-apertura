@@ -58,5 +58,3 @@ class IndicadorRed(models.Model):
 
     def __str__(self):
         return self.__unicode__().encode('utf-8')
-
-

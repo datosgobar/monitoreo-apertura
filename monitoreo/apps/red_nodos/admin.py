@@ -7,4 +7,3 @@ class TableColumnAdmin(OrderedModelAdmin):
     list_display = ('full_name', 'move_up_down_links')
 
 admin.site.register(TableColumn, TableColumnAdmin)
-

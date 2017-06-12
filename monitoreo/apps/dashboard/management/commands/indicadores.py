@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import json
 import requests
-from urllib2 import urlopen
+from urllib2 import urlopen, HTTPError
 import yaml
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
@@ -77,10 +77,11 @@ class Command(BaseCommand):
 
     @staticmethod
     def load_catalogs():
-        """Lee el archivo 'indice.yml' en el directorio raíz, y devuelve una
-        lista de URLs con rutas a los data.json de los catálogos marcados como
-        "federados" en el índice. Se asume que los data.json siguen una ruta
-        del tipo "<nombre-catalogo>/data.json"
+        """Lee el archivo 'indice.yml' en el directorio raíz, recolecta las
+        rutas a los data.json, las lee y parsea a diccionarios. Devuelve una
+        lista con los diccionarios parseados.
+        Se asume que los data.json siguen una ruta del tipo 
+        "<nombre-catalogo>/data.json"
         """
         catalogs = []
 
@@ -89,9 +90,10 @@ class Command(BaseCommand):
         for catalog_name, values in catalogs_yaml.items():
             if values.get('federado'):
                 url = URL + catalog_name + '/data.json'
+                # Intento parsear el documento, si falla, lo ignoro
                 try:
                     datajson = json.loads(urlopen(url).read())
-                except:
+                except (HTTPError, ValueError):
                     continue
                 catalogs.append(datajson)
 

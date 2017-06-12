@@ -16,7 +16,7 @@ def landing(request):
         indicators = IndicadorRed.objects.filter(fecha=yesterday)
 
     if not indicators:  # Error, no hay indicadores cargados
-        return render(request, '500.html')
+        return render(request, '500.html', status=500)
 
     # Valores para mocking, a ser calculados posteriormente
     documentados_pct = 60

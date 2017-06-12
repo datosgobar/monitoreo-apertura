@@ -1,12 +1,12 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
+import requests
 from urllib2 import urlopen
 import yaml
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
 from ...models import Indicador, IndicadorRed, IndicatorType
-
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 INDEX_URL = URL + "indice.yml"
 CENTRAL = URL + 'datosgobar/data.json'
@@ -88,6 +88,11 @@ class Command(BaseCommand):
         catalogs_yaml = yaml.load(yml_file.read())
         for catalog_name, values in catalogs_yaml.items():
             if values.get('federado'):
-                catalogs.append(URL + catalog_name + '/data.json')
+                url = URL + catalog_name + '/data.json'
+                try:
+                    datajson = json.loads(urlopen(url).read())
+                except:
+                    continue
+                catalogs.append(datajson)
 
         return catalogs

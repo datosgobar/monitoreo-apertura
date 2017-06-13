@@ -82,3 +82,7 @@ def red_nodos(request):
     }
 
     return render(request, 'dashboard/nodos.html', context)
+
+
+def compromisos(request):
+    return render(request, 'dashboard/compromisos.html')

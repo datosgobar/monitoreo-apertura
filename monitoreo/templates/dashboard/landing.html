@@ -21,7 +21,9 @@
             <strong class="subtitle">Items descargables</strong>
             <div id="donut-descargables" class="circle-progressbar" data-pct="{{ descargables_pct }}"></div>
         </div>
-        <button type="button" class="btn btn-primary">Ver más datos del PAD</button>
+        <form method="get" action="{% url 'dashboard:compromisos' %}">
+            <button type="submit" class="btn btn-primary">Ver más datos del PAD</button>
+        </form>
 
     </div>
 
@@ -34,7 +36,7 @@
             <strong class="subtitle">Datasets actualizados</strong>
             <div id="donut-actualizados" class="circle-progressbar" data-pct="{{ actualizados_pct }}"></div>
         </div>
-        <form method="get" action="{% url 'nodos:nodos' %}">
+        <form method="get" action="{% url 'dashboard:nodos' %}">
             <button type="submit" class="btn btn-primary">Ver más datos de la red de nodos</button>
         </form>
     </div>

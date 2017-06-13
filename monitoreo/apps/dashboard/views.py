@@ -9,12 +9,6 @@ def landing(request):
     today = date.today()
     indicators = IndicadorRed.objects.all()
 
-    # Si todavía no se calcularon los indicadores de hoy (12 AM - 5 AM) usamos
-    # los de ayer
-    if not indicators:
-        yesterday = today - timedelta(days=1)
-        indicators = IndicadorRed.objects.filter(fecha=yesterday)
-
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
 

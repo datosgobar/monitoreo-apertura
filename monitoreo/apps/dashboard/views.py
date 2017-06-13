@@ -7,7 +7,7 @@ from .models import Indicador, IndicadorRed, TableColumn
 def landing(request):
     # Obtengo indicadores de la red de ayer
     today = date.today()
-    indicators = IndicadorRed.objects.filter(fecha=today)
+    indicators = IndicadorRed.objects.all()
 
     # Si todavía no se calcularon los indicadores de hoy (12 AM - 5 AM) usamos
     # los de ayer
@@ -24,19 +24,21 @@ def landing(request):
     items = 0
     jurisdicciones = 0
 
-    # Agarro el primer valor que devuelve los filters. El QuerySet no debería
-    # estar vacío nunca, puesto que los indicadores se calculan todos juntos
+    # Agarro el valor más reciente que devuelve el filter. El QuerySet no
+    # debería estar vacío nunca, si el query anterior de todos los objetos es
+    # no nulo, se asume que los indicadores están cargados correctamente
     catalogos_cant = indicators.filter(
-        indicador_tipo__nombre="catalogos_cant")[0].indicador_valor
+        indicador_tipo__nombre="catalogos_cant").latest().indicador_valor
 
     datasets_cant = indicators.filter(
-        indicador_tipo__nombre="datasets_cant")[0].indicador_valor
+        indicador_tipo__nombre="datasets_cant").latest().indicador_valor
 
     ok_pct = indicators.filter(
-        indicador_tipo__nombre="datasets_meta_ok_pct")[0].indicador_valor
+        indicador_tipo__nombre="datasets_meta_ok_pct").latest().indicador_valor
 
     actualizados_pct = indicators.filter(
-        indicador_tipo__nombre="datasets_actualizados_pct")[0].indicador_valor
+        indicador_tipo__nombre="datasets_actualizados_pct").\
+        latest().indicador_valor
 
     context = {
         'fecha': today,

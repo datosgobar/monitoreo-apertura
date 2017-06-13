@@ -44,6 +44,7 @@ class IndicadorRed(models.Model):
     class Meta:
         # Nombre en plural para el admin panel de Django
         verbose_name_plural = "Indicadores de red"
+        get_latest_by = 'fecha'
 
     fecha = models.DateField()
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)

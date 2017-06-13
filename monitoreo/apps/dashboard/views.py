@@ -81,4 +81,4 @@ def red_nodos(request):
         'catalogs': catalogs
     }
 
-    return render(request, 'nodos/nodos.html', context)
+    return render(request, 'dashboard/nodos.html', context)

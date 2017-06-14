@@ -16,10 +16,10 @@ function chart(id, step_fn) {
 }
 
 window.onload = function() {
-    chart("#donut-metadatos");
-    chart("#donut-actualizados");
-    chart("#donut-documentados");
-    chart("#donut-descargables");
+    $(".circle-progressbar").each(function() {
+        var id = "#" + $(this).attr("id");
+        chart(id);
+    });
 };
 
 function default_value(_, circle) {

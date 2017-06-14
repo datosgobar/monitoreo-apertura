@@ -17,28 +17,34 @@
             <strong class="subtitle">Items documentados</strong>
             <div id="donut-documentados" class="circle-progressbar" data-pct="{{ documentados_pct }}"></div>
         </div>
-        <div class="col-lg-6">
-            <strong class="subtitle">Items descargables</strong>
+        <div class="col-lg-3">
+            <strong>Compromisos descargables</strong>
             <div id="donut-descargables" class="circle-progressbar" data-pct="{{ descargables_pct }}"></div>
         </div>
-        <form method="get" action="{% url 'dashboard:compromisos' %}">
-            <button type="submit" class="btn btn-primary">Ver más datos del PAD</button>
-        </form>
 
-    </div>
-
-    <div class="col-lg-6">
-        <div class="col-lg-6 align-content-lg-center">
-            <strong class="align-content-lg-center">Datasets correctos</strong>
+        <div class="col-lg-3">
+            <strong>Datasets correctos</strong>
             <div id="donut-metadatos" class="circle-progressbar" data-pct="{{ ok_pct }}"></div>
         </div>
-        <div class="col-lg-6">
-            <strong class="subtitle">Datasets actualizados</strong>
+
+        <div class="col-lg-3">
+            <strong>Datasets actualizados</strong>
             <div id="donut-actualizados" class="circle-progressbar" data-pct="{{ actualizados_pct }}"></div>
         </div>
-        <form method="get" action="{% url 'dashboard:nodos' %}">
-            <button type="submit" class="btn btn-primary">Ver más datos de la red de nodos</button>
-        </form>
+    </div>
+
+    <div class="row" style="text-align: center;">
+        <div class="col-lg-6">
+            <form method="get" action="{% url 'dashboard:compromisos' %}">
+                <button type="submit" class="btn btn-primary">Ver más datos del PAD</button>
+            </form>
+        </div>
+
+        <div class="col-lg-6">
+            <form method="get" action="{% url 'dashboard:nodos' %}">
+                <button type="submit" class="btn btn-primary">Ver más datos de la red de nodos</button>
+            </form>
+        </div>
     </div>
 </div>
 

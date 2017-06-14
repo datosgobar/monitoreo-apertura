@@ -5,7 +5,22 @@ function chart(id, step_fn) {
     var settings = {
         strokeWidth: 2,
         duration: 2000 * pct,
-        easing: 'easeInOut'
+        easing: 'easeInOut',
+        text: {
+            style: {
+                color: '#555',
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                padding: 0,
+                margin: 0,
+                'font-size': '200%',
+                transform: {
+                    prefix: true,
+                    value: 'translate(-50%, -50%)'
+                }
+            }
+        }
     };
     settings.step = step_fn ? step_fn : default_value;
     var circle = new ProgressBar.Circle(id, settings);

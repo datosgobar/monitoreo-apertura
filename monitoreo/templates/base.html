@@ -9,13 +9,17 @@
     <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
 
     <!-- CSS de Bootstrap / Poncho -->
-    <link rel="stylesheet" href="{% static "poncho/css/bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "poncho/css/bootstrap.min.css" %}" />
     <link rel="stylesheet" href="{% static "poncho/css/roboto-fontface.css" %}"/>
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}"/>
     <link rel="stylesheet" href="{% static "poncho/css/poncho.css" %}"/>
 
-    <link rel="stylesheet" href="{% static "css/landing.css" %}"/>
+    <!-- CSS propios -->
+    <link rel="stylesheet" href="{% static "css/base.css" %}"/>
+    {% block styles %}
+    {% endblock %}
 </head>
-<body>
+<body class="with-header">
 
 {% include "header.html" %}
 

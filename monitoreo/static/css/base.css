@@ -1,0 +1,121 @@
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+#header {
+    width: 100%;
+    height: 72px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    font-weight: 500;
+    background: white;
+    overflow: hidden;
+}
+
+#header .header-logo {
+    height: 72px;
+    display: inline-block;
+    width: 300px;
+    max-width: 100%;
+}
+
+#header a.pull-right, #header a.insite-anchor, #header span.anchor {
+    line-height: 72px;
+    color: #0695d6;
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 16px;
+}
+
+@media (max-width: 992px) {
+    #header a.pull-right, #header a.insite-anchor, #header span.anchor {
+        font-size: 14px;
+    }
+}
+
+#header a.pull-right:hover, #header a.pull-right.active, #header a.insite-anchor:hover, #header a.insite-anchor.active, #header span.anchor:hover, #header span.anchor.active {
+    background: #0695d6;
+    color: white;
+}
+
+#header i {
+    vertical-align: middle;
+}
+
+body.with-header {
+  padding-top: 72px; }
+
+.pad-footer {
+    padding: 60px 0;
+    box-shadow: 0 -2px 4px 0 rgba(220, 220, 220, 0.5);
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .pad-footer {
+        text-align: left;
+    }
+}
+
+.pad-footer .social-links {
+    margin-bottom: 20px;
+}
+
+.pad-footer .social-links a {
+    display: inline-block;
+    padding: 8px;
+    text-align: center;
+    width: 46px;
+    height: 46px;
+    color: #0695d6;
+    border-radius: 4px;
+}
+
+.pad-footer .social-links a:hover {
+    color: white;
+    background: #0695d6;
+}
+
+.pad-footer .social-links a i {
+    display: inline-block;
+    font-size: 28px;
+}
+
+.pad-footer .pad-footer-logo {
+    max-width: 300px;
+    height: auto;
+}
+
+.pad-footer .pad-footer-contact {
+    color: #999999;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.pad-footer .pad-footer-contact p {
+    display: inline-block;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .pad-footer .pad-footer-contact {
+        text-align: right;
+    }
+
+    .pad-footer .pad-footer-contact p {
+        text-align: left;
+    }
+}

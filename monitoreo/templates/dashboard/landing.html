@@ -1,45 +1,71 @@
-{% extends "dashboard/base.html" %}
+{% extends "base.html" %}
 
 {% load static %}
+{% load l10n %}
 {% block content %}
 
 <div class="container">
-    <div class="col-lg-12">
+    <div class="row">
         <h1 class="title">Dashboard de monitoreo del PAD de la República Argentina</h1>
-            <p>El <strong>Plan de Apertura de Datos</strong> está compuesto por {{ items }} compromisos de apertura definidos por {{ jurisdicciones }} jurisdicciones de la
-                Administración Pública Nacional al {{ fecha|date:"d"}} de {{ fecha|date:"E, Y" }}, que marcan el piso de compromiso del gobierno con la apertura de datos.</p>
-            <p>Actualmente, se publican {{ datasets }} datasets en {{ catalogos }} catálogos distintos que componen la
-                <strong>Red de Nodos de Datos Abiertos de la República Argentina</strong>, cumpliendo cada vez más de estos compromisos.</p>
+        <p>El <strong>Plan de Apertura de Datos</strong> está compuesto por {{ items }} compromisos de apertura definidos por {{ jurisdicciones }} jurisdicciones de la
+            Administración Pública Nacional al {% now "d \d\e F, Y" %}, que marcan el piso de compromiso del gobierno con la apertura de datos.</p>
+        <p>Actualmente, se publican {{ datasets }} datasets en {{ catalogos }} catálogos distintos que componen la
+            <strong>Red de Nodos de Datos Abiertos de la República Argentina</strong>, cumpliendo cada vez más de estos compromisos.</p>
     </div>
 
-    <div class="col-lg-6">
-        <div class="col-lg-6">
-            <strong class="subtitle">Items documentados</strong>
+    <div class="row numbers justify-content-between">
+        <div class="col-lg-6 center panel panel-default">
+            <div class="panel-body">
+                <h3>{{ jurisdicciones }}</h3>
+                <h4>jurisdicciones</h4>
+            </div>
+        </div>
+        <div class="col-lg-6 center panel panel-default">
+            <div class="panel-body">
+                <h3>{{ catalogos }}</h3>
+                <h4>catálogos</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col-lg-3">
+            <strong class="center">Compromisos documentados</strong>
             <div id="donut-documentados" class="circle-progressbar" data-pct="{{ documentados_pct }}"></div>
         </div>
-        <div class="col-lg-6">
-            <strong class="subtitle">Items descargables</strong>
+        <div class="col-lg-3">
+            <strong>Compromisos descargables</strong>
             <div id="donut-descargables" class="circle-progressbar" data-pct="{{ descargables_pct }}"></div>
         </div>
-        <button type="button" class="btn btn-primary">Ver más</button>
 
-    </div>
-
-    <div class="col-lg-6">
-        <div class="col-lg-6 align-content-lg-center">
-            <strong class="align-content-lg-center">Datasets correctos</strong>
+        <div class="col-lg-3">
+            <strong>Datasets correctos</strong>
             <div id="donut-metadatos" class="circle-progressbar" data-pct="{{ ok_pct }}"></div>
         </div>
-        <div class="col-lg-6">
-            <strong class="subtitle">Datasets actualizados</strong>
+
+        <div class="col-lg-3">
+            <strong>Datasets actualizados</strong>
             <div id="donut-actualizados" class="circle-progressbar" data-pct="{{ actualizados_pct }}"></div>
         </div>
-        <button type="button" class="btn btn-primary">Ver más</button>
+    </div>
+
+    <div class="row" style="text-align: center;">
+        <div class="col-lg-6">
+            <form method="get" action="{% url 'dashboard:compromisos' %}">
+                <button type="submit" class="btn btn-primary">Ver más datos del PAD</button>
+            </form>
+        </div>
+
+        <div class="col-lg-6">
+            <form method="get" action="{% url 'dashboard:nodos' %}">
+                <button type="submit" class="btn btn-primary">Ver más datos de la red de nodos</button>
+            </form>
+        </div>
     </div>
 </div>
 
 {% endblock %}
 
 {% block scripts %}
+    <script src="{% static "js/libs/progressbar.min.js"%}"></script>
     <script src="{% static "js/monitoreo/landing.js" %}"></script>
 {% endblock %}

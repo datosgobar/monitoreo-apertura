@@ -1,12 +1,11 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
-from urllib2 import urlopen
+from urllib2 import urlopen, HTTPError
 import yaml
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
-from ...models import Indicador, IndicadorRed
-
+from ...models import Indicador, IndicadorRed, IndicatorType
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 INDEX_URL = URL + "indice.yml"
 CENTRAL = URL + 'datosgobar/data.json'
@@ -38,7 +37,9 @@ class Command(BaseCommand):
         # Itero sobre los indicadores de red, creando modelos y agregándolos
         # a 'network_indicators'
         for indic_name, value in network_indics.items():
-            network_indic = IndicadorRed(indicador_nombre=indic_name,
+            indic_type = IndicatorType.objects.get_or_create(
+                nombre=indic_name)[0]
+            network_indic = IndicadorRed(indicador_tipo=indic_type,
                                          indicador_valor=json.dumps(value))
 
             # Al ser los indicadores de red en cantidad reducida comparado con
@@ -61,8 +62,10 @@ class Command(BaseCommand):
             # Itero sobre los indicadores calculados, creando modelos y
             # agregándolos a la lista 'indicators'
             for indic_name, value in indicators.items():
+                indic_type = IndicatorType.objects.get_or_create(
+                    nombre=indic_name)[0]
                 indic = Indicador(catalogo_nombre=catalog_name,
-                                  indicador_nombre=indic_name,
+                                  indicador_tipo=indic_type,
                                   indicador_valor=json.dumps(value))
                 indic_models.append(indic)
 
@@ -73,10 +76,11 @@ class Command(BaseCommand):
 
     @staticmethod
     def load_catalogs():
-        """Lee el archivo 'indice.yml' en el directorio raíz, y devuelve una
-        lista de URLs con rutas a los data.json de los catálogos marcados como
-        "federados" en el índice. Se asume que los data.json siguen una ruta
-        del tipo "<nombre-catalogo>/data.json"
+        """Lee el archivo 'indice.yml' en el directorio raíz, recolecta las
+        rutas a los data.json, las lee y parsea a diccionarios. Devuelve una
+        lista con los diccionarios parseados.
+        Se asume que los data.json siguen una ruta del tipo
+        "<nombre-catalogo>/data.json"
         """
         catalogs = []
 
@@ -84,6 +88,12 @@ class Command(BaseCommand):
         catalogs_yaml = yaml.load(yml_file.read())
         for catalog_name, values in catalogs_yaml.items():
             if values.get('federado'):
-                catalogs.append(URL + catalog_name + '/data.json')
+                url = URL + catalog_name + '/data.json'
+                # Intento parsear el documento, si falla, lo ignoro
+                try:
+                    datajson = json.loads(urlopen(url).read())
+                except (HTTPError, ValueError):
+                    continue
+                catalogs.append(datajson)
 
         return catalogs

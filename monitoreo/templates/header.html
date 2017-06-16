@@ -12,7 +12,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/poncho/">
+                    <a class="navbar-brand" href="{% url 'dashboard:landing' %}">
                         <img alt="Brand" src={% static "img/logo_ministerio.svg" %}
                              height="50">
                         <h1 class="sr-only">Argentina.gob.ar
@@ -22,7 +22,7 @@
                 </div>
                 <div class="collapse navbar-collapse" id="main-navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/poncho/">Inicio</a></li>
+                        <li><a href="{% url 'dashboard:landing' %}">Inicio</a></li>
                         <li><a href="/poncho/docs/">Documentación</a></li>
                         <li>
                             <a href="/poncho/docs/componentes.html">Componentes</a>

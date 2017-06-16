@@ -122,3 +122,7 @@ body.with-header {
         font-weight: 500;
     }
 }
+
+.no-padding {
+    padding: 0;
+} 

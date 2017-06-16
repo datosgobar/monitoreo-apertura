@@ -2,12 +2,14 @@
 from datetime import date, timedelta
 from django.shortcuts import render
 from .models import Indicador, IndicadorRed, TableColumn
+from .helpers import fetch_latest_indicadors
 
 
 def landing(request):
-    # Obtengo indicadores de la red de ayer
-    today = date.today()
     indicators = IndicadorRed.objects.all()
+
+    # Obtengo los indicadores más recientes, empaquetados en un diccionario
+    indicators = fetch_latest_indicadors(indicators)
 
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
@@ -18,24 +20,12 @@ def landing(request):
     items = 0
     jurisdicciones = 0
 
-    # Agarro el valor más reciente que devuelve el filter. El QuerySet no
-    # debería estar vacío nunca, si el query anterior de todos los objetos es
-    # no nulo, se asume que los indicadores están cargados correctamente
-    catalogos_cant = indicators.filter(
-        indicador_tipo__nombre="catalogos_cant").latest().indicador_valor
-
-    datasets_cant = indicators.filter(
-        indicador_tipo__nombre="datasets_cant").latest().indicador_valor
-
-    ok_pct = indicators.filter(
-        indicador_tipo__nombre="datasets_meta_ok_pct").latest().indicador_valor
-
-    actualizados_pct = indicators.filter(
-        indicador_tipo__nombre="datasets_actualizados_pct").\
-        latest().indicador_valor
+    catalogos_cant = indicators['catalogos_cant']
+    datasets_cant = indicators['datasets_cant']
+    ok_pct = indicators['datasets_meta_ok_pct']
+    actualizados_pct = indicators['datasets_actualizados_pct']
 
     context = {
-        'fecha': today,
         'items': items,
         'jurisdicciones': jurisdicciones,
         'catalogos': catalogos_cant,
@@ -49,11 +39,7 @@ def landing(request):
 
 
 def red_nodos(request):
-    today = date.today()
-    indicators = Indicador.objects.filter(fecha=today)
-    if not indicators:
-        yesterday = today - timedelta(days=1)
-        indicators = Indicador.objects.filter(fecha=yesterday)
+    indicators = Indicador.objects.all().order_by("-fecha")
 
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html')

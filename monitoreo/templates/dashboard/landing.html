@@ -1,25 +1,30 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load l10n %}
 {% block content %}
 
 <div class="container">
     <div class="row">
         <h1 class="title">Dashboard de monitoreo del PAD de la República Argentina</h1>
         <p>El <strong>Plan de Apertura de Datos</strong> está compuesto por {{ items }} compromisos de apertura definidos por {{ jurisdicciones }} jurisdicciones de la
-            Administración Pública Nacional al {{ fecha|date:"d"}} de {{ fecha|date:"E, Y" }}, que marcan el piso de compromiso del gobierno con la apertura de datos.</p>
+            Administración Pública Nacional al {% now "d \d\e F, Y" %}, que marcan el piso de compromiso del gobierno con la apertura de datos.</p>
         <p>Actualmente, se publican {{ datasets }} datasets en {{ catalogos }} catálogos distintos que componen la
             <strong>Red de Nodos de Datos Abiertos de la República Argentina</strong>, cumpliendo cada vez más de estos compromisos.</p>
     </div>
 
-    <div class="row numbers">
-        <div class="col-lg-6 center">
-            <h3>{{ jurisdicciones }}</h3>
-            <h4>jurisdicciones</h4>
+    <div class="row numbers justify-content-between">
+        <div class="col-lg-6 center panel panel-default">
+            <div class="panel-body">
+                <h3>{{ jurisdicciones }}</h3>
+                <h4>jurisdicciones</h4>
+            </div>
         </div>
-        <div class="col-lg-6 center">
-            <h3>{{ catalogos }}</h3>
-            <h4>catálogos</h4>
+        <div class="col-lg-6 center panel panel-default">
+            <div class="panel-body">
+                <h3>{{ catalogos }}</h3>
+                <h4>catálogos</h4>
+            </div>
         </div>
     </div>
     <div class="row center">

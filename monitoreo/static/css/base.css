@@ -117,5 +117,8 @@ body.with-header {
 
     .pad-footer .pad-footer-contact p {
         text-align: left;
+        color: #999999;
+        font-size: 16px;
+        font-weight: 500;
     }
 }

@@ -5,9 +5,10 @@ from urllib2 import urlopen, HTTPError
 import yaml
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
-from ...models import Indicador, IndicadorRed, IndicatorType
+from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
+    IndicatorType
+from monitoreo.apps.dashboard.helpers import load_catalogs
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
-INDEX_URL = URL + "indice.yml"
 CENTRAL = URL + 'datosgobar/data.json'
 
 
@@ -18,7 +19,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data_json = DataJson()
-        catalogs = Command.load_catalogs()
+        catalogs = load_catalogs(URL)
         indics, network_indics = data_json.generate_catalogs_indicators(
             catalogs,
             CENTRAL)
@@ -73,27 +74,3 @@ class Command(BaseCommand):
         Indicador.objects.bulk_create(indic_models)
         self.stderr.write(u'Calculados {0} indicadores en {1} catálogos'.format(
             len(indic_models), len(indics_list)))
-
-    @staticmethod
-    def load_catalogs():
-        """Lee el archivo 'indice.yml' en el directorio raíz, recolecta las
-        rutas a los data.json, las lee y parsea a diccionarios. Devuelve una
-        lista con los diccionarios parseados.
-        Se asume que los data.json siguen una ruta del tipo
-        "<nombre-catalogo>/data.json"
-        """
-        catalogs = []
-
-        yml_file = urlopen(INDEX_URL)
-        catalogs_yaml = yaml.load(yml_file.read())
-        for catalog_name, values in catalogs_yaml.items():
-            if values.get('federado'):
-                url = URL + catalog_name + '/data.json'
-                # Intento parsear el documento, si falla, lo ignoro
-                try:
-                    datajson = json.loads(urlopen(url).read())
-                except (HTTPError, ValueError):
-                    continue
-                catalogs.append(datajson)
-
-        return catalogs

@@ -1,4 +1,8 @@
 #! coding: utf-8
+import json
+from urllib2 import urlopen, HTTPError
+
+import yaml
 from django.db.models import QuerySet
 
 
@@ -19,3 +23,30 @@ def fetch_latest_indicadors(indicators):
         if i.indicador_tipo.nombre not in latest:
             latest[i.indicador_tipo.nombre] = i.indicador_valor
     return latest
+
+
+def load_catalogs(root_url):
+    """Lee el archivo 'indice.yml' en el directorio raíz, recolecta las
+    rutas a los data.json, las lee y parsea a diccionarios. Devuelve una
+    lista con los diccionarios parseados.
+    Se asume que los data.json siguen una ruta del tipo
+    "root_url/<nombre-catalogo>/data.json"
+    Args:
+        root_url (str): URL al directorio raíz de la librería de catálogos
+    """
+    index_url = root_url + 'indice.yml'
+    catalogs = []
+
+    yml_file = urlopen(index_url)
+    catalogs_yaml = yaml.load(yml_file.read())
+    for catalog_name, values in catalogs_yaml.items():
+        if values.get('federado'):
+            url = root_url + catalog_name + '/data.json'
+            # Intento parsear el documento, si falla, lo ignoro
+            try:
+                datajson = json.loads(urlopen(url).read())
+            except (HTTPError, ValueError):
+                continue
+            catalogs.append(datajson)
+
+    return catalogs

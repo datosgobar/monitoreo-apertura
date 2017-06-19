@@ -12,8 +12,8 @@ class CommandTest(TestCase):
     def setUpTestData(cls):
         call_command('indicadores')
 
-        url = "https://raw.githubusercontent.com/datosgobar/libreria" \
-              "-catalogos/master/"
+        url = 'https://raw.githubusercontent.com/datosgobar/libreria' \
+              '-catalogos/master/'
         central = url + 'datosgobar/data.json'
         cls.catalogs = load_catalogs(url)
         cls.indicators, cls.network_indicators = \

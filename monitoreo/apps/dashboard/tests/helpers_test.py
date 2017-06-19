@@ -49,15 +49,15 @@ class FetchLatestIndicatorsTest(TestCase):
 class LoadCatalogsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        url = "https://raw.githubusercontent.com/datosgobar/libreria" \
-              "-catalogos/master/"
+        url = 'https://raw.githubusercontent.com/datosgobar/libreria' \
+              '-catalogos/master/'
         cls.catalogs = load_catalogs(url)
 
     def test_method_returns_non_empty_list(self):
-        self.assertTrue(self.catalogs, "Lista no vacía")
+        self.assertTrue(self.catalogs, 'Lista no vacía')
 
     def test_returned_dicts_are_datajson_parseable(self):
         one_catalog = self.catalogs[-1]
         indicators, _ = DataJson().generate_catalogs_indicators(one_catalog)
         # Asumo que si tiene el indicador de datasets fue parseado exitosamente
-        self.assertTrue(indicators[0]['datasets_cant'], "Catálogo no parseado")
+        self.assertTrue(indicators[0]['datasets_cant'], 'Catálogo no parseado')

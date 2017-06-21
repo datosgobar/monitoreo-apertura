@@ -14,8 +14,9 @@ la línea de comandos.
 """
 
 from __future__ import print_function
-import httplib2
 import os
+import argparse
+import httplib2
 
 from googleapiclient import discovery
 from googleapiclient.http import MediaFileUpload
@@ -24,11 +25,9 @@ from oauth2client import tools
 from oauth2client.file import Storage
 
 try:
-    import argparse
-    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+    FLAGS = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
 except Exception:
-    flags = None
-
+    FLAGS = None
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
@@ -71,8 +70,8 @@ def get_credentials(api="drive"):
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE[api],
                                               SCOPES[api])
         flow.user_agent = APPLICATION_NAME
-        if flags:
-            credentials = tools.run_flow(flow, store, flags)
+        if FLAGS:
+            credentials = tools.run_flow(flow, store, FLAGS)
         else:  # Needed only for compatibility with Python 2.6
             credentials = tools.run(flow, store)
         print('Storing credentials to ' + credential_path)
@@ -82,7 +81,6 @@ def get_credentials(api="drive"):
 
 def get_sheets_service():
     """Usa las credenciales para crear un servicio a google sheets."""
-    
     credentials = get_credentials("sheets")
     http = credentials.authorize(httplib2.Http())
     discovery_url = ('https://sheets.googleapis.com/$discovery/rest?'
@@ -94,7 +92,6 @@ def get_sheets_service():
 
 def get_sheet(spreadsheet_id, range_name):
     """Devuelve el rango de una spreadsheet como lista de listas.
-    
     Args:
         spreadsheet_id (str): Id de la google spreadsheet
           Ej.: '1Vx0SjxnX7X-ASBJkXGWarrrnLItFTAs_TlQvxulLEak'
@@ -127,7 +124,7 @@ def update_drive_file(local_path, gdrive_id, convert_gdocs=None):
         local_path (str): Path local al nuevo archivo a subir.
         gdrive_id (str): Id del archivo a actualizar en el drive.
         convert_gdocs (bool): Convierte el archivo a google docs.
-    
+
     Returns:
         dict: Resultado de la llamada a la API.
     """
@@ -142,7 +139,8 @@ def update_drive_file(local_path, gdrive_id, convert_gdocs=None):
         # TODO: tomar los mimeType del formato del archivo original
         media = MediaFileUpload(
             local_path,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            mimetype='application/'
+                     'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             resumable=False)
 
     print("Actualizando archivo", gdrive_id)
@@ -153,7 +151,6 @@ def update_drive_file(local_path, gdrive_id, convert_gdocs=None):
 
 def is_file_in_folder(file_name, gdrive_dir_id):
     """Chequea que un archivo está en una carpeta del Drive.
-    
     Args:
         file_name (str): Nombre del archivo.
         gdrive_dir_id (str): Id de una carpeta en el Drive.
@@ -171,7 +168,6 @@ def is_file_in_folder(file_name, gdrive_dir_id):
 
 def create_drive_file(local_path, gdrive_dir_id, convert_gdocs=None):
     """Crea un nuevo archivo en una carpeta del drive.
-    
     Args:
         local_path (str): Path local al nuevo archivo a subir.
         gdrive_dir_id (str): Id del directorio que contiene el archivo a crear
@@ -202,7 +198,8 @@ def create_drive_file(local_path, gdrive_dir_id, convert_gdocs=None):
         # TODO: tomar los mimeType del formato del archivo original
         media = MediaFileUpload(
             local_path,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            mimetype='application/'
+                     'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             resumable=False)
 
     print("Creando archivo", file_metadata["name"])
@@ -214,13 +211,12 @@ def create_drive_file(local_path, gdrive_dir_id, convert_gdocs=None):
 
 def create_or_update_drive_file(local_path, gdrive_dir_id, convert_gdocs=None):
     """Actualiza o crea un archivo en Drive.
-    
     Args:
         local_path (str): Path local al nuevo archivo a crear o actualizar.
         gdrive_dir_id (str): Id del directorio que contiene el archivo a crear
             o a actualizar en el drive.
         convert_gdocs (str): Indica un tipo de archivo de google docs para
-            convertir. 
+            convertir.
     Returns:
         dict: Resultado de la llamada a la API.
     """

@@ -16,8 +16,6 @@ from __future__ import print_function
 
 import os
 import argparse
-import urllib2
-
 import httplib2
 
 from googleapiclient import discovery
@@ -52,7 +50,7 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'sheets.googleapis.com-python-quickstart.json')
+                                   'sheets.googleapis.com-monitoreo-pad.json')
 
     store = Storage(credential_path)
     credentials = store.get()
@@ -60,11 +58,8 @@ def get_credentials():
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE,
                                               SCOPES)
         flow.user_agent = APPLICATION_NAME
-        if FLAGS:
-            credentials = tools.run_flow(flow, store, FLAGS)
-        else: # Needed only for compatibility with Python 2.6
-            credentials = tools.run(flow, store)
-        print('Storing credentials to ' + credential_path)
+        credentials = tools.run_flow(flow, store, FLAGS)
+        print('Generando nuevas credenciales en ' + credential_path)
     return credentials
 
 
@@ -98,25 +93,11 @@ def get_sheet(spreadsheet_id, range_name):
 
 
 def main():
-    """Shows basic usage of the Sheets API.
-
-    Creates a Sheets API service object and prints the names and majors of
-    students in a sample spreadsheet:
-    https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+    """Genera las credenciales necesarias para poder leer Google Spreadsheets.
+    Este proceso es automáticamente ejecutado si se intenta abrir un
+    documento sin tener credenciales guardadas en el sistema.
     """
-
-    spreadsheet_id = '1z2itUsUxgty61AnB-09pxRQxbequLzEbWDragbZaHJs'
-    range_name = 'pad_distribuciones!C2:D'
-    values = get_sheet(spreadsheet_id, range_name)
-
-    if not values:
-        print('No data found.')
-    else:
-        print('Name, Major:')
-        for row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
-            print('%s, %s' % (row[0], row[1]))
-
+    get_credentials()
 
 if __name__ == '__main__':
     main()

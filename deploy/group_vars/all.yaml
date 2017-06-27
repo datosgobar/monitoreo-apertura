@@ -1,0 +1,107 @@
+---
+
+## Per application variables
+
+application_name: "django_application"
+# git@example.com:user/repo
+application_clone_url:
+# XXXXXXXXXXXXXXXXXXXXXXXXXXX
+django_secret_key:
+postgresql_user:
+postgresql_password:
+
+checkout_branch: master
+
+# Application user and group
+application_user: datosgobar
+application_group: datosgobar
+application_user_home: "/home/{{ application_user }}/"
+
+# Application
+env_mark: "## DEFAULT VARIABLES MARK"
+
+application_base_dir: "{{ application_user_home }}webapp/"
+base_dir: "{{ application_base_dir }}"
+
+sockets_dir: "{{ base_dir }}sockets/"
+logs_dir: "{{ base_dir }}logs/"
+config_dir: "{{ base_dir }}config/"
+bins_dir: "{{ base_dir }}bin/"
+application_dir: "{{ application_base_dir }}app/"
+
+application_requirements: "{{ application_dir }}requirements.txt"
+application_virtualenv_dir: "{{ application_base_dir }}.venv/"
+application_env_file_link: "{{ application_dir }}conf/settings/.env"
+application_conf: "{{ config_dir}}app/"
+application_temp_dir: "{{ application_base_dir }}temp/"
+application_env_file: "{{ application_conf }}env"
+application_secret_key_file: "{{ application_conf }}secret_key"
+
+application_settings_module: conf.settings.production
+
+# Postgresql
+postgresql_database_name: "{{ application_name }}_database"
+postgresql_port: 5432
+
+
+# Systemd
+available_services:
+  - nginx
+  - postgresql
+  - gunicorn
+
+#GUNICORN
+gunicorn_socket_dir: "{{sockets_dir}}gunicorn/"
+gunicorn_log_dir: "{{logs_dir}}gunicorn/"
+gunicorn_conf_dir: "{{config_dir}}gunicorn/"
+gunicorn_bins_dir: "{{ bins_dir }}gunicorn/"
+gunicorn_conf: "{{ gunicorn_conf_dir }}config.py"
+
+gunicorn_socket: "{{ gunicorn_socket_dir }}gunicorn.sock"
+gunicorn_pid: "{{ gunicorn_socket_dir }}gunicorn.pid"
+run_gunicorn_bin: "{{ gunicorn_bins_dir }}run_gunicorn.sh"
+gunicorn_access_log: "{{ gunicorn_log_dir }}access.log"
+gunicorn_error_log: "{{ gunicorn_log_dir }}error.log"
+gunicorn_user: "{{ application_user }}"
+gunicorn_group: "{{ application_group }}"
+gunicorn_module_app: conf.wsgi
+
+gunicorn_num_workers: 3
+gunicorn_max_requests: 0
+gunicorn_timeout_seconds: 30
+
+# NGINX
+nginx_conf_dir: "{{ config_dir }}nginx/"
+nginx_conf_file: "{{ nginx_conf_dir }}default.conf"
+nginx_deafult_site: "/etc/nginx/"
+nginx_log_dir: "{{ logs_dir }}nginx/"
+nginx_http_port: 80
+nginx_access_log: "{{ nginx_log_dir }}access.log"
+nginx_error_log: "{{ nginx_log_dir }}error.log"
+nginx_media_dir: "{{ base_dir }}media/"
+nginx_static_dir: "{{ base_dir }}static/"
+nginx_enabled_site: /etc/nginx/sites-enabled/000-default
+
+
+
+gunicorn_bin: "{{ application_virtualenv_dir }}bin/gunicorn"
+
+#Django
+django_settings:
+  MEDIA_ROOT: "{{ nginx_media_dir }}"
+  STATIC_ROOT: "{{ nginx_static_dir }}"
+  DATABASE_NAME: "{{ postgresql_database_name }}"
+  DATABASE_USER: "{{ postgresql_user }}"
+  DATABASE_PASSWORD: "{{ postgresql_password }}"
+  DATABASE_HOST: "127.0.0.1"
+
+django_environment:
+  DJANGO_SETTINGS_MODULE: "{{ application_settings_module }}"
+
+# Maintenance
+
+maintenance_dir: "{{ application_base_dir }}maintenance/"
+maintenance_conf_file: "{{ nginx_conf_dir }}001-maintenance.conf"
+maintenance_enabled_site: /etc/nginx/sites-enabled/001-maintenance
+maintenance_game_dir: "{{ maintenance_dir }}game/"
+maintenance_files_dir: "{{ maintenance_dir }}files/"

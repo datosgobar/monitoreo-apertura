@@ -1,0 +1,6 @@
+---
+
+- include: config_gunicorn.yml
+- include: config_nginx.yml
+- include: create_systemd_files.yml
+- include: configure_logrotate.yml

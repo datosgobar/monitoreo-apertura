@@ -69,7 +69,8 @@ def get_sheets_service():
     http = credentials.authorize(httplib2.Http())
     discovery_url = 'https://sheets.googleapis.com/$discovery/rest?version=v4'
     service = discovery.build('sheets', 'v4', http=http,
-                              discoveryServiceUrl=discovery_url)
+                              discoveryServiceUrl=discovery_url,
+                              cache_discovery=False)
     return service
 
 
@@ -83,6 +84,7 @@ def get_sheet(spreadsheet_id, range_name):
     Returns:
         list: Filas de la planilla.
     """
+
 
     service = get_sheets_service()
     result = service.spreadsheets().values().get(

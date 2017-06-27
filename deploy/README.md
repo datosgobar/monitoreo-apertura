@@ -1,8 +1,7 @@
-# Simple (Django) deploy
+# Instrucciones de deploy
 
-With this project you'll be able to deploy [this django application](https://gitlab.devartis.com/samples/django-sample).
-
-## Requirements
+El script deployea automáticamente a través de ansible y git el proyecto de Django. Además configura el crontab para obtener indicadores una vez por día (a las 5 de la mañana).
+### Requirements
 
 - Ansible: `pip install -r requirements.txt`
 - SSH client
@@ -11,29 +10,24 @@ With this project you'll be able to deploy [this django application](https://git
 
 ### Deploy
 
-For deploying, some extra vars must be passsed:
+El script acepta varias variables
 
-    export REPO_URL=git@git@example.com/user:repo  # Which repository do you want to deploy?
-    export CHECKOUT_BRANCH=master  # Which version (branch or tag)?
-    export POSTGRESQL_USER=database_user  # Set psql user name
-    export POSTGRESQL_PASSWORD=database_password_xxxxxxx  # Set psql user password
-    export HOST=8.8.8.8  # Where do you want to deploy?
-    export LOGIN_USER=root  # The user with sudo access.
+    export REPO_URL=git@example.com/user:repo.git  # Repo a clonar (se necesita acceso, si es privado)
+    export CHECKOUT_BRANCH=master  # branch o tag a clonar
+    export POSTGRESQL_USER=database_user  # psql user name
+    export POSTGRESQL_PASSWORD=database_password_xxxxxxx  # user password
+    export HOST=8.8.8.8  # IP del server al que deployar
+    export LOGIN_USER=root  # Usuario con acceso sudo del servidor
 
     bash deploy.sh -r $REPO_URL -p $POSTGRESQL_USER -P $POSTGRESQL_PASSWORD \
         -b $CHECKOUT_BRANCH -h $HOST -l $LOGIN_USER
 
+Un ejemplo puede ser
+
+    sh deploy.sh -r git@github.com:datosgobar/monitoreo-apertura.git -b master -p database_user -P database_password -h 181.209.63.95 -l llavandeira
+
 ### Update
 
-For updating, use the update.sh script:
+Una vez deployado se puede actualizar el servidor usando `update.sh`:
 
     bash update.sh -r $REPO_URL -b $CHECKOUT_BRANCH -h $HOST -l $LOGIN_USER
-
-## Vagrant & Tests
-
-You can test this project using [Vagrant](https://www.vagrantup.com/):
-
-    export REPO_URL=git@gitlab.devartis.com:samples/django-sample.git
-    eval "$(ssh-agent -s) # These two lines allow to pull the project with you ssh keys from gitlab
-    ssh-add ~/.ssh/id_rsa
-    vagrant up --provision # Setup and run playbook

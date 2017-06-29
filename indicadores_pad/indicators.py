@@ -17,7 +17,7 @@ class PADIndicators:
     @staticmethod
     def count_rows(spreadsheet_id, sheet):
         # Trae la sheet entera
-        rows = reader.get_sheet(spreadsheet_id, sheet)
+        rows = reader.read_sheet(spreadsheet_id)
         return len(rows)
 
     def generate_pad_indicators(self, spreadsheet_id):
@@ -32,13 +32,7 @@ class PADIndicators:
             dict: diccionario con los indicadores como claves
         """
 
-        rows = reader.get_sheet(spreadsheet_id, "pad_distribuciones")
-
-        for item in rows:
-            if len(item) < 10:
-                break
-            print(item[8])
-        return self.count_rows(spreadsheet_id, "pad_distribuciones")
+        rows = reader.read_sheet(spreadsheet_id)
 
     def generate_documentation_indicators(self, sheet):
         """Genera los indicadores de documentación. Un compromiso es 

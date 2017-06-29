@@ -1,106 +1,148 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#! coding: utf-8
 
-"""Se conecta a una spreadsheet de Google Drive para traer todas las filas
-
-Hay que crear credenciales propias para el proyecto siguiendo el tutorial en
-https://developers.google.com/sheets/api/quickstart/python para generar un
-client_secret.json con las credenciales necesarias para conectarse al Drive.
-
-Hay que correr el script desde la línea de comandos para configurar por primera
-vez las credenciales que van a ~/.credentials/ . La mejor manera de hacerlo es
-agregar un ejemplo sencillo de uso de la nueva API en el main() y correrlo de
-la línea de comandos.
-"""
-from __future__ import print_function
-
-import os
-import argparse
-import httplib2
-
-from googleapiclient import discovery
-from oauth2client import client
-from oauth2client import tools
-from oauth2client.file import Storage
-
-FLAGS = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
-
-# If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/sheets.googleapis.com-python-quickstart.json
-SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
-CLIENT_SECRET_FILE = 'scripts/drive/client_secret_sheets.json'
-APPLICATION_NAME = 'Monitoreo PAD'
-CREDENTIALS_FILE = {
-    "drive": 'monitoreo-pad-drive.json',
-    "sheets": 'monitoreo-pad-sheets.json'
-}
+import google_drive
 
 
-def get_credentials():
-    """Gets valid user credentials from storage.
+class SpreadsheetReader:
+    # Valores numéricos de las filas en la hoja de distribuciones del PAD
+    JURISDICCION = 0
+    COMPROMISO = 1
+    DATAJSON = 8
+    DATASET = 9
+    DISTRIBUCION = 13
 
-    If nothing has been stored, or if the stored credentials are invalid,
-    the OAuth2 flow is completed to obtain the new credentials.
+    def __init__(self):
+        self.compromisos = []
+        self.sheet = ""
 
-    Returns:
-        Credentials, the obtained credential.
-    """
-    home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials')
-    if not os.path.exists(credential_dir):
-        os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,
-                                   'sheets.googleapis.com-monitoreo-pad.json')
+    def read_sheet(self, sheet_id):
+        """Lee la hoja completa del estado del Plan de Apertura de datos, 
+        y la parsea en una lista de diccionarios de Python:
+            [
+                {
+                    "jurisdiccion_id": ...
+                    "id": ...
+                    "nombre": ...
+                    "fecha": ...
+                    "actualizacion": ...
+                    "distribuciones": [
+                        {
+                            "catalog": ...  # URL a un data.json
+                            "dataset": ...
+                            "dataset_license": ...
+                            "dataset_accrualPeriodicity": ...
+                            "compromiso_actualizacion": ...
+                            "format": ...
+                        }, ...
+                    ]
+                },
+                ...
+            ]
+    
+        Args:
+            sheet (str): ID de una hoja de google drive con los valores del PAD
+        
+        Returns:
+            list: lista con el formato especificado
+        """
 
-    store = Storage(credential_path)
-    credentials = store.get()
-    if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE,
-                                              SCOPES)
-        flow.user_agent = APPLICATION_NAME
-        credentials = tools.run_flow(flow, store, FLAGS)
-        print('Generando nuevas credenciales en ' + credential_path)
-    return credentials
+        if isinstance(sheet_id, list):
+            return sheet_id
+        if isinstance(sheet_id, str):
+            if self.sheet == sheet_id:  # Ya fue leída la misma hoja
+                return self.compromisos
+            sheet = google_drive.get_sheet(sheet_id, "pad_distribuciones")
+            self.sheet = sheet_id
+        else:
+            raise TypeError('Valor de "sheet" inválido. Se esperaba tipo list o'
+                            ' str, recibido {}'.format(type(sheet_id)))
 
+        self.compromisos = []
+        # compromisos: claves los IDs de cada compromiso, valores una lista
+        # de los data.json asociados a sus distribuciones
+        header = sheet[0]
+        for row in sheet[1:]:  # Índice 0 es el header de la tabla
+            # Asumo que cuando la len es baja, ya son rows inválidos
+            if len(row) <= self.DATASET:
+                continue
 
-def get_sheets_service():
-    """Usa las credenciales para crear un servicio a google sheets."""
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    discovery_url = 'https://sheets.googleapis.com/$discovery/rest?version=v4'
-    service = discovery.build('sheets', 'v4', http=http,
-                              discoveryServiceUrl=discovery_url,
-                              cache_discovery=False)
-    return service
+            compromiso_id = row[self.COMPROMISO]
+            compromiso = self.get_or_create_compromiso(compromiso_id)
 
+            dataset_title = row[self.DATASET]
+            dataset = self.get_or_create_dataset(dataset_title, compromiso)
 
-def get_sheet(spreadsheet_id, range_name):
-    """Devuelve el rango de una spreadsheet como lista de listas.
-    Args:
-        spreadsheet_id (str): Id de la google spreadsheet
-          Ej.: '1Vx0SjxnX7X-ASBJkXGWarrrnLItFTAs_TlQvxulLEak'
-        range_name (str): Rango target. Ej.: 'Tiempo Real!A1:K'
+            # Cada row representa una distribución única, cargamos los datos y
+            # la agregamos al dataset
+            distribution = {}
+            dataset['distribution'].append(distribution)
+            for name in header:
+                index = header.index(name)
+                value = row[index] if len(row) > index else ""
+                if 'compromiso' in name or 'jurisdiccion' in name:
+                    compromiso[name] = value
+                elif 'dataset' in name or 'catalog' in name:
+                    dataset[name] = value
+                else:  # Valores de 'distribution'
+                    distribution[name] = value
+        return self.compromisos
 
-    Returns:
-        list: Filas de la planilla.
-    """
+    @staticmethod
+    def get_or_create_dataset(dataset_title, compromiso):
+        """Devuelve el dataset perteneciente a 'compromiso' con el título 
+        'dataset_title', o de no existir, lo crea y lo agrega a los datasets del 
+        compromiso.
+        Args: 
+            dataset_title (str): valor del campo 'dataset_title' en el dataset a 
+                buscar.
+            compromiso (dict): diccionario representando a un compromiso, con el 
+                formato devuelto por la función 'get_or_create_compromiso', 
+                es decir con una clave 'dataset' con valor de lista
+        Returns:
+            dict: diccionario representante del dataset:
+                {
+                    'dataset_title': dataset_title,
+                    distribution: [],
+                }
+        """
+        for dataset in compromiso['dataset']:
+            if dataset['dataset_title'] == dataset_title:
+                return dataset
 
+        dataset = {
+            'dataset_title': dataset_title,
+            'distribution': []
+        }
+        compromiso['dataset'].append(dataset)
+        return dataset
 
-    service = get_sheets_service()
-    result = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheet_id, range=range_name).execute()
-    values = result.get('values', [])
+    def get_or_create_compromiso(self, compromiso_id):
+        """Devuelve el compromiso con 'compromiso_id' en la lista 'compromisos', 
+        o de no existir, lo crea y lo agrega a 'compromisos'.
+        Args:
+            compromiso_id (str): ID del compromiso a buscar. 
+                    
+        Returns:
+            dict: compromiso con el campo compromiso_id correspondiente
+        """
+        for compromiso in self.compromisos:
+            if compromiso['compromiso_id'] == compromiso_id:
+                return compromiso
 
-    return values
+        compromiso = {
+            'compromiso_id': compromiso_id,
+            'dataset': []
+        }
+        self.compromisos.append(compromiso)
+        return compromiso
 
 
 def main():
-    """Genera las credenciales necesarias para poder leer Google Spreadsheets.
-    Este proceso es automáticamente ejecutado si se intenta abrir un
-    documento sin tener credenciales guardadas en el sistema.
-    """
-    get_credentials()
+    import json
+    spreadsheet_id = '1uG68Yq9z1l6IX1kW8A3uO9yGHSNqDglFuagk7BxKOaw'
+    spreadsheet = SpreadsheetReader()
+    print(json.dumps(spreadsheet.read_sheet(spreadsheet_id), indent=4))
+    spreadsheet.read_sheet(spreadsheet_id)
 
 if __name__ == '__main__':
     main()
-

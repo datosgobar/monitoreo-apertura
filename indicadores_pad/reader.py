@@ -50,7 +50,8 @@ class SpreadsheetReader:
             ]
     
         Args:
-            sheet (str): ID de una hoja de google drive con los valores del PAD
+            sheet_id (str): ID de una hoja de google drive con los valores del
+                PAD
         
         Returns:
             list: lista con el formato especificado

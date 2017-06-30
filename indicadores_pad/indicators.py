@@ -1,8 +1,7 @@
 #! coding: utf-8
-
+import requests
 from pydatajson import DataJson
 from indicadores_pad.reader import SpreadsheetReader
-
 # Valores numéricos de las filas en la hoja de distribuciones del PAD
 COMPROMISO = 1
 DATAJSON = 8
@@ -39,7 +38,65 @@ class PADIndicators:
         indicators = {}
         indicators.update(self.generate_documentation_indicators(sheet))
         indicators.update(self.generate_license_indicators(sheet))
+        indicators.update(self.generate_download_indicators(sheet))
         return indicators
+
+    def generate_download_indicators(self, sheet):
+        """Genera los indicadores de descarga. Un compromiso se considera como
+        descargable si todas sus distribuciones tienen un link válido de
+        descarga en el campo 'distribution_downloadURL
+        
+        Args:
+            sheet (list): lista de dicts de una spreadsheet ya parseada
+        Returns:
+            dict: diccionario con indicadores de compromisos descargables
+                (cantidad y porcentaje)
+        """
+        count = 0
+        downloadable = 0
+        for compromiso in sheet:
+            count += 1
+            if self.compromiso_is_downloadable(compromiso):
+                downloadable += 1
+
+        downloadable_pct = round(float(downloadable) / count * 100, 2)
+        license_indicators = {
+            'pad_items_descarga_cant': downloadable,
+            'pad_items_no_descarga_cant': count - downloadable,
+            'pad_items_descarga_pct': downloadable_pct
+        }
+        return license_indicators
+
+    @staticmethod
+    def compromiso_is_downloadable(compromiso):
+        """Verifica que un compromiso sea descargable. Se lo consierará como
+        descargable si todas sus distribuciones tienen un link válido en el
+        campo 'distribution_downloadURL', es decir que el request de 200
+        
+        Args:
+            compromiso (dict): compromiso obtenido de la lectura de la planilla
+                de cálculo del PAD
+        Returns:
+            bool: True si el compromiso es descargable, False caso contrario
+        """
+
+        for dataset in compromiso['dataset']:
+            distributions = dataset.get('distribution')
+            if not distributions:
+                return False
+
+            for distribution in distributions:
+                try:
+                    # Pido el header a la URL de descarga
+                    response = requests.head(
+                        distribution.get('distribution_downloadURL'))
+                    if response.status_code != 200:
+                        return False
+                except (requests.ConnectionError,
+                        requests.models.MissingSchema):
+                    # No se pudo establecer una conexión
+                    return False
+        return True
 
     def generate_license_indicators(self, sheet):
         """Genera los indicadores de licencia. Un compromiso es

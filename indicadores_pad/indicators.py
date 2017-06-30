@@ -12,6 +12,13 @@ DISTRIBUCION = 13
 
 class PADIndicators:
     def __init__(self, reader=SpreadsheetReader, data_json=DataJson):
+        """Clase que calcula los indicadores del PAD.
+
+        Args:
+            reader: Clase lectora de planillas.
+            data_json: Clase lectora de metadatos .json de los catálogos.
+        """
+
         self.reader = reader()
         self.data_json = data_json()
         self.datajson_cache = {}

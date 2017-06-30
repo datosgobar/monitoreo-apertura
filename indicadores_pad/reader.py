@@ -16,7 +16,7 @@ class SpreadsheetReader:
         self.sheet = ""
 
     def read_sheet(self, sheet_id):
-        """Lee la hoja completa del estado del Plan de Apertura de datos, 
+        """Lee la hoja completa del estado del Plan de Apertura de datos,
         y la parsea en una lista de diccionarios de Python:
             [
                 {
@@ -42,17 +42,17 @@ class SpreadsheetReader:
                                     "distribution_accessURL": ...
                                     "distribution_title": ...
                                 }, ...
-                            ],                            
+                            ],
                         }, ...
                     ]
                 },
                 ...
             ]
-    
+
         Args:
             sheet_id (str): ID de una hoja de google drive con los valores del
                 PAD
-        
+
         Returns:
             list: lista con el formato especificado
         """
@@ -100,14 +100,14 @@ class SpreadsheetReader:
 
     @staticmethod
     def get_or_create_dataset(dataset_title, compromiso):
-        """Devuelve el dataset perteneciente a 'compromiso' con el título 
-        'dataset_title', o de no existir, lo crea y lo agrega a los datasets del 
+        """Devuelve el dataset perteneciente a 'compromiso' con el título
+        'dataset_title', o de no existir, lo crea y lo agrega a los datasets del
         compromiso.
-        Args: 
-            dataset_title (str): valor del campo 'dataset_title' en el dataset a 
+        Args:
+            dataset_title (str): valor del campo 'dataset_title' en el dataset a
                 buscar.
-            compromiso (dict): diccionario representando a un compromiso, con el 
-                formato devuelto por la función 'get_or_create_compromiso', 
+            compromiso (dict): diccionario representando a un compromiso, con el
+                formato devuelto por la función 'get_or_create_compromiso',
                 es decir con una clave 'dataset' con valor de lista
         Returns:
             dict: diccionario representante del dataset:
@@ -128,11 +128,11 @@ class SpreadsheetReader:
         return dataset
 
     def get_or_create_compromiso(self, compromiso_id):
-        """Devuelve el compromiso con 'compromiso_id' en la lista 'compromisos', 
+        """Devuelve el compromiso con 'compromiso_id' en la lista 'compromisos',
         o de no existir, lo crea y lo agrega a 'compromisos'.
         Args:
-            compromiso_id (str): ID del compromiso a buscar. 
-                    
+            compromiso_id (str): ID del compromiso a buscar.
+
         Returns:
             dict: compromiso con el campo compromiso_id correspondiente
         """

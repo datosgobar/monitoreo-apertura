@@ -90,20 +90,22 @@ class PADIndicators:
             if not datajson_url:  # Falta un datajson, no está documentado
                 return False
 
+            # Para no descargar y leer el mismo catálogo varias veces se lo
+            # guarda en una variable de clase junto con su validación
             if datajson_url not in self.datajson_cache:
                 self.datajson_cache[datajson_url] = \
                     self.data_json.validate_catalog(datajson_url)
 
             validation = self.datajson_cache[datajson_url]['error']['dataset']
             dataset_title = dataset['dataset_title']
-            valid = False
+            found = False
             for datajson_dataset in validation:
                 if datajson_dataset['title'] == dataset_title:
                     if datajson_dataset['status'] != 'OK':
                         return False
-                    valid = True
+                    found = True
 
-            if not valid:
+            if not found:  # El dataset no está en el data.json
                 return False
 
         return True

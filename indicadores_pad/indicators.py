@@ -1,7 +1,7 @@
 #! coding: utf-8
 
 from pydatajson import DataJson
-from .reader import SpreadsheetReader
+from indicadores_pad.reader import SpreadsheetReader
 
 # Valores numéricos de las filas en la hoja de distribuciones del PAD
 COMPROMISO = 1
@@ -38,7 +38,54 @@ class PADIndicators:
         sheet = self.reader.read_sheet(spreadsheet_id)
         indicators = {}
         indicators.update(self.generate_documentation_indicators(sheet))
+        indicators.update(self.generate_license_indicators(sheet))
         return indicators
+
+    def generate_license_indicators(self, sheet):
+        """Genera los indicadores de licencia. Un compromiso es
+        considerado como licenciado cuando todos sus datasets asociadas 
+        tienen algún valor en el campo dataset_license
+        
+        Args:
+            sheet (list): lista de dicts de una spreadsheet ya parseada
+        Returns:
+            dict: diccionario con indicadores de compromisos licenciados
+                (cantidad y porcentaje)
+        """
+        count = 0
+        licensed = 0
+        for compromiso in sheet:
+            count += 1
+            if self.compromiso_is_licensed(compromiso):
+                licensed += 1
+
+        licensed_pct = round(float(licensed) / count * 100, 2)
+        license_indicators = {
+            'pad_items_licencia_cant': licensed,
+            'pad_items_sin_licencia_cant': count - licensed,
+            'pad_items_licencia_pct': licensed_pct
+        }
+        return license_indicators
+
+    @staticmethod
+    def compromiso_is_licensed(compromiso):
+        """Verifica si un compromiso está licenciado. Se lo considerará como
+        licenciado a un compromiso si todos sus datasets asociadas tienen algún
+        valor en el campo 'dataset_license'
+        
+        Args:
+            compromiso (dict): compromiso obtenido de la lectura de la planilla
+                de cálculo del PAD
+        Returns:
+            bool: True si el compromiso está licenciado, False caso contrario
+        """
+
+        for dataset in compromiso['dataset']:
+            # Chequeo campo existente y no falso (i.e. distinto de string vacío)
+            if not dataset.get('dataset_license') or \
+                    not dataset['dataset_license']:
+                return False
+        return True
 
     def generate_documentation_indicators(self, sheet):
         """Genera los indicadores de documentación. Un compromiso es
@@ -61,7 +108,7 @@ class PADIndicators:
             if self.compromiso_is_documented(compromiso):
                 documented += 1
 
-        documented_pct = round(float(documented) / count, 2) * 100
+        documented_pct = round(float(documented) / count * 100, 2)
 
         documented_indicators = {
             'pad_items_documentados_cant': documented,

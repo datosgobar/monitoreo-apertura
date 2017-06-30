@@ -3,4 +3,4 @@ Aplicación web para monitoreo de la red de nodos de datos abiertos y de los pla
 
 
 ## Setup
-Correr `install_cron.sh` para configurar el cron job de colección de indicadores.
+Correr `make -f Makefile setup` para instalar el cron de la tarea de colección de indicadores.

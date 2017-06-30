@@ -40,7 +40,31 @@ class PADIndicators:
         indicators.update(self.generate_license_indicators(sheet))
         indicators.update(self.generate_download_indicators(sheet))
         indicators.update(self.generate_frequency_indicator(sheet))
+        indicators.update(self.generate_format_indicator(sheet))
         return indicators
+
+    @staticmethod
+    def generate_format_indicator(sheet):
+        """Genera el indicador de formatos: un diccionario que cuenta los
+        formatos presentes de las distribuciones dentro del PAD
+        
+        Args:
+            sheet(list): lista de dicts de una spreadsheet ya parseada
+        Returns:
+            dict: Diccionario con los formatos como claves y la cantidad de
+                cada uno como valores
+        """
+        formats = {}
+        for compromiso in sheet:
+            for dataset in compromiso.get('dataset', []):
+                for distribution in dataset.get('distribution', []):
+                    distrib_format = distribution.get('distribution_format')
+                    if distrib_format:
+                        formats[distrib_format] = \
+                            formats.get(distrib_format, 0) + 1
+        return {
+            'pad_distributions_formatos_cant': formats
+        }
 
     @staticmethod
     def generate_frequency_indicator(sheet):

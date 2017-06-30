@@ -121,5 +121,129 @@ class FrequencyIndicator(unittest.TestCase):
         }
         self.assertDictContainsSubset(expected, actual)
 
+
 class FormatIndicator(unittest.TestCase):
-    pass
+
+    def setUp(self):
+        self.pad = PADIndicators()
+
+    def test_count_one_format(self):
+        spreadsheet = [
+            {
+                'dataset': [
+                    {
+                        'distribution': [
+                            {
+                                'distribution_format': 'csv'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+        actual = self.pad.generate_pad_indicators(spreadsheet)
+        expected = {
+            'pad_distributions_formatos_cant': {
+                'csv': 1
+            }
+        }
+        self.assertDictContainsSubset(expected, actual)
+
+    def test_count_several_formats_same_item(self):
+        spreadsheet = [
+            {
+                'dataset': [
+                    {
+                        'distribution': [
+                            {
+                                'distribution_format': 'csv'
+                            },
+                            {
+                                'distribution_format': 'csv'
+                            },
+                            {
+                                'distribution_format': 'xlsx'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+        actual = self.pad.generate_pad_indicators(spreadsheet)
+        expected = {
+            'pad_distributions_formatos_cant': {
+                'csv': 2,
+                'xlsx': 1
+            }
+        }
+        self.assertDictContainsSubset(expected, actual)
+
+    def test_several_formats_different_item(self):
+        spreadsheet = [
+            {
+                'dataset': [
+                    {
+                        'distribution': [
+                            {
+                                'distribution_format': 'csv'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                'dataset': [
+                    {
+                        'distribution': [
+                            {
+                                'distribution_format': 'csv'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                'dataset': [
+                    {
+                        'distribution': [
+                            {
+                                'distribution_format': 'xlsx'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+        actual = self.pad.generate_pad_indicators(spreadsheet)
+        expected = {
+            'pad_distributions_formatos_cant': {
+                'csv': 2,
+                'xlsx': 1
+            }
+        }
+        self.assertDictContainsSubset(expected, actual)
+
+    def test_indicator_ignores_missing_format(self):
+        spreadsheet = [
+            {
+                'dataset': [
+                    {
+                        'distribution': [
+                            {
+                                'distribution_format': 'csv'
+                            },
+                            {
+                                'distribution_format': ''
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+        actual = self.pad.generate_pad_indicators(spreadsheet)
+        expected = {
+            'pad_distributions_formatos_cant': {
+                'csv': 1
+            }
+        }
+        self.assertDictContainsSubset(expected, actual)

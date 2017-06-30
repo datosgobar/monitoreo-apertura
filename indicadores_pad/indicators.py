@@ -39,7 +39,33 @@ class PADIndicators:
         indicators.update(self.generate_documentation_indicators(sheet))
         indicators.update(self.generate_license_indicators(sheet))
         indicators.update(self.generate_download_indicators(sheet))
+        indicators.update(self.generate_frequency_indicator(sheet))
         return indicators
+
+    @staticmethod
+    def generate_frequency_indicator(sheet):
+        """Genera el indicador de frecuencia: Un diccionario que cuenta las
+        periodicidades de actualización de todas las distribuciones dentro del
+        PAD
+        
+        Args:
+            sheet (list): lista de dicts de una spreadsheet ya parseada
+        Returns:
+            dict: Diccionario con las frecuencias como claves y la cantidad de
+                cada una como valores
+        """
+
+        frequencies = {}
+        for compromiso in sheet:
+            for dataset in compromiso['dataset']:
+                periodicity = dataset.get('dataset_accrualPeriodicity')
+                if periodicity:
+                    frequencies[periodicity] = \
+                        frequencies.get(periodicity, 0) + 1
+
+        return {
+            'pad_datasets_frecuencia_cant': frequencies
+        }
 
     def generate_download_indicators(self, sheet):
         """Genera los indicadores de descarga. Un compromiso se considera como

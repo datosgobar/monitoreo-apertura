@@ -1,6 +1,6 @@
 #! coding: utf-8
 import requests
-from pydatajson import DataJson
+from pydatajson import DataJson, parse_repeating_time_interval
 from indicadores_pad.reader import SpreadsheetReader
 # Valores numéricos de las filas en la hoja de distribuciones del PAD
 COMPROMISO = 1
@@ -41,7 +41,85 @@ class PADIndicators:
         indicators.update(self.generate_download_indicators(sheet))
         indicators.update(self.generate_frequency_indicator(sheet))
         indicators.update(self.generate_format_indicator(sheet))
+        indicators.update(self.generate_update_indicators(sheet))
         return indicators
+
+    def generate_update_indicators(self, sheet):
+        """Genera los indicadores de actualización."""
+
+        count = 0
+        updated = 0
+        for compromiso in sheet:
+            count += 1
+            if self.compromiso_is_updated(compromiso):
+                updated += 1
+
+        updated_pct = round(float(updated) / count * 100, 2)
+
+        updated_indicators = {
+            'pad_items_actualizados_cant': updated,
+            'pad_items_desactualizados_cant': count - updated,
+            'pad_items_actualizados_pct': updated_pct
+        }
+        return updated_indicators
+
+    def dataset_is_updated(self, dataset):
+        """Evalúa si el dataset figura como actualizado dentro de los metadatos
+        de su catálogo asociado. Devuelve True en ese caso, o si no tiene un
+        catálogo asociado.
+        """
+
+        catalog = dataset.get('catalog_datajson_url')
+        if not catalog:
+            return True
+
+        return self.data_json.dataset_is_updated(catalog, dataset.get(
+            'dataset_title'))
+
+    def compromiso_is_updated(self, compromiso):
+        """Verifica que un compromiso esté actualizado. Un compromiso se
+        considera como actualizado si hay al menos una distribución cuyo 
+        dataset_accrualPeriodicity es de igual o menor agregación temporal que 
+        compromiso_actualizacion
+        
+        Args:
+            compromiso (dict): compromiso obtenido de la lectura de la planilla
+                de cálculo del PAD
+        Returns:
+            bool: True si el compromiso es descargable, False caso contrario
+        """
+        periodicity = compromiso.get('compromiso_actualizacion', '')
+        for dataset in compromiso.get('dataset', []):
+            dataset_periodicity = dataset.get('dataset_accrualPeriodicity', '')
+            if self.compare_accrual_periodicity(dataset_periodicity,
+                                                periodicity):
+                return self.dataset_is_updated(dataset)
+
+        return False
+
+    @staticmethod
+    def compare_accrual_periodicity(periodicity, other):
+        """Devuelve true si 'periodicity' es de menor o igual período que
+        'other'
+        
+        Args:
+            periodicity (str): periodicity ISO 8601, por ejemplo 'R/P1Y' para
+                período anual.
+            other (str): periodicity ISO 8601, por ejemplo 'R/P1Y' para
+                período anual.
+        Returns:
+            bool: True si periodicity es mayor o igual que other, False caso
+                contrario. Devuelve False si alguno de los argumentos tiene un
+                formato inválido.
+        """
+
+        periodicity = parse_repeating_time_interval(periodicity)
+        other = parse_repeating_time_interval(other)
+
+        if not periodicity or not other:
+            return False
+
+        return periodicity <= other
 
     @staticmethod
     def generate_format_indicator(sheet):

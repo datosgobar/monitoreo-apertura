@@ -14,8 +14,8 @@ class PADIndicators:
         """Clase que calcula los indicadores del PAD.
 
         Args:
-            reader: Clase lectora de planillas.
-            data_json: Clase lectora de metadatos .json de los catálogos.
+            reader: instancia de objeto lector de planillas.
+            data_json: instancia de lector de metadatos .json de los catálogos.
         """
 
         self.reader = reader

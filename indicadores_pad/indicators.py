@@ -81,7 +81,7 @@ class PADIndicators:
 
         frequencies = {}
         for compromiso in sheet:
-            for dataset in compromiso['dataset']:
+            for dataset in compromiso.get('dataset', []):
                 periodicity = dataset.get('dataset_accrualPeriodicity')
                 if periodicity:
                     frequencies[periodicity] = \
@@ -130,7 +130,7 @@ class PADIndicators:
             bool: True si el compromiso es descargable, False caso contrario
         """
 
-        for dataset in compromiso['dataset']:
+        for dataset in compromiso.get('dataset', []):
             distributions = dataset.get('distribution')
             if not distributions:
                 return False
@@ -187,7 +187,7 @@ class PADIndicators:
             bool: True si el compromiso está licenciado, False caso contrario
         """
 
-        for dataset in compromiso['dataset']:
+        for dataset in compromiso.get('dataset', []):
             # Chequeo campo existente y no falso (i.e. distinto de string vacío)
             if not dataset.get('dataset_license') or \
                     not dataset['dataset_license']:
@@ -239,7 +239,7 @@ class PADIndicators:
         Returns:
             bool: True si el compromiso está documentado, False caso contrario
         """
-        for dataset in compromiso['dataset']:
+        for dataset in compromiso.get('dataset', []):
             datajson_url = dataset.get('catalog_datajson_url')
             if not datajson_url:  # Falta un datajson, no está documentado
                 return False
@@ -251,7 +251,7 @@ class PADIndicators:
                     self.data_json.validate_catalog(datajson_url)
 
             validation = self.datajson_cache[datajson_url]['error']['dataset']
-            dataset_title = dataset['dataset_title']
+            dataset_title = dataset.get('dataset_title')
             found = False
             for datajson_dataset in validation:
                 if datajson_dataset['title'] == dataset_title:

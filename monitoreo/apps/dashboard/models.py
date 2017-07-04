@@ -62,6 +62,27 @@ class IndicadorRed(models.Model):
         return self.__unicode__().encode('utf-8')
 
 
+class IndicadorPAD(models.Model):
+    class Meta:
+        verbose_name_plural = "Indicadores del PAD"
+        get_latest_by = "fecha"
+
+    fecha = models.DateField()
+    indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
+    indicador_valor = models.CharField(max_length=300)
+
+    def __init__(self, *args, **kwargs):
+        kwargs['fecha'] = timezone.now()
+        super(IndicadorPAD, self).__init__(*args, **kwargs)
+
+    def __unicode__(self):
+        string = 'Indicador "{0}" del PAD, {1}'
+        return string.format(self.indicador_tipo.nombre, self.fecha)
+
+    def __str__(self):
+        return self.__unicode__().encode('utf-8')
+
+
 class TableColumn(OrderedModel):
     class Meta(OrderedModel.Meta):
         verbose_name_plural = "Columnas de la tabla de indicadores de red"

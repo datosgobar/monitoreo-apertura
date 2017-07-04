@@ -1,15 +1,16 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
-from urllib2 import urlopen, HTTPError
-import yaml
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
+from indicadores_pad.indicators import PADIndicators
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
-    IndicatorType
+    IndicatorType, IndicadorPAD
 from monitoreo.apps.dashboard.helpers import load_catalogs
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 CENTRAL = URL + 'datosgobar/data.json'
+
+SPREADSHEET = '1z2itUsUxgty61AnB-09pxRQxbequLzEbWDragbZaHJs'
 
 
 class Command(BaseCommand):
@@ -23,16 +24,30 @@ class Command(BaseCommand):
         indics, network_indics = data_json.generate_catalogs_indicators(
             catalogs,
             CENTRAL)
-
         names = []
         for catalog in catalogs:
             # Obtengo el nombre de los catálogos a partir de la validación
             validation = data_json.validate_catalog(catalog)
             catalog_name = validation['error']['catalog']['title']
             names.append(catalog_name)
-
         self.save_indicators(indics, names)
         self.save_network_indics(network_indics)
+
+        self.pad_indicators()
+
+    def pad_indicators(self):
+        pad = PADIndicators()
+        indic_models = []
+        indicators = pad.generate_pad_indicators(SPREADSHEET)
+        for indic_name, value in indicators.items():
+            indic_type = IndicatorType.objects.get_or_create(
+                nombre=indic_name)[0]
+            indic_models.append(IndicadorPAD(indicador_tipo=indic_type,
+                                             indicador_valor=json.dumps(value)))
+
+        IndicadorPAD.objects.bulk_create(indic_models)
+        self.stderr.write(u'Calculados {0} indicadores del PAD'.format(
+            len(indic_models)))
 
     def save_network_indics(self, network_indics):
         # Itero sobre los indicadores de red, creando modelos y agregándolos

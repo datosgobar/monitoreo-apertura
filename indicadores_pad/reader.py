@@ -1,7 +1,7 @@
 #! coding: utf-8
 from __future__ import print_function
 
-from indicadores_pad import google_drive
+import google_drive
 
 
 class SpreadsheetReader:
@@ -60,7 +60,7 @@ class SpreadsheetReader:
 
         if isinstance(sheet_id, list):
             return sheet_id
-        if isinstance(sheet_id, str):
+        if isinstance(sheet_id, (str, unicode)):
             if self.sheet == sheet_id:  # Ya fue leída la misma hoja
                 return self.compromisos
             sheet = google_drive.get_sheet(sheet_id, "pad_distribuciones")

@@ -1,24 +1,26 @@
 # coding=utf-8
 from datetime import date, timedelta
 from django.shortcuts import render
-from .models import Indicador, IndicadorRed, TableColumn
+from .models import Indicador, IndicadorRed, IndicadorPAD, TableColumn
 from .helpers import fetch_latest_indicadors
 
 
 def landing(request):
     indicators = IndicadorRed.objects.all()
-
+    pad_indicators = IndicadorPAD.objects.all()
     # Obtengo los indicadores más recientes, empaquetados en un diccionario
     indicators = fetch_latest_indicadors(indicators)
+    pad_indicators = fetch_latest_indicadors(pad_indicators)
 
-    if not indicators:  # Error, no hay indicadores cargados
+    if not indicators or not pad_indicators:
+        # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
 
     # Valores para mocking, a ser calculados posteriormente
-    documentados_pct = 60
-    descargables_pct = 75
-    items = 0
-    jurisdicciones = 0
+    documentados_pct = pad_indicators['pad_items_documentados_pct']
+    descargables_pct = pad_indicators['pad_items_descarga_pct']
+    items = pad_indicators['pad_compromisos_cant']
+    jurisdicciones = pad_indicators['pad_jurisdicciones_cant']
 
     catalogos_cant = indicators['catalogos_cant']
     datasets_cant = indicators['datasets_cant']
@@ -71,4 +73,10 @@ def red_nodos(request):
 
 
 def compromisos(request):
-    return render(request, 'dashboard/compromisos.html')
+    pad_indicators = IndicadorPAD.objects.all()
+    pad_indicators = fetch_latest_indicadors(pad_indicators)
+
+    context = {
+        'jurisdictions': pad_indicators['pad_jurisdicciones']
+    }
+    return render(request, 'dashboard/compromisos.html', context)

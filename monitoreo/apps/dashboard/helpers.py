@@ -21,7 +21,7 @@ def fetch_latest_indicadors(indicators):
     latest = {}
     for i in indicators:
         if i.indicador_tipo.nombre not in latest:
-            latest[i.indicador_tipo.nombre] = i.indicador_valor
+            latest[i.indicador_tipo.nombre] = json.loads(i.indicador_valor)
     return latest
 
 

@@ -24,10 +24,11 @@ class ReaderTest(unittest.TestCase):
             "dataset"
         )
         error_msg = "El campo {0} no se encuentra en el compromiso {1}"
-        for compromiso in self.reader.read_sheet(SPREADSHEET):
-            for field in fields:
-                self.assertTrue(field in compromiso,
-                                error_msg.format(field, compromiso))
+        for k, compromisos in self.reader.read_sheet(SPREADSHEET).items():
+            for compromiso in compromisos:
+                for field in fields:
+                    self.assertTrue(field in compromiso,
+                                    error_msg.format(field, compromiso))
 
     def test_all_datasets_have_requried_fields(self):
         fields = (
@@ -41,11 +42,12 @@ class ReaderTest(unittest.TestCase):
             "distribution"
         )
         error_msg = "El campo {0} no se encuentra en el dataset {1}"
-        for compromiso in self.reader.read_sheet(SPREADSHEET):
-            for dataset in compromiso['dataset']:
-                for field in fields:
-                    self.assertTrue(field in dataset,
-                                    error_msg.format(field, dataset))
+        for k, compromisos in self.reader.read_sheet(SPREADSHEET).items():
+            for compromiso in compromisos:
+                for dataset in compromiso['dataset']:
+                    for field in fields:
+                        self.assertTrue(field in dataset,
+                                        error_msg.format(field, dataset))
 
     def test_all_distributions_have_required_fields(self):
         fields = (
@@ -56,12 +58,14 @@ class ReaderTest(unittest.TestCase):
         )
 
         error_msg = "El campo {0} no se encuentra en el compromiso {1}"
-        for compromiso in self.reader.read_sheet(SPREADSHEET):
-            for dataset in compromiso['dataset']:
-                for distribution in dataset['distribution']:
-                    for field in fields:
-                        self.assertTrue(field in distribution,
-                                        error_msg.format(field, distribution))
+        for k, compromisos in self.reader.read_sheet(SPREADSHEET).items():
+            for compromiso in compromisos:
+                for dataset in compromiso['dataset']:
+                    for distribution in dataset['distribution']:
+                        for field in fields:
+                            self.assertTrue(field in distribution,
+                                            error_msg.format(field,
+                                                             distribution))
 
     def test_reader_caches_last_result(self):
         # Benchmark de cache: si el resultado es guardado, debería tardar 'muy

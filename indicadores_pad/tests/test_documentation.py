@@ -22,159 +22,189 @@ class DocumentationTest(unittest.TestCase):
         cls.pad = PADIndicators()
 
     def test_documentation_indicators_single_valid_dataset(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'single_valid_dataset.json'),
-                        'dataset_title': u'Título del dataset'
-                    }
-                ]
-            }
-        ]
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'single_valid_dataset.json'),
+                            'dataset_title': u'Título del dataset'
+                        }
+                    ]
+                }
+            ]
+        }
         indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_no_documentados_cant': 0,
-            'pad_items_documentados_cant': 1,
-            'pad_items_documentados_pct': 100
+            'jurisdiccion': {
+                'pad_items_no_documentados_cant': 0,
+                'pad_items_documentados_cant': 1,
+                'pad_items_documentados_pct': 100
+            }
         }
-        self.assertDictContainsSubset(expected, indics)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])
 
     def test_documentation_indicators_single_invalid_dataset(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'single_invalid_dataset.json'),
-                        'dataset_title': u'Título del dataset'
-                    }
-                ]
-            }
-        ]
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'single_invalid_dataset.json'),
+                            'dataset_title': u'Título del dataset'
+                        }
+                    ]
+                }
+            ]
+        }
         indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_no_documentados_cant': 1,
-            'pad_items_documentados_cant': 0,
-            'pad_items_documentados_pct': 0
+            'jurisdiccion': {
+                'pad_items_no_documentados_cant': 1,
+                'pad_items_documentados_cant': 0,
+                'pad_items_documentados_pct': 0
+            }
         }
-        self.assertDictContainsSubset(expected, indics)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])
 
     def test_documentation_indicators_missing_dataset_in_catalog(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'single_valid_dataset.json'),
-                        'dataset_title': u'Dataset que no está en el .json'
-                    }
-                ]
-            }
-        ]
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'single_valid_dataset.json'),
+                            'dataset_title': u'Dataset que no está en el .json'
+                        }
+                    ]
+                }
+            ]
+        }
         indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_no_documentados_cant': 1,
-            'pad_items_documentados_cant': 0,
-            'pad_items_documentados_pct': 0
+            'jurisdiccion': {
+                'pad_items_no_documentados_cant': 1,
+                'pad_items_documentados_cant': 0,
+                'pad_items_documentados_pct': 0
+            }
         }
-        self.assertDictContainsSubset(expected, indics)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])
 
     def test_documentation_indicators_one_valid_one_invalid(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'multiple_datasets.json'),
-                        'dataset_title': u'Título del dataset'
-                    },
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'multiple_datasets.json'),
-                        'dataset_title': u'Título del dataset 2'
-                    },
-                ]
-            }
-        ]
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'multiple_datasets.json'),
+                            'dataset_title': u'Título del dataset'
+                        },
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'multiple_datasets.json'),
+                            'dataset_title': u'Título del dataset 2'
+                        },
+                    ]
+                }
+            ]
+        }
         indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_no_documentados_cant': 1,
-            'pad_items_documentados_cant': 0,
-            'pad_items_documentados_pct': 0
+            'jurisdiccion': {
+                'pad_items_no_documentados_cant': 1,
+                'pad_items_documentados_cant': 0,
+                'pad_items_documentados_pct': 0
+            }
         }
-        self.assertDictContainsSubset(expected, indics)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])
 
     def test_documentation_indicators_several_items(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'single_valid_dataset.json'),
-                        'dataset_title': u'Título del dataset'
-                    }
-                ]
-            },
-            {
-                'dataset': [
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'single_valid_dataset.json'),
-                        'dataset_title': u'Dataset que no está en el .json'
-                    }
-                ]
-            }
-        ]
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'single_valid_dataset.json'),
+                            'dataset_title': u'Título del dataset'
+                        }
+                    ]
+                },
+                {
+                    'dataset': [
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'single_valid_dataset.json'),
+                            'dataset_title': u'Dataset que no está en el .json'
+                        }
+                    ]
+                }
+            ]
+        }
         indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_no_documentados_cant': 1,
-            'pad_items_documentados_cant': 1,
-            'pad_items_documentados_pct': 50
+            'jurisdiccion': {
+                'pad_items_no_documentados_cant': 1,
+                'pad_items_documentados_cant': 1,
+                'pad_items_documentados_pct': 50
+            }
         }
-        self.assertDictContainsSubset(expected, indics)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])
 
     def test_documentation_indicators_several_items_different_catalogs(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'single_valid_dataset.json'),
-                        'dataset_title': u'Título del dataset'
-                    }
-                ]
-            },
-            {
-                'dataset': [
-                    {
-                        'catalog_datajson_url':
-                            os.path.join(self.SAMPLES_DIR,
-                                         'single_invalid_dataset.json'),
-                        'dataset_title': u'Título del dataset'
-                    }
-                ]
-            }
-        ]
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'single_valid_dataset.json'),
+                            'dataset_title': u'Título del dataset'
+                        }
+                    ]
+                },
+                {
+                    'dataset': [
+                        {
+                            'catalog_datajson_url':
+                                os.path.join(self.SAMPLES_DIR,
+                                             'single_invalid_dataset.json'),
+                            'dataset_title': u'Título del dataset'
+                        }
+                    ]
+                }
+            ]
+        }
         indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_no_documentados_cant': 1,
-            'pad_items_documentados_cant': 1,
-            'pad_items_documentados_pct': 50
+            'jurisdiccion': {
+                'pad_items_no_documentados_cant': 1,
+                'pad_items_documentados_cant': 1,
+                'pad_items_documentados_pct': 50
+            }
         }
-        self.assertDictContainsSubset(expected, indics)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])

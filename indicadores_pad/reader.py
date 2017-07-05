@@ -6,70 +6,40 @@ import google_drive
 
 class SpreadsheetReader:
     # Valores numéricos de las filas en la hoja de distribuciones del PAD
-    JURISDICCION = 0
+    JURISDICCION = 2
     COMPROMISO = 1
     DATAJSON = 8
     DATASET = 9
     DISTRIBUCION = 13
 
     def __init__(self):
-        self.compromisos = []
+        self.jurisdicciones = []
         self.sheet = ""
 
     def read_sheet(self, sheet_id):
         """Lee la hoja completa del estado del Plan de Apertura de datos,
-        y la parsea en una lista de diccionarios de Python:
-            [
-                {
-                    "jurisdiccion_id": ...
-                    "jurisdiccion_nombre": ...
-                    "compromiso_id": ...
-                    "compromiso_nombre": ...
-                    "compromiso_fecha": ...
-                    "compromiso_actualizacion": ...
-                    "dataset": [
-                        {
-                            "catalog_homepage": ...
-                            "catalog_title": ...
-                            "catalog_datajson_url": ...  # URL a un data.json
-                            "dataset_title": ...,
-                            "dataset_landingPage": ...
-                            "dataset_license": ...
-                            "dataset_accrualPeriodicity": ...
-                            "distribution": [
-                                {
-                                    "distribution_downloadURL": ...
-                                    "distribution_format": ...
-                                    "distribution_accessURL": ...
-                                    "distribution_title": ...
-                                }, ...
-                            ],
-                        }, ...
-                    ]
-                },
-                ...
-            ]
+        y la parsea en diccionario de Python.
 
         Args:
             sheet_id (str): ID de una hoja de google drive con los valores del
                 PAD
 
         Returns:
-            list: lista con el formato especificado
+            dict: diccionario con el formato especificado
         """
 
-        if isinstance(sheet_id, list):
+        if isinstance(sheet_id, dict):
             return sheet_id
         if isinstance(sheet_id, (str, unicode)):
             if self.sheet == sheet_id:  # Ya fue leída la misma hoja
-                return self.compromisos
+                return self.jurisdicciones
             sheet = google_drive.get_sheet(sheet_id, "pad_distribuciones")
             self.sheet = sheet_id
         else:
-            raise TypeError('Valor de "sheet" inválido. Se esperaba tipo list o'
+            raise TypeError('Valor de "sheet" inválido. Se esperaba tipo dict o'
                             ' str, recibido {}'.format(type(sheet_id)))
 
-        self.compromisos = []
+        self.jurisdicciones = {}
         # compromisos: claves los IDs de cada compromiso, valores una lista
         # de los data.json asociados a sus distribuciones
         header = sheet[0]
@@ -78,8 +48,13 @@ class SpreadsheetReader:
             if len(row) <= self.DATASET:
                 continue
 
+            jurisdiccion_nombre = row[self.JURISDICCION]
+            if jurisdiccion_nombre not in self.jurisdicciones:
+                self.jurisdicciones[jurisdiccion_nombre] = []
+
             compromiso_id = row[self.COMPROMISO]
-            compromiso = self.get_or_create_compromiso(compromiso_id)
+            compromiso = self.get_or_create_compromiso(compromiso_id,
+                                                       jurisdiccion_nombre)
 
             dataset_title = row[self.DATASET]
             dataset = self.get_or_create_dataset(dataset_title, compromiso)
@@ -97,7 +72,7 @@ class SpreadsheetReader:
                     dataset[name] = value
                 else:  # Valores de 'distribution'
                     distribution[name] = value
-        return self.compromisos
+        return self.jurisdicciones
 
     @staticmethod
     def get_or_create_dataset(dataset_title, compromiso):
@@ -128,7 +103,7 @@ class SpreadsheetReader:
         compromiso['dataset'].append(dataset)
         return dataset
 
-    def get_or_create_compromiso(self, compromiso_id):
+    def get_or_create_compromiso(self, compromiso_id, jurisdiccion):
         """Devuelve el compromiso con 'compromiso_id' en la lista 'compromisos',
         o de no existir, lo crea y lo agrega a 'compromisos'.
         Args:
@@ -137,7 +112,7 @@ class SpreadsheetReader:
         Returns:
             dict: compromiso con el campo compromiso_id correspondiente
         """
-        for compromiso in self.compromisos:
+        for compromiso in self.jurisdicciones[jurisdiccion]:
             if compromiso['compromiso_id'] == compromiso_id:
                 return compromiso
 
@@ -145,7 +120,7 @@ class SpreadsheetReader:
             'compromiso_id': compromiso_id,
             'dataset': []
         }
-        self.compromisos.append(compromiso)
+        self.jurisdicciones[jurisdiccion].append(compromiso)
         return compromiso
 
 

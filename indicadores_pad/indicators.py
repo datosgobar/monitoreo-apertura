@@ -2,6 +2,7 @@
 import requests
 from pydatajson import DataJson, parse_repeating_time_interval
 from indicadores_pad.reader import SpreadsheetReader
+
 # Valores numéricos de las filas en la hoja de distribuciones del PAD
 COMPROMISO = 1
 DATAJSON = 8
@@ -34,22 +35,48 @@ class PADIndicators:
             dict: diccionario con los indicadores como claves
         """
 
-        sheet = self.reader.read_sheet(spreadsheet_id)
         indicators = {}
-        indicators.update(self.generate_documentation_indicators(sheet))
-        indicators.update(self.generate_license_indicators(sheet))
-        indicators.update(self.generate_download_indicators(sheet))
-        indicators.update(self.generate_frequency_indicator(sheet))
-        indicators.update(self.generate_format_indicator(sheet))
-        indicators.update(self.generate_update_indicators(sheet))
+        sheet = self.reader.read_sheet(spreadsheet_id)
+        for jurisdiccion, compromisos in sheet.items():
+            indicators[jurisdiccion] = {}
+
+            indicators[jurisdiccion].update(
+                self.generate_documentation_indicators(compromisos))
+            indicators[jurisdiccion].update(
+                self.generate_license_indicators(compromisos))
+            indicators[jurisdiccion].update(
+                self.generate_download_indicators(compromisos))
+            indicators[jurisdiccion].update(
+                self.generate_frequency_indicator(compromisos))
+            indicators[jurisdiccion].update(
+                self.generate_format_indicator(compromisos))
+            indicators[jurisdiccion].update(
+                self.generate_update_indicators(compromisos))
+            # indicators.update(self.generate_count_indicators(sheet))
+
         return indicators
 
-    def generate_update_indicators(self, sheet):
+    @staticmethod
+    def generate_count_indicators(sheet):
+        """Genera dos indicadores: cantidad de items y de jurisdicciones de 
+        la planilla entera"""
+
+        distribution_count = 0
+        for compromiso in sheet:
+            for dataset in compromiso.get('dataset', []):
+                distribution_count += len(dataset.get('distribution', []))
+
+        return {
+            'pad_compromisos_cant': len(sheet),
+            'pad_distribuciones_cant': distribution_count
+        }
+
+    def generate_update_indicators(self, compromisos):
         """Genera los indicadores de actualización."""
 
         count = 0
         updated = 0
-        for compromiso in sheet:
+        for compromiso in compromisos:
             count += 1
             if self.compromiso_is_updated(compromiso):
                 updated += 1
@@ -122,18 +149,18 @@ class PADIndicators:
         return periodicity <= other
 
     @staticmethod
-    def generate_format_indicator(sheet):
+    def generate_format_indicator(compromisos):
         """Genera el indicador de formatos: un diccionario que cuenta los
         formatos presentes de las distribuciones dentro del PAD
         
         Args:
-            sheet(list): lista de dicts de una spreadsheet ya parseada
+            compromisos (list): lista de dicts de una spreadsheet ya parseada
         Returns:
             dict: Diccionario con los formatos como claves y la cantidad de
                 cada uno como valores
         """
         formats = {}
-        for compromiso in sheet:
+        for compromiso in compromisos:
             for dataset in compromiso.get('dataset', []):
                 for distribution in dataset.get('distribution', []):
                     distrib_format = distribution.get('distribution_format')
@@ -145,20 +172,20 @@ class PADIndicators:
         }
 
     @staticmethod
-    def generate_frequency_indicator(sheet):
+    def generate_frequency_indicator(compromisos):
         """Genera el indicador de frecuencia: Un diccionario que cuenta las
         periodicidades de actualización de todas las distribuciones dentro del
         PAD
         
         Args:
-            sheet (list): lista de dicts de una spreadsheet ya parseada
+            compromisos (list): lista de dicts de una spreadsheet ya parseada
         Returns:
             dict: Diccionario con las frecuencias como claves y la cantidad de
                 cada una como valores
         """
 
         frequencies = {}
-        for compromiso in sheet:
+        for compromiso in compromisos:
             for dataset in compromiso.get('dataset', []):
                 periodicity = dataset.get('dataset_accrualPeriodicity')
                 if periodicity:
@@ -169,20 +196,20 @@ class PADIndicators:
             'pad_datasets_frecuencia_cant': frequencies
         }
 
-    def generate_download_indicators(self, sheet):
+    def generate_download_indicators(self, compromisos):
         """Genera los indicadores de descarga. Un compromiso se considera como
         descargable si todas sus distribuciones tienen un link válido de
         descarga en el campo 'distribution_downloadURL
         
         Args:
-            sheet (list): lista de dicts de una spreadsheet ya parseada
+            compromisos (list): lista de dicts de una spreadsheet ya parseada
         Returns:
             dict: diccionario con indicadores de compromisos descargables
                 (cantidad y porcentaje)
         """
         count = 0
         downloadable = 0
-        for compromiso in sheet:
+        for compromiso in compromisos:
             count += 1
             if self.compromiso_is_downloadable(compromiso):
                 downloadable += 1
@@ -226,20 +253,20 @@ class PADIndicators:
                     return False
         return True
 
-    def generate_license_indicators(self, sheet):
+    def generate_license_indicators(self, compromisos):
         """Genera los indicadores de licencia. Un compromiso es
         considerado como licenciado cuando todos sus datasets asociadas 
         tienen algún valor en el campo dataset_license
         
         Args:
-            sheet (list): lista de dicts de una spreadsheet ya parseada
+            compromisos (list): lista de dicts de una spreadsheet ya parseada
         Returns:
             dict: diccionario con indicadores de compromisos licenciados
                 (cantidad y porcentaje)
         """
         count = 0
         licensed = 0
-        for compromiso in sheet:
+        for compromiso in compromisos:
             count += 1
             if self.compromiso_is_licensed(compromiso):
                 licensed += 1
@@ -272,7 +299,7 @@ class PADIndicators:
                 return False
         return True
 
-    def generate_documentation_indicators(self, sheet):
+    def generate_documentation_indicators(self, compromisos):
         """Genera los indicadores de documentación. Un compromiso es
         considerado como documentado cuando:
             1. todas sus distribuciones tienen asociado un data.json
@@ -281,14 +308,14 @@ class PADIndicators:
             3. la metadata de los datasets del compromiso en el data.json pasan
             la validación de la librería pydatajson
         Args:
-            sheet (list): lista de dicts de una spreadsheet ya parseada
+            compromisos (list): lista de dicts de compromisos ya parseada
         Returns:
             dict: diccionario con indicadores de compromisos documentados
                 (cantidad y porcentaje)
         """
         count = 0
         documented = 0
-        for compromiso in sheet:
+        for compromiso in compromisos:
             count += 1
             if self.compromiso_is_documented(compromiso):
                 documented += 1

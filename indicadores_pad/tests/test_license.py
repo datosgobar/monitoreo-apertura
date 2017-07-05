@@ -12,89 +12,111 @@ class LicenseTest(unittest.TestCase):
         self.pad = PADIndicators()
 
     def test_single_item_licensed(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'dataset_license': 'licencia válida'
-                    }
-                ]
-            }
-        ]
-        actual = self.pad.generate_pad_indicators(spreadsheet)
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'dataset_license': 'licencia válida'
+                        }
+                    ]
+                }
+            ]
+        }
+        indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_licencia_cant': 1,
-            'pad_items_sin_licencia_cant': 0,
-            'pad_items_licencia_pct': 100
+            'jurisdiccion': {
+                'pad_items_licencia_cant': 1,
+                'pad_items_sin_licencia_cant': 0,
+                'pad_items_licencia_pct': 100
+            }
         }
-        self.assertDictContainsSubset(expected, actual)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])
 
     def test_single_item_empty_license_field(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'dataset_license': ''
-                    }
-                ]
-            }
-        ]
-        actual = self.pad.generate_pad_indicators(spreadsheet)
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'dataset_license': ''
+                        }
+                    ]
+                }
+            ]
+        }
+        indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_licencia_cant': 0,
-            'pad_items_sin_licencia_cant': 1,
-            'pad_items_licencia_pct': 0
+            'jurisdiccion': {
+                'pad_items_licencia_cant': 0,
+                'pad_items_sin_licencia_cant': 1,
+                'pad_items_licencia_pct': 0
+            }
         }
-        self.assertDictContainsSubset(expected, actual)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])
 
     def test_single_item_missing_license_field(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                    }
-                ]
-            }
-        ]
-        actual = self.pad.generate_pad_indicators(spreadsheet)
+        spreadsheet = {
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                        }
+                    ]
+                }
+            ]
+        }
+        indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_licencia_cant': 0,
-            'pad_items_sin_licencia_cant': 1,
-            'pad_items_licencia_pct': 0
+            'jurisdiccion': {
+                'pad_items_licencia_cant': 0,
+                'pad_items_sin_licencia_cant': 1,
+                'pad_items_licencia_pct': 0
+            }
         }
-        self.assertDictContainsSubset(expected, actual)
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])
 
     def test_several_items(self):
-        spreadsheet = [
-            {
-                'dataset': [
-                    {
-                        'dataset_license': ''
-                    }
-                ]
-            },
-            {
-                'dataset': [
-                    {
-                        'dataset_license': 'licencia válida'
-                    }
-                ]
-            },
-            {
-                'dataset': [
-                    {
-                    }
-                ]
-            }
-        ]
-        actual = self.pad.generate_pad_indicators(spreadsheet)
+        spreadsheet = {
+
+            'jurisdiccion': [
+                {
+                    'dataset': [
+                        {
+                            'dataset_license': ''
+                        }
+                    ]
+                },
+                {
+                    'dataset': [
+                        {
+                            'dataset_license': 'licencia válida'
+                        }
+                    ]
+                },
+                {
+                    'dataset': [
+                        {
+                        }
+                    ]
+                }
+            ]
+        }
+        indics = self.pad.generate_pad_indicators(spreadsheet)
 
         expected = {
-            'pad_items_licencia_cant': 1,
-            'pad_items_sin_licencia_cant': 2,
-            'pad_items_licencia_pct': 33.33
+            'jurisdiccion': {
+                'pad_items_licencia_cant': 1,
+                'pad_items_sin_licencia_cant': 2,
+                'pad_items_licencia_pct': 33.33
+            }
         }
-        self.assertDictContainsSubset(expected, actual)
+
+        for k, v in expected.items():
+            self.assertDictContainsSubset(v, indics[k])

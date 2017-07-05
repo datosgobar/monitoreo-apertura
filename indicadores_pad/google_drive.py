@@ -15,7 +15,6 @@ la línea de comandos.
 from __future__ import print_function
 
 import os
-import argparse
 import httplib2
 
 from googleapiclient import discovery
@@ -23,7 +22,6 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
-FLAGS = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
@@ -58,7 +56,7 @@ def get_credentials():
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE,
                                               SCOPES)
         flow.user_agent = APPLICATION_NAME
-        credentials = tools.run_flow(flow, store, FLAGS)
+        credentials = tools.run_flow(flow, store)
         print('Generando nuevas credenciales en ' + credential_path)
     return credentials
 

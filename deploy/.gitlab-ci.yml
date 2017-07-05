@@ -1,0 +1,40 @@
+image: gitlab.devartis.com:4567/devops/image-utils:python-base
+stages:
+  - build
+
+variables:
+  GITLAB_REGISTRY: gitlab.devartis.com:4567
+  PROJECT_GROUP: devops
+  PROJECT_REPO: simple-deploy
+
+.build_image_template: &build_definition
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  variables:
+  before_script:
+    - docker info
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $GITLAB_REGISTRY
+    - docker build -f $DOCKER_FILE -t $GITLAB_REGISTRY/$PROJECT_GROUP/$PROJECT_REPO:$IMAGE_TAG .
+    - docker push $GITLAB_REGISTRY/$PROJECT_GROUP/$PROJECT_REPO:$IMAGE_TAG
+
+build_lastest:
+  <<: *build_definition
+  only:
+    - master
+  variables:
+    DOCKER_FILE: Dockerfile
+    IMAGE_TAG: lastest
+
+build_version:
+  <<: *build_definition
+  only:
+    - branches
+  except:
+    - master
+  variables:
+    DOCKER_FILE: Dockerfile
+    IMAGE_TAG: $CI_BUILD_REF_NAME
+

@@ -1,0 +1,22 @@
+---
+
+- name: Add run indicadores script
+  template:
+    src: run_indicadores.sh
+    dest: /usr/local/bin/run_indicadores.sh
+    mode: 0770
+    owner: "{{ application_user }}"
+    group: "{{ application_group }}"
+  become_user: "root"
+  become_method: sudo
+  become: yes
+
+- name: Setup cron
+  cron:
+    name: "Fetch indicadores"
+    minute: "0"
+    hour: "05"
+    job: "bash /usr/local/bin/run_indicadores.sh"
+  become_user: "{{ application_user }}"
+  become_method: sudo
+  become: yes

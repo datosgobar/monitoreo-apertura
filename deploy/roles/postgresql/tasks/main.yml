@@ -1,0 +1,35 @@
+---
+
+# Dependencies
+- name: Install Postgresql database
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - python-psycopg2 # For ansible postgresql module
+    - python3-psycopg2
+
+# File structures
+- name: Create postgresql directories
+  file:
+    path: "{{ item }}postgres"
+    state: directory
+    owner: "{{ application_user }}"
+    group: "postgres"
+    mode: u=rwx,g=rwx
+  with_items:
+    - "{{ sockets_dir }}"
+    - "{{ logs_dir }}"
+    - "{{ config_dir }}"
+    - "{{ bins_dir }}"
+
+- include: ensure_database.yml
+
+# Systemd unit
+- name: Enable postgresql systemd unit
+  service: 
+    state: restarted
+    name: postgresql.service
+    enabled: yes

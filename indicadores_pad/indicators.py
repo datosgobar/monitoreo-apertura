@@ -73,6 +73,32 @@ class PADIndicators:
         network_indicators = {}
         for indics in indicators.values():
             network_indicators = add_dicts(network_indicators, indics)
+
+        # Recalculo los porcentajes
+        doc_total = network_indicators['pad_items_documentados_cant'] + \
+            network_indicators['pad_items_no_documentados_cant']
+        doc_pct = float(network_indicators['pad_items_documentados_cant']) / \
+            doc_total * 100
+        network_indicators['pad_items_documentados_pct'] = round(doc_pct, 2)
+
+        lic_total = network_indicators['pad_items_licencia_cant'] + \
+            network_indicators['pad_items_sin_licencia_cant']
+        lic_pct = float(network_indicators['pad_items_licencia_cant']) / \
+            lic_total * 100
+        network_indicators['pad_items_licencia_pct'] = round(lic_pct, 2)
+
+        down_total = network_indicators['pad_items_descarga_cant'] + \
+            network_indicators['pad_items_no_descarga_cant']
+        down_pct = float(network_indicators['pad_items_descarga_cant']) / \
+            down_total * 100
+        network_indicators['pad_items_descarga_pct'] = round(down_pct, 2)
+
+        up_total = network_indicators['pad_items_actualizados_cant'] + \
+            network_indicators['pad_items_desactualizados_cant']
+        up_pct = float(network_indicators['pad_items_actualizados_cant']) / \
+            up_total * 100
+        network_indicators['pad_items_actualizados_pct'] = round(up_pct, 2)
+
         return network_indicators
 
     @staticmethod

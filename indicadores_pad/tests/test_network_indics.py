@@ -15,9 +15,9 @@ class NetworkIndicators(unittest.TestCase):
             'jurisdiccion': [
                 {
                     'compromiso_actualizacion': 'R/P1Y',
-                    'dataset_license': 'licencia válida',
                     'dataset': [
                         {
+                            'dataset_license': 'licencia válida',
                             'distribution': [
                                 {
                                     'distribution_downloadURL':
@@ -52,9 +52,9 @@ class NetworkIndicators(unittest.TestCase):
             'jurisdiccion': [
                 {
                     'compromiso_actualizacion': 'R/P1Y',
-                    'dataset_license': 'licencia válida',
                     'dataset': [
                         {
+                            'dataset_license': 'licencia válida',
                             'distribution': [
                                 {
                                     'distribution_downloadURL':
@@ -68,6 +68,7 @@ class NetworkIndicators(unittest.TestCase):
                             'dataset_accrualPeriodicity': 'R/P1M'
                         },
                         {
+                            'dataset_license': 'licencia válida',
                             'distribution': [
                                 {
                                     'distribution_downloadURL': ''
@@ -80,16 +81,16 @@ class NetworkIndicators(unittest.TestCase):
             'otra_jurisdiccion': [
                 {
                     'compromiso_actualizacion': 'R/P1Y',
-                    'dataset_license': 'licencia válida',
                     'dataset': [
                         {
+                            'dataset_license': '',
                             'distribution': [
                                 {
                                     'distribution_downloadURL':
                                         'http://datos.gob.ar/data.json'
                                 }
                             ],
-                            'dataset_title': u"Título del dataset",
+                            'dataset_title': u"Dataset que no está en el .json",
                             'catalog_datajson_url':
                                 os.path.join(self.SAMPLES_DIR,
                                              'single_valid_dataset.json'),
@@ -118,3 +119,12 @@ class NetworkIndicators(unittest.TestCase):
                 expected[name] = expected.get(name, 0) + value
 
         self.assertDictContainsSubset(expected, network_indics)
+
+        self.assertEqual(network_indics['pad_items_documentados_pct'],
+                         0)
+        self.assertEqual(network_indics['pad_items_licencia_pct'],
+                         50)
+        self.assertEqual(network_indics['pad_items_actualizados_pct'],
+                         50)
+        self.assertEqual(network_indics['pad_items_descarga_pct'],
+                         0)

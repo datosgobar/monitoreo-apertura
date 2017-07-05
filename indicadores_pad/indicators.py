@@ -72,7 +72,7 @@ class PADIndicators:
         """
         network_indicators = {}
         for indics in indicators.values():
-            add_dicts(network_indicators, indics)
+            network_indicators = add_dicts(network_indicators, indics)
         return network_indicators
 
     @staticmethod

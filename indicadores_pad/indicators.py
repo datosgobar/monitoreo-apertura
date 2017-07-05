@@ -52,9 +52,28 @@ class PADIndicators:
                 self.generate_format_indicator(compromisos))
             indicators[jurisdiccion].update(
                 self.generate_update_indicators(compromisos))
-            # indicators.update(self.generate_count_indicators(sheet))
 
-        return indicators
+        # Indicadores de la planilla entera
+        network_indics = self.generate_network_indicators(indicators)
+        network_indics.update(self.generate_count_indicators(sheet))
+        return indicators, network_indics
+
+    @staticmethod
+    def generate_network_indicators(indicators):
+        """Suma los indicadores de cada jurisdicción para generar los
+        indicadores agregados de la planilla entera del PAD.
+        
+        Args:
+            indicators (dict): Diccionario con los indicadores desagregados
+                calculados con los métodos 'generate_'
+        
+        Returns:
+            dict: diccionario con los indicadores sumados
+        """
+        network_indicators = {}
+        for indics in indicators.values():
+            add_dicts(network_indicators, indics)
+        return network_indicators
 
     @staticmethod
     def generate_count_indicators(sheet):
@@ -62,9 +81,10 @@ class PADIndicators:
         la planilla entera"""
 
         distribution_count = 0
-        for compromiso in sheet:
-            for dataset in compromiso.get('dataset', []):
-                distribution_count += len(dataset.get('distribution', []))
+        for jurisdiccion in sheet.values():
+            for compromiso in jurisdiccion:
+                for dataset in compromiso.get('dataset', []):
+                    distribution_count += len(dataset.get('distribution', []))
 
         return {
             'pad_compromisos_cant': len(sheet),
@@ -368,3 +388,26 @@ class PADIndicators:
                 return False
 
         return True
+
+
+def add_dicts(one_dict, other_dict):
+    """Suma clave a clave los dos diccionarios. Si algún valor es un
+    diccionario, llama recursivamente a la función. Ambos diccionarios deben
+    tener exactamente las mismas claves, y los valores asociados deben ser
+    sumables, o diccionarios.
+
+    Args:
+        one_dict (dict)
+        other_dict (dict)
+
+    Returns:
+        dict: resultado de la suma
+    """
+    result = other_dict.copy()
+    for k, v in one_dict.items():
+        if isinstance(v, dict):
+            result[k] = add_dicts(v, other_dict.get(k, {}))
+        else:
+            result[k] = result.get(k, 0) + v
+
+    return result

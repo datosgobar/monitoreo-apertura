@@ -26,7 +26,7 @@ class DownloadTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_descarga_cant': 1,
@@ -57,7 +57,7 @@ class DownloadTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_descarga_cant': 0,
@@ -84,7 +84,7 @@ class DownloadTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_descarga_cant': 0,
@@ -120,7 +120,7 @@ class DownloadTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_descarga_cant': 0,
@@ -160,7 +160,7 @@ class DownloadTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_descarga_cant': 1,

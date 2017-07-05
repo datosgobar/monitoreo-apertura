@@ -36,7 +36,7 @@ class DocumentationTest(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
 
         expected = {
             'jurisdiccion': {
@@ -63,7 +63,7 @@ class DocumentationTest(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
 
         expected = {
             'jurisdiccion': {
@@ -90,7 +90,7 @@ class DocumentationTest(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
 
         expected = {
             'jurisdiccion': {
@@ -123,7 +123,7 @@ class DocumentationTest(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
 
         expected = {
             'jurisdiccion': {
@@ -160,7 +160,7 @@ class DocumentationTest(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
 
         expected = {
             'jurisdiccion': {
@@ -197,7 +197,7 @@ class DocumentationTest(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
 
         expected = {
             'jurisdiccion': {

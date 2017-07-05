@@ -24,7 +24,7 @@ class UpdatedTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_actualizados_cant': 1,
@@ -49,7 +49,7 @@ class UpdatedTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_actualizados_cant': 1,
@@ -77,7 +77,7 @@ class UpdatedTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_actualizados_cant': 1,
@@ -109,7 +109,7 @@ class UpdatedTest(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_actualizados_cant': 2,
@@ -139,7 +139,7 @@ class UpdatedTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_actualizados_cant': 1,
@@ -169,7 +169,7 @@ class UpdatedTest(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_items_actualizados_cant': 0,

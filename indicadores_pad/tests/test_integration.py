@@ -11,7 +11,7 @@ class PADTest(unittest.TestCase):
         self.pad = PADIndicators()
 
     def test_count_indicators_add_up_to_the_same(self):
-        indics = self.pad.generate_pad_indicators(self.spreadsheet)
+        indics = self.pad.generate_pad_indicators(self.spreadsheet)[0]
         for k, jurisdiccion in indics.items():
             doc_count = jurisdiccion['pad_items_documentados_cant'] + \
                 jurisdiccion['pad_items_no_documentados_cant']

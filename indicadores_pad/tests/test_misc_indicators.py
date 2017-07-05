@@ -21,7 +21,7 @@ class FrequencyIndicator(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_datasets_frecuencia_cant': {
@@ -57,7 +57,7 @@ class FrequencyIndicator(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_datasets_frecuencia_cant': {
@@ -103,7 +103,7 @@ class FrequencyIndicator(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_datasets_frecuencia_cant': {
@@ -130,7 +130,7 @@ class FrequencyIndicator(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_datasets_frecuencia_cant': {
@@ -163,7 +163,7 @@ class FormatIndicator(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_distributions_formatos_cant': {
@@ -196,7 +196,7 @@ class FormatIndicator(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_distributions_formatos_cant': {
@@ -246,7 +246,7 @@ class FormatIndicator(unittest.TestCase):
                 }
             ]
         }
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_distributions_formatos_cant': {
@@ -278,7 +278,7 @@ class FormatIndicator(unittest.TestCase):
             ]
         }
 
-        indics = self.pad.generate_pad_indicators(spreadsheet)
+        indics = self.pad.generate_pad_indicators(spreadsheet)[0]
         expected = {
             'jurisdiccion': {
                 'pad_distributions_formatos_cant': {

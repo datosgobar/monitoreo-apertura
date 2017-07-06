@@ -44,7 +44,7 @@ class Indicador(models.Model):
 class IndicadorRed(models.Model):
     class Meta:
         # Nombre en plural para el admin panel de Django
-        verbose_name_plural = "Indicadores"
+        verbose_name_plural = "Indicadores agregados"
         get_latest_by = 'fecha'
 
     fecha = models.DateField()

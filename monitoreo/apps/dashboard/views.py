@@ -10,20 +10,19 @@ def landing(request):
     # Obtengo los indicadores más recientes, empaquetados en un diccionario
     indicators = fetch_latest_indicadors(indicators)
 
-    if not indicators:
-        # Error, no hay indicadores cargados
+    if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
 
     # Valores para mocking, a ser calculados posteriormente
-    documentados_pct = indicators['pad_items_documentados_pct']
-    descargables_pct = indicators['pad_items_descarga_pct']
+    documentados_pct = int(indicators['pad_items_documentados_pct'])
+    descargables_pct = int(indicators['pad_items_descarga_pct'])
     items = indicators['pad_compromisos_cant']
     jurisdicciones = indicators['pad_jurisdicciones_cant']
 
     catalogos_cant = indicators['catalogos_cant']
     datasets_cant = indicators['datasets_cant']
-    ok_pct = indicators['datasets_meta_ok_pct']
-    actualizados_pct = indicators['datasets_actualizados_pct']
+    ok_pct = int(indicators['datasets_meta_ok_pct'])
+    actualizados_pct = int(indicators['datasets_actualizados_pct'])
 
     context = {
         'items': items,

@@ -16,6 +16,7 @@ from __future__ import print_function
 
 import os
 import httplib2
+from django.conf import settings
 
 from googleapiclient import discovery
 from oauth2client import client
@@ -26,7 +27,7 @@ from oauth2client.file import Storage
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
-CLIENT_SECRET_FILE = 'scripts/drive/client_secret_sheets.json'
+CLIENT_SECRET_FILE = settings.GOOGLE_DRIVE_CREDENTIALS
 APPLICATION_NAME = 'Monitoreo PAD'
 CREDENTIALS_FILE = {
     "drive": 'monitoreo-pad-drive.json',

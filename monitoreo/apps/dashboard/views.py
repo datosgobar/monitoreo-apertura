@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetime import date, timedelta
 from django.shortcuts import render
 from .models import Indicador, IndicadorRed, TableColumn
 from .helpers import fetch_latest_indicadors
@@ -36,14 +37,32 @@ def landing(request):
 
 
 def red_nodos(request):
-    indicators = Indicador.objects.all().filter(indicador_tipo__tipo='RED').\
-        order_by('-fecha')
+    return populate_table(request, 'RED')
+
+
+def compromisos(request):
+    return populate_table(request, 'PAD')
+
+
+def populate_table(request, tipo):
+    today = date.today()
+    indicators = Indicador.objects.all().filter(indicador_tipo__tipo=tipo,
+                                                fecha__day=today.day,
+                                                fecha__month=today.month,
+                                                fecha__year=today.year)
+
+    if not indicators:
+        today = today - timedelta(days=1)
+        indicators = Indicador.objects.all().filter(indicador_tipo__tipo=tipo,
+                                                    fecha__day=today.day,
+                                                    fecha__month=today.month,
+                                                    fecha__year=today.year)
 
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html')
 
     catalogs = {}
-    columns = TableColumn.objects.all()
+    columns = TableColumn.objects.all().filter(indicator__tipo=tipo)
     indicator_names = [column.indicator.nombre for column in columns]
 
     for indicator in indicators:
@@ -65,19 +84,4 @@ def red_nodos(request):
         'catalogs': catalogs
     }
 
-    return render(request, 'dashboard/nodos.html', context)
-
-
-def compromisos(request):
-    indicators = Indicador.objects.all().filter(indicador_tipo__tipo='PAD').\
-        order_by('-fecha')
-    indicators = fetch_latest_indicadors(indicators)
-    jurisdicciones = []
-    for name, value in indicators.items():
-        if name not in jurisdicciones:
-            jurisdicciones.append(name)
-
-    context = {
-        'jurisdictions': jurisdicciones
-    }
-    return render(request, 'dashboard/compromisos.html', context)
+    return render(request, 'dashboard/detalle.html', context)

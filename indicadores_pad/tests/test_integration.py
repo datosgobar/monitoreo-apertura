@@ -9,10 +9,11 @@ class PADTest(unittest.TestCase):
 
     def setUp(self):
         self.pad = PADIndicators()
+        self.indics, self.network_indics = \
+            self.pad.generate_pad_indicators(self.spreadsheet)
 
     def test_count_indicators_add_up_to_the_same(self):
-        indics = self.pad.generate_pad_indicators(self.spreadsheet)[0]
-        for k, jurisdiccion in indics.items():
+        for k, jurisdiccion in self.indics.items():
             doc_count = jurisdiccion['pad_items_documentados_cant'] + \
                 jurisdiccion['pad_items_no_documentados_cant']
 
@@ -31,3 +32,13 @@ class PADTest(unittest.TestCase):
 
             self.assertEqual(doc_count, download_count)
 
+    def test_count_indicators(self):
+        jurisdictions = self.network_indics['pad_jurisdicciones_cant']
+        compromisos = self.network_indics['pad_compromisos_cant']
+
+        compromisos_actual = 0
+        for indicators in self.indics.values():
+            compromisos_actual += indicators['pad_compromisos_cant']
+
+        self.assertEqual(len(self.indics), jurisdictions)
+        self.assertEqual(compromisos, compromisos_actual)

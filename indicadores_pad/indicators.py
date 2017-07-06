@@ -53,6 +53,9 @@ class PADIndicators:
             indicators[jurisdiccion].update(
                 self.generate_update_indicators(compromisos))
 
+            indicators[jurisdiccion].update({
+                'pad_compromisos_cant': len(compromisos)
+            })
         # Indicadores de la planilla entera
         network_indics = self.generate_network_indicators(indicators)
         network_indics.update(self.generate_count_indicators(sheet))
@@ -107,13 +110,16 @@ class PADIndicators:
         la planilla entera"""
 
         distribution_count = 0
+        compromisos_count = 0
         for jurisdiccion in sheet.values():
             for compromiso in jurisdiccion:
+                compromisos_count += 1
                 for dataset in compromiso.get('dataset', []):
                     distribution_count += len(dataset.get('distribution', []))
 
         return {
-            'pad_compromisos_cant': len(sheet),
+            'pad_jurisdicciones_cant': len(sheet),
+            'pad_compromisos_cant': compromisos_count,
             'pad_distribuciones_cant': distribution_count
         }
 

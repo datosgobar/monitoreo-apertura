@@ -1,5 +1,4 @@
 # coding=utf-8
-from datetime import date, timedelta
 from django.shortcuts import render
 from .models import Indicador, IndicadorRed, TableColumn
 from .helpers import fetch_latest_indicadors
@@ -13,7 +12,6 @@ def landing(request):
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
 
-    # Valores para mocking, a ser calculados posteriormente
     documentados_pct = int(indicators['pad_items_documentados_pct'])
     descargables_pct = int(indicators['pad_items_descarga_pct'])
     items = indicators['pad_compromisos_cant']
@@ -38,8 +36,8 @@ def landing(request):
 
 
 def red_nodos(request):
-    indicators = Indicador.objects.all().filter(indicador_tipo__tipo="RED").\
-        order_by("-fecha")
+    indicators = Indicador.objects.all().filter(indicador_tipo__tipo='RED').\
+        order_by('-fecha')
 
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html')
@@ -71,8 +69,8 @@ def red_nodos(request):
 
 
 def compromisos(request):
-    indicators = Indicador.objects.all().filter(indicador_tipo__tipo="PAD").\
-        order_by("-fecha")
+    indicators = Indicador.objects.all().filter(indicador_tipo__tipo='PAD').\
+        order_by('-fecha')
     indicators = fetch_latest_indicadors(indicators)
     jurisdicciones = []
     for name, value in indicators.items():

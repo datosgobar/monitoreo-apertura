@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 import json
 from datetime import date
+from django.db.utils import DataError
+
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
 from indicadores_pad.indicators import PADIndicators
@@ -81,7 +83,7 @@ class Command(BaseCommand):
         Los nombres de los catálogos son leídos a partir de una lista 'names',
         con los indicadores y los nombres ordenados de la misma manera"""
 
-        indic_models = []  # Lista con todos los indicadores generados
+        indic_models = 0  # Lista con todos los indicadores generados
         for indicators in indics_list:
             catalog_name = names[indics_list.index(indicators)]
 
@@ -94,10 +96,15 @@ class Command(BaseCommand):
                 indic = Indicador(jurisdiccion_nombre=catalog_name,
                                   indicador_tipo=indic_type,
                                   indicador_valor=json.dumps(value))
-                indic_models.append(indic)
+                indic_models +=1
+                try:
+                    indic.save()
+                except DataError:
+                    self.stderr.write("Error guardando indicador: {0} - {1}: "
+                                      "{2}".format(catalog_name,
+                                                   indic_type,
+                                                   json.dumps(value)))
 
-        # Guardo en la base de datos
-        Indicador.objects.bulk_create(indic_models)
         self.stderr.write(u'Calculados {0} indicadores en {1} catálogos'.format(
-            len(indic_models), len(indics_list)))
+            indic_models, len(indics_list)))
 

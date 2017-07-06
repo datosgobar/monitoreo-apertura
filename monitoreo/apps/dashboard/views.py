@@ -1,26 +1,24 @@
 # coding=utf-8
 from datetime import date, timedelta
 from django.shortcuts import render
-from .models import Indicador, IndicadorRed, IndicadorPAD, TableColumn
+from .models import Indicador, IndicadorRed, TableColumn
 from .helpers import fetch_latest_indicadors
 
 
 def landing(request):
     indicators = IndicadorRed.objects.all()
-    pad_indicators = IndicadorPAD.objects.all()
     # Obtengo los indicadores más recientes, empaquetados en un diccionario
     indicators = fetch_latest_indicadors(indicators)
-    pad_indicators = fetch_latest_indicadors(pad_indicators)
 
-    if not indicators or not pad_indicators:
+    if not indicators:
         # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
 
     # Valores para mocking, a ser calculados posteriormente
-    documentados_pct = pad_indicators['pad_items_documentados_pct']
-    descargables_pct = pad_indicators['pad_items_descarga_pct']
-    items = pad_indicators['pad_compromisos_cant']
-    jurisdicciones = pad_indicators['pad_jurisdicciones_cant']
+    documentados_pct = indicators['pad_items_documentados_pct']
+    descargables_pct = indicators['pad_items_descarga_pct']
+    items = indicators['pad_compromisos_cant']
+    jurisdicciones = indicators['pad_jurisdicciones_cant']
 
     catalogos_cant = indicators['catalogos_cant']
     datasets_cant = indicators['datasets_cant']
@@ -41,7 +39,8 @@ def landing(request):
 
 
 def red_nodos(request):
-    indicators = Indicador.objects.all().order_by("-fecha")
+    indicators = Indicador.objects.all().filter(indicador_tipo__tipo="RED").\
+        order_by("-fecha")
 
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html')
@@ -51,7 +50,7 @@ def red_nodos(request):
     indicator_names = [column.indicator.nombre for column in columns]
 
     for indicator in indicators:
-        catalog_name = indicator.catalogo_nombre
+        catalog_name = indicator.jurisdiccion_nombre
         indicator_name = indicator.indicador_tipo.nombre
 
         if catalog_name not in catalogs.keys():
@@ -73,10 +72,15 @@ def red_nodos(request):
 
 
 def compromisos(request):
-    pad_indicators = IndicadorPAD.objects.all()
-    pad_indicators = fetch_latest_indicadors(pad_indicators)
+    indicators = Indicador.objects.all().filter(indicador_tipo__tipo="PAD").\
+        order_by("-fecha")
+    indicators = fetch_latest_indicadors(indicators)
+    jurisdicciones = []
+    for name, value in indicators.items():
+        if name not in jurisdicciones:
+            jurisdicciones.append(name)
 
     context = {
-        'jurisdictions': pad_indicators['pad_jurisdicciones']
+        'jurisdictions': jurisdicciones
     }
     return render(request, 'dashboard/compromisos.html', context)

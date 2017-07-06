@@ -5,7 +5,7 @@ from pydatajson import DataJson
 from django.core.management.base import BaseCommand
 from indicadores_pad.indicators import PADIndicators
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
-    IndicatorType, IndicadorPAD
+    IndicatorType
 from monitoreo.apps.dashboard.helpers import load_catalogs
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 CENTRAL = URL + 'datosgobar/data.json'
@@ -37,17 +37,23 @@ class Command(BaseCommand):
 
     def pad_indicators(self):
         pad = PADIndicators()
-        indic_models = []
-        indicators = pad.generate_pad_indicators(SPREADSHEET)
-        for indic_name, value in indicators.items():
-            indic_type = IndicatorType.objects.get_or_create(
-                nombre=indic_name)[0]
-            indic_models.append(IndicadorPAD(indicador_tipo=indic_type,
-                                             indicador_valor=json.dumps(value)))
+        indicators, network_indics = pad.generate_pad_indicators(SPREADSHEET)
+        count = 0
+        for jurisdiction, indics in indicators.items():
+            for indic_name, value in indics.items():
+                indic_type = IndicatorType.objects.get_or_create(
+                    nombre=indic_name,
+                    tipo='PAD')[0]
+                indicador = Indicador(indicador_tipo=indic_type,
+                                      indicador_valor=json.dumps(value),
+                                      jurisdiccion_nombre=jurisdiction)
+                indicador.save()
+                count += 1
 
-        IndicadorPAD.objects.bulk_create(indic_models)
-        self.stderr.write(u'Calculados {0} indicadores del PAD'.format(
-            len(indic_models)))
+        self.stderr.write(u'Calculados indicadores del PAD'.format(
+            count))
+
+        self.save_network_indics(network_indics)
 
     def save_network_indics(self, network_indics):
         # Itero sobre los indicadores de red, creando modelos y agregándolos
@@ -79,8 +85,9 @@ class Command(BaseCommand):
             # agregándolos a la lista 'indicators'
             for indic_name, value in indicators.items():
                 indic_type = IndicatorType.objects.get_or_create(
-                    nombre=indic_name)[0]
-                indic = Indicador(catalogo_nombre=catalog_name,
+                    nombre=indic_name,
+                    tipo='RED')[0]
+                indic = Indicador(jurisdiccion_nombre=catalog_name,
                                   indicador_tipo=indic_type,
                                   indicador_valor=json.dumps(value))
                 indic_models.append(indic)

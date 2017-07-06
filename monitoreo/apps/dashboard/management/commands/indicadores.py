@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
+from datetime import date
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
 from indicadores_pad.indicators import PADIndicators
@@ -30,8 +31,9 @@ class Command(BaseCommand):
             validation = data_json.validate_catalog(catalog)
             catalog_name = validation['error']['catalog']['title']
             names.append(catalog_name)
+
         self.save_indicators(indics, names)
-        self.save_network_indics(network_indics)
+        self.save_network_indics(network_indics, 'RED')
 
         self.pad_indicators()
 
@@ -53,14 +55,15 @@ class Command(BaseCommand):
         self.stderr.write(u'Calculados indicadores del PAD'.format(
             count))
 
-        self.save_network_indics(network_indics)
+        self.save_network_indics(network_indics, 'PAD')
 
-    def save_network_indics(self, network_indics):
+    def save_network_indics(self, network_indics, indic_class):
         # Itero sobre los indicadores de red, creando modelos y agregándolos
         # a 'network_indicators'
         for indic_name, value in network_indics.items():
             indic_type = IndicatorType.objects.get_or_create(
-                nombre=indic_name)[0]
+                nombre=indic_name,
+                tipo=indic_class)[0]
             network_indic = IndicadorRed(indicador_tipo=indic_type,
                                          indicador_valor=json.dumps(value))
 
@@ -77,6 +80,7 @@ class Command(BaseCommand):
         """Crea modelos de Django a partir de cada indicador, y los guarda.
         Los nombres de los catálogos son leídos a partir de una lista 'names',
         con los indicadores y los nombres ordenados de la misma manera"""
+
         indic_models = []  # Lista con todos los indicadores generados
         for indicators in indics_list:
             catalog_name = names[indics_list.index(indicators)]
@@ -96,3 +100,4 @@ class Command(BaseCommand):
         Indicador.objects.bulk_create(indic_models)
         self.stderr.write(u'Calculados {0} indicadores en {1} catálogos'.format(
             len(indic_models), len(indics_list)))
+

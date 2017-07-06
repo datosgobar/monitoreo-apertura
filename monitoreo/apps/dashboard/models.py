@@ -6,7 +6,7 @@ from ordered_model.models import OrderedModel
 
 
 class IndicatorType(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, unique=True)
     tipo = models.CharField(max_length=100)
 
     def __unicode__(self):

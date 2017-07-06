@@ -84,9 +84,12 @@ def populate_table(request, tipo):
             added_indicators[jurisdiction_name].append(indicator_name)
 
     indicator_full_names = [column.full_name for column in columns]
+    title = 'la Red de Nodos de Datos Abiertos' if tipo == 'RED' else \
+        'el Plan de Datos Abiertos'
     context = {
         'indicator_names': indicator_full_names,
-        'catalogs': catalogs
+        'catalogs': catalogs,
+        'title': title
     }
 
     return render(request, 'dashboard/detalle.html', context)

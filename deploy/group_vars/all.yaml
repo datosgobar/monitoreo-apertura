@@ -95,6 +95,7 @@ django_settings:
   DATABASE_PASSWORD: "{{ postgresql_password }}"
   DATABASE_HOST: "127.0.0.1"
   GOOGLE_DRIVE_CREDENTIALS: "{{application_conf}}client_secret_sheets.json"
+  GOOGLE_DRIVE_PROJECT_CREDENTIALS: "{{application_conf}}project_credentials.json"
 
 django_environment:
   DJANGO_SETTINGS_MODULE: "{{ application_settings_module }}"

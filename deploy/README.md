@@ -10,6 +10,8 @@ El script deployea automáticamente a través de ansible y git el proyecto de Dj
 
 ### Deploy
 
+El deploy ocurre en dos pasos. Primero ejecutar el script en este directorio, `deploy.sh`. Luego, es necesario agregar dos archivos, credenciales de google drive, para calcular los indicadores de la planilla del PAD.
+
 El script acepta varias variables
 
     export REPO_URL=git@example.com/user:repo.git  # Repo a clonar (se necesita acceso, si es privado)

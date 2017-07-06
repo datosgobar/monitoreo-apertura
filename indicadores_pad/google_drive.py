@@ -25,7 +25,6 @@ from oauth2client.file import Storage
 
 
 # If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/sheets.googleapis.com-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = settings.GOOGLE_DRIVE_CREDENTIALS
 APPLICATION_NAME = 'Monitoreo PAD'
@@ -44,7 +43,7 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
-    credential_path = settings.GOOGLE_DRIVE_PROJECT_CREDENTIALS
+    credential_path = settings.GOOGLE_DRIVE_USER_CREDENTIALS
 
     store = Storage(credential_path)
     credentials = store.get()

@@ -6,7 +6,8 @@ from ordered_model.models import OrderedModel
 
 
 class IndicatorType(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, unique=True)
+    tipo = models.CharField(max_length=100)
 
     def __unicode__(self):
         return self.nombre
@@ -21,9 +22,9 @@ class Indicador(models.Model):
         verbose_name_plural = "Indicadores"
 
     fecha = models.DateField()
-    catalogo_nombre = models.CharField(max_length=300)
+    jurisdiccion_nombre = models.CharField(max_length=300)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
-    indicador_valor = models.CharField(max_length=300)
+    indicador_valor = models.CharField(max_length=2000)
 
     def __init__(self, *args, **kwargs):
         # Columna fecha siempre tiene el timestamp del momento de creación
@@ -31,9 +32,9 @@ class Indicador(models.Model):
         super(Indicador, self).__init__(*args, **kwargs)
 
     def __unicode__(self):
-        string = 'Indicador "{0}" del catalogo {1}, {2}'
+        string = 'Indicador "{0}" de {1}, {2}'
         return string.format(self.indicador_tipo.nombre,
-                             self.catalogo_nombre,
+                             self.jurisdiccion_nombre,
                              self.fecha)
 
     def __str__(self):
@@ -43,7 +44,7 @@ class Indicador(models.Model):
 class IndicadorRed(models.Model):
     class Meta:
         # Nombre en plural para el admin panel de Django
-        verbose_name_plural = "Indicadores de red"
+        verbose_name_plural = "Indicadores agregados"
         get_latest_by = 'fecha'
 
     fecha = models.DateField()

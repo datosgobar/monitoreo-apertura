@@ -1,15 +1,19 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
-from urllib2 import urlopen, HTTPError
-import yaml
+from datetime import date
+from django.db.utils import DataError
+
 from pydatajson import DataJson
 from django.core.management.base import BaseCommand
+from indicadores_pad.indicators import PADIndicators
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
     IndicatorType
 from monitoreo.apps.dashboard.helpers import load_catalogs
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 CENTRAL = URL + 'datosgobar/data.json'
+
+SPREADSHEET = '1z2itUsUxgty61AnB-09pxRQxbequLzEbWDragbZaHJs'
 
 
 class Command(BaseCommand):
@@ -23,7 +27,6 @@ class Command(BaseCommand):
         indics, network_indics = data_json.generate_catalogs_indicators(
             catalogs,
             CENTRAL)
-
         names = []
         for catalog in catalogs:
             # Obtengo el nombre de los catálogos a partir de la validación
@@ -32,14 +35,40 @@ class Command(BaseCommand):
             names.append(catalog_name)
 
         self.save_indicators(indics, names)
-        self.save_network_indics(network_indics)
+        self.save_network_indics(network_indics, 'RED')
 
-    def save_network_indics(self, network_indics):
+        self.pad_indicators()
+
+    def pad_indicators(self):
+        pad = PADIndicators()
+        indicators, network_indics = pad.generate_pad_indicators(SPREADSHEET)
+        count = 0
+        for jurisdiction, indics in indicators.items():
+            for indic_name, value in indics.items():
+                indic_type = IndicatorType.objects.get_or_create(
+                    nombre=indic_name,
+                    tipo='PAD')[0]
+                indicador = Indicador(indicador_tipo=indic_type,
+                                      indicador_valor=json.dumps(value),
+                                      jurisdiccion_nombre=jurisdiction)
+                indicador.save()
+                count += 1
+
+        self.stderr.write(u'Calculados indicadores del PAD'.format(
+            count))
+
+        self.save_network_indics(network_indics, 'PAD')
+
+    def save_network_indics(self, network_indics, indic_class):
         # Itero sobre los indicadores de red, creando modelos y agregándolos
         # a 'network_indicators'
         for indic_name, value in network_indics.items():
+            if indic_name == 'datasets_no_federados':
+                continue
+
             indic_type = IndicatorType.objects.get_or_create(
-                nombre=indic_name)[0]
+                nombre=indic_name,
+                tipo=indic_class)[0]
             network_indic = IndicadorRed(indicador_tipo=indic_type,
                                          indicador_valor=json.dumps(value))
 
@@ -56,21 +85,32 @@ class Command(BaseCommand):
         """Crea modelos de Django a partir de cada indicador, y los guarda.
         Los nombres de los catálogos son leídos a partir de una lista 'names',
         con los indicadores y los nombres ordenados de la misma manera"""
-        indic_models = []  # Lista con todos los indicadores generados
+
+        indic_models = 0  # Lista con todos los indicadores generados
         for indicators in indics_list:
             catalog_name = names[indics_list.index(indicators)]
 
             # Itero sobre los indicadores calculados, creando modelos y
             # agregándolos a la lista 'indicators'
             for indic_name, value in indicators.items():
+                if indic_name == 'datasets_no_federados':
+                    continue
+
                 indic_type = IndicatorType.objects.get_or_create(
-                    nombre=indic_name)[0]
-                indic = Indicador(catalogo_nombre=catalog_name,
+                    nombre=indic_name,
+                    tipo='RED')[0]
+                indic = Indicador(jurisdiccion_nombre=catalog_name,
                                   indicador_tipo=indic_type,
                                   indicador_valor=json.dumps(value))
-                indic_models.append(indic)
+                indic_models +=1
+                try:
+                    indic.save()
+                except DataError:
+                    self.stderr.write("Error guardando indicador: {0} - {1}: "
+                                      "{2}".format(catalog_name,
+                                                   indic_type,
+                                                   json.dumps(value)))
 
-        # Guardo en la base de datos
-        Indicador.objects.bulk_create(indic_models)
         self.stderr.write(u'Calculados {0} indicadores en {1} catálogos'.format(
-            len(indic_models), len(indics_list)))
+            indic_models, len(indics_list)))
+

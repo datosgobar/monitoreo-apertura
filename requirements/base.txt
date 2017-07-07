@@ -1,5 +1,6 @@
 Django==1.10.7
 django-environ==0.4.1
-pydatajson==0.2.11
+pydatajson==0.2.13
 pyaml
 django-ordered-model==1.4.1
+google-api-python-client

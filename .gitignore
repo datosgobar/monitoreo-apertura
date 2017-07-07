@@ -124,3 +124,7 @@ ENV/
 .mypy_cache/
 
 .vagrant
+
+# Google drive client secret
+*secret*.json
+*user_credentials.json

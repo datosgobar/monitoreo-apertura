@@ -17,9 +17,10 @@ from __future__ import print_function
 import httplib2
 import environ
 env = environ.Env()
-GOOGLE_DRIVE_CREDENTIALS = env('GOOGLE_DRIVE_CREDENTIALS', default="")
+GOOGLE_DRIVE_PROJECT_CREDENTIALS = env('GOOGLE_DRIVE_PROJECT_CREDENTIALS',
+                                       default="")
 GOOGLE_DRIVE_USER_CREDENTIALS = env('GOOGLE_DRIVE_USER_CREDENTIALS',
-                                    default='')
+                                    default='user_credentials.json')
 from googleapiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -28,7 +29,6 @@ from oauth2client.file import Storage
 
 # If modifying these scopes, delete your previously saved credentials
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
-CLIENT_SECRET_FILE = GOOGLE_DRIVE_CREDENTIALS
 APPLICATION_NAME = 'Monitoreo PAD'
 
 
@@ -46,7 +46,7 @@ def get_credentials():
     store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE,
+        flow = client.flow_from_clientsecrets(GOOGLE_DRIVE_PROJECT_CREDENTIALS,
                                               SCOPES)
         flow.user_agent = APPLICATION_NAME
         credentials = tools.run_flow(flow, store)

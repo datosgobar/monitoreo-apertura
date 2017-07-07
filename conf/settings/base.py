@@ -190,8 +190,10 @@ LOGGING = {
     }
 }
 
-GOOGLE_DRIVE_CREDENTIALS = env('GOOGLE_DRIVE_CREDENTIALS', default="")
+GOOGLE_DRIVE_PROJECT_CREDENTIALS = env('GOOGLE_DRIVE_PROJECT_CREDENTIALS',
+                                       default="")
 GOOGLE_DRIVE_USER_CREDENTIALS = env('GOOGLE_DRIVE_USER_CREDENTIALS',
                                     default='')
 # EMAILS
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
+                    default='django.core.mail.backends.console.EmailBackend')

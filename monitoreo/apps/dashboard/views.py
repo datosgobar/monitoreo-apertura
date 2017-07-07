@@ -46,17 +46,19 @@ def compromisos(request):
 
 def populate_table(request, tipo):
     today = date.today()
-    indicators = Indicador.objects.all().filter(indicador_tipo__tipo=tipo,
-                                                fecha__day=today.day,
-                                                fecha__month=today.month,
-                                                fecha__year=today.year)
+    indicators = Indicador.objects.filter(indicador_tipo__tipo=tipo,
+                                          fecha__day=today.day,
+                                          fecha__month=today.month,
+                                          fecha__year=today.year).\
+        order_by('-id')
 
     if not indicators:
         today = today - timedelta(days=1)
-        indicators = Indicador.objects.all().filter(indicador_tipo__tipo=tipo,
-                                                    fecha__day=today.day,
-                                                    fecha__month=today.month,
-                                                    fecha__year=today.year)
+        indicators = Indicador.objects.filter(indicador_tipo__tipo=tipo,
+                                              fecha__day=today.day,
+                                              fecha__month=today.month,
+                                              fecha__year=today.year).\
+            order_by('-id')
 
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html')

@@ -17,7 +17,7 @@ def fetch_latest_indicadors(indicators):
         dict: conjunto iterable de python con todos los indicadores más
         recientes como valores, y los nombres como claves
     """
-    indicators = indicators.order_by('-fecha')
+    indicators = indicators.order_by('-fecha', '-id')
     latest = {}
     for i in indicators:
         if i.indicador_tipo.nombre not in latest:

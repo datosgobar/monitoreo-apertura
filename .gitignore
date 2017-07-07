@@ -128,3 +128,6 @@ ENV/
 # Google drive client secret
 *secret*.json
 *user_credentials.json
+
+# Ansible session files
+deploy/site.retry

@@ -13,7 +13,7 @@ Se debe ejecutar el script de deploy, y además generar y subir manualmente las 
 
 El deploy ocurre en dos pasos. Primero ejecutar el script en este directorio, `deploy.sh`. Luego, es necesario agregar dos archivos, credenciales de google drive, para calcular los indicadores de la planilla del PAD.
 
-El script acepta varias variables
+El script acepta varias variables. Tener en cuenta que el usuario y contraseña de postgres es del usuario _a crear_, y no un usuario previamente creado.
 
     export REPO_URL=git@example.com/user:repo.git  # Repo a clonar (se necesita acceso, si es privado)
     export CHECKOUT_BRANCH=master  # branch o tag a clonar

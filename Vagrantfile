@@ -3,14 +3,12 @@ VAGRANTFILE_API_VERSION = "2"
 SSH_KEYS = [ '~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
 
 
-application_name = "django_project"
+application_name = "monitoreo"
 checkout_branch = "master"
-database_user = "django_db_user"
-database_password = "abcdef123456789"
+database_user = "monitoreo_db_user"
+database_password = "monitoreo_db_pass"
 
-repo_url = ENV['REPO_URL']
-
-raise "must define REPO_URL" unless repo_url
+repo_url = "git@github.com:datosgobar/monitoreo-apertura.git"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "bento/ubuntu-16.04"
@@ -24,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       web.vm.network "private_network", ip: "192.168.33.10"
   end
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "site.yml"
+    ansible.playbook = "deploy/site.yml"
     ansible.groups = {
         "webservers" => ["webserver"]
     }

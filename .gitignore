@@ -122,4 +122,5 @@ ENV/
 
 # mypy
 .mypy_cache/
->>>>>>> 625906b6af8ee329a137dadd7802f8f836ebb851
+
+.vagrant

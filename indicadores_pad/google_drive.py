@@ -14,10 +14,12 @@ la línea de comandos.
 """
 from __future__ import print_function
 
-import os
 import httplib2
-from django.conf import settings
-
+import environ
+env = environ.Env()
+GOOGLE_DRIVE_CREDENTIALS = env('GOOGLE_DRIVE_CREDENTIALS', default="")
+GOOGLE_DRIVE_USER_CREDENTIALS = env('GOOGLE_DRIVE_USER_CREDENTIALS',
+                                    default='')
 from googleapiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -26,12 +28,8 @@ from oauth2client.file import Storage
 
 # If modifying these scopes, delete your previously saved credentials
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
-CLIENT_SECRET_FILE = settings.GOOGLE_DRIVE_CREDENTIALS
+CLIENT_SECRET_FILE = GOOGLE_DRIVE_CREDENTIALS
 APPLICATION_NAME = 'Monitoreo PAD'
-CREDENTIALS_FILE = {
-    "drive": 'monitoreo-pad-drive.json',
-    "sheets": 'monitoreo-pad-sheets.json'
-}
 
 
 def get_credentials():
@@ -43,7 +41,7 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
-    credential_path = settings.GOOGLE_DRIVE_USER_CREDENTIALS
+    credential_path = GOOGLE_DRIVE_USER_CREDENTIALS
 
     store = Storage(credential_path)
     credentials = store.get()
@@ -88,6 +86,8 @@ def get_sheet(spreadsheet_id, range_name):
 
 def main():
     """Genera las credenciales necesarias para poder leer Google Spreadsheets.
+    Las credenciales serán escritas en el archivo que apunte las variables de 
+    entorno GOOGLE_DRIVE_CREDENTIALS y GOOGLE_DRIVE_USER_CREDENTIALS.
     Este proceso es automáticamente ejecutado si se intenta abrir un
     documento sin tener credenciales guardadas en el sistema.
     """

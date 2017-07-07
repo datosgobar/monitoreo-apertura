@@ -58,8 +58,22 @@ class PADIndicators:
             })
         # Indicadores de la planilla entera
         network_indics = self.generate_network_indicators(indicators)
-        network_indics.update(self.generate_count_indicators(sheet))
+        network_indics.update(self.generate_count_indicators(spreadsheet_id))
+        network_indics.update({
+            'pad_distribuciones_cant': self.count_distributions(sheet)
+        })
+
+
         return indicators, network_indics
+
+    @staticmethod
+    def count_distributions(sheet):
+        distribution_count = 0
+        for jurisdiccion in sheet.values():
+            for compromiso in jurisdiccion:
+                for dataset in compromiso.get('dataset', []):
+                    distribution_count += len(dataset.get('distribution', []))
+        return distribution_count
 
     @staticmethod
     def generate_network_indicators(indicators):
@@ -104,24 +118,16 @@ class PADIndicators:
 
         return network_indicators
 
-    @staticmethod
-    def generate_count_indicators(sheet):
+    def generate_count_indicators(self, spreadsheet):
         """Genera dos indicadores: cantidad de items y de jurisdicciones de 
         la planilla entera"""
 
-        distribution_count = 0
-        compromisos_count = 0
-        for jurisdiccion in sheet.values():
-            for compromiso in jurisdiccion:
-                compromisos_count += 1
-                for dataset in compromiso.get('dataset', []):
-                    distribution_count += len(dataset.get('distribution', []))
-
-        return {
-            'pad_jurisdicciones_cant': len(sheet),
-            'pad_compromisos_cant': compromisos_count,
-            'pad_distribuciones_cant': distribution_count
+        count = self.reader.count_compromisos(spreadsheet)
+        result = {
+            'pad_compromisos_cant': count['compromisos_cant'],
+            'pad_jurisdicciones_cant': count['jurisdicciones_cant']
         }
+        return result
 
     def generate_update_indicators(self, compromisos):
         """Genera los indicadores de actualización."""

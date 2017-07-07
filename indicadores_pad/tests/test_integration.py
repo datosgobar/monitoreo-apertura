@@ -36,9 +36,9 @@ class PADTest(unittest.TestCase):
         jurisdictions = self.network_indics['pad_jurisdicciones_cant']
         compromisos = self.network_indics['pad_compromisos_cant']
 
-        compromisos_actual = 0
+        compromisos_documented = 0
         for indicators in self.indics.values():
-            compromisos_actual += indicators['pad_compromisos_cant']
+            compromisos_documented += indicators['pad_compromisos_cant']
 
-        self.assertEqual(len(self.indics), jurisdictions)
-        self.assertEqual(compromisos, compromisos_actual)
+        self.assertGreaterEqual(jurisdictions, len(self.indics))
+        self.assertGreaterEqual(compromisos, compromisos_documented)

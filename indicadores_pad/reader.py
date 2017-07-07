@@ -27,17 +27,12 @@ class SpreadsheetReader:
         Returns:
             dict: diccionario con el formato especificado
         """
-
         if isinstance(sheet_id, dict):
             return sheet_id
-        if isinstance(sheet_id, (str, unicode)):
-            if self.sheet == sheet_id:  # Ya fue leída la misma hoja
-                return self.jurisdicciones
-            sheet = google_drive.get_sheet(sheet_id, "pad_distribuciones")
-            self.sheet = sheet_id
-        else:
-            raise TypeError('Valor de "sheet" inválido. Se esperaba tipo dict o'
-                            ' str, recibido {}'.format(type(sheet_id)))
+        sheet = self._read(sheet_id, 'pad_distribuciones')
+
+        if isinstance(sheet, dict):  # Hoja leída ya estaba guardada
+            return sheet
 
         self.jurisdicciones = {}
         # compromisos: claves los IDs de cada compromiso, valores una lista
@@ -74,6 +69,64 @@ class SpreadsheetReader:
                     distribution[name] = value
         return self.jurisdicciones
 
+    def _read(self, spreadsheet, sheet):
+        """Lee la hoja 'sheet' de la spreadsheet 'spreadsheet'. Si 'spreadsheet'
+        ya es un diccionario de una hoja ya leída lo devuelve sin cambios. Si
+        spreadsheet es un string, lee y devuelve la lista de rows de la hoja.
+        """
+
+        if isinstance(spreadsheet, dict):
+            return spreadsheet
+        if isinstance(spreadsheet, (str, unicode)):
+            if self.sheet == (spreadsheet, sheet):  # Ya fue leída la misma hoja
+                return self.jurisdicciones
+            result = google_drive.get_sheet(spreadsheet, sheet)
+            self.sheet = (spreadsheet, sheet)
+            return result
+        else:
+            raise TypeError('Valor de "sheet" inválido. Se esperaba tipo dict o'
+                            ' str, recibido {}'.format(type(spreadsheet)))
+
+    def count_compromisos(self, sheet_id):
+        """Cuenta los compromisos de la planilla pasada. Los compromisos se
+        contarán de la hoja de 'pad_compromisos'.
+        
+        Args:
+            sheet_id (str): ID de la planilla del PAD
+            
+        Returns:
+            dict: claves 'jurisdicciones_cant' y 'compromisos_cant' con los 
+                valores respectivos
+        """
+
+        sheet = self._read(sheet_id, 'pad_compromisos')
+        if isinstance(sheet, dict):
+            jurisdictions_count = len(sheet)
+            compromisos_count = 0
+            for jurisdiction, compromisos_list in sheet.items():
+                compromisos_count += len(compromisos_list)
+
+        else:
+            jurisdiction = 0
+            for column_name in sheet[0]:
+                if column_name == 'jurisdiccion':
+                    jurisdiction = sheet[0].index(column_name)
+                    break
+
+            jurisdictions = []
+            compromisos = sheet[1:]
+            for row in compromisos:
+                if row[jurisdiction] not in jurisdictions:
+                    jurisdictions.append(row[jurisdiction])
+            compromisos_count = len(compromisos)
+            jurisdictions_count = len(jurisdictions)
+
+        result = {
+            'jurisdicciones_cant': jurisdictions_count,
+            'compromisos_cant': compromisos_count
+        }
+        return result
+
     @staticmethod
     def get_or_create_dataset(dataset_title, compromiso):
         """Devuelve el dataset perteneciente a 'compromiso' con el título
@@ -108,7 +161,8 @@ class SpreadsheetReader:
         o de no existir, lo crea y lo agrega a 'compromisos'.
         Args:
             compromiso_id (str): ID del compromiso a buscar.
-
+            jurisdiccion (str): clave del diccionario de jurisdicciones sobre
+                el cual buscar el compromiso_id
         Returns:
             dict: compromiso con el campo compromiso_id correspondiente
         """
@@ -125,6 +179,7 @@ class SpreadsheetReader:
 
 
 def main():
+    """Prueba de lectura básica"""
     import json
     spreadsheet_id = '1uG68Yq9z1l6IX1kW8A3uO9yGHSNqDglFuagk7BxKOaw'
     spreadsheet = SpreadsheetReader()

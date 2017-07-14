@@ -15,26 +15,26 @@ class FetchLatestIndicatorsTest(TestCase):
         test_type.save()
 
         old = Indicador.objects.create(indicador_tipo=test_type,
-                                       catalogo_nombre='test catalog',
+                                       jurisdiccion_nombre='test catalog',
                                        indicador_valor='old value')
         # Override a la fecha guardada por default
         old.fecha = yesterday
         old.save()
 
         Indicador.objects.create(indicador_tipo=test_type,
-                                 catalogo_nombre='Test catalog',
+                                 jurisdiccion_nombre='Test catalog',
                                  indicador_valor='latest value').save()
         Indicador.objects.create(indicador_tipo=test_type,
-                                 catalogo_nombre='Test catalog',
+                                 jurisdiccion_nombre='Test catalog',
                                  indicador_valor='latest value').save()
 
         other_type = IndicatorType.objects.create(nombre='other_type')
         other_type.save()
 
         Indicador.objects.create(indicador_tipo=other_type,
-                                 catalogo_nombre='Test catalog',
+                                 jurisdiccion_nombre='Test catalog',
                                  indicador_valor='valor independiente a '
-                                                 'test_type')
+                                                 'test_type').save()
 
     def test_latest_fetched(self):
         indicators = Indicador.objects.all()

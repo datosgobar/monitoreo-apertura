@@ -28,11 +28,12 @@ class PADIndicators:
         las distribuciones y los compromisos.
 
         Args:
-            spreadsheet_id (str): ID de la hoja de datos del PAD sobre la
-            cual leer y calcular los indicadores.
+            spreadsheet_id (str or dict): ID de la hoja de datos del PAD sobre la
+                cual leer y calcular los indicadores.
 
         Returns:
-            dict: diccionario con los indicadores como claves
+            tuple: un diccionario con los indicadores individuales, y un
+                diccionario con los indicadores de la red entera
         """
 
         indicators = {}

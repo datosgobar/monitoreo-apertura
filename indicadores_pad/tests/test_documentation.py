@@ -15,7 +15,7 @@ class DocumentationTest(unittest.TestCase):
         procesarlos debe poder leerlos de ambas fuentes indistintamente.
     """
 
-    SAMPLES_DIR = os.path.join('tests', 'samples')
+    SAMPLES_DIR = os.path.join('indicadores_pad', 'tests', 'samples')
 
     @classmethod
     def setUpClass(cls):

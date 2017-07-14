@@ -27,10 +27,15 @@ class CommandTest(TestCase):
         self.assertTrue(IndicadorRed.objects.all())
 
     def test_verify_network_indicators(self):
-        for network_indicator in IndicadorRed.objects.all():
-            indicator_name = network_indicator.indicador_tipo.nombre
-            self.assertEqual(json.loads(network_indicator.indicador_valor),
-                             self.network_indicators[indicator_name])
+        indicators = IndicadorRed.objects.all()
+        for network_indicator, value in self.network_indicators.items():
+            # Salteo indicador que no se guarda en el management command
+            if network_indicator == 'datasets_no_federados':
+                continue
+            indicator = indicators.filter(indicador_tipo__nombre=network_indicator)
+            self.assertTrue(indicator, 'Query no vacia: filtro por ' + network_indicator)
+            indicator = indicator[0]
+            self.assertEqual(json.loads(indicator.indicador_valor), value)
 
     def test_verify_individual_indicators(self):
         for catalog in self.catalogs:
@@ -42,7 +47,7 @@ class CommandTest(TestCase):
             # el management command de ese catálogo
             validation = self.dj.validate_catalog(catalog)
             catalog_name = validation['error']['catalog']['title']
-            indics = Indicador.objects.filter(catalogo_nombre=catalog_name)
+            indics = Indicador.objects.filter(jurisdiccion_nombre=catalog_name)
             for indicator in indics:
                 name = indicator.indicador_tipo.nombre
                 self.assertEqual(json.loads(indicator.indicador_valor),

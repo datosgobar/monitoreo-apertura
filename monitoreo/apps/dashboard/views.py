@@ -13,15 +13,15 @@ def landing(request):
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
 
-    documentados_pct = int(indicators['pad_items_documentados_pct'])
-    descargables_pct = int(indicators['pad_items_descarga_pct'])
+    documentados_pct = indicators['pad_items_documentados_pct']
+    descargables_pct = indicators['pad_items_descarga_pct']
     items = indicators['pad_compromisos_cant']
     jurisdicciones = indicators['pad_jurisdicciones_cant']
 
     catalogos_cant = indicators['catalogos_cant']
     datasets_cant = indicators['datasets_cant']
-    ok_pct = int(indicators['datasets_meta_ok_pct'])
-    actualizados_pct = int(indicators['datasets_actualizados_pct'])
+    ok_pct = indicators['datasets_meta_ok_pct']
+    actualizados_pct = indicators['datasets_actualizados_pct']
 
     context = {
         'items': items,
@@ -37,14 +37,16 @@ def landing(request):
 
 
 def red_nodos(request):
-    return populate_table(request, 'RED')
+    context = populate_table('RED')
+    return render(request, 'dashboard/red.html', context)
 
 
 def compromisos(request):
-    return populate_table(request, 'PAD')
+    context = populate_table('PAD')
+    return render(request, 'dashboard/pad.html', context)
 
 
-def populate_table(request, tabla):
+def populate_table(tabla):
     today = date.today()
     indicators = Indicador.objects.filter(indicador_tipo__tipo=tabla,
                                           fecha__day=today.day,
@@ -61,7 +63,7 @@ def populate_table(request, tabla):
             order_by('-id')
 
     if not indicators:  # Error, no hay indicadores cargados
-        return render(request, '500.html')
+        return {}
 
     catalogs = {}
     # Agarro las columnas de la tabla pasada
@@ -96,12 +98,9 @@ def populate_table(request, tabla):
             added_indicators[jurisdiction_name].append(indicator_name)
 
     indicator_full_names = [column.full_name for column in columns]
-    title = 'la Red de Nodos de Datos Abiertos' if tabla == 'RED' else \
-        'el Plan de Datos Abiertos'
     context = {
         'indicator_names': indicator_full_names,
         'catalogs': catalogs,
-        'title': title
     }
 
-    return render(request, 'dashboard/detalle.html', context)
+    return context

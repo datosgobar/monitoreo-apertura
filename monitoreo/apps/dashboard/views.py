@@ -84,7 +84,7 @@ def populate_table(tabla):
             # Primer indicador de esa jurisdicción, lo inicializo en catalogs
             # y added_indicators. Instancio la lista con tantos elementos
             # como indicadores a buscar, para asegurarse que haya valores
-            catalogs[jurisdiction_name] = [0 for _ in range(len(columns))]
+            catalogs[jurisdiction_name] = ['N/A' for _ in range(len(columns))]
             added_indicators[jurisdiction_name] = []
 
         if indicator_name in indicator_names:

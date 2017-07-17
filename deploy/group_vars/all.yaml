@@ -3,8 +3,7 @@
 ## Per application variables
 
 application_name: "django_application"
-# git@example.com:user/repo
-application_clone_url:
+application_clone_url: git@github.com:datosgobar/monitoreo-apertura.git
 # XXXXXXXXXXXXXXXXXXXXXXXXXXX
 django_secret_key:
 postgresql_user:

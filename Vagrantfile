@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         "postgresql_user" => database_user,
         "postgresql_password" => database_password,
         "checkout_branch" => checkout_branch,
-        "ansible_ssh_user" => "vagrant",
+        "ansible_user" => "vagrant",
     }
   end
 end

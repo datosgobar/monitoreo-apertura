@@ -3,7 +3,7 @@
 El script deployea automáticamente a través de ansible y git el proyecto de Django. Además configura el crontab para obtener indicadores una vez por día (a las 5 de la mañana).
 ### Requerimientos
 
-- Ansible: `pip install -r requirements.txt`
+- Ansible y librerías de credenciales de google: `pip install -r requirements.txt`
 - SSH client
   - Ubuntu: `apt-get install openssh-client`
   - Arch linux: `pacman -S openssh` ([docs](https://wiki.archlinux.org/index.php/Secure_Shell#OpenSSH))
@@ -12,7 +12,7 @@ El script deployea automáticamente a través de ansible y git el proyecto de Dj
 
 Se debe ejecutar el script de deploy, y además generar y subir manualmente las credenciales de google drive.
 
-El deploy ocurre en dos pasos. Primero ejecutar el script en este directorio, `deploy.sh`. Luego, es necesario agregar dos archivos, credenciales de google drive, para calcular los indicadores de la planilla del PAD.
+Primero ejecutar el script en este directorio, `deploy.sh`. Luego, es necesario agregar dos archivos, credenciales de google drive, para calcular los indicadores de la planilla del PAD.
 
 Finalmente es necesario ejecutar el cálculo de indicadores manualmente por primera vez y crear un usuario administrador del panel de control de la aplicación web.
 
@@ -39,7 +39,7 @@ Un ejemplo puede ser
 
 La generación de credenciales para la lectura de planillas de Google Spreadsheets se lleva a cabo en dos pasos, en un entorno local:
 - Generar credenciales del proyecto como indica el paso 1 de [esta guía](https://developers.google.com/sheets/api/quickstart/python). Esta tarea la debe realizar un usuario de Google con acceso a la planilla de indicadores.
-- Ejecutar `python google_drive.py`, en el directorio `app/indicadores_pad` del proyecto, y seguir las instrucciones para generar las credenciales del proyecto. Para ello deben ser seteadas la variable de entorno `GOOGLE_DRIVE_PROJECT_CREDENTIALS` a la ruta absoluta al archivo generado en el paso anterior. Como resultado se obtendrá el archivo `user_credentials.json`.
+- Ejecutar `python google_drive.py`, en el directorio `app/indicadores_pad` del proyecto, y seguir las instrucciones para generar las credenciales de usuario. Para ello deben ser seteadas la variable de entorno `GOOGLE_DRIVE_PROJECT_CREDENTIALS` a la ruta absoluta al archivo generado en el paso anterior. Como resultado se obtendrá el archivo `user_credentials.json`.
 
 Estos archivos luego deberán ser copiados manualmente (por `sftp`) al directorio `config/app` del proyecto deployado, con los nombres `client_secret.json` y `user_credentials.json` respectivamente.
 

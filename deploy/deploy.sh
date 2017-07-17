@@ -63,8 +63,7 @@ then
 fi
 
 
-extra_vars="application_clone_url=$repo_url \
-        checkout_branch=$checkout_branch \
+extra_vars="checkout_branch=$checkout_branch \
         ansible_user=$login_user \
         ansible_port=$ssh_port \
         postgresql_user=$postgresql_user \

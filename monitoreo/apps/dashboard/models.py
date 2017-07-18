@@ -67,7 +67,7 @@ class TableColumn(OrderedModel):
     class Meta(OrderedModel.Meta):
         verbose_name_plural = "Columnas de la tabla de indicadores de red"
 
-    indicator = models.ForeignKey(IndicatorType, models.CASCADE)
+    indicator = models.OneToOneField(IndicatorType, models.CASCADE)
     full_name = models.CharField(max_length=100)
 
     def __unicode__(self):

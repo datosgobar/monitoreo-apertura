@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 set -e;
 
-repo_url=""
+ssh_port=""
 checkout_branch=""
 host=""
 login_user=""
 
 usage() {
 	echo "Usage: `basename $0`" >&2
-	echo "(-r repository_url)" >&2
+	echo "(-s ssh_port)" >&2
 	echo "(-b checkout branch)" >&2
 	echo "(-h host to be provisioned) (-l login_user )"; >&2
 }
-if ( ! getopts "r:s:b:h:l:" opt); then
+if ( ! getopts "s:b:h:l:" opt); then
     usage;
 	exit $E_OPTERROR;
 fi
 
-while getopts "r:s:b:h:l:" opt;do
+while getopts "s:b:h:l:" opt;do
 	case "$opt" in
-	r)
-	  repo_url="$OPTARG"
+	s)
+	  ssh_port="$OPTARG"
       ;;
 	b)
 	  checkout_branch="$OPTARG"
@@ -42,7 +42,7 @@ while getopts "r:s:b:h:l:" opt;do
 	esac
 done
 
-if [ ! "$repo_url" ] || [ ! "$checkout_branch" ]  || [ ! "$host" ] || [ ! "$login_user" ]
+if [ ! "$ssh_port" ] || [ ! "$checkout_branch" ]  || [ ! "$host" ] || [ ! "$login_user" ]
 then
     echo "Missing options..."
     usage
@@ -50,9 +50,9 @@ then
 fi
 
 
-extra_vars="application_clone_url=$repo_url \
+extra_vars="ansible_port=$ssh_port \
         checkout_branch=$checkout_branch \
-        ansible_ssh_user=$login_user"
+        ansible_user=$login_user"
 
 echo "INFO: Running tasks with tag: quickly"
 ansible-playbook site.yml --extra-vars "$extra_vars" -i "$host," --tags "quickly" --ask-sudo-pass

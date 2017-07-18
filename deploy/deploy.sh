@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e;
 
-repo_url=""
+ssh_port=""
 checkout_branch=""
 postgresql_user=""
 postgresql_password=""
@@ -11,19 +11,19 @@ update=""
 
 usage() {
 	echo "Usage: `basename $0`" >&2
-	echo "(-r repository_url) (-b checkout branch)" >&2
+	echo "(-s ssh_port) (-b checkout branch)" >&2
 	echo "(-p postgresql db user) (-P postgresql db password)" >&2
 	echo "(-h host to be provisioned) (-l login_user )[-u]"; >&2
 }
-if ( ! getopts "r:b:p:P:h:l:u" opt); then
+if ( ! getopts "s:b:p:P:h:l:u" opt); then
     usage;
 	exit $E_OPTERROR;
 fi
 
-while getopts "r:b:p:P:h:l:u" opt;do
+while getopts "s:b:p:P:h:l:u" opt;do
 	case "$opt" in
-	r)
-	  repo_url="$OPTARG"
+	s)
+	  ssh_port="$OPTARG"
       ;;
 	b)
 	  checkout_branch="$OPTARG"
@@ -54,7 +54,7 @@ while getopts "r:b:p:P:h:l:u" opt;do
 	esac
 done
 
-if [ ! "$repo_url" ] || [ ! "$host" ] || [ ! "$login_user" ] \
+if [ ! "$ssh_port" ] || [ ! "$host" ] || [ ! "$login_user" ] \
     || [ ! "$checkout_branch" ] || [ ! "$postgresql_user" ] || [ ! "$postgresql_password" ]
 then
     echo "Missing options..."
@@ -63,9 +63,9 @@ then
 fi
 
 
-extra_vars="application_clone_url=$repo_url \
-        checkout_branch=$checkout_branch \
-        ansible_ssh_user=$login_user \
+extra_vars="checkout_branch=$checkout_branch \
+        ansible_user=$login_user \
+        ansible_port=$ssh_port \
         postgresql_user=$postgresql_user \
         postgresql_password=$postgresql_password"
 

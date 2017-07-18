@@ -5,7 +5,7 @@ from indicadores_pad.indicators import PADIndicators, add_dicts
 
 
 class NetworkIndicators(unittest.TestCase):
-    SAMPLES_DIR = os.path.join('tests', 'samples')
+    SAMPLES_DIR = os.path.join('indicadores_pad', 'tests', 'samples')
 
     def setUp(self):
         self.pad = PADIndicators()

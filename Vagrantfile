@@ -7,8 +7,7 @@ application_name = "monitoreo"
 checkout_branch = "master"
 database_user = "monitoreo_db_user"
 database_password = "monitoreo_db_pass"
-
-repo_url = "git@github.com:datosgobar/monitoreo-apertura.git"
+port="22"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "bento/ubuntu-16.04"
@@ -29,11 +28,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.verbose = "vvv"
     #ansible.tags = ["quickly"]
     ansible.extra_vars = {
-        "application_clone_url" => repo_url,
+        "ssh_port" => port,
         "postgresql_user" => database_user,
         "postgresql_password" => database_password,
         "checkout_branch" => checkout_branch,
-        "ansible_ssh_user" => "vagrant",
+        "ansible_user" => "vagrant",
     }
   end
 end

@@ -13,15 +13,15 @@ def landing(request):
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
 
-    documentados_pct = int(indicators['pad_items_documentados_pct'])
-    descargables_pct = int(indicators['pad_items_descarga_pct'])
+    documentados_pct = indicators['pad_items_documentados_pct']
+    descargables_pct = indicators['pad_items_descarga_pct']
     items = indicators['pad_compromisos_cant']
     jurisdicciones = indicators['pad_jurisdicciones_cant']
 
     catalogos_cant = indicators['catalogos_cant']
     datasets_cant = indicators['datasets_cant']
-    ok_pct = int(indicators['datasets_meta_ok_pct'])
-    actualizados_pct = int(indicators['datasets_actualizados_pct'])
+    ok_pct = indicators['datasets_meta_ok_pct']
+    actualizados_pct = indicators['datasets_actualizados_pct']
 
     context = {
         'items': items,
@@ -37,16 +37,18 @@ def landing(request):
 
 
 def red_nodos(request):
-    return populate_table(request, 'RED')
+    context = populate_table('RED')
+    return render(request, 'dashboard/red.html', context)
 
 
 def compromisos(request):
-    return populate_table(request, 'PAD')
+    context = populate_table('PAD')
+    return render(request, 'dashboard/pad.html', context)
 
 
-def populate_table(request, tipo):
+def populate_table(tabla):
     today = date.today()
-    indicators = Indicador.objects.filter(indicador_tipo__tipo=tipo,
+    indicators = Indicador.objects.filter(indicador_tipo__tipo=tabla,
                                           fecha__day=today.day,
                                           fecha__month=today.month,
                                           fecha__year=today.year).\
@@ -54,44 +56,51 @@ def populate_table(request, tipo):
 
     if not indicators:
         today = today - timedelta(days=1)
-        indicators = Indicador.objects.filter(indicador_tipo__tipo=tipo,
+        indicators = Indicador.objects.filter(indicador_tipo__tipo=tabla,
                                               fecha__day=today.day,
                                               fecha__month=today.month,
                                               fecha__year=today.year).\
             order_by('-id')
 
     if not indicators:  # Error, no hay indicadores cargados
-        return render(request, '500.html')
+        return {}
 
     catalogs = {}
-    columns = TableColumn.objects.all().filter(indicator__tipo=tipo)
+    # Agarro las columnas de la tabla pasada
+    columns = TableColumn.objects.all().filter(indicator__tipo=tabla)
+
+    # Nombres de los indicadores que estamos buscando para esta tabla
     indicator_names = [column.indicator.nombre for column in columns]
+
+    # Trackea que indicadores ya fueron agregados a cada jurisdicción,
+    # diccionario con listas como claves
     added_indicators = {}
+
     for indicator in indicators:
         jurisdiction_name = indicator.jurisdiccion_nombre
         indicator_name = indicator.indicador_tipo.nombre
 
         if jurisdiction_name not in catalogs.keys():
-            # Primer indicador con este nombre, lo agrego al diccionario
-            catalogs[jurisdiction_name] = []
+            # Primer indicador de esa jurisdicción, lo inicializo en catalogs
+            # y added_indicators. Instancio la lista con tantos elementos
+            # como indicadores a buscar, para asegurarse que haya valores
+            catalogs[jurisdiction_name] = ['N/A' for _ in range(len(columns))]
             added_indicators[jurisdiction_name] = []
 
         if indicator_name in indicator_names:
+            # Ya agregamos un indicador con este nombre, paso
             if indicator_name in added_indicators[jurisdiction_name]:
                 continue
 
-            # Lo agrego en la posición correcta, 'index'
+            # Lo agrego en la posición correcta, 'index', y a la lista de indicadores agregados
             index = indicator_names.index(indicator_name)
-            catalogs[jurisdiction_name].insert(index, indicator.indicador_valor)
+            catalogs[jurisdiction_name][index] = indicator.indicador_valor
             added_indicators[jurisdiction_name].append(indicator_name)
 
     indicator_full_names = [column.full_name for column in columns]
-    title = 'la Red de Nodos de Datos Abiertos' if tipo == 'RED' else \
-        'el Plan de Datos Abiertos'
     context = {
         'indicator_names': indicator_full_names,
         'catalogs': catalogs,
-        'title': title
     }
 
-    return render(request, 'dashboard/detalle.html', context)
+    return context

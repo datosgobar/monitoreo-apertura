@@ -10,40 +10,42 @@
 
 <div class="container">
     <div class="row">
-        <h1 class="title">Dashboard de monitoreo del PAD de la República Argentina</h1>
-        <p>El <strong>Plan de Apertura de Datos</strong> está compuesto por {{ items }} compromisos de apertura definidos por {{ jurisdicciones }} jurisdicciones de la
-            Administración Pública Nacional al {% now "d \d\e F, Y" %}, que marcan el piso de compromiso del gobierno con la apertura de datos.</p>
-        <p>Actualmente, se publican {{ datasets }} datasets en {{ catalogos }} catálogos distintos que componen la
-            <strong>Red de Nodos de Datos Abiertos de la República Argentina</strong>, cumpliendo cada vez más de estos compromisos.</p>
+        <h1 class="title center">Monitoreo del Plan de Apertura de Datos</h1>
+        <h2 class="title-description center">de la Administración Pública Nacional</h2>
+        <p><strong>Fecha:</strong> {% now "d \d\e F, Y" %}</p>
+        <p><strong>Explorá el estado de los {{ items }} compromisos de apertura</strong> que asumieron las {{ jurisdicciones }} jurisdicciones de la Administración Pública Nacional, marcando el piso de compromiso del gobierno con la apertura de datos.</p>
+        <p>También podés <strong>ver el estado de los {{ datasets }} conjuntos de datos</strong> publicados en los {{ catalogos }} catálogos que componen la Red de Nodos de Datos Abiertos y en el catálogo concentrador, el portal nacional de <a href="http://www.datos.gob.ar">Datos Argentina</a>.</p>
     </div>
 
     <div class="row numbers justify-content-between">
         <div class="col-lg-6 center">
-            <h3>{{ jurisdicciones }}</h3>
-            <h4>jurisdicciones</h4>
+            <p>Estado de los</p>
+            <h3>{{ items }}</h3>
+            <h4>compromisos de apertura</h4>
         </div>
         <div class="col-lg-6 center">
-            <h3>{{ catalogos }}</h3>
-            <h4>catálogos</h4>
+            <p>Estado de los</p>
+            <h3>{{ datasets }}</h3>
+            <h4>conjuntos de datos</h4>
         </div>
     </div>
     <div class="row center">
         <div class="col-lg-3">
-            <strong class="center">Compromisos documentados</strong>
+            <strong class="center">Documentados en un catálogo</strong>
             <div id="donut-documentados" class="circle-progressbar" data-pct="{{ documentados_pct }}"></div>
         </div>
         <div class="col-lg-3">
-            <strong>Compromisos descargables</strong>
+            <strong>Descargables</strong>
             <div id="donut-descargables" class="circle-progressbar" data-pct="{{ descargables_pct }}"></div>
         </div>
 
         <div class="col-lg-3">
-            <strong>Datasets documentados</strong>
+            <strong>Documentados según el perfil de metadatos</strong>
             <div id="donut-metadatos" class="circle-progressbar" data-pct="{{ ok_pct }}"></div>
         </div>
 
         <div class="col-lg-3">
-            <strong>Datasets actualizados</strong>
+            <strong>Actualizados</strong>
             <div id="donut-actualizados" class="circle-progressbar" data-pct="{{ actualizados_pct }}"></div>
         </div>
     </div>
@@ -51,13 +53,13 @@
     <div class="row bottom-button center">
         <div class="col-lg-6">
             <form method="get" action="{% url 'dashboard:compromisos' %}">
-                <button type="submit" class="btn btn-primary">Ver más datos del PAD</button>
+                <button type="submit" class="btn btn-primary">Ver datos por jurisdicción</button>
             </form>
         </div>
 
         <div class="col-lg-6">
             <form method="get" action="{% url 'dashboard:nodos' %}">
-                <button type="submit" class="btn btn-primary">Ver más datos de la red de nodos</button>
+                <button type="submit" class="btn btn-primary">Ver datos por catálogo</button>
             </form>
         </div>
     </div>

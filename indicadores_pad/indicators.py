@@ -11,6 +11,7 @@ DISTRIBUCION = 13
 
 
 class PADIndicators:
+
     def __init__(self, reader=SpreadsheetReader(), data_json=DataJson()):
         """Clase que calcula los indicadores del PAD.
 
@@ -63,7 +64,6 @@ class PADIndicators:
             'pad_distribuciones_cant': self.count_distributions(sheet)
         })
 
-
         return indicators, network_indics
 
     @staticmethod
@@ -79,11 +79,11 @@ class PADIndicators:
     def generate_network_indicators(indicators):
         """Suma los indicadores de cada jurisdicción para generar los
         indicadores agregados de la planilla entera del PAD.
-        
+
         Args:
             indicators (dict): Diccionario con los indicadores desagregados
                 calculados con los métodos 'generate_'
-        
+
         Returns:
             dict: diccionario con los indicadores sumados
         """
@@ -119,7 +119,7 @@ class PADIndicators:
         return network_indicators
 
     def generate_count_indicators(self, spreadsheet):
-        """Genera dos indicadores: cantidad de items y de jurisdicciones de 
+        """Genera dos indicadores: cantidad de items y de jurisdicciones de
         la planilla entera"""
 
         count = self.reader.count_compromisos(spreadsheet)
@@ -162,11 +162,12 @@ class PADIndicators:
             'dataset_title'))
 
     def compromiso_is_updated(self, compromiso):
-        """Verifica que un compromiso esté actualizado. Un compromiso se
-        considera como actualizado si hay al menos una distribución cuyo 
-        dataset_accrualPeriodicity es de igual o menor agregación temporal que 
-        compromiso_actualizacion
-        
+        """Verifica que un compromiso esté actualizado.
+
+        Un compromiso se considera como actualizado si hay al menos una
+        distribución cuyo dataset_accrualPeriodicity es de igual o menor
+        agregación temporal que compromiso_actualizacion.
+
         Args:
             compromiso (dict): compromiso obtenido de la lectura de la planilla
                 de cálculo del PAD
@@ -186,7 +187,7 @@ class PADIndicators:
     def compare_accrual_periodicity(periodicity, other):
         """Devuelve true si 'periodicity' es de menor o igual período que
         'other'
-        
+
         Args:
             periodicity (str): periodicity ISO 8601, por ejemplo 'R/P1Y' para
                 período anual.
@@ -210,7 +211,7 @@ class PADIndicators:
     def generate_format_indicator(compromisos):
         """Genera el indicador de formatos: un diccionario que cuenta los
         formatos presentes de las distribuciones dentro del PAD
-        
+
         Args:
             compromisos (list): lista de dicts de una spreadsheet ya parseada
         Returns:
@@ -234,7 +235,7 @@ class PADIndicators:
         """Genera el indicador de frecuencia: Un diccionario que cuenta las
         periodicidades de actualización de todas las distribuciones dentro del
         PAD
-        
+
         Args:
             compromisos (list): lista de dicts de una spreadsheet ya parseada
         Returns:
@@ -258,7 +259,7 @@ class PADIndicators:
         """Genera los indicadores de descarga. Un compromiso se considera como
         descargable si todas sus distribuciones tienen un link válido de
         descarga en el campo 'distribution_downloadURL
-        
+
         Args:
             compromisos (list): lista de dicts de una spreadsheet ya parseada
         Returns:
@@ -285,7 +286,7 @@ class PADIndicators:
         """Verifica que un compromiso sea descargable. Se lo consierará como
         descargable si todas sus distribuciones tienen un link válido en el
         campo 'distribution_downloadURL', es decir que el request de 200
-        
+
         Args:
             compromiso (dict): compromiso obtenido de la lectura de la planilla
                 de cálculo del PAD
@@ -313,9 +314,9 @@ class PADIndicators:
 
     def generate_license_indicators(self, compromisos):
         """Genera los indicadores de licencia. Un compromiso es
-        considerado como licenciado cuando todos sus datasets asociadas 
+        considerado como licenciado cuando todos sus datasets asociadas
         tienen algún valor en el campo dataset_license
-        
+
         Args:
             compromisos (list): lista de dicts de una spreadsheet ya parseada
         Returns:
@@ -342,7 +343,7 @@ class PADIndicators:
         """Verifica si un compromiso está licenciado. Se lo considerará como
         licenciado a un compromiso si todos sus datasets asociadas tienen algún
         valor en el campo 'dataset_license'
-        
+
         Args:
             compromiso (dict): compromiso obtenido de la lectura de la planilla
                 de cálculo del PAD
@@ -351,7 +352,8 @@ class PADIndicators:
         """
 
         for dataset in compromiso.get('dataset', []):
-            # Chequeo campo existente y no falso (i.e. distinto de string vacío)
+            # Chequeo campo existente y no falso (i.e. distinto de string
+            # vacío)
             if not dataset.get('dataset_license') or \
                     not dataset['dataset_license']:
                 return False

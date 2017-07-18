@@ -90,12 +90,12 @@ class SpreadsheetReader:
     def count_compromisos(self, sheet_id):
         """Cuenta los compromisos de la planilla pasada. Los compromisos se
         contarán de la hoja de 'pad_compromisos'.
-        
+
         Args:
             sheet_id (str): ID de la planilla del PAD
-            
+
         Returns:
-            dict: claves 'jurisdicciones_cant' y 'compromisos_cant' con los 
+            dict: claves 'jurisdicciones_cant' y 'compromisos_cant' con los
                 valores respectivos
         """
 
@@ -185,6 +185,7 @@ def main():
     spreadsheet = SpreadsheetReader()
     print(json.dumps(spreadsheet.read_sheet(spreadsheet_id), indent=4))
     spreadsheet.read_sheet(spreadsheet_id)
+
 
 if __name__ == '__main__':
     main()

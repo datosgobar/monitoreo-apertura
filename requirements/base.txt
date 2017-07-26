@@ -4,3 +4,5 @@ pydatajson==0.2.16
 pyaml
 django-ordered-model==1.4.1
 google-api-python-client
+django-import-export==0.5.1
+

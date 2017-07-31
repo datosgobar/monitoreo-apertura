@@ -5,6 +5,8 @@ ssh_port=""
 checkout_branch=""
 postgresql_user=""
 postgresql_password=""
+postgresql_readonly_user=""
+postgresql_readonly_password=""
 host=""
 login_user=""
 update=""
@@ -13,6 +15,7 @@ usage() {
 	echo "Usage: `basename $0`" >&2
 	echo "(-s ssh_port) (-b checkout branch)" >&2
 	echo "(-p postgresql db user) (-P postgresql db password)" >&2
+	echo "(-i postgresql readonly user) (-I postgresql readonly password)" >&2
 	echo "(-h host to be provisioned) (-l login_user )[-u]"; >&2
 }
 if ( ! getopts "s:b:p:P:h:l:u" opt); then
@@ -33,6 +36,12 @@ while getopts "s:b:p:P:h:l:u" opt;do
       ;;
 	P)
 	  postgresql_password="$OPTARG"
+      ;;
+	i)
+	  postgresql_readonly_user="$OPTARG"
+      ;;
+	I)
+	  postgresql_readonly_password="$OPTARG"
       ;;
 	h)
 	  host="$OPTARG"
@@ -55,7 +64,9 @@ while getopts "s:b:p:P:h:l:u" opt;do
 done
 
 if [ ! "$ssh_port" ] || [ ! "$host" ] || [ ! "$login_user" ] \
-    || [ ! "$checkout_branch" ] || [ ! "$postgresql_user" ] || [ ! "$postgresql_password" ]
+    || [ ! "$checkout_branch" ] \
+    || [ ! "$postgresql_user" ] || [ ! "$postgresql_password" ] \
+    || [ ! "$postgresql_readonly_user" ] || [ ! "$postgresql_readonly_password" ]
 then
     echo "Missing options..."
     usage
@@ -66,6 +77,8 @@ fi
 extra_vars="checkout_branch=$checkout_branch \
         ansible_user=$login_user \
         ansible_port=$ssh_port \
+        postgresql_readonly_user=$postgresql_readonly_user \
+        postgresql_readonly_password=$postgresql_readonly_password \
         postgresql_user=$postgresql_user \
         postgresql_password=$postgresql_password"
 

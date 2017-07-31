@@ -41,7 +41,7 @@ application_settings_module: conf.settings.production
 
 # Postgresql
 postgresql_database_name: "{{ application_name }}_database"
-postgresql_port: 5432
+postgresql_port: 8765
 postgresql_host: "127.0.0.1"
 
 

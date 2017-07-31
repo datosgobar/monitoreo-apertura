@@ -20,21 +20,30 @@ Finalmente es necesario ejecutar el cálculo de indicadores manualmente por prim
 ### Ejecución del script
 
 El script acepta varias variables. Tener en cuenta que el usuario y contraseña de postgres es del usuario _a crear_, y no un usuario previamente creado.
+Además se creará el usuario de lectura para la base de datos.
 
     export SSH_PORT=22
     export CHECKOUT_BRANCH=master  # branch o tag a clonar
     export POSTGRESQL_USER=database_user  # psql user name
     export POSTGRESQL_PASSWORD=database_password_xxxxxxx  # user password
+    export POSTGRESQL_READONLY_USER=readonly_user  # psql user name
+    export POSTGRESQL_READONLY_PASSWORD=readonly_password_xxxxxxx  # user password
+    export POSTGRESQL_PORT=8765  # user password
     export HOST=8.8.8.8  # IP del server al que deployar
     export LOGIN_USER=root  # Usuario con acceso sudo del servidor
 
-    bash deploy.sh -s $SSH_PORT -p $POSTGRESQL_USER -P $POSTGRESQL_PASSWORD \
-        -b $CHECKOUT_BRANCH -h $HOST -l $LOGIN_USER
+    bash deploy.sh -s $SSH_PORT -h $HOST -l $LOGIN_USER \
+        -p $POSTGRESQL_USER -P $POSTGRESQL_PASSWORD \
+        -i $POSTGRESQL_READONLY_USER -I $POSTGRESQL_READONLY_PASSWORD \
+        -r $POSTGRESQL_PORT \
+        -b $CHECKOUT_BRANCH
 
 El resultado de esta ejecución es la creación de un nuevo usuario en HOST, `datosgobar`, y la configuración del stack entero para correr la aplicación, en `/home/datosgobar/webapp/`
 Un ejemplo puede ser
 
-    sh deploy.sh -s 22 -b master -p database_user -P database_password -h 181.209.63.95 -l llavandeira
+    sh deploy.sh -s 22 -b master -p database_user -P database_password \
+        -i readonly_user -I readonly_pass -r 8765 \
+        -h 181.209.63.95 -l llavandeira
 
 ### Creación de credenciales de Google Sheets
 

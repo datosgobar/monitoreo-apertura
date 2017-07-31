@@ -4,6 +4,7 @@
   postgresql_user: 
     name: "{{ postgresql_readonly_user }}"
     password: "{{postgresql_readonly_password}}"
+    port: "{{ postgresql_port }}"
   become: yes
   become_user: postgres
   vars:
@@ -11,8 +12,9 @@
 
 - name: Ensure readonly user does not have unnecessary privilege
   postgresql_user: 
-   name: "{{ postgresql_readonly_user }}"
-   role_attr_flags: NOSUPERUSER,NOCREATEDB
+    name: "{{ postgresql_readonly_user }}"
+    role_attr_flags: NOSUPERUSER,NOCREATEDB
+    port: "{{ postgresql_port }}"
   become: yes
   become_user: postgres
   vars:
@@ -24,6 +26,7 @@
     role: "{{ postgresql_readonly_user }}"
     privs: ALL
     objs: ALL_IN_SCHEMA
+    port: "{{ postgresql_port }}"
   become: yes
   become_user: postgres
   vars:
@@ -35,6 +38,7 @@
     type: database
     role: "{{ postgresql_readonly_user }}"
     grant_option: yes
+    port: "{{ postgresql_port }}"
   become: yes
   become_user: postgres
   vars:
@@ -46,6 +50,7 @@
     objs: ALL_IN_SCHEMA
     role: "{{ postgresql_readonly_user }}"
     grant_option: yes
+    port: "{{ postgresql_port }}"
   become: yes
   become_user: postgres
   vars:

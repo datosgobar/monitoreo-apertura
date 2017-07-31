@@ -4,7 +4,7 @@ SSH_KEYS = [ '~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
 
 
 application_name = "monitoreo"
-checkout_branch = "19-open-postgresql"
+checkout_branch = "master"
 database_user = "monitoreo_db_user"
 database_password = "monitoreo_db_pass"
 database_readonly_user = "monitoreo_readonly_user"

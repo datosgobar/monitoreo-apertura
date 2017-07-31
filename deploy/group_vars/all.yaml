@@ -4,10 +4,11 @@
 
 application_name: "django_application"
 application_clone_url: git@github.com:datosgobar/monitoreo-apertura.git
-# XXXXXXXXXXXXXXXXXXXXXXXXXXX
-django_secret_key:
+
 postgresql_user:
 postgresql_password:
+postgresql_readonly_user:
+postgresql_readonly_password:
 
 checkout_branch: master
 

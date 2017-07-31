@@ -41,6 +41,7 @@ application_settings_module: conf.settings.production
 # Postgresql
 postgresql_database_name: "{{ application_name }}_database"
 postgresql_port: 5432
+postgresql_host: "127.0.0.1"
 
 
 # Systemd
@@ -92,7 +93,8 @@ django_settings:
   DATABASE_NAME: "{{ postgresql_database_name }}"
   DATABASE_USER: "{{ postgresql_user }}"
   DATABASE_PASSWORD: "{{ postgresql_password }}"
-  DATABASE_HOST: "127.0.0.1"
+  DATABASE_PORT: "{{ postgresql_port }}"
+  DATABASE_HOST: "{{ postgresql_host }}"
   GOOGLE_DRIVE_PROJECT_CREDENTIALS: "{{application_conf}}client_secret.json"
   GOOGLE_DRIVE_USER_CREDENTIALS: "{{application_conf}}user_credentials.json"
 

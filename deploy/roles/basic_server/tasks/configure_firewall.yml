@@ -25,6 +25,7 @@
     - 22
     - 80
     - 443
+    - "{{ postgresql_port }}"
 
 - name: Enable firewall
   ufw:

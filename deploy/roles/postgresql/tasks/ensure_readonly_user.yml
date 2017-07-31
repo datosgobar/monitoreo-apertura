@@ -1,0 +1,69 @@
+---
+
+- name: Ensure readonly user has access to database
+  postgresql_user: 
+    name: "{{ postgresql_readonly_user }}"
+    password: "{{postgresql_readonly_password}}"
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Ensure readonly user does not have unnecessary privilege
+  postgresql_user: 
+   name: "{{ postgresql_readonly_user }}"
+   role_attr_flags: NOSUPERUSER,NOCREATEDB
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- postgresql_privs:
+    db: "{{ postgresql_database_name }}"
+    state: absent
+    role: "{{ postgresql_readonly_user }}"
+    privs: ALL
+    objs: ALL_IN_SCHEMA
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- postgresql_privs:
+    db: "{{ postgresql_database_name }}"
+    privs: CONNECT
+    type: database
+    role: "{{ postgresql_readonly_user }}"
+    grant_option: yes
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- postgresql_privs:
+    db: "{{ postgresql_database_name }}"
+    privs: SELECT
+    objs: ALL_IN_SCHEMA
+    role: "{{ postgresql_readonly_user }}"
+    grant_option: yes
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- lineinfile:
+    path: /etc/postgresql/9.5/main/pg_hba.conf
+    regexp: '^host {{ postgresql_database_name }} {{ postgresql_readonly_user }}'
+    insertafter: '^# TYPE  DATABASE        USER'
+    line: 'host {{ postgresql_database_name }} {{ postgresql_readonly_user }} 0.0.0.0/0 md5'
+
+- lineinfile:
+    path: /etc/postgresql/9.5/main/postgresql.conf
+    regexp: '^listen_addresses.*'
+    insertbefore: '#listen_addresses.*'
+    line: "listen_addresses = '*'"
+
+- lineinfile:
+    path: /etc/postgresql/9.5/main/postgresql.conf
+    regexp: '^port =.*'
+    line: "port = {{ postgresql_port }}"

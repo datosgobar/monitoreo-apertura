@@ -26,6 +26,7 @@
     - "{{ bins_dir }}"
 
 - include: ensure_database.yml
+- include: ensure_readonly_user.yml
 
 # Systemd unit
 - name: Enable postgresql systemd unit

@@ -1,0 +1,26 @@
+---
+
+- name: Allow readonly user to connect by open post
+  lineinfile:
+    path: /etc/postgresql/9.5/main/pg_hba.conf
+    regexp: '^host {{ postgresql_database_name }} {{ postgresql_readonly_user }}'
+    insertafter: '^# TYPE  DATABASE        USER'
+    line: 'host {{ postgresql_database_name }} {{ postgresql_readonly_user }} 0.0.0.0/0 md5'
+
+- name: Listen to all interfaces
+  lineinfile:
+    path: /etc/postgresql/9.5/main/postgresql.conf
+    regexp: '^listen_addresses.*'
+    insertbefore: '#listen_addresses.*'
+    line: "listen_addresses = '*'"
+
+- name: Change psql port
+  lineinfile:
+    path: /etc/postgresql/9.5/main/postgresql.conf
+    regexp: '^port =.*'
+    line: "port = {{ postgresql_port }}"
+
+- name: Restart psql
+  service: 
+    state: restarted
+    name: postgresql.service

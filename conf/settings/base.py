@@ -1,9 +1,12 @@
 #! coding: utf-8
+# noinspection PyUnresolvedReferences
+
 from __future__ import absolute_import, unicode_literals
 
 from os.path import dirname
 
 import environ
+from .indicators import *
 
 SETTINGS_DIR = environ.Path(__file__) - 1
 ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)

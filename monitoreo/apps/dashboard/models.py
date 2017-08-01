@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.utils import timezone
 from django.db import models
+from django.conf import settings
 from ordered_model.models import OrderedModel
 
 
@@ -75,3 +76,14 @@ class TableColumn(OrderedModel):
 
     def __str__(self):
         return self.__unicode__().encode('utf-8')
+
+    def save(self, *args, **kwargs):
+        if not self.full_name:
+            for indicator_info in settings.INDICATORS_INFO:
+                name = indicator_info['indicador_nombre']
+                table_name = indicator_info['indicador_nombre_tabla']
+                if self.indicator.nombre == name:
+                    self.full_name = table_name
+                    break
+
+        super(TableColumn, self).save(*args, **kwargs)

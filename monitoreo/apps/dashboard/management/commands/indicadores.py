@@ -1,14 +1,14 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
-from datetime import date
 from django.db.utils import DataError
-
-from pydatajson import DataJson
+from django.conf import settings
 from django.core.management.base import BaseCommand
+from pydatajson import DataJson
+
 from indicadores_pad.indicators import PADIndicators
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
-    IndicatorType
+    IndicatorType, TableColumn
 from monitoreo.apps.dashboard.helpers import load_catalogs
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 CENTRAL = URL + 'datosgobar/data.json'
@@ -38,6 +38,10 @@ class Command(BaseCommand):
         self.save_network_indics(network_indics, 'RED')
 
         self.pad_indicators()
+
+        # Creo columnas default si no existen
+        if not TableColumn.objects.count():
+            self.init_columns()
 
     def pad_indicators(self):
         pad = PADIndicators()
@@ -114,3 +118,12 @@ class Command(BaseCommand):
         self.stderr.write(u'Calculados {0} indicadores en {1} catálogos'.format(
             indic_models, len(indics_list)))
 
+    @staticmethod
+    def init_columns():
+        """ Inicializa las columnas de las tablas de indicadores a partir de
+        valores predeterminados en la configuración de la aplicación
+        """
+        for indicator_name in settings.DEFAULT_INDICATORS:
+            indicator = IndicatorType.objects.get(nombre=indicator_name)
+            column = TableColumn(indicator=indicator)
+            column.save()

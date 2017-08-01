@@ -58,8 +58,7 @@ class Command(BaseCommand):
                 indicador.save()
                 count += 1
 
-        self.stderr.write(u'Calculados indicadores del PAD'.format(
-            count))
+        self.stderr.write(u'Calculados indicadores del PAD')
 
         self.save_network_indics(network_indics, 'PAD')
 
@@ -106,7 +105,7 @@ class Command(BaseCommand):
                 indic = Indicador(jurisdiccion_nombre=catalog_name,
                                   indicador_tipo=indic_type,
                                   indicador_valor=json.dumps(value))
-                indic_models +=1
+                indic_models += 1
                 try:
                     indic.save()
                 except DataError:

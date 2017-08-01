@@ -445,10 +445,10 @@ def add_dicts(one_dict, other_dict):
         dict: resultado de la suma
     """
     result = other_dict.copy()
-    for k, v in one_dict.items():
-        if isinstance(v, dict):
-            result[k] = add_dicts(v, other_dict.get(k, {}))
+    for key, value in one_dict.items():
+        if isinstance(value, dict):
+            result[key] = add_dicts(value, other_dict.get(key, {}))
         else:
-            result[k] = result.get(k, 0) + v
+            result[key] = result.get(key, 0) + value
 
     return result

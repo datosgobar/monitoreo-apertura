@@ -1,10 +1,11 @@
 #! coding: utf-8
 import json
 from django.test import TestCase
-from monitoreo.apps.dashboard.models import Indicador, IndicadorRed
+from django.core.management import call_command
+from django.conf import settings
+from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, TableColumn
 from monitoreo.apps.dashboard.helpers import load_catalogs
 from pydatajson import DataJson
-from django.core.management import call_command
 
 
 class CommandTest(TestCase):
@@ -52,3 +53,7 @@ class CommandTest(TestCase):
                 name = indicator.indicador_tipo.nombre
                 self.assertEqual(json.loads(indicator.indicador_valor),
                                  calculated_indicators[name])
+
+    def test_columns_are_created(self):
+        for column in settings.DEFAULT_INDICATORS:
+            self.assertTrue(TableColumn.objects.get(indicator__nombre=column))

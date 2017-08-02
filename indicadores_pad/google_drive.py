@@ -86,8 +86,8 @@ def get_sheet(spreadsheet_id, range_name):
 
 def main():
     """Genera las credenciales necesarias para poder leer Google Spreadsheets.
-    Las credenciales serán escritas en el archivo que apunte las variables de
-    entorno GOOGLE_DRIVE_CREDENTIALS y GOOGLE_DRIVE_USER_CREDENTIALS.
+    Las credenciales serán escritas en el archivo que apunte la variable
+    GOOGLE_DRIVE_USER_CREDENTIALS.
     Este proceso es automáticamente ejecutado si se intenta abrir un
     documento sin tener credenciales guardadas en el sistema.
     """

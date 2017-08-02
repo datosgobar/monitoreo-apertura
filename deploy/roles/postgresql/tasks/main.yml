@@ -25,11 +25,6 @@
     - "{{ config_dir }}"
     - "{{ bins_dir }}"
 
+- include: configure.yml
 - include: ensure_database.yml
-
-# Systemd unit
-- name: Enable postgresql systemd unit
-  service: 
-    state: restarted
-    name: postgresql.service
-    enabled: yes
+- include: ensure_readonly_user.yml

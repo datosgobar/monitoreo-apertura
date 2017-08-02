@@ -1,0 +1,57 @@
+---
+
+- name: Ensure readonly user has access to database
+  postgresql_user: 
+    name: "{{ postgresql_readonly_user }}"
+    password: "{{postgresql_readonly_password}}"
+    port: "{{ postgresql_port }}"
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Ensure readonly user does not have unnecessary privilege
+  postgresql_user: 
+    name: "{{ postgresql_readonly_user }}"
+    role_attr_flags: NOSUPERUSER,NOCREATEDB
+    port: "{{ postgresql_port }}"
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- postgresql_privs:
+    db: "{{ postgresql_database_name }}"
+    state: absent
+    role: "{{ postgresql_readonly_user }}"
+    privs: ALL
+    objs: ALL_IN_SCHEMA
+    port: "{{ postgresql_port }}"
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- postgresql_privs:
+    db: "{{ postgresql_database_name }}"
+    privs: CONNECT
+    type: database
+    role: "{{ postgresql_readonly_user }}"
+    grant_option: yes
+    port: "{{ postgresql_port }}"
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- postgresql_privs:
+    db: "{{ postgresql_database_name }}"
+    privs: SELECT
+    objs: ALL_IN_SCHEMA
+    role: "{{ postgresql_readonly_user }}"
+    grant_option: yes
+    port: "{{ postgresql_port }}"
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true

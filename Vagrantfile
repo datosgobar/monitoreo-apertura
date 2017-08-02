@@ -7,6 +7,8 @@ application_name = "monitoreo"
 checkout_branch = "master"
 database_user = "monitoreo_db_user"
 database_password = "monitoreo_db_pass"
+database_readonly_user = "monitoreo_readonly_user"
+database_readonly_password = "monitoreo_readonly_pass"
 port="22"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -31,6 +33,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         "ssh_port" => port,
         "postgresql_user" => database_user,
         "postgresql_password" => database_password,
+        "postgresql_readonly_user" => database_readonly_user,
+        "postgresql_readonly_password" => database_readonly_password,
         "checkout_branch" => checkout_branch,
         "ansible_user" => "vagrant",
     }

@@ -6,7 +6,6 @@ from .models import IndicadorRed, Indicador, TableColumn
 
 
 class TableColumnAdmin(OrderedModelAdmin):
-    readonly_fields = ('full_name',)
     list_display = ('full_name', 'move_up_down_links')
 
 

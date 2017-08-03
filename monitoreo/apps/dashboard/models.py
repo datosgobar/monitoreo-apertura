@@ -69,7 +69,9 @@ class TableColumn(OrderedModel):
         verbose_name_plural = "Columnas de la tabla de indicadores de red"
 
     indicator = models.OneToOneField(IndicatorType, models.CASCADE)
-    full_name = models.CharField(max_length=100)
+    full_name = models.CharField(max_length=100,
+                                 help_text="Usa un valor por defecto si no se especifica",
+                                 blank=True)
 
     def __unicode__(self):
         return 'Columna {}'.format(self.full_name)
@@ -77,7 +79,7 @@ class TableColumn(OrderedModel):
     def __str__(self):
         return self.__unicode__().encode('utf-8')
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if not self.full_name:
             for indicator_info in settings.INDICATORS_INFO:
                 name = indicator_info['indicador_nombre']
@@ -85,5 +87,3 @@ class TableColumn(OrderedModel):
                 if self.indicator.nombre == name:
                     self.full_name = table_name
                     break
-
-        super(TableColumn, self).save(*args, **kwargs)

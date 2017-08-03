@@ -20,5 +20,6 @@ class ColumnTest(TestCase):
         with self.settings(INDICATORS_INFO=self.indicators_info):
             column = TableColumn(
                 indicator=IndicatorType.objects.get(nombre=self.indicator_name))
+            column.clean()
             column.save()
-            self.assertTrue(column.full_name == self.indicator_full_name)
+            self.assertEqual(column.full_name, self.indicator_full_name)

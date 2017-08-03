@@ -25,7 +25,7 @@ class Indicador(models.Model):
     fecha = models.DateField()
     jurisdiccion_nombre = models.CharField(max_length=300)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
-    indicador_valor = models.CharField(max_length=2000)
+    indicador_valor = models.TextField()
 
     def __init__(self, *args, **kwargs):
         # Columna fecha siempre tiene el timestamp del momento de creación

@@ -66,9 +66,6 @@ class Command(BaseCommand):
         # Itero sobre los indicadores de red, creando modelos y agregándolos
         # a 'network_indicators'
         for indic_name, value in network_indics.items():
-            if indic_name == 'datasets_no_federados':
-                continue
-
             indic_type = IndicatorType.objects.get_or_create(
                 nombre=indic_name,
                 tipo=indic_class)[0]
@@ -92,12 +89,12 @@ class Command(BaseCommand):
         indic_models = 0  # Lista con todos los indicadores generados
         for indicators in indics_list:
             catalog_name = names[indics_list.index(indicators)]
+            if not catalog_name:  # Fallback en caso de catálogos muy erróneos
+                catalog_name = "Catálogo sin nombre"
 
             # Itero sobre los indicadores calculados, creando modelos y
             # agregándolos a la lista 'indicators'
             for indic_name, value in indicators.items():
-                if indic_name == 'datasets_no_federados':
-                    continue
 
                 indic_type = IndicatorType.objects.get_or_create(
                     nombre=indic_name,

@@ -30,12 +30,10 @@ class CommandTest(TestCase):
     def test_verify_network_indicators(self):
         indicators = IndicadorRed.objects.all()
         for network_indicator, value in self.network_indicators.items():
-            # Salteo indicador que no se guarda en el management command
-            if network_indicator == 'datasets_no_federados':
-                continue
             indicator = indicators.filter(indicador_tipo__nombre=network_indicator)
-            self.assertTrue(indicator, 'Query no vacia: filtro por ' + network_indicator)
+            self.assertTrue(indicator, 'Query vacia: filtro por ' + network_indicator)
             indicator = indicator[0]
+            value = json.loads(json.dumps(value))
             self.assertEqual(json.loads(indicator.indicador_valor), value)
 
     def test_verify_individual_indicators(self):
@@ -51,8 +49,8 @@ class CommandTest(TestCase):
             indics = Indicador.objects.filter(jurisdiccion_nombre=catalog_name)
             for indicator in indics:
                 name = indicator.indicador_tipo.nombre
-                self.assertEqual(json.loads(indicator.indicador_valor),
-                                 calculated_indicators[name])
+                value = json.loads(json.dumps(calculated_indicators[name]))
+                self.assertEqual(json.loads(indicator.indicador_valor), value)
 
     def test_columns_are_created(self):
         for column in settings.DEFAULT_INDICATORS:

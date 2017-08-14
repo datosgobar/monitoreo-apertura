@@ -50,7 +50,7 @@ class IndicadorRed(models.Model):
 
     fecha = models.DateField()
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
-    indicador_valor = models.CharField(max_length=300)
+    indicador_valor = models.TextField()
 
     def __init__(self, *args, **kwargs):
         kwargs['fecha'] = timezone.now()

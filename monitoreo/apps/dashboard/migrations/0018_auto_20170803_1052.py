@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='tablecolumn',
             name='full_name',
-            field=models.CharField(default='', help_text='Foo bar', max_length=100),
+            field=models.CharField(default='', max_length=100),
         ),
     ]

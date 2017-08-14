@@ -122,4 +122,5 @@ class Command(BaseCommand):
         for indicator_name in settings.DEFAULT_INDICATORS:
             indicator = IndicatorType.objects.get(nombre=indicator_name)
             column = TableColumn(indicator=indicator)
+            column.clean()  # Setea el nombre default
             column.save()

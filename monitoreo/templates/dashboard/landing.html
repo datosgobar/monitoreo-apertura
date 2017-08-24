@@ -11,7 +11,6 @@
 <div class="container">
     <div class="row">
         <h1 class="title center">Monitoreo del Plan de Apertura de Datos</h1>
-        <p>de la Administración Pública Nacional</p>
         <p><strong>Fecha:</strong> {% now "d \d\e F, Y" %}</p>
         <p><strong>Explorá el estado de los {{ items }} compromisos de apertura</strong> que asumieron las {{ jurisdicciones }} jurisdicciones de la Administración Pública Nacional, marcando el piso de compromiso del gobierno con la apertura de datos.</p>
         <p>También podés <strong>ver el estado de los {{ datasets }} conjuntos de datos</strong> publicados en los {{ catalogos }} catálogos que componen la Red de Nodos de Datos Abiertos y en el catálogo concentrador, el portal nacional de <a href="http://www.datos.gob.ar">Datos Argentina</a>.</p>
@@ -40,7 +39,7 @@
         </div>
 
         <div class="col-lg-3">
-            <strong>Documentados según el perfil de metadatos</strong>
+            <strong>Documentados según perfil</strong>
             <div id="donut-metadatos" class="circle-progressbar" data-pct="{{ ok_pct }}"></div>
         </div>
 

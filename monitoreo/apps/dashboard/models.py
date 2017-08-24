@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.utils import timezone
 from django.db import models
+from django.conf import settings
 from ordered_model.models import OrderedModel
 
 
@@ -24,7 +25,7 @@ class Indicador(models.Model):
     fecha = models.DateField()
     jurisdiccion_nombre = models.CharField(max_length=300)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
-    indicador_valor = models.CharField(max_length=2000)
+    indicador_valor = models.TextField()
 
     def __init__(self, *args, **kwargs):
         # Columna fecha siempre tiene el timestamp del momento de creación
@@ -49,7 +50,7 @@ class IndicadorRed(models.Model):
 
     fecha = models.DateField()
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
-    indicador_valor = models.CharField(max_length=300)
+    indicador_valor = models.TextField()
 
     def __init__(self, *args, **kwargs):
         kwargs['fecha'] = timezone.now()
@@ -68,10 +69,21 @@ class TableColumn(OrderedModel):
         verbose_name_plural = "Columnas de la tabla de indicadores de red"
 
     indicator = models.OneToOneField(IndicatorType, models.CASCADE)
-    full_name = models.CharField(max_length=100)
+    full_name = models.CharField(max_length=100,
+                                 help_text="Usa un valor por defecto si no se especifica",
+                                 blank=True)
 
     def __unicode__(self):
         return 'Columna {}'.format(self.full_name)
 
     def __str__(self):
         return self.__unicode__().encode('utf-8')
+
+    def clean(self):
+        if not self.full_name:
+            for indicator_info in settings.INDICATORS_INFO:
+                name = indicator_info['indicador_nombre']
+                table_name = indicator_info['indicador_nombre_tabla']
+                if self.indicator.nombre == name:
+                    self.full_name = table_name
+                    break

@@ -16,16 +16,16 @@ from __future__ import print_function
 
 import httplib2
 import environ
-env = environ.Env()
-GOOGLE_DRIVE_PROJECT_CREDENTIALS = env('GOOGLE_DRIVE_PROJECT_CREDENTIALS',
-                                       default="")
-GOOGLE_DRIVE_USER_CREDENTIALS = env('GOOGLE_DRIVE_USER_CREDENTIALS',
-                                    default='user_credentials.json')
 from googleapiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
+ENV = environ.Env()
+GOOGLE_DRIVE_PROJECT_CREDENTIALS = ENV('GOOGLE_DRIVE_PROJECT_CREDENTIALS',
+                                       default="")
+GOOGLE_DRIVE_USER_CREDENTIALS = ENV('GOOGLE_DRIVE_USER_CREDENTIALS',
+                                    default='user_credentials.json')
 
 # If modifying these scopes, delete your previously saved credentials
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
@@ -86,8 +86,8 @@ def get_sheet(spreadsheet_id, range_name):
 
 def main():
     """Genera las credenciales necesarias para poder leer Google Spreadsheets.
-    Las credenciales serán escritas en el archivo que apunte las variables de 
-    entorno GOOGLE_DRIVE_CREDENTIALS y GOOGLE_DRIVE_USER_CREDENTIALS.
+    Las credenciales serán escritas en el archivo que apunte la variable
+    GOOGLE_DRIVE_USER_CREDENTIALS.
     Este proceso es automáticamente ejecutado si se intenta abrir un
     documento sin tener credenciales guardadas en el sistema.
     """

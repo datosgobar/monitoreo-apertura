@@ -1,7 +1,7 @@
 #! coding: utf-8
 from __future__ import print_function
 
-import google_drive
+from . import google_drive
 
 
 class SpreadsheetReader:

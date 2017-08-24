@@ -1,14 +1,14 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
-from datetime import date
 from django.db.utils import DataError
-
-from pydatajson import DataJson
+from django.conf import settings
 from django.core.management.base import BaseCommand
+from pydatajson import DataJson
+
 from indicadores_pad.indicators import PADIndicators
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
-    IndicatorType
+    IndicatorType, TableColumn
 from monitoreo.apps.dashboard.helpers import load_catalogs
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 CENTRAL = URL + 'datosgobar/data.json'
@@ -39,6 +39,10 @@ class Command(BaseCommand):
 
         self.pad_indicators()
 
+        # Creo columnas default si no existen
+        if not TableColumn.objects.count():
+            self.init_columns()
+
     def pad_indicators(self):
         pad = PADIndicators()
         indicators, network_indics = pad.generate_pad_indicators(SPREADSHEET)
@@ -54,8 +58,7 @@ class Command(BaseCommand):
                 indicador.save()
                 count += 1
 
-        self.stderr.write(u'Calculados indicadores del PAD'.format(
-            count))
+        self.stderr.write(u'Calculados indicadores del PAD')
 
         self.save_network_indics(network_indics, 'PAD')
 
@@ -63,9 +66,6 @@ class Command(BaseCommand):
         # Itero sobre los indicadores de red, creando modelos y agregándolos
         # a 'network_indicators'
         for indic_name, value in network_indics.items():
-            if indic_name == 'datasets_no_federados':
-                continue
-
             indic_type = IndicatorType.objects.get_or_create(
                 nombre=indic_name,
                 tipo=indic_class)[0]
@@ -89,12 +89,12 @@ class Command(BaseCommand):
         indic_models = 0  # Lista con todos los indicadores generados
         for indicators in indics_list:
             catalog_name = names[indics_list.index(indicators)]
+            if not catalog_name:  # Fallback en caso de catálogos muy erróneos
+                catalog_name = "Catálogo sin nombre"
 
             # Itero sobre los indicadores calculados, creando modelos y
             # agregándolos a la lista 'indicators'
             for indic_name, value in indicators.items():
-                if indic_name == 'datasets_no_federados':
-                    continue
 
                 indic_type = IndicatorType.objects.get_or_create(
                     nombre=indic_name,
@@ -102,7 +102,7 @@ class Command(BaseCommand):
                 indic = Indicador(jurisdiccion_nombre=catalog_name,
                                   indicador_tipo=indic_type,
                                   indicador_valor=json.dumps(value))
-                indic_models +=1
+                indic_models += 1
                 try:
                     indic.save()
                 except DataError:
@@ -114,3 +114,13 @@ class Command(BaseCommand):
         self.stderr.write(u'Calculados {0} indicadores en {1} catálogos'.format(
             indic_models, len(indics_list)))
 
+    @staticmethod
+    def init_columns():
+        """ Inicializa las columnas de las tablas de indicadores a partir de
+        valores predeterminados en la configuración de la aplicación
+        """
+        for indicator_name in settings.DEFAULT_INDICATORS:
+            indicator = IndicatorType.objects.get(nombre=indicator_name)
+            column = TableColumn(indicator=indicator)
+            column.clean()  # Setea el nombre default
+            column.save()

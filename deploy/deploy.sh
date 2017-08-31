@@ -20,12 +20,12 @@ usage() {
 	echo "(-r postgresql port)" >&2
 	echo "(-h host to be provisioned) (-l login_user )[-u]"; >&2
 }
-if ( ! getopts "s:b:p:P:h:l:u" opt); then
+if ( ! getopts "s:b:p:P:i:I:r:h:l:u" opt); then
     usage;
 	exit $E_OPTERROR;
 fi
 
-while getopts "s:b:p:P:h:l:u" opt;do
+while getopts "s:b:p:P:i:I:r:h:l:u" opt;do
 	case "$opt" in
 	s)
 	  ssh_port="$OPTARG"

@@ -33,7 +33,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 RAVEN_CONFIG = {
-    'dsn': os.environ['RAVEN_DSN'],
+    'dsn': os.environ.get('RAVEN_DSN'),
 }
 
 INSTALLED_APPS = INSTALLED_APPS + ('raven.contrib.django.raven_compat',)

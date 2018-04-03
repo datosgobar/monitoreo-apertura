@@ -1,8 +1,8 @@
 Django==1.10.7
 django-environ==0.4.1
-pydatajson==0.2.22
+pydatajson>=0.3.21
 pyaml
 django-ordered-model==1.4.1
 google-api-python-client
 django-import-export==0.5.1
-
+git+git://github.com/datosgobar/django-datajsonar@0.0.1

@@ -146,11 +146,15 @@ DJANGO_BASE_APPS = (
 
 VENDOR_APPS = (
     'ordered_model',
-    'import_export'
+    'import_export',
+    'django_rq',
+    'scheduler',
 )
 
 APPS = (
     'monitoreo.apps.dashboard',
+    'django_datajsonar.apps.api',
+    'django_datajsonar.apps.management',
 )
 
 INSTALLED_APPS = DJANGO_BASE_APPS + VENDOR_APPS + APPS
@@ -201,3 +205,43 @@ GOOGLE_DRIVE_USER_CREDENTIALS = env('GOOGLE_DRIVE_USER_CREDENTIALS',
 # EMAILS
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
+
+
+DEFAULT_REDIS_HOST = env("DEFAULT_REDIS_HOST", default="localhost")
+DEFAULT_REDIS_PORT = env("DEFAULT_REDIS_PORT", default="6379")
+DEFAULT_REDIS_DB = env("DEFAULT_REDIS_DB", default="0")
+
+RQ_QUEUES = {
+    'indexing': {
+        'HOST': DEFAULT_REDIS_HOST,
+        'PORT': DEFAULT_REDIS_PORT,
+        'DB': DEFAULT_REDIS_DB,
+    },
+}
+
+DISTRIBUTION_INDEX_JOB_TIMEOUT = 1000  # Segundos
+
+# Nombre del grupo de usuarios que reciben reportes de indexación
+READ_DATAJSON_RECIPIENT_GROUP = 'read_datajson_recipients'
+
+RQ_SHOW_ADMIN_LINK = True
+
+# Metadata blacklists
+CATALOG_BLACKLIST = [
+    "themeTaxonomy"
+]
+
+DATASET_BLACKLIST = [
+
+]
+
+DISTRIBUTION_BLACKLIST = [
+    "scrapingFileSheet"
+]
+
+FIELD_BLACKLIST = [
+    "scrapingDataStartCell",
+    "scrapingIdentifierCell",
+    "scrapingDataStartCell",
+]
+

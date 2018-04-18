@@ -87,3 +87,13 @@ class TableColumn(OrderedModel):
                 if self.indicator.nombre == name:
                     self.full_name = table_name
                     break
+
+
+class HarvestingNode(models.Model):
+    class Meta:
+        verbose_name_plural = "Nodos federadores"
+
+    name = models.CharField(max_length=100)
+    url = models.URLField()
+    apikey = models.CharField(max_length=50)
+    enabled = models.BooleanField(default=False)

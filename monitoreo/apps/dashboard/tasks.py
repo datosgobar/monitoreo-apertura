@@ -20,17 +20,13 @@ def harvest_catalog(portal_url, apikey):
     for node in nodes:
         catalog_id = node.catalog_id
         catalog = DataJson(node.catalog_url)
-        dataset_list = get_dataset_list(node, catalog)
+        dataset_list = get_dataset_list(node)
         try:
             harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
         except Exception:
             pass
 
 
-def get_dataset_list(node, catalog):
+def get_dataset_list(node):
     datasets = Dataset.objects.filter(catalog__identifier=node.catalog_id, indexable=True)
-    catalog_report = catalog.validate_catalog()
-    valid_datasets = set([ds['identifier'] for ds in catalog_report['error']['dataset']
-                          if ds['status'] == 'OK'])
-    return [dataset.identifier for dataset in datasets
-            if dataset.identifier in valid_datasets]
+    return [dataset.identifier for dataset in datasets]

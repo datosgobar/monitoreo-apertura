@@ -1,8 +1,9 @@
 from django.contrib import admin
 from ordered_model.admin import OrderedModelAdmin
-from import_export import resources, fields
+from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from .models import IndicadorRed, Indicador, TableColumn
+from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode
+from .tasks import federate_catalog
 
 
 class TableColumnAdmin(OrderedModelAdmin):
@@ -39,6 +40,27 @@ class IndicatorRedAdmin(ImportExportModelAdmin):
     resource_class = IndicadorRedResource
 
 
+class HarvestingNodeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'url', 'enabled')
+    actions = ('run_harvest', 'enable', 'disable')
+
+    def enable(self, _, queryset):
+        queryset.update(enabled=True)
+    enable.short_description = 'Habilitar como nodo federador'
+
+    def disable(self, _, queryset):
+        queryset.update(enabled=False)
+    disable.short_description = 'Inhabilitar federacion del nodo'
+
+    def federate(self, _, queryset):
+        for harvesting_node in queryset:
+            portal_url = harvesting_node.url
+            apikey = harvesting_node.apikey
+            federate_catalog(portal_url, apikey)
+    federate.short_description = 'Correr federacion'
+
+
+admin.site.register(HarvestingNode, HarvestingNodeAdmin)
 admin.site.register(Indicador, IndicatorAdmin)
 admin.site.register(IndicadorRed, IndicatorRedAdmin)
 admin.site.register(TableColumn, TableColumnAdmin)

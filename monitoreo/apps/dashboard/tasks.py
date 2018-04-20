@@ -7,7 +7,7 @@ from django_datajsonar.apps.api.models import Dataset
 from .models import HarvestingNode
 
 
-def harvest_run():
+def federation_run():
     harvesting_nodes = HarvestingNode.objects.filter(enabled=True)
     for harvester in harvesting_nodes:
         portal_url = harvester.url
@@ -25,6 +25,7 @@ def harvest_catalog(portal_url, apikey):
             harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
         except Exception:
             pass
+        harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
 
 
 def get_dataset_list(node):

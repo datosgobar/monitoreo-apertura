@@ -38,6 +38,7 @@ class IndicadorRedResource(resources.ModelResource):
 class IndicatorRedAdmin(ImportExportModelAdmin):
     resource_class = IndicadorRedResource
 
+
 admin.site.register(Indicador, IndicatorAdmin)
 admin.site.register(IndicadorRed, IndicatorRedAdmin)
 admin.site.register(TableColumn, TableColumnAdmin)

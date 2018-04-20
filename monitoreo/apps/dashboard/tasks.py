@@ -8,7 +8,7 @@ from django_datajsonar.apps.management.models import Node
 from django_datajsonar.apps.api.models import Dataset
 
 
-def harvest_run():
+def federation_run():
     portal_url = getattr(settings, 'HARVESTING_URL', None)
     apikey = getattr(settings, 'HARVESTING_URL_APIKEY', None)
 

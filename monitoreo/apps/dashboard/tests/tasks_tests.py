@@ -10,7 +10,7 @@ from django.test import TestCase
 from pydatajson.core import DataJson
 from django_datajsonar.apps.management.models import Node
 from django_datajsonar.apps.api.models import Catalog, Dataset
-from ..tasks import harvest_run, get_dataset_list
+from ..tasks import federation_run, get_dataset_list
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
 
@@ -46,7 +46,7 @@ class HarvestRunTest(TestCase):
 
     @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
     def test_indexable_node_gets_harvested(self, mock_harvest):
-        harvest_run()
+        federation_run()
         mock_harvest.assert_called_with(DataJson(self.get_sample('full_data.json')), 'harvest_url',
                                         'apikey', 'id1', ['ds_1_0', 'ds_1_1', 'ds_1_2'])
 
@@ -58,7 +58,7 @@ class HarvestRunTest(TestCase):
         node2 = Node.objects.get(catalog_id='id2')
         node2.indexable = True
         node2.save()
-        harvest_run()
+        federation_run()
         mock_harvest.assert_called_with(DataJson(self.get_sample('minimum_data.json')),
                                         'harvest_url', 'apikey', 'id2', [])
 
@@ -70,7 +70,7 @@ class HarvestRunTest(TestCase):
         dataset = Dataset.objects.get(identifier='ds_2_1')
         dataset.indexable = True
         dataset.save()
-        harvest_run()
+        federation_run()
         mock_harvest.assert_called_with(DataJson(self.get_sample('minimum_data.json')),
                                         'harvest_url', 'apikey', 'id2', ['ds_2_1'])
 
@@ -79,7 +79,7 @@ class HarvestRunTest(TestCase):
         dataset = Dataset.objects.get(identifier='ds_1_1')
         dataset.indexable = False
         dataset.save()
-        harvest_run()
+        federation_run()
         mock_harvest.assert_called_with(DataJson(self.get_sample('full_data.json')),
                                         'harvest_url', 'apikey', 'id1', ['ds_1_0', 'ds_1_2'])
 

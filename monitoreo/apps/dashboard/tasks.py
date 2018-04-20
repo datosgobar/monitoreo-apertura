@@ -1,5 +1,5 @@
 #! coding: utf-8
-
+from ckanapi.errors import ValidationError, NotAuthorized
 from pydatajson.core import DataJson
 from pydatajson.federation import harvest_catalog_to_ckan
 from django_datajsonar.apps.management.models import Node
@@ -23,9 +23,8 @@ def harvest_catalog(portal_url, apikey):
         dataset_list = get_dataset_list(node)
         try:
             harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
-        except Exception:
+        except (NotAuthorized, ValidationError, KeyError):
             pass
-        harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
 
 
 def get_dataset_list(node):

@@ -52,12 +52,12 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
         queryset.update(enabled=False)
     disable.short_description = 'Inhabilitar federacion del nodo'
 
-    def run_harvest(self, _, queryset):
+    def federate(self, _, queryset):
         for harvesting_node in queryset:
             portal_url = harvesting_node.url
             apikey = harvesting_node.apikey
             harvest_catalog(portal_url, apikey)
-    run_harvest.short_description = 'Correr federacion'
+    federate.short_description = 'Correr federacion'
 
 
 admin.site.register(HarvestingNode, HarvestingNodeAdmin)

@@ -18,6 +18,7 @@
     - basic_server
     - { role: maintenance, maintenance_on: yes }
     - postgresql
+    - redis
 
 - hosts: all
   become: yes

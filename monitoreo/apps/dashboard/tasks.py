@@ -12,10 +12,10 @@ def federation_run():
     for harvester in harvesting_nodes:
         portal_url = harvester.url
         apikey = harvester.apikey
-        harvest_catalog(portal_url, apikey)
+        federate_catalog(portal_url, apikey)
 
 
-def harvest_catalog(portal_url, apikey):
+def federate_catalog(portal_url, apikey):
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
         catalog_id = node.catalog_id

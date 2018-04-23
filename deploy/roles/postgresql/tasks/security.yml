@@ -1,0 +1,8 @@
+---
+
+- name: Allow redis ports
+  ufw:
+    port: "8765"
+    rule: allow
+    proto: tcp
+

@@ -2,6 +2,7 @@
 import os
 # noinspection PyUnresolvedReferences
 from .base import *
+import raven
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG

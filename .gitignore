@@ -131,3 +131,4 @@ ENV/
 
 # Ansible session files
 deploy/site.retry
+.nvmrc

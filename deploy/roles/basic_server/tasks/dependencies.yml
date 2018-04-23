@@ -16,8 +16,6 @@
     - libxml2-dev
     - libxslt-dev
     - nginx
-    - vim
-    - acl # required for running ansible unprivileged user tasks
 
 
 # Somehow required by ansible pip module

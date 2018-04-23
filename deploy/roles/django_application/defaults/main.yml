@@ -1,0 +1,4 @@
+---
+
+sentry_dsn:
+sentry_environment: testing

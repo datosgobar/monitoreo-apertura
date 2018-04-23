@@ -1,6 +1,7 @@
 #! coding: utf-8
 
 import os
+
 try:
     from mock import patch, MagicMock
 except ImportError:

@@ -92,8 +92,8 @@ class HarvestRunTest(TestCase):
 
     def test_get_dataset_list_return_correct_ids(self):
         node1 = Node.objects.get(catalog_id='id1')
-        dj = DataJson(self.get_sample('full_data.json'))
-        dataset_list = get_dataset_list(node1, dj)
+        datajson = DataJson(self.get_sample('full_data.json'))
+        dataset_list = get_dataset_list(node1, datajson)
         self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c777',
                                '99db6631-d1c9-470b-a73e-c62daa32c420'],
                               dataset_list)
@@ -101,9 +101,9 @@ class HarvestRunTest(TestCase):
                                       identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset.identifier = 'new_identifier'
         dataset.save()
-        ds = dj.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
-        ds['identifier'] = 'new_identifier'
-        dataset_list = get_dataset_list(node1, dj)
+        dataset = datajson.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
+        dataset['identifier'] = 'new_identifier'
+        dataset_list = get_dataset_list(node1, datajson)
         self.assertItemsEqual(['new_identifier',
                                '99db6631-d1c9-470b-a73e-c62daa32c420'],
                               dataset_list)
@@ -111,11 +111,11 @@ class HarvestRunTest(TestCase):
                                       identifier='new_identifier')
         dataset.indexable = False
         dataset.save()
-        dataset_list = get_dataset_list(node1, dj)
+        dataset_list = get_dataset_list(node1, datajson)
         self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c420'],
                               dataset_list)
 
-    def test_get_dataset_list_returns_empty_list_if_there_are_no_related_datasets(self):
+    def test_dataset_list_returns_empty_if_no_related_datasets(self):
         new_node = Node(catalog_id='id4', catalog_url=self.get_sample('full_data.json'), indexable=True)
         dataset_list = get_dataset_list(new_node, DataJson(self.get_sample('full_data.json')))
         self.assertItemsEqual([], dataset_list)

@@ -2,3 +2,5 @@
 
 ansible_user: vagrant
 ansible_ssh_pass: vagrant
+# Evita re-generar la clave ssh en cada deployment
+common_generate_ssh_key: no

@@ -33,6 +33,7 @@ application_dir: "{{ application_base_dir }}app/"
 
 application_requirements: "{{ application_dir }}requirements.txt"
 application_virtualenv_dir: "{{ application_base_dir }}.venv/"
+application_virtualenv_activate: "{{ application_virtualenv_dir }}bin/activate"
 application_env_file_link: "{{ application_dir }}conf/settings/.env"
 application_conf: "{{ config_dir}}app/"
 application_temp_dir: "{{ application_base_dir }}temp/"

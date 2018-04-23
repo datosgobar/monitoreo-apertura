@@ -65,12 +65,19 @@ Esto actualizará el repositorio automaticamente.
 Se puede probar con [vagrant](http://www.vagrantup.com/) siguiendo los siguientes pasos:
 
 ```bash
-cd deploy/
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
 vagrant up --no-provision
 # Incluyo el archivo de Vault como ejemplo
-ansible-playbook -i inventories/vagrant/hosts site.yml -v
+ansible-playbook --limit api_cluster -i inventories/vagrant/hosts site.yml -v
+
+# Luego entramos al servidor, y copiamos nustra clave privada
+vagrant ssh
+#=> sudo su datosgobar
+#=> vim ~/.ssh/id_rsa
+#= exit
+
+# finalmente corremos el deployment
+ansible-playbook -i inventories/vagrant/hosts site.yml -v 
+
 ```
 
 Además con la variable de entorno "CHECKOUT_BRANCH" se puede configurar el branch que deseamos usar _dentro_ del servidor.

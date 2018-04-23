@@ -1,5 +1,6 @@
 #! coding: utf-8
 import os
+
 try:
     from mock import patch, MagicMock
 except ImportError:
@@ -27,7 +28,8 @@ class HarvestRunTest(TestCase):
         setattr(settings, 'HARVESTING_URL_APIKEY', 'apikey')
         # Set 2 nodes
         node1 = Node(catalog_id='id1', catalog_url=cls.get_sample('full_data.json'), indexable=True)
-        node2 = Node(catalog_id='id2', catalog_url=cls.get_sample('minimum_data.json'), indexable=False)
+        node2 = Node(catalog_id='id2', catalog_url=cls.get_sample('minimum_data.json'),
+                     indexable=False)
         node1.save()
         node2.save()
         # Set Catalogs and Datasets
@@ -36,11 +38,11 @@ class HarvestRunTest(TestCase):
         catalog1.save()
         catalog2.save()
         for x in range(0, 3):
-            dataset = Dataset(identifier='ds_1_'+str(x), metadata='{}', catalog=catalog1,
+            dataset = Dataset(identifier='ds_1_' + str(x), metadata='{}', catalog=catalog1,
                               indexable=True, present=True, updated=True)
             dataset.save()
         for x in range(0, 3):
-            dataset = Dataset(identifier='ds_2_'+str(x), metadata='{}', catalog=catalog2,
+            dataset = Dataset(identifier='ds_2_' + str(x), metadata='{}', catalog=catalog2,
                               indexable=False, present=True, updated=True)
             dataset.save()
 
@@ -99,6 +101,7 @@ class HarvestRunTest(TestCase):
         self.assertItemsEqual(['ds_1_0', 'ds_1_2'], dataset_list)
 
     def test_get_dataset_list_returns_empty_list_if_there_are_no_related_datasets(self):
-        new_node = Node(catalog_id='id3', catalog_url=self.get_sample('full_data.json'), indexable=True)
+        new_node = Node(catalog_id='id3', catalog_url=self.get_sample('full_data.json'),
+                        indexable=True)
         dataset_list = get_dataset_list(new_node)
         self.assertItemsEqual([], dataset_list)

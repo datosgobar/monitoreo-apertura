@@ -13,37 +13,11 @@ El script deployea automáticamente a través de ansible y git el proyecto de Dj
 
 Se debe ejecutar el script de deploy, y además generar y subir manualmente las credenciales de google drive.
 
-Primero ejecutar el script en este directorio, `deploy.sh`. Luego, es necesario agregar dos archivos, credenciales de google drive, para calcular los indicadores de la planilla del PAD.
+Primero debemos seguir las [instrucciones de deployment](docs/index.md).
+
+Luego, es necesario agregar dos archivos, credenciales de google drive, para calcular los indicadores de la planilla del PAD.
 
 Finalmente es necesario ejecutar el cálculo de indicadores manualmente por primera vez y crear un usuario administrador del panel de control de la aplicación web.
-
-### Ejecución del script
-
-El script acepta varias variables. Tener en cuenta que el usuario y contraseña de postgres es del usuario _a crear_, y no un usuario previamente creado.
-Además se creará el usuario de lectura para la base de datos.
-
-    export SSH_PORT=22
-    export CHECKOUT_BRANCH=master  # branch o tag a clonar
-    export POSTGRESQL_USER=database_user  # psql user name
-    export POSTGRESQL_PASSWORD=database_password_xxxxxxx  # user password
-    export POSTGRESQL_READONLY_USER=readonly_user  # psql user name
-    export POSTGRESQL_READONLY_PASSWORD=readonly_password_xxxxxxx  # user password
-    export POSTGRESQL_PORT=8765  # user password
-    export HOST=8.8.8.8  # IP del server al que deployar
-    export LOGIN_USER=root  # Usuario con acceso sudo del servidor
-
-    bash deploy.sh -s $SSH_PORT -h $HOST -l $LOGIN_USER \
-        -p $POSTGRESQL_USER -P $POSTGRESQL_PASSWORD \
-        -i $POSTGRESQL_READONLY_USER -I $POSTGRESQL_READONLY_PASSWORD \
-        -r $POSTGRESQL_PORT \
-        -b $CHECKOUT_BRANCH
-
-El resultado de esta ejecución es la creación de un nuevo usuario en HOST, `datosgobar`, y la configuración del stack entero para correr la aplicación, en `/home/datosgobar/webapp/`
-Un ejemplo puede ser
-
-    sh deploy.sh -s 22 -b master -p database_user -P database_password \
-        -i readonly_user -I readonly_pass -r 8765 \
-        -h 181.209.63.95 -l llavandeira
 
 ### Creación de credenciales de Google Sheets
 
@@ -80,6 +54,4 @@ Con las credenciales provistas, se podrá ingresar al panel de administración d
 
 ## Update
 
-Una vez deployado se puede actualizar el servidor usando `update.sh`:
-
-    bash update.sh -s $SSH_PORT -b $CHECKOUT_BRANCH -h $HOST -l $LOGIN_USER
+Simplemente volver a correr el script de deployment.

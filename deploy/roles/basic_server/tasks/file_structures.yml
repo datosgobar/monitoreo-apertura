@@ -1,14 +1,6 @@
 ---
 
 
-- name: Create application directory
-  file: 
-    path: "{{ application_base_dir }}"
-    state: directory
-    owner: "{{ application_user }}"
-    group: "{{ application_group }}"
-    mode: u=rwx,g=rwx
-
 - name: Create logs, sockets, config and bins directories
   file: 
     path: "{{ item }}"

@@ -1,0 +1,18 @@
+---
+
+ansible_host: 192.168.33.10
+ansible_port: 22
+
+# psql
+
+postgresql_user: monitoreo_db_user
+postgresql_password: monitoreo_db_pass
+postgresql_readonly_user: monitoreo_readonly_user
+postgresql_readonly_password: monitoreo_readonly_pass
+
+# Django
+
+checkout_branch: master
+application_name: monitoreo
+
+

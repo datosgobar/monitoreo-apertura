@@ -1,4 +1,5 @@
 #! coding: utf-8
+
 from ckanapi.errors import ValidationError, NotAuthorized
 from pydatajson.core import DataJson
 from pydatajson.federation import harvest_catalog_to_ckan
@@ -20,13 +21,16 @@ def federate_catalog(portal_url, apikey):
     for node in nodes:
         catalog_id = node.catalog_id
         catalog = DataJson(node.catalog_url)
-        dataset_list = get_dataset_list(node)
+        dataset_list = get_dataset_list(node, catalog)
         try:
             harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
         except (NotAuthorized, ValidationError, KeyError):
             pass
 
 
-def get_dataset_list(node):
+def get_dataset_list(node, catalog):
     datasets = Dataset.objects.filter(catalog__identifier=node.catalog_id, indexable=True)
-    return [dataset.identifier for dataset in datasets]
+    catalog_report = catalog.validate_catalog()
+    valid_datasets = set([ds['identifier'] for ds in catalog_report['error']['dataset']
+                          if ds['status'] == 'OK'])
+    return [dataset.identifier for dataset in datasets if dataset.identifier in valid_datasets]

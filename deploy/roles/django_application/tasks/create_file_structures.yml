@@ -17,26 +17,3 @@
     dest: "{{ application_dir }}"
     version: "{{ checkout_branch }}"
   tags: quickly
-
-- name: Remove old code
-  file:
-    path: "{{ application_dir }}"
-    state: absent
-  tags: quickly
-
-- name: Copy new code
-  shell: "cp {{ tempapp }} {{ application_dir }} -r"
-  tags: quickly
-
-- name: Remove temp clone folder
-  file:
-    path: "{{ tempclone }}"
-    state: absent
-  become_user: "{{ ansible_user }}" # Why?!
-  become_method: sudo
-  become: yes
-
-- name: Remove temp folder
-  file:
-    path: "{{ application_temp_dir }}"
-    state: absent

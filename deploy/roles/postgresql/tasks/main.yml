@@ -28,3 +28,4 @@
 - include: configure.yml
 - include: ensure_database.yml
 - include: ensure_readonly_user.yml
+- include: security.yml

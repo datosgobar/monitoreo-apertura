@@ -36,7 +36,6 @@ ALLOWED_HOSTS = ['*']
 
 RAVEN_CONFIG = {
     'dsn': env('RAVEN_DSN', default=""),
-    'release': raven.fetch_git_sha(os.path.abspath(os.pardir)),
 }
 
 INSTALLED_APPS += 'raven.contrib.django.raven_compat',

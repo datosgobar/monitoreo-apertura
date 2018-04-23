@@ -1,6 +1,6 @@
 #! coding: utf-8
+
 import os
-import json
 try:
     from mock import patch, MagicMock
 except ImportError:

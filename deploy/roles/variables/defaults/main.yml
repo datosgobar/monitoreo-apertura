@@ -16,12 +16,14 @@ checkout_branch: master
 application_user: datosgobar
 application_group: datosgobar
 application_user_home: "/home/{{ application_user }}/"
+application_ansible_user_home: "/home/{{ application_user }}"
 
 # Application
 env_mark: "## DEFAULT VARIABLES MARK"
 
 application_base_dir: "{{ application_user_home }}webapp/"
 base_dir: "{{ application_base_dir }}"
+application_utils_dir: "{{ application_base_dir }}utils/"
 
 sockets_dir: "{{ base_dir }}sockets/"
 logs_dir: "{{ base_dir }}logs/"

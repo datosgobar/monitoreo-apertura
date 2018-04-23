@@ -1,6 +1,4 @@
 ---
 
-- include: configure_firewall.yml
 - include: dependencies.yml
-- include: users_and_group.yml
 - include: file_structures.yml

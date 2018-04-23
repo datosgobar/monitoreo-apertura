@@ -1,15 +1,6 @@
 ---
 
-# This was required because Digital Ocean's ubuntu16.04 does not provides a 'python' binary
-# We cannot make python3 default on ubuntu14.04, some scripts depends on python2
-# See http://stackoverflow.com/a/34402816
-- hosts: all
-  become: yes
-  become_method: sudo
-  gather_facts: no
-  pre_tasks:
-    - name: "Install python2 and make it default"
-      raw: sudo apt-get -y install python && rm /usr/bin/python && sudo ln -s /usr/bin/python2 /usr/bin/python
+- import_playbook: api_cluster.yml
 
 - hosts: all
   become: yes

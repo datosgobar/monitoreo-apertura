@@ -4,6 +4,8 @@ from __future__ import print_function
 from . import google_drive
 
 PAD_DISTRIBUTIONS = 'pad-distribuciones'
+PAD_COMPROMISOS = 'pad_compromisos'
+
 
 class SpreadsheetReader:
     # Valores numéricos de las filas en la hoja de distribuciones del PAD
@@ -100,7 +102,7 @@ class SpreadsheetReader:
                 valores respectivos
         """
 
-        sheet = self._read(sheet_id, 'pad_compromisos')
+        sheet = self._read(sheet_id, PAD_COMPROMISOS)
         if isinstance(sheet, dict):
             jurisdictions_count = len(sheet)
             compromisos_count = 0

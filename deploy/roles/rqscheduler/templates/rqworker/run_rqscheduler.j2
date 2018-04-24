@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "Starting RQ scheduler"
+
+. {{ application_virtualenv_dir }}bin/activate
+
+export DJANGO_SETTINGS_MODULE={{ application_settings_module }}
+
+cd {{ application_dir }};
+rqscheduler --host {{ default_redis_host }} --port {{ default_redis_port }};

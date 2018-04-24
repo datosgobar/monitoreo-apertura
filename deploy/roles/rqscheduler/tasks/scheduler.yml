@@ -1,0 +1,25 @@
+---
+
+- name: Create rqscheduler bin file
+  template:
+    src: "rqworker/run_rqscheduler.j2"
+    dest: "{{ run_rqscheduler_bin }}"
+    owner: "{{ application_user }}"
+    group: "{{ application_group }}"
+    mode: 0770
+    backup: yes
+
+- name: Create systemd unit for scheudler
+  template:
+    src: "rqworker/services/rqscheduler.service.j2"
+    dest: "/etc/systemd/system/rqscheduler.service"
+    mode: 0664
+    backup: no
+  notify:
+    - Reload systemd
+    - Enable and restart rqscheduler
+
+- name: Stop rqscheduler
+  shell: systemctl stop rqscheduler
+  notify:
+    - Enable and restart rqscheduler

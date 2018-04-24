@@ -24,6 +24,7 @@
   gather_facts: yes
   roles:
     - rqworker
+    - rqscheduler
 
 - hosts: all
   become: yes

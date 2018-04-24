@@ -56,8 +56,7 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
         for harvesting_node in queryset:
             portal_url = harvesting_node.url
             apikey = harvesting_node.apikey
-            print portal_url, apikey
-            federate_catalog(portal_url, apikey)
+            federate_catalog.delay(portal_url, apikey)
     federate.short_description = 'Correr federacion'
 
 

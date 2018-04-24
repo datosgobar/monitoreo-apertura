@@ -26,7 +26,8 @@ def federate_catalog(portal_url, apikey):
     for node in nodes:
         catalog_id = node.catalog_id
         catalog = DataJson(node.catalog_url)
-        dataset_list = get_dataset_list(node)
+        catalog.generate_distribution_ids()
+        dataset_list = get_dataset_list(node, catalog)
         try:
             harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
         except Exception as e:
@@ -34,6 +35,8 @@ def federate_catalog(portal_url, apikey):
                          (catalog_id, dataset_list, e))
 
 
-def get_dataset_list(node):
-    datasets = Dataset.objects.filter(catalog__identifier=node.catalog_id, indexable=True)
-    return [dataset.identifier for dataset in datasets]
+def get_dataset_list(node, catalog):
+    catalog_report = catalog.validate_catalog()
+    valid_datasets = [ds['identifier'] for ds in catalog_report['error']['dataset'] if ds['status'] == 'OK']
+    return list(Dataset.objects.filter(catalog__identifier=node.catalog_id, indexable=True,
+                                       identifier__in=valid_datasets).values_list("identifier", flat=True))

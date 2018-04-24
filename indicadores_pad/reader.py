@@ -3,6 +3,7 @@ from __future__ import print_function
 
 from . import google_drive
 
+PAD_DISTRIBUTIONS = 'pad-distribuciones'
 
 class SpreadsheetReader:
     # Valores numéricos de las filas en la hoja de distribuciones del PAD
@@ -29,7 +30,7 @@ class SpreadsheetReader:
         """
         if isinstance(sheet_id, dict):
             return sheet_id
-        sheet = self._read(sheet_id, 'pad_distribuciones')
+        sheet = self._read(sheet_id, PAD_DISTRIBUTIONS)
 
         if isinstance(sheet, dict):  # Hoja leída ya estaba guardada
             return sheet

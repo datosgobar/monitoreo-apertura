@@ -6,6 +6,7 @@
     state: directory
     owner: "{{ application_user }}"
     group: "{{ application_group }}" # Should this be "www-data"?
+    mode: u=rwx,g=rwx,o=rx
   with_items:
     - "{{ nginx_media_dir }}"
     - "{{ nginx_static_dir }}"

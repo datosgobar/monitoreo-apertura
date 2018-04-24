@@ -18,6 +18,13 @@
   roles:
     - django_application
 
+- hosts: rqworkers
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  roles:
+    - rqworker
+
 - hosts: all
   become: yes
   become_method: sudo

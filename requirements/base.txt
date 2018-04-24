@@ -5,4 +5,4 @@ pyaml
 django-ordered-model==1.4.1
 google-api-python-client
 django-import-export==0.5.1
--e git+git://github.com/datosgobar/django-datajsonar
+-e git+git://github.com/datosgobar/django-datajsonar#egg=django_datajsonar

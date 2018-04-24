@@ -42,7 +42,7 @@ class IndicatorRedAdmin(ImportExportModelAdmin):
 
 class HarvestingNodeAdmin(admin.ModelAdmin):
     list_display = ('name', 'url', 'enabled')
-    actions = ('run_harvest', 'enable', 'disable')
+    actions = ('federate', 'enable', 'disable')
 
     def enable(self, _, queryset):
         queryset.update(enabled=True)
@@ -56,6 +56,7 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
         for harvesting_node in queryset:
             portal_url = harvesting_node.url
             apikey = harvesting_node.apikey
+            print portal_url, apikey
             federate_catalog(portal_url, apikey)
     federate.short_description = 'Correr federacion'
 

@@ -1,11 +1,15 @@
 #! coding: utf-8
 
-from ckanapi.errors import ValidationError, NotAuthorized
+import logging
+from django_rq import job
+
 from pydatajson.core import DataJson
 from pydatajson.federation import harvest_catalog_to_ckan
 from django_datajsonar.apps.management.models import Node
 from django_datajsonar.apps.api.models import Dataset
 from .models import HarvestingNode
+
+logger = logging.getLogger(__name__)
 
 
 def federation_run():
@@ -16,6 +20,7 @@ def federation_run():
         federate_catalog(portal_url, apikey)
 
 
+@job('indexing')
 def federate_catalog(portal_url, apikey):
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
@@ -25,8 +30,9 @@ def federate_catalog(portal_url, apikey):
         dataset_list = get_dataset_list(node, catalog)
         try:
             harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
-        except (NotAuthorized, ValidationError, KeyError):
-            pass
+        except Exception as e:
+            logger.error(u"Error federando catalog: %s datasets: %s - Error: %s" %
+                         (catalog_id, dataset_list, e))
 
 
 def get_dataset_list(node, catalog):

@@ -1,0 +1,6 @@
+---
+
+- name: Allow nginx 80
+  ufw:
+    rule: allow
+    port: 80

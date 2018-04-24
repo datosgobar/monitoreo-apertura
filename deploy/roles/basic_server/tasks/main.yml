@@ -2,3 +2,4 @@
 
 - include: dependencies.yml
 - include: file_structures.yml
+- include: security.yml

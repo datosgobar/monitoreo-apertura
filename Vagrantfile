@@ -19,6 +19,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "deploy/site.yml"
     ansible.inventory_path = "deploy/inventories/vagrant/hosts"
     ansible.limit = "all"
-    ansible.verbose = "vvv"
+    ansible.verbose = "vv"
   end
 end

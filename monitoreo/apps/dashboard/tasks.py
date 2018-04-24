@@ -21,6 +21,7 @@ def federate_catalog(portal_url, apikey):
     for node in nodes:
         catalog_id = node.catalog_id
         catalog = DataJson(node.catalog_url)
+        catalog.generate_distribution_ids()
         dataset_list = get_dataset_list(node, catalog)
         try:
             harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
@@ -29,8 +30,7 @@ def federate_catalog(portal_url, apikey):
 
 
 def get_dataset_list(node, catalog):
-    datasets = Dataset.objects.filter(catalog__identifier=node.catalog_id, indexable=True)
     catalog_report = catalog.validate_catalog()
-    valid_datasets = set([ds['identifier'] for ds in catalog_report['error']['dataset']
-                          if ds['status'] == 'OK'])
-    return [dataset.identifier for dataset in datasets if dataset.identifier in valid_datasets]
+    valid_datasets = [ds['identifier'] for ds in catalog_report['error']['dataset'] if ds['status'] == 'OK']
+    return list(Dataset.objects.filter(catalog__identifier=node.catalog_id, indexable=True,
+                                       identifier__in=valid_datasets).values_list("identifier", flat=True))

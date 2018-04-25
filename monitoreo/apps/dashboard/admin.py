@@ -3,7 +3,7 @@ from ordered_model.admin import OrderedModelAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode
-from .tasks import federate_catalog
+from .tasks import federate_catalogs
 
 
 class TableColumnAdmin(OrderedModelAdmin):
@@ -56,7 +56,7 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
         for harvesting_node in queryset:
             portal_url = harvesting_node.url
             apikey = harvesting_node.apikey
-            federate_catalog.delay(portal_url, apikey)
+            federate_catalogs.delay(portal_url, apikey)
     federate.short_description = 'Correr federacion'
 
 

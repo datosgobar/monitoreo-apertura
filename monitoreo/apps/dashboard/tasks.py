@@ -32,20 +32,24 @@ def federate_catalogs(portal_url, apikey):
 def federate_catalog(node, portal_url, apikey):
     catalog = get_catalog_from_node(node)
     catalog_id = node.catalog_id
+
     if not catalog:
         logger.info(u"No se puede acceder al catálogo: %s" %
                     node.catalog_id)
-        return u"No se pudo acceder al catálogo"
+        raise Exception(u"No se pudo acceder al catálogo: %s" % node.catalog_id)
+
     catalog.generate_distribution_ids()
     dataset_list = get_dataset_list(node, catalog)
+
     try:
         harvested_ids = harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, dataset_list)
         return u"Se federaron los datasets %s" % (harvested_ids,)
+
     except Exception as e:
         msg = u"Error federando catalog: %s datasets: %s - Error: %s" % \
               (catalog_id, dataset_list, e)
         logger.error(msg)
-        return msg
+        raise Exception(msg)
 
 
 def get_dataset_list(node, catalog):

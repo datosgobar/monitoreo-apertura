@@ -9,8 +9,7 @@ except ImportError:
 
 from django.test import TestCase
 from pydatajson.core import DataJson
-from django_datajsonar.apps.management.models import Node
-from django_datajsonar.apps.api.models import Catalog, Dataset
+from django_datajsonar.models import Node, Catalog, Dataset
 from ..tasks import federation_run, get_dataset_list
 from ..models import HarvestingNode
 

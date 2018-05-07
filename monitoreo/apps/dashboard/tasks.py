@@ -6,8 +6,7 @@ from django_rq import job
 
 from pydatajson.core import DataJson
 from pydatajson.federation import harvest_catalog_to_ckan
-from django_datajsonar.apps.management.models import Node
-from django_datajsonar.apps.api.models import Dataset
+from django_datajsonar.models import Node, Dataset
 from .models import HarvestingNode
 
 logger = logging.getLogger(__name__)

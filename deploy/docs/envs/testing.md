@@ -43,7 +43,7 @@ Luego, en el servidor "deploy" y con el usuario de deployment, creamos el direct
 ```
 mkdir ~/dev && cd ~/dev
 git clone git@github.com:datosgobar/monitoreo-apertura.git
-cd ~/dev/api-gateway/deploy
+cd ~/dev/monitoreo-apertura/deploy
 ```
 
 ### Configuracion & setup inicial
@@ -53,7 +53,7 @@ En Ubuntu 16.04:
 
 ```
 sudo apt update
-sudo apt install python3 python3-virtualenv
+sudo apt install python3 python3-venv python3-dev libssl-dev -y
 ```
 
 Luego, es necesario instalar los requerimientos en un virtualenv.
@@ -61,7 +61,7 @@ Para crear el virtualenv corremos:
 
 ```
 cd ~/dev
-virtualenv ./venv
+python3 -m venv ./venv
 ```
 
 Luego activamos el "virtualev" e instalamos los requerimientos para el deployment.
@@ -86,6 +86,13 @@ web0
 
 [web]
 web0
+
+[rqworkers]
+web0
+
+[api_cluster:children]
+web
+
 ```
 
 

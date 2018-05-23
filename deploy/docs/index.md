@@ -49,7 +49,7 @@ ansible especificada en para el repositorio con el comando `pip install -r deplo
 
 ## Inicializacion por ambiente
 
-- testing (TBD)
+- [testing](deploy/docs/envs/testing.md)
 - staging (TBD)
 - production (TBD)
 

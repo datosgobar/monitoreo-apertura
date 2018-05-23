@@ -24,3 +24,10 @@
     name: virtualenv
     executable: pip
     virtualenv_python: python2.7
+
+
+- name: Add nginx to datosgobar group
+  user:
+    name: www-data
+    groups: "{{ application_group }}"
+    append: yes

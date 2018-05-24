@@ -1,5 +1,26 @@
 ---
 
+- name: Check credentials
+  fail:
+    msg: "Missing 'postgresql_user' credential variable"
+  when: postgresql_user == ""
+
+- name: Check credentials
+  fail:
+    msg: "Missing 'postgresql_password' credential variable"
+  when: postgresql_password == ""
+
+- name: Check reaonly credentials
+  fail:
+    msg: "Missing 'postgresql_readonly_user' credential variable"
+  when: postgresql_readonly_user == ""
+
+- name: Check reaonly credentials
+  fail:
+    msg: "Missing 'postgresql_readonly_password' credential variable"
+  when: postgresql_readonly_password == ""
+
+
 # Dependencies
 - name: Install Postgresql database
   apt:

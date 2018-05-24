@@ -2,3 +2,9 @@ web0
 
 [web]
 web0
+
+[rqworkers]
+web0
+
+[api_cluster:children]
+web

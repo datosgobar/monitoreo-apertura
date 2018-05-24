@@ -10,7 +10,7 @@ except ImportError:
 from django.test import TestCase
 from pydatajson.core import DataJson
 from django_datajsonar.models import Node, Catalog, Dataset
-from ..tasks import federation_run, get_dataset_list
+from ..tasks import federation_run, get_dataset_lists
 from ..models import HarvestingNode
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
@@ -53,12 +53,12 @@ class HarvestRunTest(TestCase):
                            catalog=catalog1, indexable=True, present=True, updated=True)
         dataset2.save()
 
-    @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
+    @patch('monitoreo.apps.dashboard.tasks.federate_catalog', autospec=True)
     def test_indexable_node_gets_harvested(self, mock_harvest):
         federation_run()
         self.assertEqual(3, len(mock_harvest.mock_calls))
 
-    @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
+    @patch('monitoreo.apps.dashboard.tasks.federate_catalog', autospec=True)
     def test_unindexable_node_does_not_get_harvested(self, mock_harvest):
         node1 = Node.objects.get(catalog_id='id1')
         node1.indexable = False
@@ -90,50 +90,52 @@ class HarvestRunTest(TestCase):
         mock_harvest.assert_any_call(DataJson(self.get_sample('missing_dataset_title.json')),
                                      'harvest_url', 'apikey', 'id3', [])
 
-    def test_get_dataset_list_return_correct_ids(self):
+    def test_get_dataset_lists_return_correct_ids(self):
         node1 = Node.objects.get(catalog_id='id1')
         datajson = DataJson(self.get_sample('full_data.json'))
-        dataset_list = get_dataset_list(node1, datajson)
+        valid, _, _ = get_dataset_lists(node1, datajson)
         self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c777',
                                '99db6631-d1c9-470b-a73e-c62daa32c420'],
-                              dataset_list)
+                              valid)
         dataset = Dataset.objects.get(catalog__identifier='id1',
                                       identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset.identifier = 'new_identifier'
         dataset.save()
         dataset = datajson.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset['identifier'] = 'new_identifier'
-        dataset_list = get_dataset_list(node1, datajson)
+        valid, _, _ = get_dataset_lists(node1, datajson)
         self.assertItemsEqual(['new_identifier',
                                '99db6631-d1c9-470b-a73e-c62daa32c420'],
-                              dataset_list)
+                              valid)
         dataset = Dataset.objects.get(catalog__identifier='id1',
                                       identifier='new_identifier')
         dataset.indexable = False
         dataset.save()
-        dataset_list = get_dataset_list(node1, datajson)
+        valid, _, _ = get_dataset_lists(node1, datajson)
         self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c420'],
-                              dataset_list)
+                              valid)
 
     def test_dataset_list_returns_empty_if_no_related_datasets(self):
         new_node = Node(catalog_id='id4', catalog_url=self.get_sample('full_data.json'), indexable=True)
-        dataset_list = get_dataset_list(new_node, DataJson(self.get_sample('full_data.json')))
-        self.assertItemsEqual([], dataset_list)
+        valid, _, _ = get_dataset_lists(new_node, DataJson(self.get_sample('full_data.json')))
+        self.assertItemsEqual([], valid)
 
     def test_get_dataset_does_not_return_invalid_datasets(self):
         node = Node.objects.get(catalog_id='id3')
         datajson = DataJson(self.get_sample('missing_dataset_title.json'))
-        dataset_list = get_dataset_list(node, datajson)
-        self.assertItemsEqual([], dataset_list)
+        valid, invalid, _ = get_dataset_lists(node, datajson)
+        self.assertItemsEqual(set(), valid)
+        self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, invalid)
         dataset = datajson.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset['title'] = 'aTitle'
-        dataset_list = get_dataset_list(node, datajson)
-        self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c777'], dataset_list)
+        valid, _, _ = get_dataset_lists(node, datajson)
+        self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, valid)
+        self.assertItemsEqual(set(), invalid)
 
     def test_get_dataset_does_not_return_missing_datasets(self):
         node = Node.objects.get(catalog_id='id1')
         datajson = DataJson(self.get_sample('full_data.json'))
         datajson.datasets.pop(0)
-        dataset_list = get_dataset_list(node, datajson)
-        self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c420'], dataset_list)
-
+        valid, _, missing = get_dataset_lists(node, datajson)
+        self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c420'}, valid)
+        self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, missing)

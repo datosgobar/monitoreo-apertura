@@ -10,7 +10,7 @@ except ImportError:
 from django.test import TestCase
 from pydatajson.core import DataJson
 from django_datajsonar.models import Node, Catalog, Dataset
-from ..tasks import federation_run, get_dataset_lists
+from ..tasks import federation_run, sort_datasets_by_condition
 from ..models import HarvestingNode
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
@@ -93,7 +93,7 @@ class HarvestRunTest(TestCase):
     def test_get_dataset_lists_return_correct_ids(self):
         node1 = Node.objects.get(catalog_id='id1')
         datajson = DataJson(self.get_sample('full_data.json'))
-        valid, _, _ = get_dataset_lists(node1, datajson)
+        valid, _, _ = sort_datasets_by_condition(node1, datajson)
         self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c777',
                                '99db6631-d1c9-470b-a73e-c62daa32c420'],
                               valid)
@@ -103,7 +103,7 @@ class HarvestRunTest(TestCase):
         dataset.save()
         dataset = datajson.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset['identifier'] = 'new_identifier'
-        valid, _, _ = get_dataset_lists(node1, datajson)
+        valid, _, _ = sort_datasets_by_condition(node1, datajson)
         self.assertItemsEqual(['new_identifier',
                                '99db6631-d1c9-470b-a73e-c62daa32c420'],
                               valid)
@@ -111,24 +111,24 @@ class HarvestRunTest(TestCase):
                                       identifier='new_identifier')
         dataset.indexable = False
         dataset.save()
-        valid, _, _ = get_dataset_lists(node1, datajson)
+        valid, _, _ = sort_datasets_by_condition(node1, datajson)
         self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c420'],
                               valid)
 
     def test_dataset_list_returns_empty_if_no_related_datasets(self):
         new_node = Node(catalog_id='id4', catalog_url=self.get_sample('full_data.json'), indexable=True)
-        valid, _, _ = get_dataset_lists(new_node, DataJson(self.get_sample('full_data.json')))
+        valid, _, _ = sort_datasets_by_condition(new_node, DataJson(self.get_sample('full_data.json')))
         self.assertItemsEqual([], valid)
 
     def test_get_dataset_does_not_return_invalid_datasets(self):
         node = Node.objects.get(catalog_id='id3')
         datajson = DataJson(self.get_sample('missing_dataset_title.json'))
-        valid, invalid, _ = get_dataset_lists(node, datajson)
+        valid, invalid, _ = sort_datasets_by_condition(node, datajson)
         self.assertItemsEqual(set(), valid)
         self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, invalid)
         dataset = datajson.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset['title'] = 'aTitle'
-        valid, _, _ = get_dataset_lists(node, datajson)
+        valid, _, _ = sort_datasets_by_condition(node, datajson)
         self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, valid)
         self.assertItemsEqual(set(), invalid)
 
@@ -136,6 +136,6 @@ class HarvestRunTest(TestCase):
         node = Node.objects.get(catalog_id='id1')
         datajson = DataJson(self.get_sample('full_data.json'))
         datajson.datasets.pop(0)
-        valid, _, missing = get_dataset_lists(node, datajson)
+        valid, _, missing = sort_datasets_by_condition(node, datajson)
         self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c420'}, valid)
         self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, missing)

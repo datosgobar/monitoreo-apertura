@@ -40,7 +40,7 @@ def federate_catalog(node, portal_url, apikey, task):
         raise Exception(msg)
 
     catalog.generate_distribution_ids()
-    valid, invalid, missing = get_dataset_lists(node, catalog)
+    valid, invalid, missing = sort_datasets_by_condition(node, catalog)
 
     try:
         harvested_ids = harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, list(valid))
@@ -60,7 +60,7 @@ def federate_catalog(node, portal_url, apikey, task):
         raise Exception(msg)
 
 
-def get_dataset_lists(node, catalog):
+def sort_datasets_by_condition(node, catalog):
     catalog_report = catalog.validate_catalog()
     valid_set = {ds['identifier'] for ds in catalog_report['error']['dataset'] if ds['status'] == 'OK'}
     invalid_set = {ds['identifier'] for ds in catalog_report['error']['dataset'] if ds['status'] == 'ERROR'}

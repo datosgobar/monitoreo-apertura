@@ -128,7 +128,7 @@ class HarvestRunTest(TestCase):
         self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, invalid)
         dataset = datajson.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset['title'] = 'aTitle'
-        valid, _, _ = sort_datasets_by_condition(node, datajson)
+        valid, invalid, _ = sort_datasets_by_condition(node, datajson)
         self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, valid)
         self.assertItemsEqual(set(), invalid)
 

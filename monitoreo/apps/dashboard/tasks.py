@@ -24,12 +24,13 @@ def federation_run():
 def federate_catalogs(portal_url, apikey, task):
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
-        federate_catalog.delay(node, portal_url, apikey, task)
+        federate_catalog.delay(node, portal_url, apikey, task.pk)
 
 
 @job('indexing', timeout=1800)
-def federate_catalog(node, portal_url, apikey, task):
-    set_logger(task)
+def federate_catalog(node, portal_url, apikey, task_id):
+    task = FederationTask.objects.get(pk=task_id)
+    handler = set_logger(task)
     catalog = get_catalog_from_node(node)
     catalog_id = node.catalog_id
     total = Dataset.objects.filter(indexable=True, catalog__identifier=catalog_id).count()
@@ -37,8 +38,8 @@ def federate_catalog(node, portal_url, apikey, task):
     if not catalog:
         msg += u"No se puede acceder al catálogo: %s\n" % node.catalog_id
         FederationTask.info(task, msg)
+        handler.close()
         raise Exception(msg)
-
     catalog.generate_distribution_ids()
     valid, invalid, missing = sort_datasets_by_condition(node, catalog)
 
@@ -51,12 +52,14 @@ def federate_catalog(node, portal_url, apikey, task):
                u"%s \n" % \
                (len(harvested_ids), total, len(invalid), list(invalid), len(missing), list(missing))
         FederationTask.info(task, msg)
+        handler.close()
         return msg
 
     except Exception as e:
         msg += u"Error federando catalog: %s datasets: %s - Error: %s\n" % \
                (catalog_id, list(valid), e)
         FederationTask.info(task, msg)
+        handler.close()
         raise Exception(msg)
 
 
@@ -93,3 +96,4 @@ def set_logger(task):
     fh_formatter = logging.Formatter('%(asctime)s :%(filename)s - %(message)s')
     fh.setFormatter(fh_formatter)
     logger.addHandler(fh)
+    return fh

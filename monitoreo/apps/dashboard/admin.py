@@ -2,7 +2,7 @@ from django.contrib import admin
 from ordered_model.admin import OrderedModelAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode
+from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode, FederationTask
 from .tasks import federate_catalogs
 
 
@@ -54,12 +54,20 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
 
     def federate(self, _, queryset):
         for harvesting_node in queryset:
+            task = FederationTask.objects.create()
             portal_url = harvesting_node.url
             apikey = harvesting_node.apikey
-            federate_catalogs.delay(portal_url, apikey)
+            federate_catalogs.delay(portal_url, apikey, task)
     federate.short_description = 'Correr federacion'
 
 
+class FederationAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'logs',)
+    exclude = ('status', 'finished',)
+    list_display = ('__unicode__',)
+
+
+admin.site.register(FederationTask, FederationAdmin)
 admin.site.register(HarvestingNode, HarvestingNodeAdmin)
 admin.site.register(Indicador, IndicatorAdmin)
 admin.site.register(IndicadorRed, IndicatorRedAdmin)

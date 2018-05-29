@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db import models
 from django.conf import settings
 from ordered_model.models import OrderedModel
+from django_datajsonar.models import AbstractTask
 
 
 class IndicatorType(models.Model):
@@ -97,3 +98,8 @@ class HarvestingNode(models.Model):
     url = models.URLField()
     apikey = models.CharField(max_length=50)
     enabled = models.BooleanField(default=False)
+
+
+class FederationTask(AbstractTask):
+    class Meta:
+        verbose_name_plural = "Corridas de Federación"

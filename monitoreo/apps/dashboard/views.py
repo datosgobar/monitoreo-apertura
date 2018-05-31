@@ -13,23 +13,14 @@ def landing(request):
     if not indicators:  # Error, no hay indicadores cargados
         return render(request, '500.html', status=500)
 
-    documentados_pct = indicators['pad_items_documentados_pct']
-    descargables_pct = indicators['pad_items_descarga_pct']
-    items = indicators['pad_compromisos_cant']
-    jurisdicciones = indicators['pad_jurisdicciones_cant']
-
     catalogos_cant = indicators['catalogos_cant']
     datasets_cant = indicators['datasets_cant']
     ok_pct = indicators['datasets_meta_ok_pct']
     actualizados_pct = indicators['datasets_actualizados_pct']
 
     context = {
-        'items': items,
-        'jurisdicciones': jurisdicciones,
         'catalogos': catalogos_cant,
         'datasets': datasets_cant,
-        'documentados_pct': documentados_pct,
-        'descargables_pct': descargables_pct,
         'ok_pct': ok_pct,
         'actualizados_pct': actualizados_pct
     }
@@ -39,11 +30,6 @@ def landing(request):
 def red_nodos(request):
     context = populate_table('RED')
     return render(request, 'dashboard/red.html', context)
-
-
-def compromisos(request):
-    context = populate_table('PAD')
-    return render(request, 'dashboard/pad.html', context)
 
 
 def populate_table(tabla):

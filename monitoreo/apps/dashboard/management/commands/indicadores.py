@@ -6,7 +6,6 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from pydatajson import DataJson
 
-from indicadores_pad.indicators import PADIndicators
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
     IndicatorType, TableColumn
 from monitoreo.apps.dashboard.helpers import load_catalogs
@@ -37,30 +36,9 @@ class Command(BaseCommand):
         self.save_indicators(indics, names)
         self.save_network_indics(network_indics, 'RED')
 
-        self.pad_indicators()
-
         # Creo columnas default si no existen
         if not TableColumn.objects.count():
             self.init_columns()
-
-    def pad_indicators(self):
-        pad = PADIndicators()
-        indicators, network_indics = pad.generate_pad_indicators(SPREADSHEET)
-        count = 0
-        for jurisdiction, indics in indicators.items():
-            for indic_name, value in indics.items():
-                indic_type = IndicatorType.objects.get_or_create(
-                    nombre=indic_name,
-                    tipo='PAD')[0]
-                indicador = Indicador(indicador_tipo=indic_type,
-                                      indicador_valor=json.dumps(value),
-                                      jurisdiccion_nombre=jurisdiction)
-                indicador.save()
-                count += 1
-
-        self.stderr.write(u'Calculados indicadores del PAD')
-
-        self.save_network_indics(network_indics, 'PAD')
 
     def save_network_indics(self, network_indics, indic_class):
         # Itero sobre los indicadores de red, creando modelos y agregándolos

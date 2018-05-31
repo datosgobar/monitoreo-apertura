@@ -2,11 +2,6 @@
 
 
 DEFAULT_INDICATORS = [
-    "pad_compromisos_cant",
-    "pad_items_documentados_pct",
-    "pad_items_descarga_pct",
-    "pad_items_actualizados_pct",
-    "pad_items_licencia_pct",
     "datasets_cant",
     "catalogo_ultima_actualizacion_dias",
     "campos_optativos_pct",
@@ -15,7 +10,6 @@ DEFAULT_INDICATORS = [
     "datasets_actualizados_pct",
     "datasets_meta_ok_pct",
     "distribuciones_formatos_cant",
-    "pad_datasets_frecuencia_cant"
 ]
 
 INDICATORS_INFO = [
@@ -55,38 +49,4 @@ INDICATORS_INFO = [
      "indicador_nombre_tabla": "Distribuciones (cant)"},
     {"indicador_nombre": "distribuciones_formatos_cant",
      "indicador_nombre_tabla": "Distribuciones formatos (cant x frecuencia)"},
-    {"indicador_nombre": "pad_jurisdicciones_cant",
-     "indicador_nombre_tabla": "Jurisdicciones (cant)"},
-    {"indicador_nombre": "pad_compromisos_cant",
-     "indicador_nombre_tabla": "Compromisos (cant)"},
-    {"indicador_nombre": "pad_items_documentados_cant",
-     "indicador_nombre_tabla": "Compromisos documentados (cant)"},
-    {"indicador_nombre": "pad_items_no_documentados_cant",
-     "indicador_nombre_tabla": "Compromisos no documentados (cant)"},
-    {"indicador_nombre": "pad_items_documentados_pct",
-     "indicador_nombre_tabla": "Compromisos documentados (%)"},
-    {"indicador_nombre": "pad_items_descarga_cant",
-     "indicador_nombre_tabla": "Compromisos descargables (cant)"},
-    {"indicador_nombre": "pad_items_no_descarga_cant",
-     "indicador_nombre_tabla": "Compromisos no descargables (cant)"},
-    {"indicador_nombre": "pad_items_descarga_pct",
-     "indicador_nombre_tabla": "Compromisos descargables (%)"},
-    {"indicador_nombre": "pad_items_actualizados_cant",
-     "indicador_nombre_tabla": "Compromisos actualizados (cant)"},
-    {"indicador_nombre": "pad_items_desactualizados_cant",
-     "indicador_nombre_tabla": "Compromisos desactualizados (cant)"},
-    {"indicador_nombre": "pad_items_actualizados_pct",
-     "indicador_nombre_tabla": "Compromisos actualizados (%)"},
-    {"indicador_nombre": "pad_items_licencia_cant",
-     "indicador_nombre_tabla": "Compromisos con licencia (cant)"},
-    {"indicador_nombre": "pad_items_sin_licencia_cant",
-     "indicador_nombre_tabla": "Compromisos sin licencia (cant)"},
-    {"indicador_nombre": "pad_items_licencia_pct",
-     "indicador_nombre_tabla": "Compromisos con licencia (%)"},
-    {"indicador_nombre": "pad_datasets_frecuencia_cant",
-     "indicador_nombre_tabla": "Datasets frecuencias (cant x frecuencia)"},
-    {"indicador_nombre": "pad_distribuciones_cant",
-     "indicador_nombre_tabla": "Distribuciones (cant)"},
-    {"indicador_nombre": "pad_distributions_formatos_cant",
-     "indicador_nombre_tabla": "Distribuciones formatos (cant x frecuencia)"}
 ]

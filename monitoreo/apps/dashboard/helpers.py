@@ -1,9 +1,7 @@
 #! coding: utf-8
 import json
-import logging
 import yaml
 from urllib2 import urlopen, HTTPError
-from .models import FederationTask
 
 
 def fetch_latest_indicadors(indicators):
@@ -53,14 +51,3 @@ def load_catalogs(root_url):
             catalogs.append(datajson)
 
     return catalogs
-
-
-class FederationTaskHandler(logging.Handler):
-
-    def __init__(self, task):
-        self.task = task
-        super(FederationTaskHandler, self).__init__()
-
-    def emit(self, record):
-        task_entry = self.format(record)
-        return FederationTask.info(self.task, task_entry)

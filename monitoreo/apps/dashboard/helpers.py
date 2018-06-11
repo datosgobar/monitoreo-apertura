@@ -1,8 +1,10 @@
 #! coding: utf-8
 import json
 import logging
-import yaml
 from urllib2 import urlopen, HTTPError
+
+import yaml
+
 from .models import FederationTask
 
 

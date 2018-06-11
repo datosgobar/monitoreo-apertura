@@ -138,3 +138,5 @@ static/
 # Ruby
 .ruby-version
 .rbenv-gemset
+scripts/deploy/files/*
+scripts/deploy/files.tar.gz

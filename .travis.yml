@@ -12,7 +12,7 @@ services:
 
 language: python
 python:
-- "3.6"
+- "2.7"
 
 env:
 - DJANGO_SETTINGS_MODULE=conf.settings.testing NODE_JS_VERSION=v8.11.2

@@ -134,3 +134,7 @@ deploy/site.retry
 .nvmrc
 media/
 static/
+
+# Ruby
+.ruby-version
+.rbenv-gemset

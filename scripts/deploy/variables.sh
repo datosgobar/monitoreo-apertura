@@ -27,6 +27,18 @@ if [ "$ENVIRONMENT" == "testing" ]; then
     export DEPLOY_ENVIRONMENT="$ENVIRONMENT"
     export MTU_VALUE="${STIEMPO_DEV_MTU_VALUE:-$DEFAULT_MTU_VALUE}"
     export DEPLOY_REVISION="master"
+elif [ "$ENVIRONMENT" == "staging" ]; then
+    echo "Ambiente $ENVIRONMENT"
+
+    export USE_VPN="$STAGING_USE_VPN"
+
+    export DEPLOY_TARGET_VAULT_PASS_FILE="$STAGING_DEPLOY_VAULT_PASS_FILE"
+    export DEPLOY_TARGET_SSH_PORT="$STAGING_DEPLOY_TARGET_SSH_PORT"
+    export DEPLOY_TARGET_USERNAME="$STAGING_DEPLOY_TARGET_USERNAME"
+    export DEPLOY_TARGET_IP="$STAGING_DEPLOY_TARGET_IP"
+    export DEPLOY_ENVIRONMENT="$ENVIRONMENT"
+    export MTU_VALUE="${STAGING_DEV_MTU_VALUE:-$DEFAULT_MTU_VALUE}"
+    export DEPLOY_REVISION="${TRAVIS_TAG:-$TRAVIS_COMMIT}" # Desde el tag o el hash del commit
 else
     echo "Ambiente '$ENVIRONMENT' desconocido";
     exit 1;

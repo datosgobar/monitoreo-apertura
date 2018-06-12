@@ -92,8 +92,8 @@ def get_catalog_from_node(node):
 def set_logger(task):
     logger = logging.getLogger('pydatajson')
     logger.setLevel(level=logging.ERROR)
-    fh = FederationTaskHandler(task)
+    fed_handler = FederationTaskHandler(task)
     fh_formatter = logging.Formatter('%(asctime)s :%(filename)s - %(message)s')
-    fh.setFormatter(fh_formatter)
-    logger.addHandler(fh)
-    return fh
+    fed_handler.setFormatter(fh_formatter)
+    logger.addHandler(fed_handler)
+    return fed_handler

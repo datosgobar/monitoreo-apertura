@@ -5,8 +5,8 @@ set -e;
 # Nota: Las variables no definidas aqui deben ser seteadas en ./variables.sh
 # si tenes dudas sobre la sintaxis ${!variable}, mira https://stackoverflow.com/a/1921337/2355756
 
-export files_key_var_name="encrypted_b4e59b25bceb_key"
-export files_iv_var_name="encrypted_b4e59b25bceb_iv"
+export files_key_var_name="encrypted_fd34314b9fa6_key"
+export files_iv_var_name="encrypted_fd34314b9fa6_iv"
 
 deploy_files="scripts/deploy"
 files_tar="$deploy_files/files.tar.gz"

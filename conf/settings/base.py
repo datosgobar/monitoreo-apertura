@@ -106,6 +106,14 @@ ROOT_URLCONF = 'monitoreo.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'conf.wsgi.application'
 
+
+def export_vars(_):
+    data = {
+        'APP_VERSION': env('APP_VERSION', default='local')
+    }
+    return data
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -123,7 +131,8 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request'
+                'django.template.context_processors.request',
+                'conf.settings.base.export_vars',
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',

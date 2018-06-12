@@ -1,0 +1,6 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+{% block userlinks %}
+    {{ block.super }}
+    App version {{ APP_VERSION }}
+{% endblock %}

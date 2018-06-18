@@ -94,6 +94,12 @@ class HarvestingNode(models.Model):
     class Meta:
         verbose_name_plural = "Nodos federadores"
 
+    def __unicode__(self):
+        return u'%s' % self.name
+
+    def __str__(self):
+        return self.__unicode__()
+
     name = models.CharField(max_length=100)
     url = models.URLField()
     apikey = models.CharField(max_length=50)
@@ -103,3 +109,5 @@ class HarvestingNode(models.Model):
 class FederationTask(AbstractTask):
     class Meta:
         verbose_name_plural = "Corridas de Federación"
+
+    harvesting_node = models.ForeignKey(HarvestingNode, models.CASCADE, null=True)

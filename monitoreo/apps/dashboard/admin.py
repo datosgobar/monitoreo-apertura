@@ -54,10 +54,10 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
 
     def federate(self, _, queryset):
         for harvesting_node in queryset:
-            task = FederationTask.objects.create()
+            task = FederationTask.objects.create(harvesting_node=harvesting_node)
             portal_url = harvesting_node.url
             apikey = harvesting_node.apikey
-            federate_catalogs.delay(portal_url, apikey, task)
+            federate_catalogs.delay(portal_url, apikey, task.pk)
     federate.short_description = 'Correr federacion'
 
 
@@ -65,6 +65,23 @@ class FederationAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'logs',)
     exclude = ('status', 'finished',)
     list_display = ('__unicode__',)
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return self.readonly_fields + ('harvesting_node',)
+        else:
+            return self.readonly_fields
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "harvesting_node":
+            kwargs["queryset"] = HarvestingNode.objects.filter(enabled=True)
+        return super(FederationAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def save_model(self, request, obj, form, change):
+        super(FederationAdmin, self).save_model(request, obj, form, change)
+        federate_catalogs.delay(obj.harvesting_node.url,
+                                obj.harvesting_node.apikey,
+                                obj.pk)
 
 
 admin.site.register(FederationTask, FederationAdmin)

@@ -1,11 +1,11 @@
 #! coding: utf-8
 import json
-import logging
 from urllib2 import urlopen, HTTPError
-
+from six import text_type
 import yaml
+from django_datajsonar.models import Dataset
 
-from .models import FederationTask
+from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
 
 def fetch_latest_indicadors(indicators):
@@ -57,12 +57,47 @@ def load_catalogs(root_url):
     return catalogs
 
 
-class FederationTaskHandler(logging.Handler):
+def generate_task_log(catalog, catalog_id, invalid, missing, harvested_ids, federation_errors):
+    validation = catalog.validate_catalog(only_errors=True)
+    total = Dataset.objects.filter(indexable=True, catalog__identifier=catalog_id).count()
+    log = OVERALL_ASSESSMENT.format(len(harvested_ids), total)
+    if invalid:
+        log += VALIDATION_ERRORS.format(len(invalid), list(invalid))
 
-    def __init__(self, task):
-        self.task = task
-        super(FederationTaskHandler, self).__init__()
+    if missing:
+        log += MISSING.format(len(missing), list(missing))
 
-    def emit(self, record):
-        task_entry = self.format(record)
-        return FederationTask.info(self.task, task_entry)
+    if federation_errors:
+        log += HARVESTING_ERRORS.format(len(federation_errors.keys()), list(federation_errors.keys()))
+        log = append_federation_errors(log, federation_errors)
+
+    if validation['status'] == 'ERROR':
+        # Separado del "if invalid", porque generar ids de distribuciones puede ocultar errores
+        log = append_validation_errors(log, validation)
+
+    return log
+
+
+def append_federation_errors(log, errors):
+    log += ERRORS_DIVIDER.format(u'FEDERACIÓN')
+    for dataset in errors:
+        log += dataset + u": " + errors[dataset] + u"\n"
+    return log
+
+
+def append_validation_errors(log, validation):
+    log += ERRORS_DIVIDER.format(u'VALIDACIÓN')
+    if validation['error']['catalog']['status'] == 'ERROR':
+        log += u"Errores de catalogo: \n"
+        log = list_errors(log, validation['error']['catalog']['errors'])
+
+    for dataset in validation['error']['dataset']:
+        log += u"Errores en el dataset: {} \n".format(dataset['identifier'])
+        log = list_errors(log, dataset['errors'])
+    return log
+
+
+def list_errors(msg, errors):
+    for error in errors:
+        msg += u'\t {}: {} \n'.format(text_type(error['path']), error['message'])
+    return msg

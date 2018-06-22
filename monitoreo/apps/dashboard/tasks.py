@@ -1,14 +1,14 @@
 #! coding: utf-8
 
-import logging
 import json
 from django_rq import job
 
 from pydatajson.core import DataJson
 from pydatajson.federation import harvest_catalog_to_ckan
 from django_datajsonar.models import Node, Dataset
+from .helpers import generate_task_log
 from .models import HarvestingNode, FederationTask
-from .helpers import FederationTaskHandler
+from .strings import UNREACHABLE_CATALOG, TASK_ERROR
 
 
 def federation_run():
@@ -30,36 +30,25 @@ def federate_catalogs(portal_url, apikey, task):
 @job('indexing', timeout=1800)
 def federate_catalog(node, portal_url, apikey, task_id):
     task = FederationTask.objects.get(pk=task_id)
-    handler = set_logger(task)
     catalog = get_catalog_from_node(node)
     catalog_id = node.catalog_id
-    total = Dataset.objects.filter(indexable=True, catalog__identifier=catalog_id).count()
     msg = u"Catálogo: %s\n" % node.catalog_id
     if not catalog:
-        msg += u"No se puede acceder al catálogo: %s\n" % node.catalog_id
+        msg += UNREACHABLE_CATALOG.format(node.catalog_id)
         FederationTask.info(task, msg)
-        handler.close()
         raise Exception(msg)
     catalog.generate_distribution_ids()
     valid, invalid, missing = sort_datasets_by_condition(node, catalog)
 
     try:
-        harvested_ids = harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, list(valid))
-        msg += u"Se federaron %s de %s datasets.\n" \
-               u"%s tuvieron errores de validacion:\n"\
-               u"%s \n"\
-               u"%s ausentes:\n"\
-               u"%s \n" % \
-               (len(harvested_ids), total, len(invalid), list(invalid), len(missing), list(missing))
+        harvested_ids, federation_errors = harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, list(valid))
+        msg += generate_task_log(catalog, catalog_id, invalid, missing, harvested_ids, federation_errors)
         FederationTask.info(task, msg)
-        handler.close()
         return msg
 
     except Exception as e:
-        msg += u"Error federando catalog: %s datasets: %s - Error: %s\n" % \
-               (catalog_id, list(valid), e)
+        msg += TASK_ERROR.format(catalog_id, list(valid), e)
         FederationTask.info(task, msg)
-        handler.close()
         raise Exception(msg)
 
 
@@ -87,13 +76,3 @@ def get_catalog_from_node(node):
             return catalog
         else:
             return None
-
-
-def set_logger(task):
-    logger = logging.getLogger('pydatajson')
-    logger.setLevel(level=logging.ERROR)
-    fed_handler = FederationTaskHandler(task)
-    fh_formatter = logging.Formatter('%(asctime)s :%(filename)s - %(message)s')
-    fed_handler.setFormatter(fh_formatter)
-    logger.addHandler(fed_handler)
-    return fed_handler

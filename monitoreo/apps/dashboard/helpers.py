@@ -1,7 +1,10 @@
 #! coding: utf-8
 import json
-import yaml
 from urllib2 import urlopen, HTTPError
+from six import text_type
+import yaml
+
+from .strings import ERRORS_DIVIDER
 
 
 def fetch_latest_indicadors(indicators):
@@ -51,3 +54,28 @@ def load_catalogs(root_url):
             catalogs.append(datajson)
 
     return catalogs
+
+
+def append_federation_errors(msg, errors):
+    msg += ERRORS_DIVIDER.format(u'FEDERACIÓN')
+    for dataset in errors:
+        msg += dataset+u": "+errors[dataset]+u"\n"
+    return msg
+
+
+def append_validation_errors(msg, validation):
+    msg += ERRORS_DIVIDER.format(u'VALIDACIÓN')
+    if validation['error']['catalog']['status'] == 'ERROR':
+        msg += u"Errores de catalogo: \n"
+        msg = list_errors(msg, validation['error']['catalog']['errors'])
+
+    for dataset in validation['error']['dataset']:
+        msg += u"Errores en el dataset: {} \n".format(dataset['identifier'])
+        msg = list_errors(msg, dataset['errors'])
+    return msg
+
+
+def list_errors(msg, errors):
+    for error in errors:
+        msg += u'\t {}: {} \n'.format(text_type(error['path']), error['message'])
+    return msg

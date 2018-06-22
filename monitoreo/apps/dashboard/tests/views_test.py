@@ -2,8 +2,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from monitoreo.apps.dashboard.views import landing, compromisos, red_nodos
-
 
 class ViewsTest(TestCase):
     def test_landing_with_no_indicators_loaded_returns_500(self):

@@ -47,6 +47,7 @@
       RAVEN_DSN="{{ sentry_dsn }}"
       SENTRY_ENVIRONMENT="{{ sentry_environment }}"
       {% endif %}
+      APP_VERSION={{ checkout_branch }}
 
 
 - name: Ensure env file

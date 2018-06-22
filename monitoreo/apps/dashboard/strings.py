@@ -11,3 +11,5 @@ MISSING = u"{} ausentes:\n {} \n"
 HARVESTING_ERRORS = u"{} tuvieron errores de federación:\n {} \n"
 
 TASK_ERROR = u"Error federando catalog: {} datasets: {} - Error: {}\n"
+
+ERRORS_DIVIDER = u"####### ERRORES DE {} ####### \n"

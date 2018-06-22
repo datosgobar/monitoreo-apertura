@@ -68,6 +68,7 @@ class HarvestRunTest(TestCase):
 
     @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
     def test_indexable_datasets_get_harvested(self, mock_harvest):
+        mock_harvest.return_value = ([], {})
         federation_run()
         mock_harvest.assert_any_call(DataJson(self.get_sample('minimum_data.json')),
                                      'harvest_url', 'apikey', 'id2',
@@ -76,6 +77,7 @@ class HarvestRunTest(TestCase):
     @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
     def test_unindexable_datasets_dont_get_harvested(self, mock_harvest):
         Dataset.objects.all().update(indexable=False)
+        mock_harvest.return_value = ([], {})
         federation_run()
         mock_harvest.assert_any_call(DataJson(self.get_sample('full_data.json')),
                                      'harvest_url', 'apikey', 'id1', [])
@@ -86,6 +88,7 @@ class HarvestRunTest(TestCase):
 
     @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
     def test_invalid_datasets_dont_get_harvested(self, mock_harvest):
+        mock_harvest.return_value = ([], {})
         federation_run()
         mock_harvest.assert_any_call(DataJson(self.get_sample('missing_dataset_title.json')),
                                      'harvest_url', 'apikey', 'id3', [])

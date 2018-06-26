@@ -14,17 +14,17 @@ from .strings import UNREACHABLE_CATALOG, TASK_ERROR
 def federation_run():
     harvesting_nodes = HarvestingNode.objects.filter(enabled=True)
     for harvester in harvesting_nodes:
-        task = FederationTask.objects.create()
+        task = FederationTask.objects.create(harvesting_node=harvester)
         portal_url = harvester.url
         apikey = harvester.apikey
-        federate_catalogs(portal_url, apikey, task)
+        federate_catalogs(portal_url, apikey, task.pk)
 
 
 @job('indexing')
-def federate_catalogs(portal_url, apikey, task):
+def federate_catalogs(portal_url, apikey, task_id):
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
-        federate_catalog.delay(node, portal_url, apikey, task.pk)
+        federate_catalog.delay(node, portal_url, apikey, task_id)
 
 
 @job('indexing', timeout=1800)

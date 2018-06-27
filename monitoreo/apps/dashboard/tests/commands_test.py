@@ -3,7 +3,7 @@ import json
 from django.test import TestCase
 from django.core.management import call_command
 from django.conf import settings
-from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, TableColumn
+from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, TableColumn, IndicatorsGenerationTask
 from monitoreo.apps.dashboard.helpers import load_catalogs
 from pydatajson import DataJson
 
@@ -55,3 +55,6 @@ class CommandTest(TestCase):
     def test_columns_are_created(self):
         for column in settings.DEFAULT_INDICATORS:
             self.assertTrue(TableColumn.objects.get(indicator__nombre=column))
+
+    def test_task_is_created(self):
+        self.assertEqual(1, IndicatorsGenerationTask.objects.count())

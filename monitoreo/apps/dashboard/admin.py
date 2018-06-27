@@ -1,9 +1,12 @@
+# coding=utf-8
+
 from django.contrib import admin
 from ordered_model.admin import OrderedModelAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode, FederationTask
+from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode, FederationTask, IndicatorsGenerationTask
 from .tasks import federate_catalogs
+from .indicators_tasks import generate_indicators
 
 
 class TableColumnAdmin(OrderedModelAdmin):
@@ -84,7 +87,17 @@ class FederationAdmin(admin.ModelAdmin):
                                 obj.pk)
 
 
+class IndicatorTaskAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'logs', 'status', 'finished')
+    list_display = ('__unicode__',)
+
+    def save_model(self, request, obj, form, change):
+        super(IndicatorTaskAdmin, self).save_model(request, obj, form, change)
+        generate_indicators.delay(obj.pk)
+
+
 admin.site.register(FederationTask, FederationAdmin)
+admin.site.register(IndicatorsGenerationTask, IndicatorTaskAdmin)
 admin.site.register(HarvestingNode, HarvestingNodeAdmin)
 admin.site.register(Indicador, IndicatorAdmin)
 admin.site.register(IndicadorRed, IndicatorRedAdmin)

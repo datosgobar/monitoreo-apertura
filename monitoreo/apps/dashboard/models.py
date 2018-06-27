@@ -109,5 +109,9 @@ class HarvestingNode(models.Model):
 class FederationTask(AbstractTask):
     class Meta:
         verbose_name_plural = "Corridas de Federación"
-
     harvesting_node = models.ForeignKey(HarvestingNode, models.CASCADE, null=True)
+
+
+class IndicatorsGenerationTask(AbstractTask):
+    class Meta:
+        verbose_name_plural = "Corridas de Indicadores"

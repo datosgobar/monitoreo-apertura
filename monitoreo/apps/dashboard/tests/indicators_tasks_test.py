@@ -12,7 +12,8 @@ from django.conf import settings
 
 from pydatajson import DataJson
 
-from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, Indicador, IndicadorRed, TableColumn
+from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, Indicador, IndicadorRed,\
+    TableColumn, IndicatorType
 from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
 
 
@@ -69,3 +70,16 @@ class IndicatorGenerationsTest(TestCase):
         self.assertEqual(1, TableColumn.objects.filter(full_name='col_a').count())
         self.assertEqual(1, TableColumn.objects.filter(full_name='col_b').count())
         self.assertEqual(1, TableColumn.objects.filter(full_name='col_c').count())
+
+    def test_indicators_are_updated_without_replication(self, mock_indic, mock_load):
+        mock_load.return_value = self.catalogs
+        mock_indic.return_value = (self.indicators, self.network_indicators)
+        task = IndicatorsGenerationTask.objects.create()
+        generate_indicators(task.pk)
+        self.indicator_2['ind_b'] = 10
+        generate_indicators(task.pk)
+        self.assertEqual(6, Indicador.objects.count())
+        self.assertEqual(3, IndicadorRed.objects.count())
+        ind_type = IndicatorType.objects.get(nombre='ind_b', tipo='RED')
+        self.assertEqual('10', Indicador.objects.get(jurisdiccion_nombre=self.catalogs[1]['title'],
+                                                     indicador_tipo=ind_type).indicador_valor)

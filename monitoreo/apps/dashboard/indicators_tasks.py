@@ -56,13 +56,12 @@ def save_network_indics(network_indics, indic_class, task):
         indic_type = IndicatorType.objects.get_or_create(
             nombre=indic_name,
             tipo=indic_class)[0]
-        network_indic = IndicadorRed(indicador_tipo=indic_type,
-                                     indicador_valor=json.dumps(value))
-
+        IndicadorRed.objects.update_or_create(fecha=timezone.now().date(),
+                                              indicador_tipo=indic_type,
+                                              defaults={'indicador_valor': json.dumps(value)})
         # Al ser los indicadores de red en cantidad reducida comparado con
         # la cantidad de los indicadores comunes, los guardo
         # uno por uno sin mayor impacto de performance
-        network_indic.save()
 
     IndicatorsGenerationTask.info(task, u'Calculados {} indicadores de red'.format(len(network_indics)))
 
@@ -85,12 +84,13 @@ def save_indicators(indics_list, names, task):
             indic_type = IndicatorType.objects.get_or_create(
                 nombre=indic_name,
                 tipo='RED')[0]
-            indic = Indicador(jurisdiccion_nombre=catalog_name,
-                              indicador_tipo=indic_type,
-                              indicador_valor=json.dumps(value))
-            indic_models += 1
+
             try:
-                indic.save()
+                Indicador.objects.update_or_create(fecha=timezone.now().date(),
+                                                   jurisdiccion_nombre=catalog_name,
+                                                   indicador_tipo=indic_type,
+                                                   defaults={'indicador_valor': json.dumps(value)})
+                indic_models += 1
             except DataError:
                 IndicatorsGenerationTask.info(task, u"Error guardando indicador: {0} - {1}: {2}"
                                               .format(catalog_name, indic_type, json.dumps(value)))

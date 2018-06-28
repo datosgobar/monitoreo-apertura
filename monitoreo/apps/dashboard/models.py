@@ -23,15 +23,10 @@ class Indicador(models.Model):
         # Nombre en plural para el admin panel de Django
         verbose_name_plural = "Indicadores"
 
-    fecha = models.DateField()
+    fecha = models.DateField(auto_now_add=True)
     jurisdiccion_nombre = models.CharField(max_length=300)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.TextField()
-
-    def __init__(self, *args, **kwargs):
-        # Columna fecha siempre tiene el timestamp del momento de creación
-        kwargs['fecha'] = timezone.now()
-        super(Indicador, self).__init__(*args, **kwargs)
 
     def __unicode__(self):
         string = 'Indicador "{0}" de {1}, {2}'
@@ -49,13 +44,9 @@ class IndicadorRed(models.Model):
         verbose_name_plural = "Indicadores agregados"
         get_latest_by = 'fecha'
 
-    fecha = models.DateField()
+    fecha = models.DateField(auto_now_add=True)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.TextField()
-
-    def __init__(self, *args, **kwargs):
-        kwargs['fecha'] = timezone.now()
-        super(IndicadorRed, self).__init__(*args, **kwargs)
 
     def __unicode__(self):
         string = 'Indicador "{0}" de la Red de Nodos, {1}'

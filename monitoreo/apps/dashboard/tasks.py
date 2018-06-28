@@ -20,6 +20,7 @@ def federation_run():
         federate_catalogs(portal_url, apikey, task.pk)
 
 
+@job('indexing')
 def federate_catalogs(portal_url, apikey, task_id):
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:

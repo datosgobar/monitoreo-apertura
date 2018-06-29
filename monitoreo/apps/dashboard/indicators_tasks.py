@@ -59,9 +59,6 @@ def save_network_indics(network_indics, indic_class, task):
         IndicadorRed.objects.update_or_create(fecha=timezone.now().date(),
                                               indicador_tipo=indic_type,
                                               defaults={'indicador_valor': json.dumps(value)})
-        # Al ser los indicadores de red en cantidad reducida comparado con
-        # la cantidad de los indicadores comunes, los guardo
-        # uno por uno sin mayor impacto de performance
 
     IndicatorsGenerationTask.info(task, u'Calculados {} indicadores de red'.format(len(network_indics)))
 

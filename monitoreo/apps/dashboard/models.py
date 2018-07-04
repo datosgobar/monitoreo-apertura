@@ -92,7 +92,7 @@ class HarvestingNode(models.Model):
         return self.__unicode__()
 
     name = models.CharField(max_length=100)
-    url = models.URLField()
+    url = models.URLField(help_text='URL del nodo federador ej: http://datos.gob.ar')
     apikey = models.CharField(max_length=50)
     enabled = models.BooleanField(default=False)
 

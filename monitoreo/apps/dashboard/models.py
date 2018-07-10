@@ -25,6 +25,7 @@ class Indicador(models.Model):
 
     fecha = models.DateField(auto_now_add=True)
     jurisdiccion_nombre = models.CharField(max_length=300)
+    jurisdiccion_id = models.CharField(max_length=100, null=True)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.TextField()
 

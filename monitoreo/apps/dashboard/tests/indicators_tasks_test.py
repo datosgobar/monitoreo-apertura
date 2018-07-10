@@ -28,20 +28,19 @@ class IndicatorGenerationsTest(TestCase):
     def get_sample(cls, sample_filename):
         return os.path.join(SAMPLES_DIR, sample_filename)
 
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
         # set mock default indicators
         settings.DEFAULT_INDICATORS = ['ind_a', 'ind_b', 'ind_c', ]
         settings.INDICATORS_INFO = [{"indicador_nombre": "ind_a", "indicador_nombre_tabla": "col_a"},
                                     {"indicador_nombre": "ind_b", "indicador_nombre_tabla": "col_b"},
                                     {"indicador_nombre": "ind_c", "indicador_nombre_tabla": "col_c"}]
         # set mock catalog list
-        cls.catalogs = [DataJson(cls.get_sample(cat)) for cat in ['full_data.json', 'catalogo_justicia.json']]
+        self.catalogs = [DataJson(self.get_sample(cat)) for cat in ['full_data.json', 'catalogo_justicia.json']]
         # set mock indicators
-        cls.indicator_1 = {'ind_a': 0, 'ind_b': 1, 'ind_c': 2}
-        cls.indicator_2 = {'ind_a': 3, 'ind_b': None, 'ind_c': 2}
-        cls.indicators = [cls.indicator_1, cls.indicator_2]
-        cls.network_indicators = {'ind_a': 3, 'ind_b': 1, 'ind_c': 4}
+        self.indicator_1 = {'identifier': 'a', 'title': self.catalogs[0]['title'], 'ind_a': 0, 'ind_b': 1, 'ind_c': 2}
+        self.indicator_2 = {'identifier': 'b', 'title': self.catalogs[1]['title'], 'ind_a': 3, 'ind_b': None, 'ind_c': 2}
+        self.indicators = [self.indicator_1, self.indicator_2]
+        self.network_indicators = {'ind_a': 3, 'ind_b': 1, 'ind_c': 4}
 
     def test_task_is_finished(self, mock_indic, mock_load):
         mock_load.return_value = self.catalogs
@@ -77,6 +76,13 @@ class IndicatorGenerationsTest(TestCase):
         task = IndicatorsGenerationTask.objects.create()
         generate_indicators(task.pk)
         self.indicator_2['ind_b'] = 10
+
+        self.indicator_1['identifier'] = 'a'
+        self.indicator_2['identifier'] = 'b'
+
+        self.indicator_1['title'] = self.catalogs[0]['title']
+        self.indicator_2['title'] = self.catalogs[1]['title']
+
         generate_indicators(task.pk)
         self.assertEqual(6, Indicador.objects.count())
         self.assertEqual(3, IndicadorRed.objects.count())

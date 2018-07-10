@@ -1,13 +1,19 @@
 #! coding: utf-8
+import os
+import json
 from datetime import date, timedelta
 from django.test import TestCase
+from django_datajsonar.models import Node
 from monitoreo.apps.dashboard.models import Indicador, IndicatorType
 from monitoreo.apps.dashboard.helpers import fetch_latest_indicadors, \
     load_catalogs
 from pydatajson import DataJson
 
+dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
+
 
 class FetchLatestIndicatorsTest(TestCase):
+
     def setUp(self):
         today = date.today()
         yesterday = today - timedelta(days=1)
@@ -47,10 +53,19 @@ class FetchLatestIndicatorsTest(TestCase):
 
 
 class LoadCatalogsTest(TestCase):
+
+    catalog_id = 'test_catalog'
+
     @classmethod
     def setUpTestData(cls):
         url = 'https://raw.githubusercontent.com/datosgobar/libreria' \
               '-catalogos/master/'
+        cls.node = Node(catalog_id=cls.catalog_id,
+                        catalog_url=os.path.join(dir_path, 'full_data.json'),
+                        indexable=True)
+        cls.node.catalog = json.dumps(DataJson(cls.node.catalog_url))
+        cls.node.save()
+
         cls.catalogs = load_catalogs(url)
 
     def test_method_returns_non_empty_list(self):

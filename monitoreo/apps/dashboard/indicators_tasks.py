@@ -24,19 +24,13 @@ def indicators_run():
 @job('indexing')
 def generate_indicators(task_id):
     data_json = DataJson()
-    catalogs = load_catalogs(URL)
+    task = IndicatorsGenerationTask.objects.get(pk=task_id)
+    catalogs = load_catalogs(task)
     indics, network_indics = data_json.generate_catalogs_indicators(
         catalogs,
         CENTRAL)
-    names = []
-    for catalog in catalogs:
-        # Obtengo el nombre de los catálogos a partir de la validación
-        validation = data_json.validate_catalog(catalog)
-        catalog_name = validation['error']['catalog']['title']
-        names.append(catalog_name)
 
-    task = IndicatorsGenerationTask.objects.get(pk=task_id)
-    save_indicators(indics, names, task)
+    save_indicators(indics, task)
     save_network_indics(network_indics, 'RED', task)
 
     # Creo columnas default si no existen
@@ -63,17 +57,15 @@ def save_network_indics(network_indics, indic_class, task):
     IndicatorsGenerationTask.info(task, u'Calculados {} indicadores de red'.format(len(network_indics)))
 
 
-def save_indicators(indics_list, names, task):
+def save_indicators(indics_list, task):
     """Crea modelos de Django a partir de cada indicador, y los guarda.
     Los nombres de los catálogos son leídos a partir de una lista 'names',
     con los indicadores y los nombres ordenados de la misma manera"""
 
     indic_models = 0  # Lista con todos los indicadores generados
     for indicators in indics_list:
-        catalog_name = names[indics_list.index(indicators)]
-        if not catalog_name:  # Fallback en caso de catálogos muy erróneos
-            catalog_name = "Catálogo sin nombre"
-
+        catalog_name = indicators.pop('title')
+        catalog_id = indicators.pop('identifier')
         # Itero sobre los indicadores calculados, creando modelos y
         # agregándolos a la lista 'indicators'
         for indic_name, value in indicators.items():
@@ -85,6 +77,7 @@ def save_indicators(indics_list, names, task):
             try:
                 Indicador.objects.update_or_create(fecha=timezone.now().date(),
                                                    jurisdiccion_nombre=catalog_name,
+                                                   jurisdiccion_id=catalog_id,
                                                    indicador_tipo=indic_type,
                                                    defaults={'indicador_valor': json.dumps(value)})
                 indic_models += 1

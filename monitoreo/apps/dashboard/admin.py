@@ -4,6 +4,7 @@ from django.contrib import admin
 from ordered_model.admin import OrderedModelAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+from django_datajsonar.admin import AbstractTaskAdmin
 from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode, FederationTask, IndicatorsGenerationTask
 from .tasks import federate_catalogs
 from .indicators_tasks import generate_indicators
@@ -26,6 +27,8 @@ class IndicatorResource(resources.ModelResource):
 
 
 class IndicatorAdmin(ImportExportModelAdmin):
+    list_filter = ('jurisdiccion_id',)
+
     resource_class = IndicatorResource
 
 
@@ -87,9 +90,12 @@ class FederationAdmin(admin.ModelAdmin):
                                 obj.pk)
 
 
-class IndicatorTaskAdmin(admin.ModelAdmin):
+class IndicatorTaskAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs', 'status', 'finished')
     list_display = ('__unicode__',)
+
+    model = IndicatorsGenerationTask
+    task = generate_indicators
 
     def save_model(self, request, obj, form, change):
         super(IndicatorTaskAdmin, self).save_model(request, obj, form, change)

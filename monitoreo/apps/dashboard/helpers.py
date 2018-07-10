@@ -3,8 +3,10 @@ import json
 from urllib2 import urlopen, HTTPError
 from six import text_type
 import yaml
-from django_datajsonar.models import Dataset
+from django_datajsonar.models import Dataset, Node
+from pydatajson import DataJson
 
+from .models import IndicatorsGenerationTask
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
 
@@ -30,30 +32,19 @@ def fetch_latest_indicadors(indicators):
     return latest
 
 
-def load_catalogs(root_url):
-    """Lee el archivo 'indice.yml' en el directorio raíz, recolecta las
-    rutas a los data.json, las lee y parsea a diccionarios. Devuelve una
-    lista con los diccionarios parseados.
-    Se asume que los data.json siguen una ruta del tipo
-    "root_url/<nombre-catalogo>/data.json"
-    Args:
-        root_url (str): URL al directorio raíz de la librería de catálogos
-    """
-    index_url = root_url + 'indice.yml'
+def load_catalogs(task):
+    nodes = Node.objects.filter(indexable=True)
     catalogs = []
+    for node in nodes:
+        try:
+            catalog = DataJson(node.catalog_url)
+        except Exception as e:
+            msg = u'Error accediendo al catálogo {}: {}'.format(node.catalog_id, str(e))
+            IndicatorsGenerationTask.info(task, msg)
+            continue
 
-    yml_file = urlopen(index_url)
-    catalogs_yaml = yaml.load(yml_file.read())
-    for catalog_name, values in catalogs_yaml.items():
-        if values.get('federado'):
-            url = root_url + catalog_name + '/data.json'
-            # Intento parsear el documento, si falla, lo ignoro
-            try:
-                datajson = json.loads(urlopen(url).read())
-            except (HTTPError, ValueError):
-                continue
-            catalogs.append(datajson)
-
+        catalog['identifier'] = node.catalog_id
+        catalogs.append(catalog)
     return catalogs
 
 

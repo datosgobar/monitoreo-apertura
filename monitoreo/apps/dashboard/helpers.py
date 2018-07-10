@@ -1,10 +1,9 @@
 #! coding: utf-8
 import json
-from urllib2 import urlopen, HTTPError
 from six import text_type
-import yaml
-from django_datajsonar.models import Dataset, Node
 from pydatajson import DataJson
+
+from django_datajsonar.models import Dataset, Node
 
 from .models import IndicatorsGenerationTask
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER

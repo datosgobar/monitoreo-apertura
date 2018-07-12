@@ -1,3 +1,15 @@
+0.0.6 (12-07-18)
+-------------------
+
+* Agrega id de nodos a los indicadores.
+* Genera los indicadores de red a partir de los nodos indexables.
+* Actualiza la versión de `pydatajson` para calcular los 3 nuevos indicadores. 
+
+0.0.5 (04-07-18)
+-------------------
+
+* Agrega help text de url de nodos (tag para probar el deploy).
+
 0.0.4 (02-07-18)
 -------------------
 

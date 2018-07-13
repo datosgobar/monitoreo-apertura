@@ -92,4 +92,10 @@
   tags: quickly
 
 - name: set timezone
-  command: timedatectl set-timezone America/Argentina/Buenos_Aires
+  timezone:
+    name: America/Argentina/Buenos_Aires
+
+- name: restart crontab
+  service:
+    name: cron
+    state: restarted

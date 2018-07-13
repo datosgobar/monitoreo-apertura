@@ -90,3 +90,6 @@
     name: "nginx.service"
     enabled: yes
   tags: quickly
+
+- name: set timezone
+  command: timedatectl set-timezone America/Argentina/Buenos_Aires

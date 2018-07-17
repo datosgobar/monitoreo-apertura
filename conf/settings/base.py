@@ -158,6 +158,7 @@ VENDOR_APPS = (
     'import_export',
     'django_rq',
     'scheduler',
+    'des',
 )
 
 APPS = (
@@ -210,10 +211,8 @@ GOOGLE_DRIVE_PROJECT_CREDENTIALS = env('GOOGLE_DRIVE_PROJECT_CREDENTIALS',
                                        default="")
 GOOGLE_DRIVE_USER_CREDENTIALS = env('GOOGLE_DRIVE_USER_CREDENTIALS',
                                     default='')
-# EMAILS
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
-                    default='django.core.mail.backends.console.EmailBackend')
 
+EMAIL_BACKEND = 'des.backends.ConfiguredEmailBackend'
 
 DEFAULT_REDIS_HOST = env("DEFAULT_REDIS_HOST", default="localhost")
 DEFAULT_REDIS_PORT = env("DEFAULT_REDIS_PORT", default="6379")

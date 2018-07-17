@@ -54,7 +54,7 @@ class ReportGenerator(object):
             return
 
         start_time = self._format_date(self.task.created)
-        subject = u'Indicadores Monitoreo Apertura: {}'.format(start_time)
+        subject = u'[{}]Indicadores Monitoreo Apertura: {}'.format(settings.ENV_TYPE, start_time)
 
         msg = render_to_string('reports/report.txt', context=context)
         mail = EmailMultiAlternatives(subject, msg, settings.EMAIL_HOST_USER, emails)

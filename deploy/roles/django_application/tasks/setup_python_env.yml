@@ -48,6 +48,9 @@
       SENTRY_ENVIRONMENT="{{ sentry_environment }}"
       {% endif %}
       APP_VERSION={{ checkout_branch }}
+      {% if env_type %}
+      ENV_TYPE={{ env_type }}
+      {% endif %}
 
 
 - name: Ensure env file

@@ -27,6 +27,7 @@ if [ "$ENVIRONMENT" == "testing" ]; then
     export DEPLOY_ENVIRONMENT="$ENVIRONMENT"
     export MTU_VALUE="${STIEMPO_DEV_MTU_VALUE:-$DEFAULT_MTU_VALUE}"
     export DEPLOY_REVISION="master"
+    export ENV_TYPE="dev"
 elif [ "$ENVIRONMENT" == "staging" ]; then
     echo "Ambiente $ENVIRONMENT"
 
@@ -39,6 +40,7 @@ elif [ "$ENVIRONMENT" == "staging" ]; then
     export DEPLOY_ENVIRONMENT="$ENVIRONMENT"
     export MTU_VALUE="${STAGING_DEV_MTU_VALUE:-$DEFAULT_MTU_VALUE}"
     export DEPLOY_REVISION="${TRAVIS_TAG:-$TRAVIS_COMMIT}" # Desde el tag o el hash del commit
+    export ENV_TYPE="stg"
 else
     echo "Ambiente '$ENVIRONMENT' desconocido";
     exit 1;

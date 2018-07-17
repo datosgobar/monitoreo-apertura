@@ -252,3 +252,4 @@ FIELD_BLACKLIST = [
     "scrapingDataStartCell",
 ]
 
+ENV_TYPE = env('ENV_TYPE', default='')

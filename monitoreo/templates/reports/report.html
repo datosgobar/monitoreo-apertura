@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <p>Horario de finalización: {{ finish_time }}</p>
+
+    <h4>Resumen</h4>
+    <ul>
+        <li>Cantidad Nodos: </li>
+        <li>Cantidad Datasets:</li>
+        <li>Cantidad Distribuciones:</li>
+    </ul>
+
+    <hr>
+
+    <h4>Detalle</h4>
+    <p>Indicadores de Red:</p>
+    <ul>
+        {% for key, value in latest_indicators.items %}
+        <li>{{ key }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

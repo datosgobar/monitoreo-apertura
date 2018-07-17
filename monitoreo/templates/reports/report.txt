@@ -1,0 +1,5 @@
+Horario de finalización: {{ finish_time }}
+
+Indicadores de Red:
+    {% for indicator in latest_indicators %}
+    {{ indicator.indicador_tipo}}: {{indicator.indicador_valor}}

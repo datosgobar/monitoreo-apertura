@@ -1,0 +1,4 @@
+dataset_title,landing_page
+{% for dataset in dataset_list %}
+{{ dataset.0 }}, {{ dataset.1 }}
+{% endfor %}

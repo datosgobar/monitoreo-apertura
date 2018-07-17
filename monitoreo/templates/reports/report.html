@@ -3,20 +3,24 @@
 <body>
     <p>Horario de finalización: {{ finish_time }}</p>
 
-    <h4>Resumen</h4>
+    <h4>Detalle</h4>
+    <p>Indicadores numéricos de Red:</p>
     <ul>
-        <li>Cantidad Nodos: </li>
-        <li>Cantidad Datasets:</li>
-        <li>Cantidad Distribuciones:</li>
+        {% for key, value in one_dimensional_indics.items %}
+        <li>{{ key }}: {{ value }}</li>
+        {% endfor %}
     </ul>
 
-    <hr>
-
-    <h4>Detalle</h4>
-    <p>Indicadores de Red:</p>
+    <p>Indicadores no numéricos de Red:</p>
     <ul>
-        {% for key, value in latest_indicators.items %}
-        <li>{{ key }}: {{ value }}</li>
+        {% for key, nested in multi_dimensional_indics.items %}
+        <li>{{ key }}:
+            <ul>{% for key, value in nested.items %}
+                <li>{{ key|default:"None" }}: {{ value }}</li>
+            {% endfor %}
+            </ul>
+            <br>
+        </li>
         {% endfor %}
     </ul>
 </body>

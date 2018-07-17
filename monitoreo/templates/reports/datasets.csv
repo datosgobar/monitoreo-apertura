@@ -1,4 +1,4 @@
 dataset_title,landing_page
 {% for dataset in dataset_list %}
-{{ dataset.0 }}, {{ dataset.1 }}
+{{ dataset.0 }}, {{ dataset.1|default:'No landing page' }}
 {% endfor %}

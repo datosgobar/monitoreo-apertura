@@ -32,22 +32,6 @@ def red_nodos(request):
     return render(request, 'dashboard/red.html', context)
 
 
-def test_report(request):
-    context = {
-        'finish_time': 'FINNISH TIM'
-    }
-    a_taks = IndicatorsGenerationTask.objects.last()
-    date = a_taks.finished.date()
-    latest_indicators = IndicadorRed.objects.filter(fecha=date)
-    indicator_dict = {indicator.indicador_tipo.nombre: indicator.indicador_valor for indicator in latest_indicators}
-    harvested_datasets = indicator_dict.pop('datasets_federados')
-    non_harvested_datasets = indicator_dict.pop('datasets_no_federados')
-    context.update({
-        'latest_indicators': indicator_dict
-    })
-    return render(request, 'reports/report.html', context)
-
-
 def populate_table(tabla):
     today = date.today()
     indicators = Indicador.objects.filter(indicador_tipo__tipo=tabla,

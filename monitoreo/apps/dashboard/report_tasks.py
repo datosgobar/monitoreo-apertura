@@ -14,7 +14,8 @@ from .models import IndicadorRed, IndicatorsGenerationTask
 
 def send_staff_report():
     try:
-        task = IndicatorsGenerationTask.objects.latest('finished')
+        task = IndicatorsGenerationTask.objects\
+            .filter(status=IndicatorsGenerationTask.FINISHED).latest('finished')
     except IndicatorsGenerationTask.DoesNotExist:
         # No hay un task cargado
         return

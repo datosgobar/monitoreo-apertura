@@ -28,6 +28,9 @@ class ReportGenerationTest(TestCase):
     @classmethod
     def setUpTestData(cls):
 
+        # set mock env
+        settings.ENV_TYPE = 'tst'
+
         # set mock user
         cls.staff_user = User(username='staff', password='staff', email='staff@test.com', is_staff=True)
         cls.staff_user.save()
@@ -71,7 +74,7 @@ class ReportGenerationTest(TestCase):
 
     def test_subject(self):
         start_time = timezone.localtime(self.task.created).strftime('%Y-%m-%d %H:%M:%S')
-        subject = u'[local] Indicadores Monitoreo Apertura: {}'.format(start_time)
+        subject = u'[tst] Indicadores Monitoreo Apertura: {}'.format(start_time)
         self.assertEqual(subject, self.mail.subject)
 
     def test_mail_body(self):

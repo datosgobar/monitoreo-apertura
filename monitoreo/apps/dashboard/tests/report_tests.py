@@ -8,6 +8,7 @@ except ImportError:
     from unittest.mock import patch, MagicMock
 
 from django.core import mail
+from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -24,15 +25,17 @@ class ReportGenerationTest(TestCase):
     def get_sample(cls, sample_filename):
         return os.path.join(SAMPLES_DIR, sample_filename)
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
+
         # set mock user
-        self.staff_user = User(username='staff', password='staff', email='staff@test.com', is_staff=True)
-        self.staff_user.save()
-        self.regular_user = User(username='regular', password='regular', email='regular@test.com', is_staff=False)
-        self.regular_user.save()
+        cls.staff_user = User(username='staff', password='staff', email='staff@test.com', is_staff=True)
+        cls.staff_user.save()
+        cls.regular_user = User(username='regular', password='regular', email='regular@test.com', is_staff=False)
+        cls.regular_user.save()
 
         # set mock task
-        self.task = IndicatorsGenerationTask(
+        cls.task = IndicatorsGenerationTask(
             status=IndicatorsGenerationTask.FINISHED,
             finished=timezone.now(),
             logs='test task logs'
@@ -48,27 +51,41 @@ class ReportGenerationTest(TestCase):
 
         ind_a = IndicadorRed(indicador_tipo=type_a, indicador_valor='42')
         ind_a.save()
-        ind_b = IndicadorRed(indicador_tipo=type_b, indicador_valor='[("d1", "l1"), ("d2","l2")]')
+        ind_b = IndicadorRed(indicador_tipo=type_b, indicador_valor='[["d1", "l1"], ["d2", "l2"]]')
         ind_b.save()
         ind_c = IndicadorRed(indicador_tipo=type_c, indicador_valor='{"k1": 1, "k2": 2}')
         ind_c.save()
 
-        self.report_generator = ReportGenerator(self.task)
+        cls.report_generator = ReportGenerator(cls.task)
+
+    def setUp(self):
+        self.report_generator.generate_email()
+        self.mail = mail.outbox[0]
 
     def tearDown(self):
         mail.outbox = []
 
     def test_mail_is_sent_to_staff_members(self):
-        pass
-
-    def test_info_attachment(self):
-        pass
-
-    def test_list_attachment(self):
-        pass
-
-    def test_mail_body(self):
-        pass
+        self.assertEqual(1, len(mail.outbox))
+        self.assertEqual(['staff@test.com'], self.mail.to)
 
     def test_subject(self):
-        pass
+        start_time = timezone.localtime(self.task.created).strftime('%Y-%m-%d %H:%M:%S')
+        subject = u'[local] Indicadores Monitoreo Apertura: {}'.format(start_time)
+        self.assertEqual(subject, self.mail.subject)
+
+    def test_mail_body(self):
+        body = self.mail.body
+        self.assertTrue('ind_a: 42' in body)
+        self.assertTrue('ind_c:\n' in body)
+        self.assertTrue('k1: 1' in body)
+        self.assertTrue('k2: 2' in body)
+
+    def test_info_attachment(self):
+        self.assertTrue(('info.log', 'test task logs', 'text/plain') in self.mail.attachments)
+
+    def test_list_attachment(self):
+        self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd1, l1\nd2, l2\n', 'text/csv') in
+                        self.mail.attachments)
+
+

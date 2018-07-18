@@ -1,3 +1,11 @@
+0.0.7 (18-07-18)
+-------------------
+
+* Migración para indicadores con ids faltantes.
+* Usa nueva versión de django datajsonar con columna reviewed para datasets.
+
+
+
 0.0.6 (12-07-18)
 -------------------
 

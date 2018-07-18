@@ -90,5 +90,3 @@ class ReportGenerationTest(TestCase):
     def test_list_attachment(self):
         self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd1, l1\nd2, l2\n', 'text/csv') in
                         self.mail.attachments)
-
-

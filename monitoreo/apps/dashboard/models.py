@@ -1,10 +1,32 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from django.utils import timezone
+
+import json
+
 from django.db import models
 from django.conf import settings
 from ordered_model.models import OrderedModel
 from django_datajsonar.models import AbstractTask
+
+
+class IndicatorManager(models.Manager):
+
+    def sorted_indicators_on_date(self, date):
+        indicators = self.model.objects.filter(fecha=date)
+
+        one_dimensional = {}
+        multi_dimensional = {}
+        listed = {}
+        for indicator in indicators:
+            value = json.loads(indicator.indicador_valor)
+            if isinstance(value, dict):
+                multi_dimensional[indicator.indicador_tipo.nombre] = value
+            elif isinstance(value, list):
+                listed[indicator.indicador_tipo.nombre] = value
+            else:
+                one_dimensional[indicator.indicador_tipo.nombre] = value
+
+        return one_dimensional, multi_dimensional, listed
 
 
 class IndicatorType(models.Model):
@@ -29,6 +51,8 @@ class Indicador(models.Model):
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.TextField()
 
+    objects = IndicatorManager()
+
     def __unicode__(self):
         string = 'Indicador "{0}" de {1}, {2}'
         return string.format(self.indicador_tipo.nombre,
@@ -48,6 +72,8 @@ class IndicadorRed(models.Model):
     fecha = models.DateField(auto_now_add=True)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.TextField()
+
+    objects = IndicatorManager()
 
     def __unicode__(self):
         string = 'Indicador "{0}" de la Red de Nodos, {1}'

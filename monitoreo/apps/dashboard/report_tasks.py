@@ -1,8 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-import json
-
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail.message import EmailMultiAlternatives
@@ -12,7 +10,7 @@ from django.utils import timezone
 from .models import IndicadorRed, IndicatorsGenerationTask
 
 
-def send_staff_report():
+def send_reports():
     try:
         task = IndicatorsGenerationTask.objects\
             .filter(status=IndicatorsGenerationTask.FINISHED).latest('finished')
@@ -38,8 +36,10 @@ class ReportGenerator(object):
         context = {
             'finish_time': self._format_date(self.task.finished)
         }
-        latest_indicators = IndicadorRed.objects.filter(fecha=self.task.finished.date())
-        one_dimensional, multi_dimensional, listed = self._sort_indicators(latest_indicators)
+
+        one_dimensional, multi_dimensional, listed = \
+            IndicadorRed.objects.sorted_indicators_on_date(self.task.finished.date())
+
         context.update({
             'one_dimensional_indics': one_dimensional,
             'multi_dimensional_indics': multi_dimensional
@@ -73,19 +73,3 @@ class ReportGenerator(object):
 
     def _format_date(self, date):
         return timezone.localtime(date).strftime(self.DATE_FORMAT)
-
-    @staticmethod
-    def _sort_indicators(queryset):
-        one_dimensional = {}
-        multi_dimensional = {}
-        listed = {}
-        for indicator in queryset:
-            value = json.loads(indicator.indicador_valor)
-            if isinstance(value, dict):
-                multi_dimensional[indicator.indicador_tipo.nombre] = value
-            elif isinstance(value, list):
-                listed[indicator.indicador_tipo.nombre] = value
-            else:
-                one_dimensional[indicator.indicador_tipo.nombre] = value
-
-        return one_dimensional, multi_dimensional, listed

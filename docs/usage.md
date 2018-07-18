@@ -107,3 +107,25 @@ Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
 Luego de guardar la instancia deberiamos tener algo como:
 
 ![Generación indicadores](./images/generacion_indicadores.png)
+
+### Reporte de indicadores
+
+Es posible programar una tarea para enviar un reporte de los indicadores de la red de nodos a los responsables
+pertinentes. Se hace también con un `RepeatableJob`.
+
+En la ruta `/admin/scheduler/repeatablejob/`.
+
+En el campo **nombre** podemos poner lo que deseemos (como "Reporte indicadores"), en el campo **callable** debemos
+poner `monitoreo.apps.dashboard.report_tasks.send_reports`.
+En el campo **Queue** ponemos `indexing`.
+Habilitar el campo **Enabled**.
+En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
+Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
+Luego de guardar la instancia deberiamos tener algo como:
+
+![Generación indicadores](./images/tarea_reportes.png)
+
+Los mails de reporte de red se envian al staff del proyecto. Para marcar un usuario como staff, hay que acceder
+a la ruta `/admin/auth/user/` y en la vista del usuario particular, marcar la opción:
+
+![Marcar staff](./images/staff_checkmark.png)

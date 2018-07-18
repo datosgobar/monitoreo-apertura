@@ -1,7 +1,7 @@
 # coding=utf-8
 from datetime import date, timedelta
 from django.shortcuts import render
-from .models import Indicador, IndicadorRed, TableColumn, IndicatorsGenerationTask, IndicatorType
+from .models import Indicador, IndicadorRed, TableColumn
 from .helpers import fetch_latest_indicadors
 
 

@@ -18,4 +18,4 @@ ssh $DEPLOY_TARGET_USERNAME@$DEPLOY_TARGET_IP -p$DEPLOY_TARGET_SSH_PORT "\
 ssh $DEPLOY_TARGET_USERNAME@$DEPLOY_TARGET_IP -p$DEPLOY_TARGET_SSH_PORT "\
     cd ~/dev/monitoreo-apertura/deploy/ &&\
     source ~/dev/venv/bin/activate &&\
-    ansible-playbook -i ~/dev/monitoreo-apertura/deploy/inventories/$DEPLOY_ENVIRONMENT/hosts --extra-vars='checkout_branch=$DEPLOY_REVISION' --vault-password-file $DEPLOY_TARGET_VAULT_PASS_FILE site.yml -vv"
+    ansible-playbook -i ~/dev/monitoreo-apertura/deploy/inventories/$DEPLOY_ENVIRONMENT/hosts --extra-vars='checkout_branch=$DEPLOY_REVISION env_type=$ENV_TYPE' --vault-password-file $DEPLOY_TARGET_VAULT_PASS_FILE site.yml -vv"

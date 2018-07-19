@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <p>Horario de finalización: {{ finish_time }}</p>
+
+    <h4>Detalle</h4>
+    <p>Indicadores numéricos de Red:</p>
+    <ul>
+        {% for key, value in one_dimensional_indics.items %}
+        <li>{{ key }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+
+    <p>Indicadores no numéricos de Red:</p>
+    <ul>
+        {% for key, nested in multi_dimensional_indics.items %}
+        <li>{{ key }}:
+            <ul>{% for key, value in nested.items %}
+                <li>{{ key|default:"None" }}: {{ value }}</li>
+            {% endfor %}
+            </ul>
+            <br>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

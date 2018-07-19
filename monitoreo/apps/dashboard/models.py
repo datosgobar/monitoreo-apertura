@@ -12,7 +12,7 @@ from django_datajsonar.models import AbstractTask
 class IndicatorManager(models.Manager):
 
     def sorted_indicators_on_date(self, date):
-        indicators = self.model.objects.filter(fecha=date)
+        indicators = self.filter(fecha=date)
 
         one_dimensional = {}
         multi_dimensional = {}

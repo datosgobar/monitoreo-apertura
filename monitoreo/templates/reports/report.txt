@@ -1,11 +1,11 @@
 Horario de finalización: {{ finish_time }}
 
-Indicadores numéricos de Red:
+Indicadores numéricos de {{ target }}:
     {% for key, value in one_dimensional_indics.items %}
     {{ key }}: {{ value|default:"None" }}
     {% endfor %}
 
-Indicadores no numéricos de Red:
+Indicadores no numéricos de {{ target }}:
     {% for key, nested in multi_dimensional_indics.items %}
     {{ key }}:
         {% for key, value in nested.items %}

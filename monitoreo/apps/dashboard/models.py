@@ -11,8 +11,10 @@ from django_datajsonar.models import AbstractTask
 
 class IndicatorManager(models.Manager):
 
-    def sorted_indicators_on_date(self, date):
+    def sorted_indicators_on_date(self, date, node=None):
         indicators = self.filter(fecha=date)
+        if node:
+            indicators = indicators.filter(jurisdiccion_id=node.catalog_id)
 
         one_dimensional = {}
         multi_dimensional = {}

@@ -7,7 +7,9 @@ from django.core.mail.message import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from .models import IndicadorRed, IndicatorsGenerationTask
+from django_datajsonar.models import Node
+
+from .models import Indicador, IndicadorRed, IndicatorsGenerationTask
 
 
 def send_reports():
@@ -20,6 +22,10 @@ def send_reports():
     generator = ReportGenerator(task)
     generator.generate_email()
 
+    nodes = Node.objects.filter(indexable=True)
+    for node in nodes:
+        generator.generate_email(node)
+
 
 class ReportGenerator(object):
     DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -27,7 +33,7 @@ class ReportGenerator(object):
     def __init__(self, task):
         self.task = task
 
-    def generate_email(self):
+    def generate_email(self, node=None):
         """Genera y manda el mail con el reporte de indexación. Si node es especificado, genera el reporte
         con valores de entidades pertenecientes únicamente a ese nodo (reporte individual). Caso contrario
         (default), genera el reporte de indexación global
@@ -36,20 +42,29 @@ class ReportGenerator(object):
         context = {
             'finish_time': self._format_date(self.task.finished)
         }
-
-        one_dimensional, multi_dimensional, listed = \
-            IndicadorRed.objects.sorted_indicators_on_date(self.task.finished.date())
+        if not node:
+            one_dimensional, multi_dimensional, listed = \
+                IndicadorRed.objects.sorted_indicators_on_date(self.task.finished.date())
+            target = 'Red'
+        else:
+            one_dimensional, multi_dimensional, listed = \
+                Indicador.objects.sorted_indicators_on_date(self.task.finished.date(), node)
+            target = node.catalog_id
 
         context.update({
+            'target': target,
             'one_dimensional_indics': one_dimensional,
             'multi_dimensional_indics': multi_dimensional
         })
-        self.send_email(context, listed)
+        self.send_email(context, listed, node)
 
-    def send_email(self, context, listed):
+    def send_email(self, context, listed, node=None):
+        if not node:
+            recipients = User.objects.filter(is_staff=True)
+        else:
+            recipients = node.admins.all()
 
-        recipients = User.objects.filter(is_staff=True)
-        emails = [user.email for user in recipients]
+        emails = [user.email for user in recipients if user.email]
 
         if not emails:  # Nothing to do here
             return
@@ -62,10 +77,13 @@ class ReportGenerator(object):
         html_msg = render_to_string('reports/report.html', context=context)
         mail.attach_alternative(html_msg, 'text/html')
 
-        mail.attach('info.log', self.task.logs, 'text/plain')
+        if not node:
+            mail.attach('info.log', self.task.logs, 'text/plain')
+
         for indicator in listed:
-            body = render_to_string('reports/datasets.csv', context={'dataset_list': listed[indicator]})
-            mail.attach('{}.csv'.format(indicator), body, 'text/csv')
+            if listed[indicator]:
+                body = render_to_string('reports/datasets.csv', context={'dataset_list': listed[indicator]})
+                mail.attach('{}.csv'.format(indicator), body, 'text/csv')
 
         sent = mail.send()
         if emails and not sent:

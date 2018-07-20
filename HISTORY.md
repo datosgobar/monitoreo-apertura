@@ -1,6 +1,12 @@
+0.0.8 (20-07-18)
+-------------------
+
+* Funcionalidad de mail de reporte de la red de nodos para usuarios staff
+
 0.0.7 (18-07-18)
 -------------------
 
+* Fix de timezones
 * Migración para indicadores con ids faltantes.
 * Usa nueva versión de django datajsonar con columna reviewed para datasets.
 

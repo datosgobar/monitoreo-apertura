@@ -13,7 +13,9 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, IndicatorType, IndicadorRed
+from django_datajsonar.models import Node
+
+from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, IndicatorType, IndicadorRed, Indicador
 from monitoreo.apps.dashboard.report_tasks import ReportGenerator
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
@@ -27,15 +29,18 @@ class ReportGenerationTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-
         # set mock env
         settings.ENV_TYPE = 'tst'
 
         # set mock user
-        cls.staff_user = User(username='staff', password='staff', email='staff@test.com', is_staff=True)
-        cls.staff_user.save()
-        cls.regular_user = User(username='regular', password='regular', email='regular@test.com', is_staff=False)
-        cls.regular_user.save()
+        User.objects.create(username='staff', password='staff', email='staff@test.com', is_staff=True)
+
+        # set mock nodes
+        cls.node1 = Node.objects.create(catalog_id='id1', catalog_url='url', indexable=True)
+        cls.node2 = Node.objects.create(catalog_id='id2', catalog_url='url', indexable=True)
+
+        cls.node1.admins.create(username='admin1', password='regular', email='admin1@test.com', is_staff=False)
+        cls.node2.admins.create(username='admin2', password='regular', email='admin2@test.com', is_staff=False)
 
         # set mock task
         cls.task = IndicatorsGenerationTask(
@@ -45,20 +50,22 @@ class ReportGenerationTest(TestCase):
         )
 
         # set mock indicators
-        type_a = IndicatorType(nombre='ind_a', tipo='RED')
-        type_a.save()
-        type_b = IndicatorType(nombre='ind_b', tipo='RED')
-        type_b.save()
-        type_c = IndicatorType(nombre='ind_c', tipo='RED')
-        type_c.save()
+        type_a = IndicatorType.objects.create(nombre='ind_a', tipo='RED')
+        type_b = IndicatorType.objects.create(nombre='ind_b', tipo='RED')
+        type_c = IndicatorType.objects.create(nombre='ind_c', tipo='RED')
 
-        ind_a = IndicadorRed(indicador_tipo=type_a, indicador_valor='42')
-        ind_a.save()
-        ind_b = IndicadorRed(indicador_tipo=type_b, indicador_valor='[["d1", "l1"], ["d2", "l2"]]')
-        ind_b.save()
-        ind_c = IndicadorRed(indicador_tipo=type_c, indicador_valor='{"k1": 1, "k2": 2}')
-        ind_c.save()
-
+        types = [type_a, type_b, type_c]
+        values = ['42', '[["d1", "l1"], ["d2", "l2"]]', '{"k1": 1, "k2": 2}']
+        for t, v in zip(types, values):
+            IndicadorRed.objects.create(indicador_tipo=t, indicador_valor=v)
+        values = ['23', '[["d1", "l1"]]', '{"k2": 1}']
+        for t, v in zip(types, values):
+            Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id1',
+                                     jurisdiccion_nombre='nodo1')
+        values = ['19', '[["d2", "l2"]]', '{"k1": 1, "k2": 1}']
+        for t, v in zip(types, values):
+            Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id2',
+                                     jurisdiccion_nombre='nodo2')
         cls.report_generator = ReportGenerator(cls.task)
 
     def setUp(self):
@@ -90,3 +97,14 @@ class ReportGenerationTest(TestCase):
     def test_list_attachment(self):
         self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd1, l1\nd2, l2\n', 'text/csv') in
                         self.mail.attachments)
+
+    def test_nodes_email_outbox(self):
+        mail.outbox = []
+        self.report_generator.generate_email(node=self.node2)
+        self.assertEqual(1, len(mail.outbox))
+        sent_mail = mail.outbox[0]
+        self.assertEqual(['admin2@test.com'], sent_mail.to)
+        self.assertTrue('ind_a: 19' in sent_mail.body)
+        self.assertTrue(1, len(sent_mail.attachments))
+        self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv') in
+                        sent_mail.attachments)

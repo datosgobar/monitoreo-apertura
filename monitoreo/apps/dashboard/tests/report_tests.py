@@ -15,8 +15,9 @@ from django.test import TestCase
 
 from django_datajsonar.models import Node
 
-from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, IndicatorType, IndicadorRed, Indicador
-from monitoreo.apps.dashboard.report_tasks import ReportGenerator
+from monitoreo.apps.dashboard.models import ReportGenerationTask, IndicatorsGenerationTask,\
+    IndicatorType, IndicadorRed, Indicador
+from monitoreo.apps.dashboard.report_tasks import ReportGenerator, send_reports
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
 
@@ -43,11 +44,13 @@ class ReportGenerationTest(TestCase):
         cls.node2.admins.create(username='admin2', password='regular', email='admin2@test.com', is_staff=False)
 
         # set mock task
-        cls.task = IndicatorsGenerationTask(
+        cls.indicators_task = IndicatorsGenerationTask(
             status=IndicatorsGenerationTask.FINISHED,
             finished=timezone.now(),
             logs='test task logs'
         )
+
+        cls.report_task = ReportGenerationTask.objects.create()
 
         # set mock indicators
         type_a = IndicatorType.objects.create(nombre='ind_a', tipo='RED')
@@ -66,7 +69,7 @@ class ReportGenerationTest(TestCase):
         for t, v in zip(types, values):
             Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id2',
                                      jurisdiccion_nombre='nodo2')
-        cls.report_generator = ReportGenerator(cls.task)
+        cls.report_generator = ReportGenerator(cls.indicators_task, report_task=cls.report_task)
 
     def setUp(self):
         self.report_generator.generate_email()
@@ -80,7 +83,7 @@ class ReportGenerationTest(TestCase):
         self.assertEqual(['staff@test.com'], self.mail.to)
 
     def test_subject(self):
-        start_time = timezone.localtime(self.task.created).strftime('%Y-%m-%d %H:%M:%S')
+        start_time = timezone.localtime(self.indicators_task.created).strftime('%Y-%m-%d %H:%M:%S')
         subject = u'[tst] Indicadores Monitoreo Apertura: {}'.format(start_time)
         self.assertEqual(subject, self.mail.subject)
 
@@ -108,3 +111,38 @@ class ReportGenerationTest(TestCase):
         self.assertTrue(1, len(sent_mail.attachments))
         self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv') in
                         sent_mail.attachments)
+
+
+class ReportTaskTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        # set mock user
+        User.objects.create(username='staff', password='staff', email='staff@test.com', is_staff=True)
+
+        # set mock nodes
+        cls.node1 = Node.objects.create(catalog_id='id1', catalog_url='url', indexable=True)
+        cls.node2 = Node.objects.create(catalog_id='id2', catalog_url='url', indexable=True)
+
+        cls.node1.admins.create(username='admin1', password='regular', email='admin1@test.com', is_staff=False)
+        cls.node2.admins.create(username='admin2', password='regular', email='admin2@test.com', is_staff=False)
+
+        # set mock task
+        cls.indicators_task = IndicatorsGenerationTask(
+            status=IndicatorsGenerationTask.FINISHED,
+            finished=timezone.now(),
+            logs='test task logs'
+        )
+        cls.indicators_task.save()
+        cls.report_task = ReportGenerationTask.objects.create()
+        send_reports(cls.report_task)
+
+    def tearDown(self):
+        mail.outbox = []
+
+    def test_all_mails_are_sent(self):
+        self.assertTrue(3, len(mail.outbox))
+
+    def test_task_is_finished(self):
+        self.report_task.refresh_from_db()
+        self.assertEqual(ReportGenerationTask.FINISHED, self.report_task.status)

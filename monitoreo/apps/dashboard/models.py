@@ -135,3 +135,8 @@ class FederationTask(AbstractTask):
 class IndicatorsGenerationTask(AbstractTask):
     class Meta:
         verbose_name_plural = "Corridas de Indicadores"
+
+
+class ReportGenerationTask(AbstractTask):
+    class Meta:
+        verbose_name_plural = "Envío de reportes"

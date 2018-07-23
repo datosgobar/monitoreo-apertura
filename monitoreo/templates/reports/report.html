@@ -4,14 +4,14 @@
     <p>Horario de finalización: {{ finish_time }}</p>
 
     <h4>Detalle</h4>
-    <p>Indicadores numéricos de Red:</p>
+    <p>Indicadores numéricos de {{ target }}:</p>
     <ul>
         {% for key, value in one_dimensional_indics.items %}
         <li>{{ key }}: {{ value }}</li>
         {% endfor %}
     </ul>
 
-    <p>Indicadores no numéricos de Red:</p>
+    <p>Indicadores no numéricos de {{ target }}:</p>
     <ul>
         {% for key, nested in multi_dimensional_indics.items %}
         <li>{{ key }}:

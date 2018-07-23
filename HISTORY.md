@@ -1,3 +1,8 @@
+0.0.9 (20-07-23)
+-------------------
+
+* Funcionalidad de mail de reporte de la red de nodos para los administradores de nodos
+
 0.0.8 (20-07-18)
 -------------------
 

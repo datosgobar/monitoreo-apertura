@@ -44,11 +44,12 @@ class ReportGenerationTest(TestCase):
         cls.node2.admins.create(username='admin2', password='regular', email='admin2@test.com', is_staff=False)
 
         # set mock task
-        cls.indicators_task = IndicatorsGenerationTask(
-            status=IndicatorsGenerationTask.FINISHED,
+        cls.indicators_task = IndicatorsGenerationTask.objects.create(
             finished=timezone.now(),
             logs='test task logs'
         )
+        cls.indicators_task.status = IndicatorsGenerationTask.FINISHED
+        cls.indicators_task.save()
 
         cls.report_task = ReportGenerationTask.objects.create()
 
@@ -69,7 +70,7 @@ class ReportGenerationTest(TestCase):
         for t, v in zip(types, values):
             Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id2',
                                      jurisdiccion_nombre='nodo2')
-        cls.report_generator = ReportGenerator(cls.indicators_task, report_task=cls.report_task)
+        cls.report_generator = ReportGenerator(cls.indicators_task, cls.report_task)
 
     def setUp(self):
         self.report_generator.generate_email()
@@ -112,37 +113,11 @@ class ReportGenerationTest(TestCase):
         self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv') in
                         sent_mail.attachments)
 
+    def test_task_is_closed(self):
+        self.report_generator.close_task()
+        self.assertEqual(ReportGenerationTask.FINISHED, self.report_generator.report_task.status)
 
-class ReportTaskTest(TestCase):
-
-    @classmethod
-    def setUpTestData(cls):
-        # set mock user
-        User.objects.create(username='staff', password='staff', email='staff@test.com', is_staff=True)
-
-        # set mock nodes
-        cls.node1 = Node.objects.create(catalog_id='id1', catalog_url='url', indexable=True)
-        cls.node2 = Node.objects.create(catalog_id='id2', catalog_url='url', indexable=True)
-
-        cls.node1.admins.create(username='admin1', password='regular', email='admin1@test.com', is_staff=False)
-        cls.node2.admins.create(username='admin2', password='regular', email='admin2@test.com', is_staff=False)
-
-        # set mock task
-        cls.indicators_task = IndicatorsGenerationTask(
-            status=IndicatorsGenerationTask.FINISHED,
-            finished=timezone.now(),
-            logs='test task logs'
-        )
-        cls.indicators_task.save()
-        cls.report_task = ReportGenerationTask.objects.create()
-        send_reports(cls.report_task)
-
-    def tearDown(self):
+    def test_send_report(self):
         mail.outbox = []
-
-    def test_all_mails_are_sent(self):
-        self.assertTrue(3, len(mail.outbox))
-
-    def test_task_is_finished(self):
-        self.report_task.refresh_from_db()
-        self.assertEqual(ReportGenerationTask.FINISHED, self.report_task.status)
+        send_reports()
+        self.assertEqual(3, len(mail.outbox))

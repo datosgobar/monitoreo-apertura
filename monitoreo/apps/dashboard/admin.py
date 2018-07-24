@@ -5,9 +5,13 @@ from ordered_model.admin import OrderedModelAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode, FederationTask, IndicatorsGenerationTask
+from django_datajsonar.admin import AbstractTaskAdmin
+
+from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode,\
+    FederationTask, IndicatorsGenerationTask, ReportGenerationTask
 from .tasks import federate_catalogs
 from .indicators_tasks import generate_indicators
+from .report_tasks import send_reports
 
 
 class TableColumnAdmin(OrderedModelAdmin):
@@ -99,6 +103,15 @@ class IndicatorTaskAdmin(admin.ModelAdmin):
         generate_indicators.delay(obj.pk)
 
 
+class ReportAdmin(AbstractTaskAdmin):
+    readonly_fields = ('created', 'logs', 'status', 'finished')
+    list_display = ('__unicode__',)
+
+    model = ReportGenerationTask
+    task = send_reports
+
+
+admin.site.register(ReportGenerationTask, ReportAdmin)
 admin.site.register(FederationTask, FederationAdmin)
 admin.site.register(IndicatorsGenerationTask, IndicatorTaskAdmin)
 admin.site.register(HarvestingNode, HarvestingNodeAdmin)

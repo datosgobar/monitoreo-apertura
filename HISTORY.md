@@ -1,3 +1,8 @@
+0.0.10 (20-07-26)
+-------------------
+
+* Ahora es posible disparar la tarea de generación de reportes desde el admin de django, creando un `ReportGenerationTask`.
+
 0.0.9 (20-07-23)
 -------------------
 

@@ -26,7 +26,7 @@ def fill_indicators_id(apps, schema_editor):
 class Migration(migrations.Migration):
     atomic = False
     dependencies = [
-        ('dashboard', '0028_populate_indicador_jurisdiccion_id'),
+        ('dashboard', '0030_reportgenerationtask'),
     ]
 
     operations = [

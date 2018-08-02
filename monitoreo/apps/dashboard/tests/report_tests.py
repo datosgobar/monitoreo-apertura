@@ -1,6 +1,8 @@
 #! coding: utf-8
 from __future__ import unicode_literals
+
 import os
+import re
 
 try:
     from mock import patch, MagicMock
@@ -56,17 +58,19 @@ class ReportGenerationTest(TestCase):
         # set mock indicators
         type_a = IndicatorType.objects.create(nombre='ind_a', tipo='RED')
         type_b = IndicatorType.objects.create(nombre='ind_b', tipo='RED')
-        type_c = IndicatorType.objects.create(nombre='ind_c', tipo='RED')
+        type_c = IndicatorType.objects.create(nombre='ind_c', tipo='RED', resumen=True)
+        type_d = IndicatorType.objects.create(nombre='ind_d', tipo='RED', resumen=True, mostrar=False)
+        type_e = IndicatorType.objects.create(nombre='ind_e', tipo='RED', mostrar=False)
 
-        types = [type_a, type_b, type_c]
-        values = ['42', '[["d1", "l1"], ["d2", "l2"]]', '{"k1": 1, "k2": 2}']
+        types = [type_a, type_b, type_c, type_d, type_e]
+        values = ['42', '[["d1", "l1"], ["d2", "l2"]]', '{"k1": 1, "k2": 2}', '100', '1']
         for t, v in zip(types, values):
             IndicadorRed.objects.create(indicador_tipo=t, indicador_valor=v)
-        values = ['23', '[["d1", "l1"]]', '{"k2": 1}']
+        values = ['23', '[["d1", "l1"]]', '{"k2": 1}', '500', '2']
         for t, v in zip(types, values):
             Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id1',
                                      jurisdiccion_nombre='nodo1')
-        values = ['19', '[["d2", "l2"]]', '{"k1": 1, "k2": 1}']
+        values = ['19', '[["d2", "l2"]]', '{"k1": 1, "k2": 1}', '50', '2']
         for t, v in zip(types, values):
             Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id2',
                                      jurisdiccion_nombre='nodo2')
@@ -88,12 +92,31 @@ class ReportGenerationTest(TestCase):
         subject = u'[tst] Indicadores Monitoreo Apertura: {}'.format(start_time)
         self.assertEqual(subject, self.mail.subject)
 
-    def test_mail_body(self):
-        body = self.mail.body
-        self.assertTrue('ind_a: 42' in body)
-        self.assertTrue('ind_c:\n' in body)
-        self.assertTrue('k1: 1' in body)
-        self.assertTrue('k2: 2' in body)
+    def test_mail_header(self):
+        header, _, _ = filter(None, re.split(r'Resumen:|Detalle:', self.mail.body))
+        finish_time = timezone.localtime(self.indicators_task.finished).strftime('%Y-%m-%d %H:%M:%S')
+        expected_header = 'Horario de finalización: {}\n\n'.format(finish_time)
+        self.assertEqual(expected_header, header)
+
+    def test_mail_summary(self):
+        _, summary, detail = filter(None, re.split(r'Resumen:|Detalle:', self.mail.body))
+        self.assertTrue('ind_d: 100' in summary)
+        self.assertTrue('ind_c:\n' in summary)
+        self.assertTrue('k1: 1' in summary)
+        self.assertTrue('k2: 2' in summary)
+        self.assertTrue('ind_a' not in summary)
+        self.assertTrue('ind_d' not in detail)
+        self.assertTrue('ind_c' in detail)
+
+    def test_mail_detail(self):
+        _, summary, detail = filter(None, re.split(r'Resumen:|Detalle:', self.mail.body))
+        self.assertTrue('ind_a: 42' in detail)
+        self.assertTrue('ind_c:\n' in detail)
+        self.assertTrue('k1: 1' in detail)
+        self.assertTrue('k2: 2' in detail)
+        self.assertTrue('ind_d' not in detail)
+        self.assertTrue('ind_a' not in summary)
+        self.assertTrue('ind_c' in summary)
 
     def test_info_attachment(self):
         self.assertTrue(('info.log', 'test task logs', 'text/plain') in self.mail.attachments)

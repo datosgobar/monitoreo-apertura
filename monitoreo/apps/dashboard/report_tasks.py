@@ -12,7 +12,8 @@ from django_rq import job
 
 from django_datajsonar.models import Node
 
-from .models import Indicador, IndicadorRed, IndicatorsGenerationTask, ReportGenerationTask
+from .models import Indicador, IndicadorRed, IndicatorType,\
+    IndicatorsGenerationTask, ReportGenerationTask
 
 
 @job('indexing')
@@ -53,18 +54,28 @@ class ReportGenerator(object):
             'finish_time': self._format_date(self.indicators_task.finished)
         }
         if not node:
+            one_d_summary, multi_d_summary, _ = \
+                IndicadorRed.objects.filter(indicador_tipo__resumen=True).\
+                sorted_indicators_on_date(self.indicators_task.finished.date())
             one_dimensional, multi_dimensional, listed = \
-                IndicadorRed.objects.sorted_indicators_on_date(self.indicators_task.finished.date())
+                IndicadorRed.objects.filter(indicador_tipo__mostrar=True).\
+                sorted_indicators_on_date(self.indicators_task.finished.date())
             target = 'Red'
         else:
+            one_d_summary, multi_d_summary, _ = \
+                Indicador.objects.filter(indicador_tipo__resumen=True).\
+                sorted_indicators_on_date(self.indicators_task.finished.date(), node)
             one_dimensional, multi_dimensional, listed = \
-                Indicador.objects.sorted_indicators_on_date(self.indicators_task.finished.date(), node)
+                Indicador.objects.filter(indicador_tipo__mostrar=True)\
+                .sorted_indicators_on_date(self.indicators_task.finished.date(), node)
             target = node.catalog_id
 
         context.update({
             'target': target,
+            'one_d_summary': one_d_summary,
+            'multi_d_summary': multi_d_summary,
             'one_dimensional_indics': one_dimensional,
-            'multi_dimensional_indics': multi_dimensional
+            'multi_dimensional_indics': multi_dimensional,
         })
         self.send_email(context, listed, node)
 

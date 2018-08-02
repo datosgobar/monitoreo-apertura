@@ -2,15 +2,39 @@
 <html lang="en">
 <body>
     <p>Horario de finalización: {{ finish_time }}</p>
-
+    <h4>Resumen</h4>
+    {% if  one_d_summary %}
+    <p>Resumen indicadores numéricos de {{ target }}:</p>
+    <ul>
+        {% for key, value in one_d_summary.items %}
+        <li>{{ key }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if  multi_d_summary %}
+    <p>Resumen indicadores no numéricos de {{ target }}:</p>
+    <ul>
+        {% for key, nested in multi_d_summary.items %}
+        <li>{{ key }}:
+            <ul>{% for key, value in nested.items %}
+                <li>{{ key|default:"None" }}: {{ value }}</li>
+            {% endfor %}
+            </ul>
+            <br>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
     <h4>Detalle</h4>
+    {% if  one_dimensional_indics %}
     <p>Indicadores numéricos de {{ target }}:</p>
     <ul>
         {% for key, value in one_dimensional_indics.items %}
         <li>{{ key }}: {{ value }}</li>
         {% endfor %}
     </ul>
-
+    {% endif %}
+    {% if  multi_dimensional_indics %}
     <p>Indicadores no numéricos de {{ target }}:</p>
     <ul>
         {% for key, nested in multi_dimensional_indics.items %}
@@ -23,5 +47,6 @@
         </li>
         {% endfor %}
     </ul>
+    {% endif %}
 </body>
 </html>

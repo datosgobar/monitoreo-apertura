@@ -25,6 +25,7 @@ class IndicatorQuerySet(models.QuerySet):
         for indicator in indicators:
             value = json.loads(indicator.indicador_valor)
             if isinstance(value, dict):
+                value = OrderedDict(sorted(value.items(), key=lambda t: t[1], reverse=True))
                 multi_dimensional[indicator.indicador_tipo.nombre] = value
             elif isinstance(value, list):
                 listed[indicator.indicador_tipo.nombre] = value

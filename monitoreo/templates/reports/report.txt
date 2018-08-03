@@ -1,10 +1,34 @@
 Horario de finalización: {{ finish_time }}
 
+Resumen:
+
+{% if one_d_summary %}
+Resumen indicadores numéricos de {{ target }}:
+    {% for key, value in one_d_summary.items %}
+    {{ key }}: {{ value }}
+    {% endfor %}
+{% endif %}
+
+{% if multi_d_summary %}
+Resumen indicadores no numéricos de {{ target }}:</p>
+    {% for key, nested in multi_d_summary.items %}
+    {{ key }}:
+        {% for key, value in nested.items %}
+            {{ key|default:"None" }}: {{ value }}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+Detalle:
+
+{% if one_dimensional_indics %}
 Indicadores numéricos de {{ target }}:
     {% for key, value in one_dimensional_indics.items %}
     {{ key }}: {{ value|default:"None" }}
     {% endfor %}
+{% endif %}
 
+{% if multi_dimensional_indics %}
 Indicadores no numéricos de {{ target }}:
     {% for key, nested in multi_dimensional_indics.items %}
     {{ key }}:
@@ -12,3 +36,4 @@ Indicadores no numéricos de {{ target }}:
             {{ key|default:"None" }}: {{ value }}
         {% endfor %}
     {% endfor %}
+{% endif %}

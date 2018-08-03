@@ -7,11 +7,15 @@ from import_export.admin import ImportExportModelAdmin
 
 from django_datajsonar.admin import AbstractTaskAdmin
 
-from .models import IndicadorRed, Indicador, TableColumn, HarvestingNode,\
+from .models import IndicadorRed, Indicador, IndicatorType, TableColumn, HarvestingNode,\
     FederationTask, IndicatorsGenerationTask, ReportGenerationTask
 from .tasks import federate_catalogs
 from .indicators_tasks import generate_indicators
 from .report_tasks import send_reports
+
+
+def switch(field, boolean):
+    return lambda _, __, queryset: queryset.update(**{field: boolean})
 
 
 class TableColumnAdmin(OrderedModelAdmin):
@@ -50,16 +54,44 @@ class IndicatorRedAdmin(ImportExportModelAdmin):
     resource_class = IndicadorRedResource
 
 
+class IndicatorTypeAdmin(OrderedModelAdmin):
+    list_display = ('nombre', 'order', 'resumen', 'mostrar', 'move_up_down_links')
+    list_filter = ('resumen', 'mostrar')
+    actions = ('queryset_to_top', 'queryset_to_bottom', 'summarize', 'desummarize', 'show', 'hide')
+
+    def queryset_to_top(self, _, queryset):
+        for elem in queryset:
+            elem.top()
+            elem.save()
+    queryset_to_top.short_description = 'Mover al tope'
+
+    def queryset_to_bottom(self, _, queryset):
+        for elem in queryset:
+            elem.bottom()
+            elem.save()
+    queryset_to_bottom.short_description = 'Mover al fondo'
+
+    summarize = switch('resumen', True)
+    summarize.short_description = 'Agregar al resumen'
+
+    desummarize = switch('resumen', False)
+    desummarize.short_description = 'Quitar del resumen'
+
+    show = switch('mostrar', True)
+    show.short_description = 'Agregar al reporte'
+
+    hide = switch('mostrar', False)
+    hide.short_description = 'Quitar del reporte'
+
+
 class HarvestingNodeAdmin(admin.ModelAdmin):
     list_display = ('name', 'url', 'enabled')
     actions = ('federate', 'enable', 'disable')
 
-    def enable(self, _, queryset):
-        queryset.update(enabled=True)
+    enable = switch('enabled', True)
     enable.short_description = 'Habilitar como nodo federador'
 
-    def disable(self, _, queryset):
-        queryset.update(enabled=False)
+    disable = switch('enabled', False)
     disable.short_description = 'Inhabilitar federacion del nodo'
 
     def federate(self, _, queryset):
@@ -117,4 +149,5 @@ admin.site.register(IndicatorsGenerationTask, IndicatorTaskAdmin)
 admin.site.register(HarvestingNode, HarvestingNodeAdmin)
 admin.site.register(Indicador, IndicatorAdmin)
 admin.site.register(IndicadorRed, IndicatorRedAdmin)
+admin.site.register(IndicatorType, IndicatorTypeAdmin)
 admin.site.register(TableColumn, TableColumnAdmin)

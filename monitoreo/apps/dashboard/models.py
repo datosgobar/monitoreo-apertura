@@ -3,22 +3,25 @@ from __future__ import unicode_literals
 
 import json
 
+from collections import OrderedDict
+
 from django.db import models
 from django.conf import settings
 from ordered_model.models import OrderedModel
 from django_datajsonar.models import AbstractTask
 
 
-class IndicatorManager(models.Manager):
+class IndicatorQuerySet(models.QuerySet):
 
     def sorted_indicators_on_date(self, date, node=None):
         indicators = self.filter(fecha=date)
         if node:
             indicators = indicators.filter(jurisdiccion_id=node.catalog_id)
+        indicators = indicators.order_by('indicador_tipo__order')
 
-        one_dimensional = {}
-        multi_dimensional = {}
-        listed = {}
+        one_dimensional = OrderedDict()
+        multi_dimensional = OrderedDict()
+        listed = OrderedDict()
         for indicator in indicators:
             value = json.loads(indicator.indicador_valor)
             if isinstance(value, dict):
@@ -31,9 +34,15 @@ class IndicatorManager(models.Manager):
         return one_dimensional, multi_dimensional, listed
 
 
-class IndicatorType(models.Model):
+class IndicatorType(OrderedModel):
+
     nombre = models.CharField(max_length=100, unique=True)
     tipo = models.CharField(max_length=100)
+    resumen = models.BooleanField(default=False)
+    mostrar = models.BooleanField(default=True)
+
+    class Meta(OrderedModel.Meta):
+        verbose_name_plural = "Tipos de indicadores"
 
     def __unicode__(self):
         return self.nombre
@@ -53,7 +62,7 @@ class Indicador(models.Model):
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.TextField()
 
-    objects = IndicatorManager()
+    objects = IndicatorQuerySet.as_manager()
 
     def __unicode__(self):
         string = 'Indicador "{0}" de {1}, {2}'
@@ -75,7 +84,7 @@ class IndicadorRed(models.Model):
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)
     indicador_valor = models.TextField()
 
-    objects = IndicatorManager()
+    objects = IndicatorQuerySet.as_manager()
 
     def __unicode__(self):
         string = 'Indicador "{0}" de la Red de Nodos, {1}'

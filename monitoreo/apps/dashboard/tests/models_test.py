@@ -1,4 +1,8 @@
 #! coding: utf-8
+from __future__ import unicode_literals
+
+from collections import OrderedDict
+
 from django.test import TestCase
 from django.utils.timezone import now
 from django.utils.dateparse import parse_datetime
@@ -31,13 +35,14 @@ class ColumnTest(TestCase):
 
         IndicadorRed.objects.create(indicador_tipo=type_a, indicador_valor='42')
         IndicadorRed.objects.create(indicador_tipo=type_b, indicador_valor='[["d1", "l1"], ["d2", "l2"]]')
-        IndicadorRed.objects.create(indicador_tipo=type_c, indicador_valor='{"k1": 1, "k2": 2}')
+        IndicadorRed.objects.create(indicador_tipo=type_c, indicador_valor='{"k3":3, "k2": 1, "k1": 2}')
 
         # Necesario para agregar los indicadores con fecha distinta a la de hoy
         cls.past_date = parse_datetime('2000-01-01 12:00:00Z')
+
         old_a = IndicadorRed.objects.create(indicador_tipo=type_a, indicador_valor='23')
         old_b = IndicadorRed.objects.create(indicador_tipo=type_b, indicador_valor='[["d1", "l1"]]')
-        old_c = IndicadorRed.objects.create(indicador_tipo=type_c, indicador_valor='{"k1": 1, "k2": 1, "k3":1}')
+        old_c = IndicadorRed.objects.create(indicador_tipo=type_c, indicador_valor='{"k1": 1, "k2": 2, "k3":10}')
 
         old_ids = [indic.pk for indic in [old_a, old_b, old_c]]
         IndicadorRed.objects.filter(id__in=old_ids).update(fecha=cls.past_date)
@@ -53,7 +58,7 @@ class ColumnTest(TestCase):
     def test_sorting_indicators(self):
         expected_one_dimensional = {'ind_a': 42}
         expected_listed = {'ind_b': [["d1", "l1"], ["d2", "l2"]]}
-        expected_multi_dimensional = {'ind_c': {"k1": 1, "k2": 2}}
+        expected_multi_dimensional = {'ind_c': OrderedDict([('k3', 3), ('k1', 2), ('k2', 1)])}
 
         one_dimensional, multi_dimensional, listed = IndicadorRed\
             .objects.sorted_indicators_on_date(now().date())
@@ -64,7 +69,7 @@ class ColumnTest(TestCase):
 
         expected_one_dimensional = {'ind_a': 23}
         expected_listed = {'ind_b': [["d1", "l1"], ]}
-        expected_multi_dimensional = {'ind_c': {"k1": 1, "k2": 1, "k3": 1}}
+        expected_multi_dimensional = {'ind_c': OrderedDict([('k3', 10), ('k2', 2), ('k1', 1)])}
 
         one_dimensional, multi_dimensional, listed = IndicadorRed \
             .objects.sorted_indicators_on_date(self.past_date)

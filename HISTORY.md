@@ -1,9 +1,17 @@
-0.0.10 (20-07-26)
+0.0.11 (03-07-18)
+-------------------
+
+* Agrega sección de resumen al reporte de indicadores.
+* Permite ordenar los indicadores en el reporte.
+* Permite ocultar indicadores del reporte.
+* Ordena los indicadores no numéricos por valor de manera descendiente.
+
+0.0.10 (26-07-18)
 -------------------
 
 * Ahora es posible disparar la tarea de generación de reportes desde el admin de django, creando un `ReportGenerationTask`.
 
-0.0.9 (20-07-23)
+0.0.9 (23-07-18)
 -------------------
 
 * Funcionalidad de mail de reporte de la red de nodos para los administradores de nodos

@@ -1,4 +1,10 @@
-0.0.11 (03-07-18)
+0.0.12 (07-08-18)
+-------------------
+
+* Saca temporalmente acciones de top y bottom para los tipos de indicadores
+
+
+0.0.11 (03-08-18)
 -------------------
 
 * Agrega sección de resumen al reporte de indicadores.

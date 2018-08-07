@@ -59,18 +59,6 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
     list_filter = ('resumen', 'mostrar')
     actions = ('queryset_to_top', 'queryset_to_bottom', 'summarize', 'desummarize', 'show', 'hide')
 
-    def queryset_to_top(self, _, queryset):
-        for elem in queryset:
-            elem.top()
-            elem.save()
-    queryset_to_top.short_description = 'Mover al tope'
-
-    def queryset_to_bottom(self, _, queryset):
-        for elem in queryset:
-            elem.bottom()
-            elem.save()
-    queryset_to_bottom.short_description = 'Mover al fondo'
-
     summarize = switch('resumen', True)
     summarize.short_description = 'Agregar al resumen'
 

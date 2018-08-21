@@ -18,13 +18,12 @@ CENTRAL = URL + 'datosgobar/data.json'
 
 def indicators_run():
     task = IndicatorsGenerationTask.objects.create()
-    generate_indicators.delay(task.pk)
+    generate_indicators.delay(task)
 
 
 @job('indexing')
-def generate_indicators(task_id):
+def generate_indicators(task):
     data_json = DataJson()
-    task = IndicatorsGenerationTask.objects.get(pk=task_id)
     catalogs = load_catalogs(task)
     indics, network_indics = data_json.generate_catalogs_indicators(
         catalogs,

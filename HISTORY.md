@@ -1,3 +1,10 @@
+0.0.13 (22-08-18)
+-------------------
+
+* Agrega botones de top y bottom para mover los tipos de indicadores.
+* Actualiza la versiones de `pydatajson`.
+
+
 0.0.12 (07-08-18)
 -------------------
 

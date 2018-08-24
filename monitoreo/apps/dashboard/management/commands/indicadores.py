@@ -13,4 +13,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # Llama sincrónicamente
         task = IndicatorsGenerationTask.objects.create()
-        generate_indicators(task.pk)
+        generate_indicators(task)

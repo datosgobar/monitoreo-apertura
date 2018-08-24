@@ -25,6 +25,10 @@ def federate_catalogs(portal_url, apikey, task_id):
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
         federate_catalog.delay(node, portal_url, apikey, task_id)
+    # Necesario para usar el abstractTaskAdmin. Terminar todas las tareas
+    task = FederationTask.objects.get(pk=task_id)
+    task.status = FederationTask.FINISHED
+    task.save()
 
 
 @job('indexing', timeout=1800)

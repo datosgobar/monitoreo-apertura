@@ -46,7 +46,7 @@ class IndicatorGenerationsTest(TestCase):
         mock_load.return_value = self.catalogs
         mock_indic.return_value = (self.indicators, self.network_indicators)
         task = IndicatorsGenerationTask.objects.create()
-        generate_indicators(task.pk)
+        generate_indicators(task)
         task.refresh_from_db()
         self.assertEqual(IndicatorsGenerationTask.FINISHED, task.status)
 
@@ -54,7 +54,7 @@ class IndicatorGenerationsTest(TestCase):
         mock_load.return_value = self.catalogs
         mock_indic.return_value = (self.indicators, self.network_indicators)
         task = IndicatorsGenerationTask.objects.create()
-        generate_indicators(task.pk)
+        generate_indicators(task)
         self.assertEqual(6, Indicador.objects.count())
         self.assertEqual(3, IndicadorRed.objects.count())
         self.assertEqual(3, Indicador.objects.filter(jurisdiccion_nombre=self.catalogs[0]['title']).count())
@@ -64,7 +64,7 @@ class IndicatorGenerationsTest(TestCase):
         mock_load.return_value = self.catalogs
         mock_indic.return_value = (self.indicators, self.network_indicators)
         task = IndicatorsGenerationTask.objects.create()
-        generate_indicators(task.pk)
+        generate_indicators(task)
         self.assertEqual(3, TableColumn.objects.count())
         self.assertEqual(1, TableColumn.objects.filter(full_name='col_a').count())
         self.assertEqual(1, TableColumn.objects.filter(full_name='col_b').count())
@@ -74,7 +74,7 @@ class IndicatorGenerationsTest(TestCase):
         mock_load.return_value = self.catalogs
         mock_indic.return_value = (self.indicators, self.network_indicators)
         task = IndicatorsGenerationTask.objects.create()
-        generate_indicators(task.pk)
+        generate_indicators(task)
         self.indicator_2['ind_b'] = 10
 
         self.indicator_1['identifier'] = 'a'
@@ -83,7 +83,7 @@ class IndicatorGenerationsTest(TestCase):
         self.indicator_1['title'] = self.catalogs[0]['title']
         self.indicator_2['title'] = self.catalogs[1]['title']
 
-        generate_indicators(task.pk)
+        generate_indicators(task)
         self.assertEqual(6, Indicador.objects.count())
         self.assertEqual(3, IndicadorRed.objects.count())
         ind_type = IndicatorType.objects.get(nombre='ind_b', tipo='RED')

@@ -1,9 +1,9 @@
 Django>=1.11,<2.0.0
 django-environ==0.4.1
-pydatajson==0.4.20
+pydatajson==0.4.21
 django-des==2.4.1
 pyaml
 django-ordered-model==1.4.1
 google-api-python-client
 django-import-export==0.5.1
--e git+git://github.com/datosgobar/django-datajsonar@abstract-tasks-scheduling#egg=django_datajsonar
+-e git+git://github.com/datosgobar/django-datajsonar@0.1.1#egg=django_datajsonar

@@ -253,3 +253,54 @@ FIELD_BLACKLIST = [
 ]
 
 ENV_TYPE = env('ENV_TYPE', default='')
+
+DEFAULT_TASKS = [
+    {
+        'name': 'Lectura de metadatos de red ',
+        'callable': 'django_datajsonar.tasks.schedule_full_read_task',
+        'start_hour': 3,
+        'start_minute': 0,
+        'interval': 1,
+        'interval_unit': 'hours'
+    },
+    {
+        'name': 'Lectura completa de red',
+        'callable': 'django_datajsonar.tasks.schedule_metadata_read_task',
+        'start_hour': 3,
+        'start_minute': 0,
+        'interval': 1,
+        'interval_unit': 'days'
+    },
+    {
+        'name': 'Cerrar tareas de lectura',
+        'callable': 'django_datajsonar.indexing.tasks.close_read_datajson_task',
+        'start_hour': 3,
+        'start_minute': 15,
+        'interval': 10,
+        'interval_unit': 'minutes'
+    },
+    {
+        'name': 'Corrida de federación',
+        'callable': 'monitoreo.apps.dashboard.tasks.federation_run',
+        'start_hour': 3,
+        'start_minute': 0,
+        'interval': 4,
+        'interval_unit': 'hours'
+    },
+    {
+        'name': 'Generación de indicadores',
+        'callable': 'monitoreo.apps.dashboard.indicators_tasks.indicators_run',
+        'start_hour': 2,
+        'start_minute': 0,
+        'interval': 1,
+        'interval_unit': 'days'
+    },
+    {
+        'name': 'Envío de reportes',
+        'callable': 'monitoreo.apps.dashboard.report_tasks.send_reports',
+        'start_hour': 11,
+        'start_minute': 0,
+        'interval': 1,
+        'interval_unit': 'days'
+    },
+]

@@ -16,13 +16,13 @@ from django_datajsonar.admin import AbstractTaskAdmin
 
 from .models import IndicadorRed, Indicador, IndicatorType, TableColumn, HarvestingNode,\
     FederationTask, IndicatorsGenerationTask, ReportGenerationTask
-from .tasks import federate_catalogs
+from .tasks import federate_catalogs, federation_run
 from .indicators_tasks import generate_indicators
 from .report_tasks import send_reports
 
 
-def switch(field, boolean):
-    return lambda _, __, queryset: queryset.update(**{field: boolean})
+def switch(updates):
+    return lambda _, __, queryset: queryset.update(**updates)
 
 
 class TableColumnAdmin(OrderedModelAdmin):
@@ -91,16 +91,16 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    summarize = switch('resumen', True)
+    summarize = switch({'resumen': True})
     summarize.short_description = 'Agregar al resumen'
 
-    desummarize = switch('resumen', False)
+    desummarize = switch({'resumen': False})
     desummarize.short_description = 'Quitar del resumen'
 
-    show = switch('mostrar', True)
+    show = switch({'mostrar': True})
     show.short_description = 'Agregar al reporte'
 
-    hide = switch('mostrar', False)
+    hide = switch({'mostrar': False})
     hide.short_description = 'Quitar del reporte'
 
 
@@ -108,10 +108,10 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
     list_display = ('name', 'url', 'enabled')
     actions = ('federate', 'enable', 'disable')
 
-    enable = switch('enabled', True)
+    enable = switch({'enabled': True})
     enable.short_description = 'Habilitar como nodo federador'
 
-    disable = switch('enabled', False)
+    disable = switch({'enabled': False})
     disable.short_description = 'Inhabilitar federacion del nodo'
 
     def federate(self, _, queryset):
@@ -123,10 +123,14 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
     federate.short_description = 'Correr federacion'
 
 
-class FederationAdmin(admin.ModelAdmin):
+class FederationAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs',)
     exclude = ('status', 'finished',)
     list_display = ('__unicode__',)
+
+    model = FederationTask
+    task = federation_run
+    callable_str = 'monitoreo.apps.dashboard.tasks.federation_run'
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -146,13 +150,13 @@ class FederationAdmin(admin.ModelAdmin):
                                 obj.pk)
 
 
-class IndicatorTaskAdmin(admin.ModelAdmin):
+class IndicatorTaskAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs', 'status', 'finished')
     list_display = ('__unicode__',)
 
-    def save_model(self, request, obj, form, change):
-        super(IndicatorTaskAdmin, self).save_model(request, obj, form, change)
-        generate_indicators.delay(obj.pk)
+    model = IndicatorsGenerationTask
+    task = generate_indicators
+    callable_str = 'monitoreo.apps.dashboard.indicators_tasks.indicators_run'
 
 
 class ReportAdmin(AbstractTaskAdmin):
@@ -161,6 +165,7 @@ class ReportAdmin(AbstractTaskAdmin):
 
     model = ReportGenerationTask
     task = send_reports
+    callable_str = 'monitoreo.apps.dashboard.report_tasks.'
 
 
 admin.site.register(ReportGenerationTask, ReportAdmin)

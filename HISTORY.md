@@ -1,3 +1,16 @@
+0.0.15 (4-09-18)
+-------------------
+
+* Management command para programar tareas default.
+* Form para simplificar la programación de tareas periódicas.
+
+
+0.0.14 (29-08-18)
+-------------------
+
+* Actualiza versión de pydatajson
+
+
 0.0.12 (07-08-18)
 -------------------
 

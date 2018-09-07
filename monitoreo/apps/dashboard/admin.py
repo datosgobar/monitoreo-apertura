@@ -117,9 +117,7 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
     def federate(self, _, queryset):
         for harvesting_node in queryset:
             task = FederationTask.objects.create(harvesting_node=harvesting_node)
-            portal_url = harvesting_node.url
-            apikey = harvesting_node.apikey
-            federate_catalogs.delay(portal_url, apikey, task.pk)
+            federate_catalogs.delay(task)
     federate.short_description = 'Correr federacion'
 
 
@@ -129,7 +127,7 @@ class FederationAdmin(AbstractTaskAdmin):
     list_display = ('__unicode__',)
 
     model = FederationTask
-    task = federation_run
+    task = federate_catalogs
     callable_str = 'monitoreo.apps.dashboard.tasks.federation_run'
 
     def get_readonly_fields(self, request, obj=None):
@@ -142,12 +140,6 @@ class FederationAdmin(AbstractTaskAdmin):
         if db_field.name == "harvesting_node":
             kwargs["queryset"] = HarvestingNode.objects.filter(enabled=True)
         return super(FederationAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
-
-    def save_model(self, request, obj, form, change):
-        super(FederationAdmin, self).save_model(request, obj, form, change)
-        federate_catalogs.delay(obj.harvesting_node.url,
-                                obj.harvesting_node.apikey,
-                                obj.pk)
 
 
 class IndicatorTaskAdmin(AbstractTaskAdmin):
@@ -165,7 +157,7 @@ class ReportAdmin(AbstractTaskAdmin):
 
     model = ReportGenerationTask
     task = send_reports
-    callable_str = 'monitoreo.apps.dashboard.report_tasks.'
+    callable_str = 'monitoreo.apps.dashboard.report_tasks.send_reports'
 
 
 admin.site.register(ReportGenerationTask, ReportAdmin)

@@ -15,18 +15,17 @@ def federation_run():
     harvesting_nodes = HarvestingNode.objects.filter(enabled=True)
     for harvester in harvesting_nodes:
         task = FederationTask.objects.create(harvesting_node=harvester)
-        portal_url = harvester.url
-        apikey = harvester.apikey
-        federate_catalogs(portal_url, apikey, task.pk)
+        federate_catalogs(task)
 
 
 @job('indexing')
-def federate_catalogs(portal_url, apikey, task_id):
+def federate_catalogs(task):
+    portal_url = task.harvesting_node.url
+    apikey = task.harvesting_node.apikey
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
-        federate_catalog.delay(node, portal_url, apikey, task_id)
+        federate_catalog.delay(node, portal_url, apikey, task.pk)
     # Necesario para usar el abstractTaskAdmin. Terminar todas las tareas
-    task = FederationTask.objects.get(pk=task_id)
     task.status = FederationTask.FINISHED
     task.save()
 

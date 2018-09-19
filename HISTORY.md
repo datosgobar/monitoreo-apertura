@@ -3,6 +3,13 @@
 
 * Actualiza versión de pydatajson.
 
+0.0.16 (19-09-18)
+-------------------
+
+* Bugfix en el schedule form de reportes
+* Bugfix en la creación de corridas de federación.
+* Actualiza versión de django_datajsonar 
+
 
 0.0.15 (4-09-18)
 -------------------

@@ -16,7 +16,7 @@ python:
 - "2.7"
 
 env:
-- DJANGO_SETTINGS_MODULE=conf.settings.testing NODE_JS_VERSION=v8.11.2 DATABASE_NAME=postgres DATABASE_PASSWORD='' DATABASE_NAME=travisci DATABASE_HOST=localhost
+- DJANGO_SETTINGS_MODULE=conf.settings.testing NODE_JS_VERSION=v8.11.2 DATABASE_USER=postgres DATABASE_PASSWORD='' DATABASE_NAME=travisci DATABASE_HOST=localhost
 
 
 before_install:

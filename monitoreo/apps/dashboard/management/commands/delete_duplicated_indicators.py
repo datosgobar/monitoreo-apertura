@@ -1,13 +1,27 @@
 # coding=utf-8
 from __future__ import unicode_literals
 from django.core.management.base import BaseCommand
+from django.db import connection
+
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed
 
 
-def get_duplicates(model, distinct_fields):
-    distinct = model.objects.all().distinct(*distinct_fields).values_list('pk', flat=True)
-    duplicates = model.objects.all().exclude(pk__in=distinct)
-    return duplicates
+def delete_duplicates(model, distinct_fields, ignore_null=False):
+
+    columns = ", ".join(distinct_fields)
+    table = model._meta.db_table
+    null_condition = ' AND jurisdiccion_id IS NOT NULL' if ignore_null else ''
+
+    query = """
+        DELETE FROM %s
+        WHERE id NOT IN
+        (
+            SELECT id FROM %s GROUP BY %s
+        )%s;
+        """ % (table, table, columns, null_condition)
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
 
 
 class Command(BaseCommand):
@@ -18,10 +32,8 @@ class Command(BaseCommand):
         parser.add_argument('--ignore_null', action='store_true')
 
     def handle(self, *args, **options):
-        duplicates = get_duplicates(IndicadorRed, ['fecha', 'indicador_tipo'])
-        duplicates.delete()
+        delete_duplicates(IndicadorRed, ['fecha', 'indicador_tipo_id'])
 
-        duplicates = get_duplicates(Indicador, ['fecha', 'indicador_tipo', 'jurisdiccion_nombre', 'jurisdiccion_id'])
-        if options['ignore_null']:
-            duplicates = duplicates.exclude(jurisdiccion_id=None)
-        duplicates.delete()
+        delete_duplicates(Indicador,
+                          ['fecha', 'indicador_tipo_id', 'jurisdiccion_nombre', 'jurisdiccion_id'],
+                          options['ignore_null'])

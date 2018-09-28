@@ -111,7 +111,7 @@ class ModelsTest(TestCase):
         self.assertEqual(7, Indicador.objects.all().count())
         self.assertEqual(3, Indicador.objects.filter(jurisdiccion_id='test_1').count())
 
-    def test_remove_null_id_duplicates(self):
+    def test_ignore_null_id_duplicates(self):
         # Duplico los indicadores
         self.duplicate_indicators(IndicadorRed)
         self.duplicate_indicators(Indicador)

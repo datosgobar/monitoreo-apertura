@@ -9,6 +9,7 @@ addons:
 
 services:
 - docker
+- postgresql
 
 language: python
 python:
@@ -16,9 +17,13 @@ python:
 
 env:
 - DJANGO_SETTINGS_MODULE=conf.settings.testing NODE_JS_VERSION=v8.11.2
+- DATABASE_NAME=postgres
+- DATABASE_PASSWORD=''
+- DATABASE_NAME=travisci
+- DATABASE_HOST=localhost
+
 
 before_install:
-- sudo service postgresql stop
 - docker-compose pull
 - docker-compose up -d redis
 - docker-compose ps
@@ -28,6 +33,9 @@ install:
 - nvm install $NODE_JS_VERSION
 - nvm use $NODE_JS_VERSION
 - npm install
+
+before_script:
+- psql -c 'create database travis_ci_test;' -U postgres
 
 script:
 - scripts/eslint.sh

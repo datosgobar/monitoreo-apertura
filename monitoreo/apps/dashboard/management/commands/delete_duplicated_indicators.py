@@ -4,14 +4,14 @@ from django.core.management.base import BaseCommand
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed
 
 
-def get_duplicates(model, distinct_fields, ignore_null=False):
+def get_duplicates(model, distinct_fields):
     distinct = model.objects.all().distinct(*distinct_fields).values_list('pk', flat=True)
     duplicates = model.objects.all().exclude(pk__in=distinct)
     return duplicates
 
 
 class Command(BaseCommand):
-    help = """Borra indicadores de red y catálogo duplicados por día. 
+    help = """Borra indicadores de red y catálogo duplicados por día.
     Apropos de: https://github.com/datosgobar/monitoreo-apertura/issues/109"""
 
     def add_arguments(self, parser):

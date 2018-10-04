@@ -108,21 +108,8 @@ class ModelsTest(TestCase):
         self.assertEqual(6, Indicador.objects.filter(jurisdiccion_id='test_1').count())
         call_command('delete_duplicated_indicators')
         self.assertEqual(6, IndicadorRed.objects.all().count())
-        self.assertEqual(7, Indicador.objects.all().count())
-        self.assertEqual(3, Indicador.objects.filter(jurisdiccion_id='test_1').count())
-
-    def test_ignore_null_id_duplicates(self):
-        # Duplico los indicadores
-        self.duplicate_indicators(IndicadorRed)
-        self.duplicate_indicators(Indicador)
-        self.assertEqual(12, IndicadorRed.objects.all().count())
-        self.assertEqual(14, Indicador.objects.all().count())
-        self.assertEqual(2, Indicador.objects.filter(jurisdiccion_id=None).count())
-        call_command('delete_duplicated_indicators', ignore_null=True)
-        # El indicador con id nulo sigue duplicado
-        self.assertEqual(6, IndicadorRed.objects.all().count())
         self.assertEqual(8, Indicador.objects.all().count())
-        self.assertEqual(2, Indicador.objects.filter(jurisdiccion_id=None).count())
+        self.assertEqual(3, Indicador.objects.filter(jurisdiccion_id='test_1').count())
 
     def duplicate_indicators(self, model):
         for indicator in model.objects.all():

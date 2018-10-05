@@ -1,13 +1,21 @@
+0.0.19 (5-10-18)
+-------------------
+
+* Actualiza versión de django_datajsonar. 
+* Actualiza versión de pydatajson.
+* Bugfix de generación de indicadores duplicados.
+
+
 0.0.18 (19-09-18)
 -------------------
 
-* Actualiza versión de django_datajsonar 
+* Actualiza versión de django_datajsonar.
 
 
 0.0.17 (13-09-18)
 -------------------
 
-* Bugfix en el schedule form de reportes
+* Bugfix en el schedule form de reportes.
 * Bugfix en la creación de corridas de federación. 
 
 

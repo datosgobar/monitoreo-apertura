@@ -15,7 +15,7 @@ class Command(BaseCommand):
         with connection.cursor() as cursor:
             cursor.execute(
                 """
-                DELETE FROM dashboard_indicadorred WHERE id NOT IN 
+                DELETE FROM dashboard_indicadorred WHERE id NOT IN
                     ( SELECT id FROM dashboard_indicadorred GROUP BY fecha, indicador_tipo_id );
                 """)
             cursor.execute(

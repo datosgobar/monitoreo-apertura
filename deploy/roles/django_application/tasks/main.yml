@@ -3,4 +3,3 @@
 - include: create_file_structures.yml
 - include: setup_python_env.yml
 - include: migrate.yml
-- include: setup_cron.yml

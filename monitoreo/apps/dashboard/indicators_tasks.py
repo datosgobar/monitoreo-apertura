@@ -38,7 +38,7 @@ def generate_indicators(task):
 
     task.refresh_from_db()
     task.status = IndicatorsGenerationTask.FINISHED
-    task.finished = timezone.now()
+    task.finished = timezone.localtime()
     task.save()
 
 
@@ -49,7 +49,7 @@ def save_network_indics(network_indics, indic_class, task):
         indic_type = IndicatorType.objects.get_or_create(
             nombre=indic_name,
             tipo=indic_class)[0]
-        IndicadorRed.objects.update_or_create(fecha=timezone.now().date(),
+        IndicadorRed.objects.update_or_create(fecha=timezone.localtime().date(),
                                               indicador_tipo=indic_type,
                                               defaults={'indicador_valor': json.dumps(value)})
 
@@ -74,7 +74,7 @@ def save_indicators(indics_list, task):
                 tipo='RED')[0]
 
             try:
-                Indicador.objects.update_or_create(fecha=timezone.now().date(),
+                Indicador.objects.update_or_create(fecha=timezone.localtime().date(),
                                                    jurisdiccion_nombre=catalog_name,
                                                    jurisdiccion_id=catalog_id,
                                                    indicador_tipo=indic_type,

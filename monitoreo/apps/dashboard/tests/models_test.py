@@ -6,7 +6,9 @@ from collections import OrderedDict
 from django.test import TestCase
 from django.utils.timezone import now
 from django.utils.dateparse import parse_datetime
-from monitoreo.apps.dashboard.models import IndicatorType, TableColumn, IndicadorRed
+from django.core.management import call_command
+
+from monitoreo.apps.dashboard.models import IndicatorType, TableColumn, IndicadorRed, Indicador
 
 try:
     from mock import patch
@@ -14,7 +16,7 @@ except ImportError:
     from unittest.mock import patch
 
 
-class ColumnTest(TestCase):
+class ModelsTest(TestCase):
     indicator_name = "Indicador test"
     indicator_full_name = "Nombre completo del indicador test"
 
@@ -28,24 +30,43 @@ class ColumnTest(TestCase):
         _type = IndicatorType(nombre=cls.indicator_name, tipo="TEST")
         _type.save()
 
-        # set mock indicators
+        # Tipos de indicadores
         type_a = IndicatorType.objects.create(nombre='ind_a', tipo='RED')
         type_b = IndicatorType.objects.create(nombre='ind_b', tipo='RED')
         type_c = IndicatorType.objects.create(nombre='ind_c', tipo='RED')
 
-        IndicadorRed.objects.create(indicador_tipo=type_a, indicador_valor='42')
-        IndicadorRed.objects.create(indicador_tipo=type_b, indicador_valor='[["d1", "l1"], ["d2", "l2"]]')
-        IndicadorRed.objects.create(indicador_tipo=type_c, indicador_valor='{"k3":3, "k2": 1, "k1": 2}')
+        types = [type_a, type_b, type_c]
 
+        # Indicadores agregados
+        values = ['42', '[["d1", "l1"], ["d2", "l2"]]', '{"k3":3, "k2": 1, "k1": 2}']
+        for ind_type, value in zip(types, values):
+            IndicadorRed.objects.create(indicador_tipo=ind_type, indicador_valor=value)
+
+        values = ['23', '[["d1", "l1"]]', '{"k1":1, "k2": 2, "k3": 10}']
+        old_ids = []
+        for ind_type, value in zip(types, values):
+            old = IndicadorRed.objects.create(indicador_tipo=ind_type, indicador_valor=value)
+            old_ids.append(old.id)
         # Necesario para agregar los indicadores con fecha distinta a la de hoy
         cls.past_date = parse_datetime('2000-01-01 12:00:00Z')
-
-        old_a = IndicadorRed.objects.create(indicador_tipo=type_a, indicador_valor='23')
-        old_b = IndicadorRed.objects.create(indicador_tipo=type_b, indicador_valor='[["d1", "l1"]]')
-        old_c = IndicadorRed.objects.create(indicador_tipo=type_c, indicador_valor='{"k1": 1, "k2": 2, "k3":10}')
-
-        old_ids = [indic.pk for indic in [old_a, old_b, old_c]]
         IndicadorRed.objects.filter(id__in=old_ids).update(fecha=cls.past_date)
+
+        # Indicadores
+        values = ['22', '["d1", "l1"]', '{"k3":2, "k1": 2}']
+        for ind_type, value in zip(types, values):
+            Indicador.objects.create(indicador_tipo=ind_type, indicador_valor=value,
+                                     jurisdiccion_nombre='catalogo_de_test_1',
+                                     jurisdiccion_id='test_1')
+
+        values = ['20', '["d2", "l2"]', '{"k3":1, "k2": 1}']
+        for ind_type, value in zip(types, values):
+            Indicador.objects.create(indicador_tipo=ind_type, indicador_valor=value,
+                                     jurisdiccion_nombre='catalogo_de_test_2',
+                                     jurisdiccion_id='test_2')
+
+        Indicador.objects.create(indicador_tipo=type_a, indicador_valor='00',
+                                 jurisdiccion_nombre='catalogo_de_test_2',
+                                 jurisdiccion_id=None)
 
     def test_indicators_created(self):
         with self.settings(INDICATORS_INFO=self.indicators_info):
@@ -77,3 +98,20 @@ class ColumnTest(TestCase):
         self.assertDictEqual(expected_listed, listed)
         self.assertDictEqual(expected_multi_dimensional, multi_dimensional)
         self.assertDictEqual(expected_one_dimensional, one_dimensional)
+
+    def test_remove_duplicated_indicators(self):
+        # Duplicar indicadores
+        self.duplicate_indicators(IndicadorRed)
+        self.duplicate_indicators(Indicador)
+        self.assertEqual(12, IndicadorRed.objects.all().count())
+        self.assertEqual(14, Indicador.objects.all().count())
+        self.assertEqual(6, Indicador.objects.filter(jurisdiccion_id='test_1').count())
+        call_command('delete_duplicated_indicators')
+        self.assertEqual(6, IndicadorRed.objects.all().count())
+        self.assertEqual(8, Indicador.objects.all().count())
+        self.assertEqual(3, Indicador.objects.filter(jurisdiccion_id='test_1').count())
+
+    def duplicate_indicators(self, model):
+        for indicator in model.objects.all():
+            indicator.id = None
+            indicator.save()

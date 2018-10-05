@@ -9,6 +9,7 @@ except ImportError:
 
 from django.test import TestCase
 from django.conf import settings
+from django.utils import timezone
 
 from pydatajson import DataJson
 
@@ -84,6 +85,35 @@ class IndicatorGenerationsTest(TestCase):
         self.indicator_2['title'] = self.catalogs[1]['title']
 
         generate_indicators(task)
+        self.assertEqual(6, Indicador.objects.count())
+        self.assertEqual(3, IndicadorRed.objects.count())
+        ind_type = IndicatorType.objects.get(nombre='ind_b', tipo='RED')
+        self.assertEqual('10', Indicador.objects.get(jurisdiccion_nombre=self.catalogs[1]['title'],
+                                                     indicador_tipo=ind_type).indicador_valor)
+
+    def test_indicators_store_correct_date(self, mock_indic, mock_load):
+        mock_load.return_value = self.catalogs
+        mock_indic.return_value = (self.indicators, self.network_indicators)
+        with patch('monitoreo.apps.dashboard.indicators_tasks.timezone') as mock_time:
+            time = timezone.localtime().replace(hour=5, minute=0)
+            mock_time.localtime.return_value = time
+            task1 = IndicatorsGenerationTask.objects.create()
+            generate_indicators(task1)
+
+        self.indicator_2['ind_b'] = 10
+
+        self.indicator_1['identifier'] = 'a'
+        self.indicator_2['identifier'] = 'b'
+
+        self.indicator_1['title'] = self.catalogs[0]['title']
+        self.indicator_2['title'] = self.catalogs[1]['title']
+
+        with patch('monitoreo.apps.dashboard.indicators_tasks.timezone') as mock_time:
+            time = timezone.localtime().replace(hour=23, minute=0)
+            mock_time.localtime.return_value = time
+            task2 = IndicatorsGenerationTask.objects.create()
+            generate_indicators(task2)
+
         self.assertEqual(6, Indicador.objects.count())
         self.assertEqual(3, IndicadorRed.objects.count())
         ind_type = IndicatorType.objects.get(nombre='ind_b', tipo='RED')

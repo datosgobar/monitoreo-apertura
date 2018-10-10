@@ -16,11 +16,11 @@ class Command(BaseCommand):
             cursor.execute(
                 """
                 DELETE FROM dashboard_indicadorred WHERE id NOT IN
-                    ( SELECT id FROM dashboard_indicadorred GROUP BY fecha, indicador_tipo_id );
+                    ( SELECT MAX(id) FROM dashboard_indicadorred GROUP BY fecha, indicador_tipo_id );
                 """)
             cursor.execute(
                 """
                 DELETE FROM dashboard_indicador WHERE jurisdiccion_id IS NOT NULL AND id NOT IN
-                    ( SELECT id FROM dashboard_indicador
+                    ( SELECT MAX(id) FROM dashboard_indicador
                     GROUP BY fecha, indicador_tipo_id, jurisdiccion_nombre, jurisdiccion_id );
                 """)

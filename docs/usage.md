@@ -100,7 +100,7 @@ Para eso vamos a la ruta `/admin/scheduler/repeatablejob/`.
 
 En el campo **nombre** podemos poner lo que deseemos (como "Generación indicadores"), en el campo **callable** debemos
 poner `monitoreo.apps.dashboard.indicators_tasks.indicators_run`.
-En el campo **Queue** ponemos `indexing`.
+En el campo **Queue** ponemos `indicators`.
 Habilitar el campo **Enabled**.
 En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
 Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
@@ -117,7 +117,7 @@ En la ruta `/admin/scheduler/repeatablejob/`.
 
 En el campo **nombre** podemos poner lo que deseemos (como "Reporte indicadores"), en el campo **callable** debemos
 poner `monitoreo.apps.dashboard.report_tasks.send_reports`.
-En el campo **Queue** ponemos `indexing`.
+En el campo **Queue** ponemos `reports`.
 Habilitar el campo **Enabled**.
 En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
 Finalmente en **interval** ponemos `1` y en **interval unit** `days`.

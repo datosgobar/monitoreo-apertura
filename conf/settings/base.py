@@ -224,6 +224,26 @@ RQ_QUEUES = {
         'PORT': DEFAULT_REDIS_PORT,
         'DB': DEFAULT_REDIS_DB,
     },
+    'federation': {
+        'HOST': DEFAULT_REDIS_HOST,
+        'PORT': DEFAULT_REDIS_PORT,
+        'DB': DEFAULT_REDIS_DB,
+    },
+    'indicators': {
+        'HOST': DEFAULT_REDIS_HOST,
+        'PORT': DEFAULT_REDIS_PORT,
+        'DB': DEFAULT_REDIS_DB,
+    },
+    'reports': {
+        'HOST': DEFAULT_REDIS_HOST,
+        'PORT': DEFAULT_REDIS_PORT,
+        'DB': DEFAULT_REDIS_DB,
+    },
+    'synchro': {
+        'HOST': DEFAULT_REDIS_HOST,
+        'PORT': DEFAULT_REDIS_PORT,
+        'DB': DEFAULT_REDIS_DB,
+    },
 }
 
 DISTRIBUTION_INDEX_JOB_TIMEOUT = 1000  # Segundos
@@ -302,5 +322,33 @@ DEFAULT_TASKS = [
         'start_minute': 0,
         'interval': 1,
         'interval_unit': 'days'
+    },
+]
+
+DEFAULT_PROCESSES = [
+    {
+        'name': "Full process",
+        'stages': [
+            {
+                'callable_str': 'django_datajsonar.tasks.schedule_new_read_datajson_task',
+                'queue': 'indexing',
+                'task': 'django_datajsonar.models.ReadDataJsonTask'
+
+            },
+            {
+
+                'callable_str': 'monitoreo.apps.dashboard.tasks.federation_run',
+                'queue': 'federation'
+            },
+            {
+                'callable_str': 'monitoreo.apps.dashboard.indicators_tasks.indicators_run',
+                'queue': 'indicators'
+            },
+            {
+                'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_reports',
+                'queue': 'reports'
+            },
+
+        ],
     },
 ]

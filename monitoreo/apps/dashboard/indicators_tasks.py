@@ -21,7 +21,7 @@ def indicators_run():
     generate_indicators.delay(task)
 
 
-@job('indexing')
+@job('indicators')
 def generate_indicators(task):
     data_json = DataJson()
     catalogs = load_catalogs(task)

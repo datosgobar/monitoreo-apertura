@@ -18,7 +18,7 @@ def federation_run():
         federate_catalogs(task)
 
 
-@job('indexing')
+@job('federation')
 def federate_catalogs(task):
     portal_url = task.harvesting_node.url
     apikey = task.harvesting_node.apikey
@@ -30,7 +30,7 @@ def federate_catalogs(task):
     task.save()
 
 
-@job('indexing', timeout=1800)
+@job('federation', timeout=1800)
 def federate_catalog(node, portal_url, apikey, task_id):
     task = FederationTask.objects.get(pk=task_id)
     catalog = get_catalog_from_node(node)

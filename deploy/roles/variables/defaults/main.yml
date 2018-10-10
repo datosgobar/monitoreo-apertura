@@ -3,7 +3,7 @@
 ## Per application variables
 
 application_name: "django_application"
-application_clone_url: git@github.com:datosgobar/monitoreo-apertura.git
+application_clone_url: https://github.com/datosgobar/monitoreo-apertura.git
 
 postgresql_user:
 postgresql_password:

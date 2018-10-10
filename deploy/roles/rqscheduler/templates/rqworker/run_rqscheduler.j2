@@ -7,4 +7,4 @@ echo "Starting RQ scheduler"
 export DJANGO_SETTINGS_MODULE={{ application_settings_module }}
 
 cd {{ application_dir }};
-./manage.py rqscheduler --queue indexing;
+./manage.py rqscheduler --queue indexing federation indicators reports synchro;

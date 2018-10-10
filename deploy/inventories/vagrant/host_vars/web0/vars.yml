@@ -16,3 +16,4 @@ checkout_branch: master
 application_name: monitoreo
 
 
+env_type: 'vagr'

@@ -16,7 +16,7 @@ from .models import Indicador, IndicadorRed, IndicatorType,\
     IndicatorsGenerationTask, ReportGenerationTask
 
 
-@job('indexing')
+@job('reports')
 def send_reports(report_task=None):
     try:
         indicators_task = IndicatorsGenerationTask.objects\

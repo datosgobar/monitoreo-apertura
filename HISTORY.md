@@ -1,3 +1,15 @@
+0.0.22-prod (11-10-18)
+-------------------
+
+* Actualiza versión de pydatajson y django_datajsonar (Incluye los synchronizers).
+
+
+0.0.22-prod (11-10-18)
+-------------------
+
+* Actualiza versión de pydatajson (No incluye los synchronizers).
+
+
 0.0.21 (11-10-18)
 -------------------
 

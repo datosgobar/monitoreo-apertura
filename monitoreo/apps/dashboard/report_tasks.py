@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+from datetime import timezone
 from smtplib import SMTPException
 
 from django.conf import settings
@@ -12,7 +13,7 @@ from django_rq import job
 
 from django_datajsonar.models import Node
 
-from .models import Indicador, IndicadorRed, IndicatorType,\
+from .models import Indicador, IndicadorRed, \
     IndicatorsGenerationTask, ReportGenerationTask
 
 
@@ -56,18 +57,30 @@ class ReportGenerator(object):
         if not node:
             one_d_summary, multi_d_summary, _ = \
                 IndicadorRed.objects.filter(indicador_tipo__resumen=True).\
-                sorted_indicators_on_date(self.indicators_task.finished.date())
+                sorted_indicators_on_date(
+                    self.indicators_task.finished
+                        .astimezone(timezone.get_current_timezone())
+                        .date())
             one_dimensional, multi_dimensional, listed = \
                 IndicadorRed.objects.filter(indicador_tipo__mostrar=True).\
-                sorted_indicators_on_date(self.indicators_task.finished.date())
+                sorted_indicators_on_date(
+                    self.indicators_task.finished
+                        .astimezone(timezone.get_current_timezone())
+                        .date())
             target = 'Red'
         else:
             one_d_summary, multi_d_summary, _ = \
                 Indicador.objects.filter(indicador_tipo__resumen=True).\
-                sorted_indicators_on_date(self.indicators_task.finished.date(), node)
+                sorted_indicators_on_date(
+                    self.indicators_task.finished
+                        .astimezone(timezone.get_current_timezone())
+                        .date(), node)
             one_dimensional, multi_dimensional, listed = \
                 Indicador.objects.filter(indicador_tipo__mostrar=True)\
-                .sorted_indicators_on_date(self.indicators_task.finished.date(), node)
+                .sorted_indicators_on_date(
+                    self.indicators_task.finished
+                        .astimezone(timezone.get_current_timezone())
+                        .date(), node)
             target = node.catalog_id
 
         context.update({

@@ -58,28 +58,28 @@ class ReportGenerator(object):
                 IndicadorRed.objects.filter(indicador_tipo__resumen=True).\
                 sorted_indicators_on_date(
                     self.indicators_task.finished
-                        .astimezone(timezone.get_current_timezone())
-                        .date())
+                    .astimezone(timezone.get_current_timezone())
+                    .date())
             one_dimensional, multi_dimensional, listed = \
                 IndicadorRed.objects.filter(indicador_tipo__mostrar=True).\
                 sorted_indicators_on_date(
                     self.indicators_task.finished
-                        .astimezone(timezone.get_current_timezone())
-                        .date())
+                    .astimezone(timezone.get_current_timezone())
+                    .date())
             target = 'Red'
         else:
             one_d_summary, multi_d_summary, _ = \
                 Indicador.objects.filter(indicador_tipo__resumen=True).\
                 sorted_indicators_on_date(
                     self.indicators_task.finished
-                        .astimezone(timezone.get_current_timezone())
-                        .date(), node)
+                    .astimezone(timezone.get_current_timezone())
+                    .date(), node)
             one_dimensional, multi_dimensional, listed = \
                 Indicador.objects.filter(indicador_tipo__mostrar=True)\
                 .sorted_indicators_on_date(
                     self.indicators_task.finished
-                        .astimezone(timezone.get_current_timezone())
-                        .date(), node)
+                    .astimezone(timezone.get_current_timezone())
+                    .date(), node)
             target = node.catalog_id
 
         context.update({

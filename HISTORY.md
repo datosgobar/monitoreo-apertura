@@ -1,4 +1,10 @@
-0.0.22-prod (11-10-18)
+0.0.23 (23-10-18)
+-------------------
+
+* Bugfix en reportes que llegaban vacíos.
+
+
+0.0.22 (11-10-18)
 -------------------
 
 * Actualiza versión de pydatajson y django_datajsonar (Incluye los synchronizers).

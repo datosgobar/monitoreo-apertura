@@ -53,11 +53,12 @@ Por una cuestion de concurrencia, las tareas no quedaran en estado "Finalizada" 
 Para que el sistema verifique es estado de las tareas, debemos instanciar un `RepeatableJob`.
 Para eso vamos a la ruta `/admin/scheduler/repeatablejob/`.
 
-En el campo **nombre** podemos poner lo que deseemos (como ""), en el campo **callable** debemos
-poner `django_datajsonar.indexing.tasks.close_read_datajson_task`.
-En el campo **Queue** ponemos `indexing`.
-En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
-Finalmente en **interval** ponemos `10` y en **interval unit** `minutes`.
+- En el campo **nombre** podemos poner lo que deseemos (como "Cerrar lecturas de red").
+- En el campo **callable** debemos poner `django_datajsonar.indexing.tasks.close_read_datajson_task`.
+- En el campo **Queue** ponemos `indexing`.
+- En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
+- Finalmente en **interval** ponemos `10` y en **interval unit** `minutes`.
+
 Luego de guardar la instancia deberiamos tener algo como:
 
 ![Close Read DataJson Task](./images/close_read_datajson_task.png)
@@ -69,12 +70,13 @@ Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un
 
 Para eso vamos a la ruta `/admin/scheduler/repeatablejob/`.
 
-En el campo **nombre** podemos poner lo que deseemos (como "New Read Datajson Task"), en el campo **callable** debemos
-poner `django_datajsonar.tasks.schedule_new_read_datajson_task`.
-En el campo **Queue** ponemos `indexing`.
-Habilitar el campo **Enabled**.
-En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
-Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
+- En el campo **nombre** podemos poner lo que deseemos (como "New Read Datajson Task").
+- En el campo **callable** debemos poner `django_datajsonar.tasks.schedule_new_read_datajson_task`.
+- En el campo **Queue** ponemos `indexing`.
+- Habilitar el campo **Enabled**.
+- En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
+- Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
+
 Luego de guardar la instancia deberiamos tener algo como:
 
 ![New Read DataJson Task](./images/new_read_datajson_task.png)
@@ -98,12 +100,13 @@ Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un
 
 Para eso vamos a la ruta `/admin/scheduler/repeatablejob/`.
 
-En el campo **nombre** podemos poner lo que deseemos (como "Generación indicadores"), en el campo **callable** debemos
-poner `monitoreo.apps.dashboard.indicators_tasks.indicators_run`.
-En el campo **Queue** ponemos `indicators`.
-Habilitar el campo **Enabled**.
-En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
-Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
+- En el campo **nombre** podemos poner lo que deseemos (como "Generación indicadores").
+- En el campo **callable** debemos poner `monitoreo.apps.dashboard.indicators_tasks.indicators_run`.
+- En el campo **Queue** ponemos `indicators`.
+- Habilitar el campo **Enabled**.
+- En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
+- Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
+
 Luego de guardar la instancia deberiamos tener algo como:
 
 ![Generación indicadores](./images/generacion_indicadores.png)
@@ -115,12 +118,14 @@ pertinentes. Se hace también con un `RepeatableJob`.
 
 En la ruta `/admin/scheduler/repeatablejob/`.
 
-En el campo **nombre** podemos poner lo que deseemos (como "Reporte indicadores"), en el campo **callable** debemos
-poner `monitoreo.apps.dashboard.report_tasks.send_reports`.
-En el campo **Queue** ponemos `reports`.
-Habilitar el campo **Enabled**.
-En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
-Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
+- En el campo **nombre** podemos poner lo que deseemos (como "Reporte indicadores").
+- En el campo **callable** debemos poner `monitoreo.apps.dashboard.report_tasks.send_reports`.
+- En el campo **Queue** ponemos `reports`.
+- Habilitar el campo **Enabled**.
+- En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
+- Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
+
+
 Luego de guardar la instancia deberiamos tener algo como:
 
 ![Generación indicadores](./images/tarea_reportes.png)

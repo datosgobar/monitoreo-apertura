@@ -129,3 +129,60 @@ Los mails de reporte de red se envian al staff del proyecto. Para marcar un usua
 a la ruta `/admin/auth/user/` y en la vista del usuario particular, marcar la opción:
 
 ![Marcar staff](./images/staff_checkmark.png)
+
+
+## Creación de procesos
+
+Es posible, crear procesos que engloben las tareas descriptas anteriormente y las ejecuten secuencialmente.
+Para lograr eso vamos a la ruta `/admin/django_datajsonar/synchronizer/`. Allí vamos a `Create new process` y nos
+encontramos con un formulario de este estilo:
+
+![Primer formulario](./images/synchro_form_1.png)
+
+En el primer campo ponemos el nombre del proceso y en el segundo la cantidad de etapas que tendrá. Al dar submit,
+nos encontramos con la segunda parte del formulario:
+
+![Segundo formulario](./images/synchro_form_2.png)
+
+Cada fila representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente para configurar las
+tareas ya existentes se deben pasar estos valores:
+
+| Tarea                                  | Callable Str                                             | Queue      | Task                     |
+|----------------------------------------|----------------------------------------------------------|------------|--------------------------|
+| Lectura de la red de nodos (default)   | django_datajsonar.tasks.schedule_new_read_datajson_task  | indexing   | ReadDataJsonTask         |
+| Lectura de la red de nodos (completa)  | django_datajsonar.tasks.schedule_full_read_task          | indexing   | ReadDataJsonTask         |
+| Lectura de la red de nodos (metadatos) | django_datajsonar.tasks.schedule_metadata_read_task      | indexing   | ReadDataJsonTask         |
+| Federación de metadatos                | monitoreo.apps.dashboard.tasks.federation_run            | federation | FederationTask           |
+| Cálculo de indicadores                 | monitoreo.apps.dashboard.indicators_tasks.indicators_run | indicators | IndicatorsGenerationTask |
+| Envío de reportes                      | monitoreo.apps.dashboard.report_tasks.send_reports       | reports    | ReportGenerationTask     |
+
+Si no están creadas, es necesario schedulear 2 tareas de mantenimiento periódicas. Se crean mediante repeatableJobs:
+
+En la ruta `/admin/scheduler/repeatablejob/`.
+
+Primero vamos a crear la tarea que comienza los procesos en stand-by.
+
+- En el campo **nombre** podemos poner lo que deseemos (como "Comenzar synchronizers").
+- En el campo **callable** debemos poner `django_datajsonar.synchronizer_tasks.start_synchros`.
+- En el campo **Queue** ponemos `synchro`.
+- Habilitar el campo **Enabled**.
+- En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
+- Finalmente en **interval** ponemos `1` y en **interval unit** `days`.
+
+Luego de guardar la instancia deberiamos tener algo como:
+
+![Generación indicadores](./images/tarea_start_synchros.png)
+
+La siguiente es la tarea que avanza las tareas a medida que van terminando:
+
+- En el campo **nombre** podemos poner lo que deseemos (como "Avanzar synchronizers").
+- En el campo **callable** debemos poner `django_datajsonar.synchronizer_tasks.upkeep`.
+- En el campo **Queue** ponemos `synchro`.
+- Habilitar el campo **Enabled**.
+- En los campos **fecha** y **hora** de **scheduled time** hacemos click en "Hoy" y "Ahora".
+- Finalmente en **interval** ponemos `5` y en **interval unit** `minutes`.
+
+Luego de guardar la instancia deberiamos tener algo como:
+
+![Generación indicadores](./images/tarea_upkeep.png)
+

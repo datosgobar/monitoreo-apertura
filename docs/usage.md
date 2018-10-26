@@ -36,6 +36,53 @@ Eso procesara el archivo (puede tardar un poco), y al terminar veremos los nodos
 
 ![Nodes list](./images/nodes_list.png)
 
+### Configuración de datasets indexables
+
+Hay 2 formas de marcar un nodo como indexable, manualmente o cargando un csv de configuración. Para el caso manual, se
+puede marcar en el modelo o, marcar un subconjunto de los datasets y ejecutar la acción "Marcar como indexable".
+
+El otro método es cargando un nuevo `Dataset Indexing file`.
+Esta pagina se encuentra en la ruta `/admin/django_datajsonar/datasetindexingfile/`.
+Este archivo tiene un registro de los datasets _indexables_. Ese un archivo de extencion `.csv` y
+tiene un aspecto como el siguiente:
+
+
+```
+catalog_id,dataset_identifier
+sspm,399
+sspm,330
+enacom,REGIS-DE-PROVE-POSTA
+acumar,cb351aa5-731b-458b-8227-a0c5b828356f
+# Más entradas
+```
+
+La primera columna tiene el identificador del catalogo, y la segunda el identificador del dataset que se desea marcar
+como indexable.
+
+Luego de que creamos la nueva instancia, volvemos a la pagina del listado y deberiamos ver algo como
+la siguiente imagen:
+
+![Node register file list](images/dataset_indexing_file.png)
+
+Luego seleccionamos la instancia y usamos la accion "Process node file", como se muestra en la imagen:
+
+![Process Node register file list](images/process_indexing_file.png)
+
+Eso procesa el archivo (puede tardar un poco), y al terminar veremos los datasets marcados como indexables en
+`/admin/django_datajsonar/node/`.
+
+### Generación de archivos de configuración
+
+Hay 2 formas de generar los archivos de configuración con los datasets indexables. La primera es entrando en la ruta:
+`admin/dataset/federacion-config.csv`. De esa manera, se descarga un csv con todos datasets marcados como indexables.
+
+La segunda es mediante una acción de Django. Podemos seleccionar un subconjunto de datasets y ejecutar la acción
+`Generar csv de configuración`
+
+![Generar csv de configuración](./images/config_csv_action.png)
+
+De esta manera conseguimos el csv de configuración con los datasets indexables del subconjunto elegido.
+
 
 ## Lectura de catalogos
 

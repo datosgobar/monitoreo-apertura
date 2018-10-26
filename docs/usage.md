@@ -39,12 +39,11 @@ Eso procesara el archivo (puede tardar un poco), y al terminar veremos los nodos
 ### Configuración de datasets indexables
 
 Hay 2 formas de marcar un nodo como indexable, manualmente o cargando un csv de configuración. Para el caso manual, se
-puede marcar en el modelo o, marcar un subconjunto de los datasets y ejecutar la acción "Marcar como indexable".
+puede marcar en el modelo, o marcar un subconjunto de los datasets y ejecutar la acción "Marcar como indexable".
 
-El otro método es cargando un nuevo `Dataset Indexing file`.
-Esta pagina se encuentra en la ruta `/admin/django_datajsonar/datasetindexingfile/`.
-Este archivo tiene un registro de los datasets _indexables_. Ese un archivo de extencion `.csv` y
-tiene un aspecto como el siguiente:
+El otro método es cargando un nuevo `Dataset Indexing file`. Esta pagina se encuentra en la ruta
+`/admin/django_datajsonar/datasetindexingfile/`. El archivo tiene un registro de los datasets _indexables_.
+Es un archivo de extensión `.csv` y tiene un aspecto como el siguiente:
 
 
 ```
@@ -56,15 +55,15 @@ acumar,cb351aa5-731b-458b-8227-a0c5b828356f
 # Más entradas
 ```
 
-La primera columna tiene el identificador del catalogo, y la segunda el identificador del dataset que se desea marcar
+La primera columna tiene el identificador del catálogo, y la segunda el identificador del dataset que se desea marcar
 como indexable.
 
-Luego de que creamos la nueva instancia, volvemos a la pagina del listado y deberiamos ver algo como
+Luego de que creamos la nueva instancia, volvemos a la página del listado y deberíamos ver algo como
 la siguiente imagen:
 
 ![Node register file list](images/dataset_indexing_file.png)
 
-Luego seleccionamos la instancia y usamos la accion "Process node file", como se muestra en la imagen:
+Luego seleccionamos la instancia y usamos la acción "Process node file", como se muestra en la imagen:
 
 ![Process Node register file list](images/process_indexing_file.png)
 

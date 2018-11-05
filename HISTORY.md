@@ -1,3 +1,10 @@
+0.0.24 (05-11-18)
+-------------------
+
+* Actualiza versión de pydatajson y django_datajsonar.
+* Agrega documentación de synchronizers y config files.
+
+
 0.0.23 (23-10-18)
 -------------------
 

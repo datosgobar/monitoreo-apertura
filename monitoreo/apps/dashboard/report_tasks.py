@@ -10,10 +10,11 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django_rq import job
 
+from pydatajson.core import DataJson
 from django_datajsonar.models import Node
 
 from .models import Indicador, IndicadorRed, \
-    IndicatorsGenerationTask, ReportGenerationTask
+    IndicatorsGenerationTask, ReportGenerationTask, ValidationReportTask
 
 
 @job('reports')
@@ -129,6 +130,71 @@ class ReportGenerator(object):
     def close_task(self):
         self.report_task.refresh_from_db()
         self.report_task.status = ReportGenerationTask.FINISHED
+        self.report_task.finished = timezone.now()
+        self.report_task.save()
+
+    def _format_date(self, date):
+        return timezone.localtime(date).strftime(self.DATE_FORMAT)
+
+
+@job('reports')
+def send_validations(validation_task=None):
+    validation_task = validation_task or ValidationReportTask.objects.create()
+
+    generator = ValidationReportGenerator(validation_task)
+    nodes = Node.objects.filter(indexable=True)
+    for node in nodes:
+        generator.generate_email(node)
+
+    generator.close_task()
+
+
+class ValidationReportGenerator(object):
+    DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+
+    def __init__(self, report_task):
+        self.report_task = report_task
+
+    def generate_email(self, node=None):
+        catalog = DataJson(node.catalog_url)
+        validation = catalog.validate_catalog(only_errors=True)
+        context = {
+            'validation_time': self._format_date(timezone.now()),
+            'status': validation['status'],
+            'catalog': validation['error']['catalog'],
+            'dataset_list': validation['error']['dataset']
+
+        }
+        self.send_email(context, node)
+
+    def send_email(self, context, node=None):
+        recipients = node.admins.all()
+        emails = [user.email for user in recipients if user.email]
+
+        if not emails:  # Nothing to do here
+            return
+
+        subject = u'[{}] Validaciones nodo {}'.format(
+            settings.ENV_TYPE, node.catalog_id)
+
+        msg = render_to_string('reports/validation.txt', context=context)
+        mail = EmailMultiAlternatives(subject, msg, settings.EMAIL_HOST_USER,
+                                      emails)
+        html_msg = render_to_string('reports/validation.html', context=context)
+        mail.attach_alternative(html_msg, 'text/html')
+
+        try:
+            mail.send()
+            msg = "Reporte de {} enviado exitosamente".format(node.catalog_id)
+        except SMTPException as e:
+            msg = "Error enviando reporte de {}:\n {}".format(node.catalog_id,
+                                                              str(e))
+
+        ValidationReportTask.info(self.report_task, msg)
+
+    def close_task(self):
+        self.report_task.refresh_from_db()
+        self.report_task.status = ValidationReportTask.FINISHED
         self.report_task.finished = timezone.now()
         self.report_task.save()
 

@@ -15,7 +15,7 @@ from import_export.admin import ImportExportModelAdmin
 from django_datajsonar.admin import AbstractTaskAdmin
 
 from .models import IndicadorRed, Indicador, IndicatorType, TableColumn, HarvestingNode,\
-    FederationTask, IndicatorsGenerationTask, ReportGenerationTask
+    FederationTask, IndicatorsGenerationTask, ReportGenerationTask, ValidationReportTask
 from .tasks import federate_catalogs, federation_run
 from .indicators_tasks import generate_indicators
 from .report_tasks import send_reports
@@ -160,6 +160,7 @@ class ReportAdmin(AbstractTaskAdmin):
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_reports'
 
 
+admin.site.register(ValidationReportTask)
 admin.site.register(ReportGenerationTask, ReportAdmin)
 admin.site.register(FederationTask, FederationAdmin)
 admin.site.register(IndicatorsGenerationTask, IndicatorTaskAdmin)

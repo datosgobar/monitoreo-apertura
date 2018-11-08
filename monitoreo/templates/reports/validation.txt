@@ -1,0 +1,21 @@
+Horario de inspección: {{ validation_time }}
+
+Status: {{ status }}
+{% if catalog.errors %}
+Validación datos de catálogo: {{ catalog.title }}
+    Errores:{% for error in catalog.errors %}
+        - {{ error.path }}: {{ error.message }}
+        {% endfor %}
+{% endif %}
+
+{% if dataset_list %}
+Validacion datos de datasets:
+{% for dataset in dataset_list %}
+- Dataset: {{ dataset.title }}
+    Status: {{ dataset.status }}
+
+    Errores:{% for error in dataset.errors%}
+            - {{ error.path }}: {{ error.message }}
+            {% endfor %}
+{% endfor %}
+{% endif %}

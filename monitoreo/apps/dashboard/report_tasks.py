@@ -28,22 +28,84 @@ def send_reports(report_task=None):
 
     report_task = report_task or ReportGenerationTask.objects.create()
 
-    generator = ReportGenerator(indicators_task, report_task)
-    generator.generate_email()
+    generator = IndicatorReportGenerator(indicators_task, report_task)
+    mail = generator.generate_email()
+    generator.send_email(mail)
 
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
-        generator.generate_email(node)
-
+        mail = generator.generate_email(node)
+        if mail:
+            generator.send_email(mail, node=node)
     generator.close_task()
 
 
-class ReportGenerator(object):
+@job('reports')
+def send_validations(validation_task=None):
+    validation_task = validation_task or ValidationReportTask.objects.create()
+
+    generator = ValidationReportGenerator(validation_task)
+    nodes = Node.objects.filter(indexable=True)
+    for node in nodes:
+        mail = generator.generate_email(node)
+        if mail:
+            generator.send_email(mail, node=node)
+    generator.close_task()
+
+
+class AbstractReportGenerator(object):
     DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+    TXT_TEMPLATE = None
+    HTML_TEMPLATE = None
+
+    def __init__(self, report_task):
+        self.report_task = report_task
+
+    def generate_email(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def send_email(self, mail, node=None):
+        target = node.catalog_id if node else 'Red'
+
+        try:
+            mail.send()
+            msg = "Reporte de {} enviado exitosamente".format(target)
+        except SMTPException as e:
+            msg = "Error enviando reporte de {}:\n {}".format(target, str(e))
+
+        self.report_task.info(self.report_task, msg)
+
+    def _get_recipients(self, node=None):
+        if not node:
+            recipients = User.objects.filter(is_staff=True)
+        else:
+            recipients = node.admins.all()
+        return [user.email for user in recipients if user.email]
+
+    def _render_templates(self, subject, emails, context):
+        msg = render_to_string(self.TXT_TEMPLATE, context=context)
+        html_msg = render_to_string(self.HTML_TEMPLATE, context=context)
+        mail = EmailMultiAlternatives(subject, msg, settings.EMAIL_HOST_USER, emails)
+        mail.attach_alternative(html_msg, 'text/html')
+        return mail
+
+    def close_task(self):
+        self.report_task.refresh_from_db()
+        self.report_task.status = self.report_task.FINISHED
+        self.report_task.finished = timezone.now()
+        self.report_task.save()
+
+    def _format_date(self, date):
+        return timezone.localtime(date).strftime(self.DATE_FORMAT)
+
+
+class IndicatorReportGenerator(AbstractReportGenerator):
+    TXT_TEMPLATE = 'reports/report.txt'
+    HTML_TEMPLATE = 'reports/report.html'
 
     def __init__(self, indicators_task, report_task):
         self.indicators_task = indicators_task
-        self.report_task = report_task
+        super(IndicatorReportGenerator, self).__init__(report_task)
 
     def generate_email(self, node=None):
         """Genera y manda el mail con el reporte de indexación. Si node es especificado, genera el reporte
@@ -67,7 +129,6 @@ class ReportGenerator(object):
                     self.indicators_task.finished
                     .astimezone(timezone.get_current_timezone())
                     .date())
-            target = 'Red'
         else:
             one_d_summary, multi_d_summary, _ = \
                 Indicador.objects.filter(indicador_tipo__resumen=True).\
@@ -81,35 +142,21 @@ class ReportGenerator(object):
                     self.indicators_task.finished
                     .astimezone(timezone.get_current_timezone())
                     .date(), node)
-            target = node.catalog_id
 
         context.update({
-            'target': target,
             'one_d_summary': one_d_summary,
             'multi_d_summary': multi_d_summary,
             'one_dimensional_indics': one_dimensional,
             'multi_dimensional_indics': multi_dimensional,
         })
-        self.send_email(context, listed, node)
 
-    def send_email(self, context, listed, node=None):
-        if not node:
-            recipients = User.objects.filter(is_staff=True)
-        else:
-            recipients = node.admins.all()
-
-        emails = [user.email for user in recipients if user.email]
-
-        if not emails:  # Nothing to do here
-            return
-
+        emails = self._get_recipients(node=node)
+        if not emails:
+            # Nothing to do here
+            return None
         start_time = self._format_date(self.indicators_task.created)
         subject = u'[{}] Indicadores Monitoreo Apertura: {}'.format(settings.ENV_TYPE, start_time)
-
-        msg = render_to_string('reports/report.txt', context=context)
-        mail = EmailMultiAlternatives(subject, msg, settings.EMAIL_HOST_USER, emails)
-        html_msg = render_to_string('reports/report.html', context=context)
-        mail.attach_alternative(html_msg, 'text/html')
+        mail = self._render_templates(subject, emails, context)
 
         if not node:
             mail.attach('info.log', self.indicators_task.logs, 'text/plain')
@@ -119,84 +166,34 @@ class ReportGenerator(object):
                 body = render_to_string('reports/datasets.csv', context={'dataset_list': listed[indicator]})
                 mail.attach('{}.csv'.format(indicator), body, 'text/csv')
 
-        try:
-            mail.send()
-            msg = "Reporte de {} enviado exitosamente".format(context['target'])
-        except SMTPException as e:
-            msg = "Error enviando reporte de {}:\n {}".format(context['target'], str(e))
-
-        ReportGenerationTask.info(self.report_task, msg)
-
-    def close_task(self):
-        self.report_task.refresh_from_db()
-        self.report_task.status = ReportGenerationTask.FINISHED
-        self.report_task.finished = timezone.now()
-        self.report_task.save()
-
-    def _format_date(self, date):
-        return timezone.localtime(date).strftime(self.DATE_FORMAT)
+        return mail
 
 
-@job('reports')
-def send_validations(validation_task=None):
-    validation_task = validation_task or ValidationReportTask.objects.create()
-
-    generator = ValidationReportGenerator(validation_task)
-    nodes = Node.objects.filter(indexable=True)
-    for node in nodes:
-        generator.generate_email(node)
-
-    generator.close_task()
-
-
-class ValidationReportGenerator(object):
-    DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+class ValidationReportGenerator(AbstractReportGenerator):
+    TXT_TEMPLATE = 'reports/validation.txt'
+    HTML_TEMPLATE = 'reports/validation.html'
 
     def __init__(self, report_task):
         self.report_task = report_task
+        super(ValidationReportGenerator, self).__init__(report_task)
 
-    def generate_email(self, node=None):
+    def generate_email(self, node):
         catalog = DataJson(node.catalog_url)
         validation = catalog.validate_catalog(only_errors=True)
+        if validation['status'] == 'OK':
+            return None
         context = {
             'validation_time': self._format_date(timezone.now()),
             'status': validation['status'],
             'catalog': validation['error']['catalog'],
             'dataset_list': validation['error']['dataset']
-
         }
-        self.send_email(context, node)
 
-    def send_email(self, context, node=None):
-        recipients = node.admins.all()
-        emails = [user.email for user in recipients if user.email]
+        subject = u'[{}] Validacion de {}'.format(settings.ENV_TYPE, node.catalog_id)
+        emails = self._get_recipients(node=node)
+        if not emails:
+            # Nothing to do here
+            return None
+        mail = self._render_templates(subject, emails, context)
 
-        if not emails:  # Nothing to do here
-            return
-
-        subject = u'[{}] Validaciones nodo {}'.format(
-            settings.ENV_TYPE, node.catalog_id)
-
-        msg = render_to_string('reports/validation.txt', context=context)
-        mail = EmailMultiAlternatives(subject, msg, settings.EMAIL_HOST_USER,
-                                      emails)
-        html_msg = render_to_string('reports/validation.html', context=context)
-        mail.attach_alternative(html_msg, 'text/html')
-
-        try:
-            mail.send()
-            msg = "Reporte de {} enviado exitosamente".format(node.catalog_id)
-        except SMTPException as e:
-            msg = "Error enviando reporte de {}:\n {}".format(node.catalog_id,
-                                                              str(e))
-
-        ValidationReportTask.info(self.report_task, msg)
-
-    def close_task(self):
-        self.report_task.refresh_from_db()
-        self.report_task.status = ValidationReportTask.FINISHED
-        self.report_task.finished = timezone.now()
-        self.report_task.save()
-
-    def _format_date(self, date):
-        return timezone.localtime(date).strftime(self.DATE_FORMAT)
+        return mail

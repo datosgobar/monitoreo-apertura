@@ -44,11 +44,10 @@ def send_reports(report_task=None):
 @job('reports')
 def send_validations(validation_task=None):
     validation_task = validation_task or ValidationReportTask.objects.create()
-
     generator = ValidationReportGenerator(validation_task)
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
-        mail = generator.generate_email(node)
+        mail = generator.generate_email(node=node)
         if mail:
             generator.send_email(mail, node=node)
     generator.close_task()
@@ -185,6 +184,8 @@ class ValidationReportGenerator(AbstractReportGenerator):
         catalog = DataJson(node.catalog_url)
         validation = catalog.validate_catalog(only_errors=True)
         if validation['status'] == 'OK':
+            msg = "Catálogo {} válido.".format(node.catalog_id)
+            self.report_task.info(self.report_task, msg)
             return None
         context = {
             'validation_time': self._format_date(timezone.now()),

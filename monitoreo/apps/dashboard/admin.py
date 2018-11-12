@@ -18,7 +18,7 @@ from .models import IndicadorRed, Indicador, IndicatorType, TableColumn, Harvest
     FederationTask, IndicatorsGenerationTask, ReportGenerationTask, ValidationReportTask
 from .tasks import federate_catalogs, federation_run
 from .indicators_tasks import generate_indicators
-from .report_tasks import send_reports
+from .report_tasks import send_reports, send_validations
 
 
 def switch(updates):
@@ -160,7 +160,16 @@ class ReportAdmin(AbstractTaskAdmin):
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_reports'
 
 
-admin.site.register(ValidationReportTask)
+class ValidationReportAdmin(AbstractTaskAdmin):
+    readonly_fields = ('created', 'logs', 'status', 'finished')
+    list_display = ('__unicode__',)
+
+    model = ValidationReportTask
+    task = send_validations
+    callable_str = 'monitoreo.apps.dashboard.report_tasks.send_validations'
+
+
+admin.site.register(ValidationReportTask, ValidationReportAdmin)
 admin.site.register(ReportGenerationTask, ReportAdmin)
 admin.site.register(FederationTask, FederationAdmin)
 admin.site.register(IndicatorsGenerationTask, IndicatorTaskAdmin)

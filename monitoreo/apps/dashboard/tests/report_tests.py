@@ -197,7 +197,7 @@ class ValidationReportGenerationTest(TestCase):
     def test_mail_detail(self):
         _, catalog_validation, dataset_validation =\
             filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
-        self.assertTrue("u&#39;"+('title'*25)+"&#39; is too long" in dataset_validation)
+        self.assertTrue("u&#39;" + ('title' * 25) + "&#39; is too long" in dataset_validation)
         self.assertTrue("123 is not valid under any of the given schemas" in dataset_validation)
         self.assertTrue("u&#39;" + ('title' * 25) + "&#39; is too long" not in catalog_validation)
         self.assertTrue("123 is not valid under any of the given schemas" not in catalog_validation)

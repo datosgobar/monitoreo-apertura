@@ -62,7 +62,7 @@ class AbstractReportGenerator(object):
     def __init__(self, report_task):
         self.report_task = report_task
 
-    def generate_email(self, *args, **kwargs):
+    def generate_email(self, node=None):
         raise NotImplementedError
 
     def send_email(self, mail, node=None):
@@ -178,7 +178,10 @@ class ValidationReportGenerator(AbstractReportGenerator):
         self.report_task = report_task
         super(ValidationReportGenerator, self).__init__(report_task)
 
-    def generate_email(self, node):
+    def generate_email(self, node=None):
+        if not node:
+            # No genera mail de staff
+            return None
         catalog = DataJson(node.catalog_url)
         validation = catalog.validate_catalog(only_errors=True)
         if validation['status'] == 'OK':

@@ -72,10 +72,10 @@ class IndicatorReportGenerationTest(TestCase):
         for t, v in zip(types, values):
             Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id2',
                                      jurisdiccion_nombre='nodo2')
-        cls.report_generator = IndicatorReportGenerator(cls.indicators_task, cls.report_task)
+        cls.indicators_report_generator = IndicatorReportGenerator(cls.indicators_task, cls.report_task)
 
     def setUp(self):
-        self.report_generator.send_email(self.report_generator.generate_email())
+        self.indicators_report_generator.send_email(self.indicators_report_generator.generate_email())
         self.mail = mail.outbox[0]
 
     def tearDown(self):
@@ -125,7 +125,7 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_nodes_email_outbox(self):
         mail.outbox = []
-        self.report_generator.send_email(self.report_generator.generate_email(node=self.node2))
+        self.indicators_report_generator.send_email(self.indicators_report_generator.generate_email(node=self.node2))
         self.assertEqual(1, len(mail.outbox))
         sent_mail = mail.outbox[0]
         self.assertEqual(['admin2@test.com'], sent_mail.to)
@@ -135,8 +135,8 @@ class IndicatorReportGenerationTest(TestCase):
                         sent_mail.attachments)
 
     def test_task_is_closed(self):
-        self.report_generator.close_task()
-        self.assertEqual(ReportGenerationTask.FINISHED, self.report_generator.report_task.status)
+        self.indicators_report_generator.close_task()
+        self.assertEqual(ReportGenerationTask.FINISHED, self.indicators_report_generator.report_task.status)
 
     def test_send_report(self):
         mail.outbox = []
@@ -156,7 +156,6 @@ class ValidationReportGenerationTest(TestCase):
         settings.ENV_TYPE = 'tst'
 
         # set mock nodes
-
         cls.node1 = Node.objects.create(catalog_id='id1', catalog_url=cls.get_sample('several_assorted_errors.json'), indexable=True)
         cls.node2 = Node.objects.create(catalog_id='id2', catalog_url=cls.get_sample('full_data.json'), indexable=True)
 
@@ -165,10 +164,10 @@ class ValidationReportGenerationTest(TestCase):
 
         cls.report_task = ValidationReportTask.objects.create()
 
-        cls.report_generator = ValidationReportGenerator(cls.report_task)
+        cls.validation_report_generator = ValidationReportGenerator(cls.report_task)
 
     def setUp(self):
-        self.report_generator.send_email(self.report_generator.generate_email(self.node1))
+        self.validation_report_generator.send_email(self.validation_report_generator.generate_email(self.node1))
         self.mail = mail.outbox[0]
 
     def tearDown(self):
@@ -186,34 +185,30 @@ class ValidationReportGenerationTest(TestCase):
         header, _, _ = filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
         expected_header = 'Horario de inspección:'
         self.assertTrue(header.startswith(expected_header))
-    '''
+
     def test_catalog_validation(self):
-        _, catalog_validation, dataset_validation = filter(None, re.split(r'Catálogo:|Datasets:', self.mail.body))
-        self.assertTrue('ind_d: 100' in catalog_validation)
-        self.assertTrue('ind_c:\n' in catalog_validation)
-        self.assertTrue('k1: 1' in catalog_validation)
-        self.assertTrue('k2: 2' in catalog_validation)
-        self.assertTrue('ind_a' not in catalog_validation)
-        self.assertTrue('ind_d' not in detail)
-        self.assertTrue('ind_c' in detail)
+        _, catalog_validation, dataset_validation =\
+            filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
+        self.assertTrue("u&#39;title&#39; is a required property" in catalog_validation)
+        self.assertTrue("u&#39;datosmodernizacion.gob.ar&#39; is not a u&#39;email&#39;" in catalog_validation)
+        self.assertTrue("u&#39;title&#39; is a required property" not in dataset_validation)
+        self.assertTrue("u&#39;datosmodernizacion.gob.ar&#39; is not a u&#39;email&#39;" not in dataset_validation)
 
     def test_mail_detail(self):
-        _, summary, detail = filter(None, re.split(r'Catálogo:|Datasets:', self.mail.body))
-        self.assertTrue('ind_a: 42' in detail)
-        self.assertTrue('ind_c:\n' in detail)
-        self.assertTrue('k1: 1' in detail)
-        self.assertTrue('k2: 2' in detail)
-        self.assertTrue('ind_d' not in detail)
-        self.assertTrue('ind_a' not in summary)
-        self.assertTrue('ind_c' in summary)
-    '''
+        _, catalog_validation, dataset_validation =\
+            filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
+        self.assertTrue("u&#39;"+('title'*25)+"&#39; is too long" in dataset_validation)
+        self.assertTrue("123 is not valid under any of the given schemas" in dataset_validation)
+        self.assertTrue("u&#39;" + ('title' * 25) + "&#39; is too long" not in catalog_validation)
+        self.assertTrue("123 is not valid under any of the given schemas" not in catalog_validation)
+
     def test_valid_node_does_not_trigger_email(self):
-        valid_node_mail = self.report_generator.generate_email(node=self.node2)
+        valid_node_mail = self.validation_report_generator.generate_email(node=self.node2)
         self.assertIsNone(valid_node_mail)
 
     def test_task_is_closed(self):
-        self.report_generator.close_task()
-        self.assertEqual(ValidationReportTask.FINISHED, self.report_generator.report_task.status)
+        self.validation_report_generator.close_task()
+        self.assertEqual(ValidationReportTask.FINISHED, self.validation_report_generator.report_task.status)
 
     def test_send_report(self):
         mail.outbox = []

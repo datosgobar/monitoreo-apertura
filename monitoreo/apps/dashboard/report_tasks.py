@@ -30,7 +30,8 @@ def send_reports(report_task=None):
 
     generator = IndicatorReportGenerator(indicators_task, report_task)
     mail = generator.generate_email()
-    generator.send_email(mail)
+    if mail:
+        generator.send_email(mail)
 
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:

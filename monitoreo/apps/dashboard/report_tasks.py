@@ -110,55 +110,37 @@ class IndicatorReportGenerator(AbstractReportGenerator):
         """
 
         context = {
-            'finish_time': self._format_date(self.indicators_task.finished)
+            'finish_time': self._format_date(self.indicators_task.finished),
+            'target': node.catalog_id if node else 'Red'
         }
-        if not node:
-            one_d_summary, multi_d_summary, _ = \
-                models.IndicadorRed.objects.filter(indicador_tipo__resumen=True).\
-                sorted_indicators_on_date(
-                    self.indicators_task.finished
-                    .astimezone(timezone.get_current_timezone())
-                    .date())
-            one_dimensional, multi_dimensional, listed = \
-                models.IndicadorRed.objects.filter(indicador_tipo__mostrar=True).\
-                sorted_indicators_on_date(
-                    self.indicators_task.finished
-                    .astimezone(timezone.get_current_timezone())
-                    .date())
-        else:
-            one_d_summary, multi_d_summary, _ = \
-                models.Indicador.objects.filter(indicador_tipo__resumen=True).\
-                sorted_indicators_on_date(
-                    self.indicators_task.finished
-                    .astimezone(timezone.get_current_timezone())
-                    .date(), node)
-            one_dimensional, multi_dimensional, listed = \
-                models.Indicador.objects.filter(indicador_tipo__mostrar=True)\
-                .sorted_indicators_on_date(
-                    self.indicators_task.finished
-                    .astimezone(timezone.get_current_timezone())
-                    .date(), node)
+        model = models.Indicador if node else models.IndicadorRed
 
-        context.update({
-            'one_d_summary': one_d_summary,
-            'multi_d_summary': multi_d_summary,
-            'one_dimensional_indics': one_dimensional,
-            'multi_dimensional_indics': multi_dimensional,
-        })
+        queryset = model.objects.filter(indicador_tipo__resumen=True)
+        context['one_d_summary'], context['multi_d_summary'], _ =\
+            self._get_current_indicators(queryset, node=node)
+
+        queryset = model.objects.filter(indicador_tipo__mostrar=True)
+        context['one_dimensional_indics'], context['multi_dimensional_indics'], context['listed'] = \
+            self._get_current_indicators(queryset, node=node)
 
         start_time = self._format_date(self.indicators_task.created)
         subject = u'[{}] Indicadores Monitoreo Apertura: {}'.format(settings.ENV_TYPE, start_time)
         mail = self._render_templates(subject, context)
 
+        listed = context['listed']
         if not node:
             mail.attach('info.log', self.indicators_task.logs, 'text/plain')
-
         for indicator in listed:
             if listed[indicator]:
                 body = render_to_string('reports/datasets.csv', context={'dataset_list': listed[indicator]})
                 mail.attach('{}.csv'.format(indicator), body, 'text/csv')
-
         return mail
+
+    def _get_current_indicators(self, queryset, node=None):
+        return queryset.sorted_indicators_on_date(
+            self.indicators_task.finished.astimezone(
+                timezone.get_current_timezone()).date(),
+            node)
 
     def _render_templates(self, subject, context):
         msg = render_to_string(self.TXT_TEMPLATE, context=context)
@@ -205,4 +187,3 @@ class ValidationReportGenerator(AbstractReportGenerator):
         mail = EmailMultiAlternatives(subject, msg, settings.EMAIL_HOST_USER)
         mail.attach_alternative(html_msg, 'text/html')
         return mail
-

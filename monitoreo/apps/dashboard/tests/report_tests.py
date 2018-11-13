@@ -13,9 +13,11 @@ from django.core import mail
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.utils.html import escape
 from django.test import TestCase
 
 from django_datajsonar.models import Node
+from pydatajson.core import DataJson
 
 from monitoreo.apps.dashboard.models import ReportGenerationTask, IndicatorsGenerationTask,\
     IndicatorType, IndicadorRed, Indicador, ValidationReportTask
@@ -125,7 +127,7 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_nodes_email_outbox(self):
         mail.outbox = []
-        self.indicators_report_generator.send_email(self.indicators_report_generator.generate_email(node=self.node2))
+        self.indicators_report_generator.send_email(self.indicators_report_generator.generate_email(node=self.node2), node=self.node2)
         self.assertEqual(1, len(mail.outbox))
         sent_mail = mail.outbox[0]
         self.assertEqual(['admin2@test.com'], sent_mail.to)
@@ -166,8 +168,11 @@ class ValidationReportGenerationTest(TestCase):
 
         cls.validation_report_generator = ValidationReportGenerator(cls.report_task)
 
+        catalog = DataJson(cls.get_sample('several_assorted_errors.json'))
+        cls.report = catalog.validate_catalog(only_errors=True)
+
     def setUp(self):
-        self.validation_report_generator.send_email(self.validation_report_generator.generate_email(self.node1))
+        self.validation_report_generator.send_email(self.validation_report_generator.generate_email(self.node1), node=self.node1)
         self.mail = mail.outbox[0]
 
     def tearDown(self):
@@ -189,18 +194,14 @@ class ValidationReportGenerationTest(TestCase):
     def test_catalog_validation(self):
         _, catalog_validation, dataset_validation =\
             filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
-        self.assertTrue("u&#39;title&#39; is a required property" in catalog_validation)
-        self.assertTrue("u&#39;datosmodernizacion.gob.ar&#39; is not a u&#39;email&#39;" in catalog_validation)
-        self.assertTrue("u&#39;title&#39; is a required property" not in dataset_validation)
-        self.assertTrue("u&#39;datosmodernizacion.gob.ar&#39; is not a u&#39;email&#39;" not in dataset_validation)
+        for error in self.report['error']['catalog']['errors']:
+            self.assertTrue(escape(error['message']) in catalog_validation)
 
-    def test_mail_detail(self):
+    def test_dataset_validation(self):
         _, catalog_validation, dataset_validation =\
             filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
-        self.assertTrue("u&#39;" + ('title' * 25) + "&#39; is too long" in dataset_validation)
-        self.assertTrue("123 is not valid under any of the given schemas" in dataset_validation)
-        self.assertTrue("u&#39;" + ('title' * 25) + "&#39; is too long" not in catalog_validation)
-        self.assertTrue("123 is not valid under any of the given schemas" not in catalog_validation)
+        for error in self.report['error']['dataset'][0]['errors']:
+            self.assertTrue(escape(error['message']) in dataset_validation)
 
     def test_valid_node_does_not_trigger_email(self):
         valid_node_mail = self.validation_report_generator.generate_email(node=self.node2)

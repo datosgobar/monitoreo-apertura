@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Validacion del nodo {{ catalog.title }}</title>
+    <style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+    </style>
+</head>
+<body>
+<h3>Horario de inspección: {{ validation_time }}</h3>
+<p>Status: {{ status }}</p>
+
+{% if catalog.errors %}
+<h2>Catálogo:</h2>
+<h3>Validación datos de catálogo: {{ catalog.title }}</h3><br>
+    <table>
+    <tr><th>path</th> <th>message</th></tr>
+    {% for error in catalog.errors %}
+    <tr><td>{{ error.path }}</td><td>{{ error.message }}</td></tr>
+    {% endfor %}
+    </table>
+    <br>
+{% endif %}
+
+{% if dataset_list %}
+<h2>Datasets:</h2>
+<ul>
+{% for dataset in dataset_list %}
+<li>
+<h3>Dataset: {{ dataset.title }}</h3><br>
+    <table>
+    <tr><th>path</th> <th>message</th></tr>
+    {% for error in dataset.errors %}
+    <tr><td>{{ error.path }}</td><td>{{ error.message }}</td></tr>
+    {% endfor %}
+    </table>
+</li><br>
+{% endfor %}
+</ul>
+{% endif %}
+</body>
+</html>

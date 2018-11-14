@@ -14,11 +14,10 @@ from import_export.admin import ImportExportModelAdmin
 
 from django_datajsonar.admin import AbstractTaskAdmin
 
-from .models import IndicadorRed, Indicador, IndicatorType, TableColumn, HarvestingNode,\
-    FederationTask, IndicatorsGenerationTask, ReportGenerationTask
-from .tasks import federate_catalogs, federation_run
+from . import models
+from .tasks import federate_catalogs
 from .indicators_tasks import generate_indicators
-from .report_tasks import send_reports
+from .report_tasks import send_reports, send_validations
 
 
 def switch(updates):
@@ -32,7 +31,7 @@ class TableColumnAdmin(OrderedModelAdmin):
 class IndicatorResource(resources.ModelResource):
 
     class Meta:
-        model = Indicador
+        model = models.Indicador
         fields = export_order = (
             'fecha',
             'jurisdiccion_nombre',
@@ -49,7 +48,7 @@ class IndicatorAdmin(ImportExportModelAdmin):
 
 class IndicadorRedResource(resources.ModelResource):
     class Meta:
-        model = IndicadorRed
+        model = models.IndicadorRed
         fields = export_order = (
             'fecha',
             'indicador_tipo__nombre',
@@ -82,7 +81,7 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
     position_actions.allow_tags = True
 
     def order_move(self, request, model_id, direction):
-        indicator_type = IndicatorType.objects.get(pk=model_id)
+        indicator_type = models.IndicatorType.objects.get(pk=model_id)
         if direction == 'top':
             indicator_type.top()
         elif direction == 'bottom':
@@ -116,7 +115,7 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
 
     def federate(self, _, queryset):
         for harvesting_node in queryset:
-            task = FederationTask.objects.create(harvesting_node=harvesting_node)
+            task = models.FederationTask.objects.create(harvesting_node=harvesting_node)
             federate_catalogs.delay(task)
     federate.short_description = 'Correr federacion'
 
@@ -126,7 +125,7 @@ class FederationAdmin(AbstractTaskAdmin):
     exclude = ('status', 'finished',)
     list_display = ('__unicode__',)
 
-    model = FederationTask
+    model = models.FederationTask
     task = federate_catalogs
     callable_str = 'monitoreo.apps.dashboard.tasks.federation_run'
 
@@ -138,7 +137,7 @@ class FederationAdmin(AbstractTaskAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "harvesting_node":
-            kwargs["queryset"] = HarvestingNode.objects.filter(enabled=True)
+            kwargs["queryset"] = models.HarvestingNode.objects.filter(enabled=True)
         return super(FederationAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -146,7 +145,7 @@ class IndicatorTaskAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs', 'status', 'finished')
     list_display = ('__unicode__',)
 
-    model = IndicatorsGenerationTask
+    model = models.IndicatorsGenerationTask
     task = generate_indicators
     callable_str = 'monitoreo.apps.dashboard.indicators_tasks.indicators_run'
 
@@ -155,16 +154,26 @@ class ReportAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs', 'status', 'finished')
     list_display = ('__unicode__',)
 
-    model = ReportGenerationTask
+    model = models.ReportGenerationTask
     task = send_reports
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_reports'
 
 
-admin.site.register(ReportGenerationTask, ReportAdmin)
-admin.site.register(FederationTask, FederationAdmin)
-admin.site.register(IndicatorsGenerationTask, IndicatorTaskAdmin)
-admin.site.register(HarvestingNode, HarvestingNodeAdmin)
-admin.site.register(Indicador, IndicatorAdmin)
-admin.site.register(IndicadorRed, IndicatorRedAdmin)
-admin.site.register(IndicatorType, IndicatorTypeAdmin)
-admin.site.register(TableColumn, TableColumnAdmin)
+class ValidationReportAdmin(AbstractTaskAdmin):
+    readonly_fields = ('created', 'logs', 'status', 'finished')
+    list_display = ('__unicode__',)
+
+    model = models.ValidationReportTask
+    task = send_validations
+    callable_str = 'monitoreo.apps.dashboard.report_tasks.send_validations'
+
+
+admin.site.register(models.ValidationReportTask, ValidationReportAdmin)
+admin.site.register(models.ReportGenerationTask, ReportAdmin)
+admin.site.register(models.FederationTask, FederationAdmin)
+admin.site.register(models.IndicatorsGenerationTask, IndicatorTaskAdmin)
+admin.site.register(models.HarvestingNode, HarvestingNodeAdmin)
+admin.site.register(models.Indicador, IndicatorAdmin)
+admin.site.register(models.IndicadorRed, IndicatorRedAdmin)
+admin.site.register(models.IndicatorType, IndicatorTypeAdmin)
+admin.site.register(models.TableColumn, TableColumnAdmin)

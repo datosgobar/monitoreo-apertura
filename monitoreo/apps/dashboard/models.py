@@ -149,4 +149,9 @@ class IndicatorsGenerationTask(AbstractTask):
 
 class ReportGenerationTask(AbstractTask):
     class Meta:
-        verbose_name_plural = "Envío de reportes"
+        verbose_name_plural = "Envío de Reportes"
+
+
+class ValidationReportTask(AbstractTask):
+    class Meta:
+        verbose_name_plural = "Reportes de Validación"

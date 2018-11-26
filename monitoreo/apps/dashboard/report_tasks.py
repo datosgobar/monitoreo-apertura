@@ -2,6 +2,9 @@
 from __future__ import unicode_literals
 
 from smtplib import SMTPException
+from tempfile import NamedTemporaryFile
+
+from requests.exceptions import RequestException
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -44,9 +47,13 @@ def send_validations(validation_task=None):
     generator = ValidationReportGenerator(validation_task)
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
-        mail = generator.generate_email(node=node)
-        if mail:
-            generator.send_email(mail, node=node)
+        try:
+            mail = generator.generate_email(node=node)
+            if mail:
+                generator.send_email(mail, node=node)
+        except (ValueError, RequestException) as e:
+            msg = 'Error enviando la validación de {}: {}'.format(node.catalog_id, str(e))
+            models.ValidationReportTask.info(validation_task, msg)
     generator.close_task()
 
 
@@ -165,19 +172,26 @@ class ValidationReportGenerator(AbstractReportGenerator):
             return None
         catalog = DataJson(node.catalog_url)
         validation = catalog.validate_catalog(only_errors=True)
+        validation_time = self._format_date(timezone.now())
         if validation['status'] == 'OK':
             msg = "Catálogo {} válido.".format(node.catalog_id)
             self.report_task.info(self.report_task, msg)
             return None
         context = {
-            'validation_time': self._format_date(timezone.now()),
+            'validation_time': validation_time,
             'status': validation['status'],
             'catalog': validation['error']['catalog'],
             'dataset_list': validation['error']['dataset']
         }
 
-        subject = u'[{}] Validacion de {}'.format(settings.ENV_TYPE, node.catalog_id)
+        subject = u'[{}] Validacion de catalogo {}: {}'.format(
+            settings.ENV_TYPE, node.catalog_id, validation_time)
         mail = self._render_templates(subject, context)
+
+        with NamedTemporaryFile(suffix='.xlsx') as tmpfile:
+            catalog.validate_catalog(export_path=tmpfile.name)
+            mail.attach('reporte_validacion_{}.xlsx'.format(node.catalog_id),
+                        tmpfile.read())
 
         return mail
 

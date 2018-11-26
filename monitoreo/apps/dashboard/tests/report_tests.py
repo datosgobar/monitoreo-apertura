@@ -147,6 +147,7 @@ class IndicatorReportGenerationTest(TestCase):
 
 
 class ValidationReportGenerationTest(TestCase):
+    NOW_FOR_TESTING = timezone.datetime(2010, 10, 10, 10, tzinfo=timezone.utc)
 
     @classmethod
     def get_sample(cls, sample_filename):
@@ -172,8 +173,11 @@ class ValidationReportGenerationTest(TestCase):
         cls.report = catalog.validate_catalog(only_errors=True)
 
     def setUp(self):
-        self.validation_report_generator.send_email(self.validation_report_generator.generate_email(self.node1), node=self.node1)
-        self.mail = mail.outbox[0]
+        with patch('django.utils.timezone.now', return_value=self.NOW_FOR_TESTING):
+            self.validation_report_generator.send_email(
+                self.validation_report_generator.generate_email(self.node1),
+                node=self.node1)
+            self.mail = mail.outbox[0]
 
     def tearDown(self):
         mail.outbox = []
@@ -183,7 +187,7 @@ class ValidationReportGenerationTest(TestCase):
         self.assertEqual(['admin1@test.com'], self.mail.to)
 
     def test_subject(self):
-        subject = u'[tst] Validacion de {}'.format(self.node1.catalog_id)
+        subject = u'[tst] Validacion de catalogo id1: 2010-10-10 07:00:00'
         self.assertEqual(subject, self.mail.subject)
 
     def test_mail_header(self):
@@ -202,6 +206,10 @@ class ValidationReportGenerationTest(TestCase):
             filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
         for error in self.report['error']['dataset'][0]['errors']:
             self.assertTrue(escape(error['message']) in dataset_validation)
+
+    def test_mail_attachment(self):
+        attachments = [attachment[0] for attachment in self.mail.attachments]
+        self.assertTrue('reporte_validacion_id1.xlsx' in attachments)
 
     def test_valid_node_does_not_trigger_email(self):
         valid_node_mail = self.validation_report_generator.generate_email(node=self.node2)

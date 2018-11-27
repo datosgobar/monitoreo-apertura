@@ -18,6 +18,7 @@ from . import models
 from .tasks import federate_catalogs
 from .indicators_tasks import generate_indicators
 from .report_tasks import send_reports, send_validations
+from .views import indicators_csv
 
 
 def switch(updates):
@@ -45,6 +46,13 @@ class IndicatorAdmin(ImportExportModelAdmin):
 
     resource_class = IndicatorResource
 
+    def get_urls(self):
+        urls = super(IndicatorAdmin, self).get_urls()
+        name = '%s_%s_indicadores.csv'
+        extra_urls = [url(r'^(?P<node_id>.+)/series-indicadores/$',
+                          indicators_csv, name=name), ]
+        return extra_urls + urls
+
 
 class IndicadorRedResource(resources.ModelResource):
     class Meta:
@@ -59,11 +67,21 @@ class IndicadorRedResource(resources.ModelResource):
 class IndicatorRedAdmin(ImportExportModelAdmin):
     resource_class = IndicadorRedResource
 
+    def get_urls(self):
+        urls = super(IndicatorRedAdmin, self).get_urls()
+        extra_urls = [url(r'^series-indicadores/$', indicators_csv,
+                          name='download_time_series'), ]
+        return extra_urls + urls
+
 
 class IndicatorTypeAdmin(OrderedModelAdmin):
-    list_display = ('nombre', 'order', 'resumen', 'mostrar', 'move_up_down_links', 'position_actions')
+    list_display = ('nombre', 'order', 'resumen', 'mostrar', 'series',
+                    'move_up_down_links', 'position_actions')
     list_filter = ('resumen', 'mostrar')
-    actions = ('queryset_to_top', 'queryset_to_bottom', 'summarize', 'desummarize', 'show', 'hide')
+    actions = ('queryset_to_top', 'queryset_to_bottom',
+               'summarize', 'desummarize',
+               'show', 'hide',
+               'add_to_series', 'remove_from_series')
 
     def get_urls(self):
         urls = super(IndicatorTypeAdmin, self).get_urls()
@@ -101,6 +119,12 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
 
     hide = switch({'mostrar': False})
     hide.short_description = 'Quitar del reporte'
+
+    add_to_series = switch({'series': True})
+    add_to_series.short_description = 'Agregar a las series de tiempo'
+
+    remove_from_series = switch({'series': False})
+    remove_from_series.short_description = 'Quitar de las series de tiempo'
 
 
 class HarvestingNodeAdmin(admin.ModelAdmin):

@@ -1,11 +1,16 @@
 #! coding: utf-8
 import json
+import csv
+
 from six import text_type
 from pydatajson import DataJson
 
+from django.http import HttpResponse
+from django.utils.timezone import localtime
+
 from django_datajsonar.models import Dataset, Node
 
-from .models import IndicatorsGenerationTask
+from .models import IndicatorsGenerationTask, IndicatorType
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
 
@@ -91,3 +96,22 @@ def list_errors(msg, errors):
     for error in errors:
         msg += u'\t {}: {} \n'.format(text_type(error['path']), error['message'])
     return msg
+
+
+def download_time_series(indicators, node_id=None):
+    response = HttpResponse(content_type='text/csv')
+    filename = 'series-indicadores-{}.csv'.format(node_id or 'red')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    return generate_time_series(indicators, response)
+
+
+def generate_time_series(indicators, output):
+    fieldnames = ['indice_tiempo']
+    fieldnames = fieldnames + list(IndicatorType.objects.filter(series=True)
+                                   .values_list('nombre', flat=True))
+    writer = csv.DictWriter(output, fieldnames, extrasaction='ignore')
+    writer.writeheader()
+    for date in indicators:
+        indicators[date].update({'indice_tiempo': date})
+        writer.writerow(indicators[date])
+    return output

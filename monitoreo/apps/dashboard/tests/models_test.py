@@ -99,6 +99,19 @@ class ModelsTest(TestCase):
         self.assertDictEqual(expected_multi_dimensional, multi_dimensional)
         self.assertDictEqual(expected_one_dimensional, one_dimensional)
 
+    def test_get_numerical_network_indicators(self):
+        expected_network_indics = {now().date(): {'ind_a': 42},
+                                   parse_datetime('2000-01-01 12:00:00Z')
+                                   .date(): {'ind_a': 23}}
+        network_indics = IndicadorRed.objects.numerical_indicators_by_date()
+        self.assertDictEqual(expected_network_indics, network_indics)
+
+    def test_get_node_network_indicators(self):
+        expected_node_indics = {now().date(): {'ind_a': 22}}
+        node_indics = Indicador.objects.numerical_indicators_by_date(
+            node_id='test_1')
+        self.assertDictEqual(expected_node_indics, node_indics)
+
     def test_remove_duplicated_indicators(self):
         # Duplicar indicadores
         self.duplicate_indicators(IndicadorRed)

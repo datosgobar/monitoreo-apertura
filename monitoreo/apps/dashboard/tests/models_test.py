@@ -8,8 +8,6 @@ from django.utils.timezone import now
 from django.utils.dateparse import parse_datetime
 from django.core.management import call_command
 
-from django_datajsonar.models import Node
-
 from monitoreo.apps.dashboard.models import IndicatorType, TableColumn, IndicadorRed, Indicador
 
 try:

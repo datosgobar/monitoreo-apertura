@@ -102,9 +102,9 @@ class ModelsTest(TestCase):
         self.assertDictEqual(expected_one_dimensional, one_dimensional)
 
     def test_get_numerical_network_indicators(self):
-        expected_network_indics = {
-           now().date(): {'ind_a': 42},
-           parse_datetime('2000-01-01 12:00:00Z').date(): {'ind_a': 23}}
+        expected_network_indics = {now().date(): {'ind_a': 42},
+                                   parse_datetime('2000-01-01 12:00:00Z')
+                                   .date(): {'ind_a': 23}}
         network_indics = IndicadorRed.objects.numerical_indicators_by_date()
         self.assertDictEqual(expected_network_indics, network_indics)
 

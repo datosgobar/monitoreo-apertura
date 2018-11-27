@@ -25,7 +25,8 @@ class IndicatorQuerySet(models.QuerySet):
         for indicator in indicators:
             value = json.loads(indicator.indicador_valor)
             if isinstance(value, dict):
-                value = OrderedDict(sorted(value.items(), key=lambda t: t[1], reverse=True))
+                value = OrderedDict(sorted(value.items(), key=lambda t: t[1],
+                                           reverse=True))
                 multi_dimensional[indicator.indicador_tipo.nombre] = value
             elif isinstance(value, list):
                 listed[indicator.indicador_tipo.nombre] = value
@@ -34,6 +35,20 @@ class IndicatorQuerySet(models.QuerySet):
 
         return one_dimensional, multi_dimensional, listed
 
+    def numerical_indicators_by_date(self, node_id=None):
+        indicators = self.order_by('fecha')
+        if node_id:
+            indicators = indicators.filter(jurisdiccion_id=node_id)
+
+        numerical = {}
+        for indicator in indicators:
+            value = json.loads(indicator.indicador_valor)
+            if isinstance(value, (float, int)):
+                numerical.setdefault(indicator.fecha, {})\
+                    .update({indicator.indicador_tipo.nombre: value})
+
+        return numerical
+
 
 class IndicatorType(OrderedModel):
 
@@ -41,6 +56,7 @@ class IndicatorType(OrderedModel):
     tipo = models.CharField(max_length=100)
     resumen = models.BooleanField(default=False)
     mostrar = models.BooleanField(default=True)
+    series = models.BooleanField(default=True)
 
     class Meta(OrderedModel.Meta):
         verbose_name_plural = "Tipos de indicadores"

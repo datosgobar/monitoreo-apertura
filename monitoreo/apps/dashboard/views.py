@@ -2,7 +2,7 @@
 from datetime import date, timedelta
 from django.shortcuts import render
 from .models import Indicador, IndicadorRed, TableColumn
-from .helpers import fetch_latest_indicadors
+from .helpers import fetch_latest_indicadors, download_time_series
 
 
 def landing(request):
@@ -90,3 +90,14 @@ def populate_table(tabla):
     }
 
     return context
+
+
+def indicators_csv(request, node_id=None):
+    if node_id:
+        model = Indicador
+    else:
+        model = IndicadorRed
+    indicators = model.objects\
+        .filter(indicador_tipo__series=True)\
+        .numerical_indicators_by_date(node_id=node_id)
+    return download_time_series(indicators, node_id=node_id)

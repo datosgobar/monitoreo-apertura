@@ -111,7 +111,7 @@ def generate_time_series(indicators, output):
     min_date = min(dates)
     max_date = max(dates)
     date_range = [min_date + datetime.timedelta(days=x) for x in
-                  range(0, (max_date-min_date).days + 1)]
+                  range(0, (max_date - min_date).days + 1)]
     fieldnames = ['indice_tiempo']
     fieldnames = fieldnames + list(IndicatorType.objects.filter(series=True)
                                    .values_list('nombre', flat=True))

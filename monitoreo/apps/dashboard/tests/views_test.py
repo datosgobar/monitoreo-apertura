@@ -19,11 +19,6 @@ class ViewsTest(TestCase):
         self.node2 = Node.objects.create(catalog_id='id2', catalog_url='url',
                                          indexable=True)
 
-        self.node1.admins.create(username='admin1', password='regular',
-                                 email='admin1@test.com', is_staff=False)
-        self.node2.admins.create(username='admin2', password='regular',
-                                 email='admin2@test.com', is_staff=False)
-
         # set mock indicators
         type_a = IndicatorType.objects.create(nombre='ind_a', tipo='RED')
         type_b = IndicatorType.objects.create(nombre='ind_b', tipo='RED')
@@ -66,25 +61,6 @@ class ViewsTest(TestCase):
         IndicadorRed.objects.filter(id__in=old_ids).update(
             fecha=self.past_date)
 
-        # Indicadores
-        values = ['22', '["d1", "l1"]', '{"k3":2, "k1": 2}']
-        for ind_type, value in zip(types, values):
-            Indicador.objects.create(indicador_tipo=ind_type,
-                                     indicador_valor=value,
-                                     jurisdiccion_nombre='catalogo_de_test_1',
-                                     jurisdiccion_id='test_1')
-
-        values = ['20', '["d2", "l2"]', '{"k3":1, "k2": 1}']
-        for ind_type, value in zip(types, values):
-            Indicador.objects.create(indicador_tipo=ind_type,
-                                     indicador_valor=value,
-                                     jurisdiccion_nombre='catalogo_de_test_2',
-                                     jurisdiccion_id='test_2')
-
-        Indicador.objects.create(indicador_tipo=type_a,
-                                 indicador_valor='00',
-                                 jurisdiccion_nombre='catalogo_de_test_2',
-                                 jurisdiccion_id=None)
 
     def format_previous_dates(self, delta):
         return (localdate() - datetime.timedelta(days=delta))\

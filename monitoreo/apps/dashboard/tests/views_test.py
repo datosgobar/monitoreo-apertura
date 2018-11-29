@@ -156,4 +156,3 @@ class ViewsTest(TestCase):
                         'ind_e': '2'}
         row = next(series_csv, None)
         self.assertDictEqual(expected_row, row)
-

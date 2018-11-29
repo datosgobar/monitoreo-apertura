@@ -7,7 +7,6 @@ from six import text_type
 from pydatajson import DataJson
 
 from django.http import HttpResponse
-from django.utils import timezone
 
 from django_datajsonar.models import Dataset, Node
 
@@ -108,10 +107,13 @@ def download_time_series(indicators, node_id=None):
 
 def generate_time_series(indicators, output):
     dates = indicators.keys()
-    min_date = min(dates)
-    max_date = max(dates)
-    date_range = [min_date + datetime.timedelta(days=x) for x in
-                  range(0, (max_date - min_date).days + 1)]
+    if dates:
+        min_date = min(dates)
+        max_date = max(dates)
+        date_range = [min_date + datetime.timedelta(days=x) for x in
+                      range(0, (max_date - min_date).days + 1)]
+    else:
+        date_range = []
     fieldnames = ['indice_tiempo']
     fieldnames = fieldnames + list(IndicatorType.objects.filter(series=True)
                                    .values_list('nombre', flat=True))

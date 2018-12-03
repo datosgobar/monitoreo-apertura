@@ -31,38 +31,41 @@ class ViewsTest(TestCase):
                                               mostrar=False)
 
         types = [type_a, type_b, type_c, type_d, type_e]
+
         values = ['42', '[["d1", "l1"], ["d2", "l2"]]', '{"k1": 1, "k2": 2}',
                   '100', '1']
-        for t, v in zip(types, values):
-            IndicadorRed.objects.create(indicador_tipo=t, indicador_valor=v)
+        self._create_indicators(types, values)
 
         values = ['23', '[["d1", "l1"]]', '{"k2": 1}', '500', '2']
-        for t, v in zip(types, values):
-            Indicador.objects.create(indicador_tipo=t, indicador_valor=v,
-                                     jurisdiccion_id='id1',
-                                     jurisdiccion_nombre='nodo1')
+        self._create_indicators(types, values, node_id='id1', node_name='nodo1')
 
         values = ['19', '[["d2", "l2"]]', '{"k1": 1, "k2": 1}', '50', '2']
-        for t, v in zip(types, values):
-            Indicador.objects.create(indicador_tipo=t, indicador_valor=v,
-                                     jurisdiccion_id='id2',
-                                     jurisdiccion_nombre='nodo2')
+        self._create_indicators(types, values, node_id='id2', node_name='nodo2')
 
         # Necesario para agregar los indicadores con fecha distinta a la de hoy
         values = ['23', '[["d1", "l1"]]', '{"k1":1, "k2": 2, "k3": 10}',
                   '50', '0']
-        old_ids = []
-        for ind_type, value in zip(types, values):
-            old = IndicadorRed.objects.create(indicador_tipo=ind_type,
-                                              indicador_valor=value)
-            old_ids.append(old.id)
+        old_ids = self._create_indicators(types, values)
 
         self.past_date = localdate() - datetime.timedelta(days=2)
         IndicadorRed.objects.filter(id__in=old_ids).update(
             fecha=self.past_date)
 
+    def _create_indicators(self, ind_type, values, node_id=None, node_name=''):
+        res = []
+        for ind_type, value in zip(ind_type, values):
+            if node_id and node_name:
+                created = Indicador.objects.create(
+                    indicador_tipo=ind_type, indicador_valor=value,
+                    jurisdiccion_id=node_id, jurisdiccion_nombre=node_name)
+            else:
+                created = IndicadorRed.objects.create(
+                    indicador_tipo=ind_type, indicador_valor=value)
+            res.append(created.id)
 
-    def format_previous_dates(self, delta):
+        return res
+
+    def _format_previous_dates(self, delta):
         return (localdate() - datetime.timedelta(days=delta))\
             .strftime('%Y-%m-%d')
 
@@ -97,21 +100,21 @@ class ViewsTest(TestCase):
         series = network_response.content.splitlines()
         self.assertEqual(4, len(series))
         series_csv = csv.DictReader(series)
-        two_days_ago = self.format_previous_dates(2)
+        two_days_ago = self._format_previous_dates(2)
         expected_row = {'indice_tiempo': two_days_ago,
                         'ind_a': '23',
                         'ind_b': '',
                         'ind_e': '0'}
         row = next(series_csv, None)
         self.assertDictEqual(expected_row, row)
-        yesterday = self.format_previous_dates(1)
+        yesterday = self._format_previous_dates(1)
         expected_row = {'indice_tiempo': yesterday,
                         'ind_a': '',
                         'ind_b': '',
                         'ind_e': ''}
         row = next(series_csv, None)
         self.assertDictEqual(expected_row, row)
-        today = self.format_previous_dates(0)
+        today = self._format_previous_dates(0)
         expected_row = {'indice_tiempo': today,
                         'ind_a': '42',
                         'ind_b': '',
@@ -125,7 +128,7 @@ class ViewsTest(TestCase):
         series = node_response.content.splitlines()
         self.assertEqual(2, len(series))
         series_csv = csv.DictReader(series)
-        today = self.format_previous_dates(0)
+        today = self._format_previous_dates(0)
         expected_row = {'indice_tiempo': today,
                         'ind_a': '23',
                         'ind_b': '',

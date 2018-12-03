@@ -40,7 +40,7 @@ class IndicatorQuerySet(models.QuerySet):
         if node_id:
             indicators = indicators.filter(jurisdiccion_id=node_id)
 
-        numerical = {}
+        numerical = OrderedDict()
         for indicator in indicators:
             value = json.loads(indicator.indicador_valor)
             if isinstance(value, (float, int)):

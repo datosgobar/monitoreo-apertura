@@ -1,12 +1,12 @@
 #! coding: utf-8
 import json
 import csv
+import datetime
 
 from six import text_type
 from pydatajson import DataJson
 
 from django.http import HttpResponse
-from django.utils.timezone import localtime
 
 from django_datajsonar.models import Dataset, Node
 
@@ -106,12 +106,21 @@ def download_time_series(indicators, node_id=None):
 
 
 def generate_time_series(indicators, output):
+    dates = indicators.keys()
+    if dates:
+        min_date = min(dates)
+        max_date = max(dates)
+        date_range = [min_date + datetime.timedelta(days=x) for x in
+                      range(0, (max_date - min_date).days + 1)]
+    else:
+        date_range = []
     fieldnames = ['indice_tiempo']
     fieldnames = fieldnames + list(IndicatorType.objects.filter(series=True)
                                    .values_list('nombre', flat=True))
     writer = csv.DictWriter(output, fieldnames, extrasaction='ignore')
     writer.writeheader()
-    for date in indicators:
+    for date in date_range:
+        indicators.setdefault(date, {})
         indicators[date].update({'indice_tiempo': date})
         writer.writerow(indicators[date])
     return output

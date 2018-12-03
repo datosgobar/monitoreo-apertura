@@ -48,9 +48,8 @@ class IndicatorAdmin(ImportExportModelAdmin):
 
     def get_urls(self):
         urls = super(IndicatorAdmin, self).get_urls()
-        name = '%s_%s_indicadores.csv'
         extra_urls = [url(r'^(?P<node_id>.+)/series-indicadores/$',
-                          indicators_csv, name=name), ]
+                          indicators_csv, name='node_series'), ]
         return extra_urls + urls
 
 
@@ -70,7 +69,7 @@ class IndicatorRedAdmin(ImportExportModelAdmin):
     def get_urls(self):
         urls = super(IndicatorRedAdmin, self).get_urls()
         extra_urls = [url(r'^series-indicadores/$', indicators_csv,
-                          name='download_time_series'), ]
+                          name='network_series'), ]
         return extra_urls + urls
 
 
@@ -85,7 +84,8 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
 
     def get_urls(self):
         urls = super(IndicatorTypeAdmin, self).get_urls()
-        extra_urls = [url(r'^(?P<model_id>.+)/(?P<direction>top|bottom)/$', self.order_move, name='order_move'), ]
+        extra_urls = [url(r'^(?P<model_id>.+)/(?P<direction>top|bottom)/$',
+                          self.order_move, name='order_move'), ]
         return extra_urls + urls
 
     def position_actions(self, obj):
@@ -139,7 +139,8 @@ class HarvestingNodeAdmin(admin.ModelAdmin):
 
     def federate(self, _, queryset):
         for harvesting_node in queryset:
-            task = models.FederationTask.objects.create(harvesting_node=harvesting_node)
+            task = models.FederationTask.objects.create(
+                harvesting_node=harvesting_node)
             federate_catalogs.delay(task)
     federate.short_description = 'Correr federacion'
 

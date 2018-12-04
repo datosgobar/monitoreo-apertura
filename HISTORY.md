@@ -1,3 +1,15 @@
+0.0.26 (4-12-18)
+-------------------
+
+* Agrega series de tiempo para indicadores de red y de nodos (`admin/indicadorred/series-indicadores` y `admin/indicador/<id de catalogo>/series-indicadores` respectivamente)
+
+
+0.0.25 (28-11-18)
+-------------------
+
+* Agrega reportes de validación para los nodos de la red
+
+
 0.0.24 (05-11-18)
 -------------------
 

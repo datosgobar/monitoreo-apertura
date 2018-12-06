@@ -237,3 +237,11 @@ Luego de guardar la instancia deberiamos tener algo como:
 
 ![Generación indicadores](./images/tarea_upkeep.png)
 
+## Series de tiempo
+
+Es posible descargar los indicadores como series de tiempo en formato `.csv`. Entrando en la ruta
+`admin/dashboard/indicadorred/series-indicadores` podemos descargar las series de los indicadores agregados; y en la ruta
+`admin/dashboard/indicador/<id de nodo>/series-indicadores` se encuentran las series para nodos particulares.
+
+Se pueden definir en el admin de tipos de indicadores cuales se desean mostrar en las series. Marcando los booleanos,
+`series red` y `series nodos` se especifican los tipos a presentar. 

@@ -56,7 +56,8 @@ class IndicatorType(OrderedModel):
     tipo = models.CharField(max_length=100)
     resumen = models.BooleanField(default=False)
     mostrar = models.BooleanField(default=True)
-    series = models.BooleanField(default=True)
+    series_red = models.BooleanField(default=True)
+    series_nodos = models.BooleanField(default=True)
 
     class Meta(OrderedModel.Meta):
         verbose_name_plural = "Tipos de indicadores"

@@ -74,13 +74,15 @@ class IndicatorRedAdmin(ImportExportModelAdmin):
 
 
 class IndicatorTypeAdmin(OrderedModelAdmin):
-    list_display = ('nombre', 'order', 'resumen', 'mostrar', 'series',
+    list_display = ('nombre', 'order', 'resumen', 'mostrar',
+                    'series_red', 'series_nodos',
                     'move_up_down_links', 'position_actions')
     list_filter = ('resumen', 'mostrar')
     actions = ('queryset_to_top', 'queryset_to_bottom',
                'summarize', 'desummarize',
                'show', 'hide',
-               'add_to_series', 'remove_from_series')
+               'add_to_aggregated_series', 'remove_from_aggregated_series',
+               'add_to_nodes_series', 'remove_from_nodes_series')
 
     def get_urls(self):
         urls = super(IndicatorTypeAdmin, self).get_urls()
@@ -120,11 +122,21 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
     hide = switch({'mostrar': False})
     hide.short_description = 'Quitar del reporte'
 
-    add_to_series = switch({'series': True})
-    add_to_series.short_description = 'Agregar a las series de tiempo'
+    add_to_aggregated_series = switch({'series_red': True})
+    add_to_aggregated_series.short_description =\
+        'Agregar a las series de tiempo de red'
 
-    remove_from_series = switch({'series': False})
-    remove_from_series.short_description = 'Quitar de las series de tiempo'
+    remove_from_aggregated_series = switch({'series_red': False})
+    remove_from_aggregated_series.short_description =\
+        'Quitar de las series de tiempo de red'
+
+    add_to_nodes_series = switch({'series_nodos': True})
+    add_to_nodes_series.short_description = \
+        'Agregar a las series de tiempo de nodos'
+
+    remove_from_nodes_series = switch({'series_nodos': False})
+    remove_from_nodes_series.short_description = \
+        'Quitar de las series de tiempo de nodos'
 
 
 class HarvestingNodeAdmin(admin.ModelAdmin):
@@ -162,8 +174,10 @@ class FederationAdmin(AbstractTaskAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "harvesting_node":
-            kwargs["queryset"] = models.HarvestingNode.objects.filter(enabled=True)
-        return super(FederationAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+            kwargs["queryset"] = \
+                models.HarvestingNode.objects.filter(enabled=True)
+        return super(FederationAdmin, self)\
+            .formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class IndicatorTaskAdmin(AbstractTaskAdmin):

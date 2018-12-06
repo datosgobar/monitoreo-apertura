@@ -94,10 +94,9 @@ def populate_table(tabla):
 
 def indicators_csv(request, node_id=None):
     if node_id:
-        model = Indicador
+        queryset = Indicador.objects.filter(indicador_tipo__series_nodos=True)
     else:
-        model = IndicadorRed
-    indicators = model.objects\
-        .filter(indicador_tipo__series=True)\
-        .numerical_indicators_by_date(node_id=node_id)
+        queryset = IndicadorRed.objects.filter(indicador_tipo__series_red=True)
+
+    indicators = queryset.numerical_indicators_by_date(node_id=node_id)
     return download_time_series(indicators, node_id=node_id)

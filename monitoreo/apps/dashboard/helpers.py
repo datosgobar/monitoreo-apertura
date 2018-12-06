@@ -102,10 +102,10 @@ def download_time_series(indicators, node_id=None):
     response = HttpResponse(content_type='text/csv')
     filename = 'series-indicadores-{}.csv'.format(node_id or 'red')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
-    return generate_time_series(indicators, response)
+    return generate_time_series(indicators, response, node_id is None)
 
 
-def generate_time_series(indicators, output):
+def generate_time_series(indicators, output, aggregated=False):
     dates = indicators.keys()
     if dates:
         min_date = min(dates)
@@ -114,9 +114,16 @@ def generate_time_series(indicators, output):
                       range(0, (max_date - min_date).days + 1)]
     else:
         date_range = []
+
+    if aggregated:
+        ind_types = IndicatorType.objects.filter(series_red=True)
+    else:
+        ind_types = IndicatorType.objects.filter(series_nodos=True)
+
+    columns = list(ind_types.values_list('nombre', flat=True))
     fieldnames = ['indice_tiempo']
-    fieldnames = fieldnames + list(IndicatorType.objects.filter(series=True)
-                                   .values_list('nombre', flat=True))
+    fieldnames = fieldnames + columns
+
     writer = csv.DictWriter(output, fieldnames, extrasaction='ignore')
     writer.writeheader()
     for date in date_range:

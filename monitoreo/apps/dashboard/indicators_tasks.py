@@ -9,8 +9,9 @@ from django_rq import job
 
 from pydatajson.core import DataJson
 
-from .models import IndicatorsGenerationTask, TableColumn, IndicatorType, Indicador, IndicadorRed
-from .helpers import load_catalogs
+from .models import IndicatorsGenerationTask, TableColumn, IndicatorType,\
+    Indicador, IndicadorFederador, IndicadorRed
+from .helpers import load_catalogs, load_federator_catalogs
 
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 CENTRAL = URL + 'datosgobar/data.json'
@@ -32,6 +33,11 @@ def generate_indicators(task):
     save_indicators(indics, task)
     save_network_indics(network_indics, 'RED', task)
 
+    federator_catalogs = load_federator_catalogs(task)
+    federator_indics, _ = data_json.generate_catalogs_indicators(
+        federator_catalogs)
+
+    save_indicators(federator_indics, task, harvesting_nodes=True)
     # Creo columnas default si no existen
     if not TableColumn.objects.count():
         init_columns()
@@ -56,10 +62,14 @@ def save_network_indics(network_indics, indic_class, task):
     IndicatorsGenerationTask.info(task, u'Calculados {} indicadores de red'.format(len(network_indics)))
 
 
-def save_indicators(indics_list, task):
+def save_indicators(indics_list, task, harvesting_nodes=False):
     """Crea modelos de Django a partir de cada indicador, y los guarda.
     Los nombres de los catálogos son leídos a partir de una lista 'names',
     con los indicadores y los nombres ordenados de la misma manera"""
+    if harvesting_nodes:
+        model = IndicadorFederador
+    else:
+        model = Indicador
 
     indic_models = 0  # Lista con todos los indicadores generados
     for indicators in indics_list:
@@ -68,24 +78,27 @@ def save_indicators(indics_list, task):
         # Itero sobre los indicadores calculados, creando modelos y
         # agregándolos a la lista 'indicators'
         for indic_name, value in indicators.items():
-
             indic_type = IndicatorType.objects.get_or_create(
                 nombre=indic_name,
                 tipo='RED')[0]
 
             try:
-                Indicador.objects.update_or_create(fecha=timezone.localtime().date(),
-                                                   jurisdiccion_nombre=catalog_name,
-                                                   jurisdiccion_id=catalog_id,
-                                                   indicador_tipo=indic_type,
-                                                   defaults={'indicador_valor': json.dumps(value)})
+                model.objects.update_or_create(
+                    fecha=timezone.localtime().date(),
+                    jurisdiccion_nombre=catalog_name,
+                    jurisdiccion_id=catalog_id,
+                    indicador_tipo=indic_type,
+                    defaults={'indicador_valor': json.dumps(value)})
+
                 indic_models += 1
             except DataError:
                 IndicatorsGenerationTask.info(task, u"Error guardando indicador: {0} - {1}: {2}"
                                               .format(catalog_name, indic_type, json.dumps(value)))
-
-    IndicatorsGenerationTask.info(task, u'Calculados {0} indicadores en {1} catálogos'
-                                  .format(indic_models, len(indics_list)))
+    msg = u'Calculados {0} indicadores en {1} catálogos'\
+        .format(indic_models, len(indics_list))
+    if harvesting_nodes:
+        msg += ' indexadores'
+    IndicatorsGenerationTask.info(task, msg)
 
 
 def init_columns():

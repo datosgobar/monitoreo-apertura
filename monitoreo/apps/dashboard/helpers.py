@@ -5,12 +5,13 @@ import datetime
 
 from six import text_type
 from pydatajson import DataJson
+from urlparse import urljoin
 
 from django.http import HttpResponse
 
 from django_datajsonar.models import Dataset, Node
 
-from .models import IndicatorsGenerationTask, IndicatorType
+from .models import IndicatorsGenerationTask, IndicatorType, HarvestingNode
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
 
@@ -48,6 +49,21 @@ def load_catalogs(task):
             continue
 
         catalog['identifier'] = node.catalog_id
+        catalogs.append(catalog)
+    return catalogs
+
+
+def load_federator_catalogs(task):
+    nodes = HarvestingNode.objects.filter(enabled=True)
+    catalogs = []
+    for node in nodes:
+        try:
+            catalog = DataJson(urljoin(node.url, 'data.json'))
+        except Exception as e:
+            msg = u'Error accediendo al catálogo {}: {}'.format(node.catalog_url, str(e))
+            IndicatorsGenerationTask.info(task, msg)
+            continue
+        catalog['identifier'] = node.name
         catalogs.append(catalog)
     return catalogs
 

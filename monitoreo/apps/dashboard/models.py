@@ -69,10 +69,9 @@ class IndicatorType(OrderedModel):
         return self.__unicode__().encode('utf-8')
 
 
-class Indicador(models.Model):
+class AbstractIndicator(models.Model):
     class Meta:
-        # Nombre en plural para el admin panel de Django
-        verbose_name_plural = "Indicadores"
+        abstract = True
 
     fecha = models.DateField(auto_now_add=True)
     jurisdiccion_nombre = models.CharField(max_length=300)
@@ -81,6 +80,27 @@ class Indicador(models.Model):
     indicador_valor = models.TextField()
 
     objects = IndicatorQuerySet.as_manager()
+
+
+class Indicador(AbstractIndicator):
+    class Meta:
+        # Nombre en plural para el admin panel de Django
+        verbose_name_plural = "Indicadores"
+
+    def __unicode__(self):
+        string = 'Indicador "{0}" de {1}, {2}'
+        return string.format(self.indicador_tipo.nombre,
+                             self.jurisdiccion_nombre,
+                             self.fecha)
+
+    def __str__(self):
+        return self.__unicode__().encode('utf-8')
+
+
+class IndicadorFederador(AbstractIndicator):
+    class Meta:
+        # Nombre en plural para el admin panel de Django
+        verbose_name_plural = "Indicadores nodos federadores"
 
     def __unicode__(self):
         string = 'Indicador "{0}" de {1}, {2}'

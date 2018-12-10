@@ -39,7 +39,7 @@ class IndicatorResource(resources.ModelResource):
             'jurisdiccion_id',
             'jurisdiccion_nombre',
             'indicador_valor',
-            'indicador_id'
+            'indicador_tipo'
         )
 
 
@@ -65,7 +65,7 @@ class IndexingIndicatorResource(resources.ModelResource):
             'jurisdiccion_id',
             'jurisdiccion_nombre',
             'indicador_valor',
-            'indicador_id'
+            'indicador_tipo'
         )
 
 

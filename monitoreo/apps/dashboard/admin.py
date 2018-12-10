@@ -34,10 +34,12 @@ class IndicatorResource(resources.ModelResource):
     class Meta:
         model = models.Indicador
         fields = export_order = (
+            'id',
             'fecha',
+            'jurisdiccion_id',
             'jurisdiccion_nombre',
-            'indicador_tipo__nombre',
-            'indicador_valor'
+            'indicador_valor',
+            'indicador_tipo'
         )
 
 
@@ -57,9 +59,10 @@ class IndicadorRedResource(resources.ModelResource):
     class Meta:
         model = models.IndicadorRed
         fields = export_order = (
+            'id',
             'fecha',
-            'indicador_tipo__nombre',
-            'indicador_valor'
+            'indicador_valor',
+            'indicador_tipo'
         )
 
 

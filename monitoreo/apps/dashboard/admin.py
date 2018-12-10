@@ -34,10 +34,12 @@ class IndicatorResource(resources.ModelResource):
     class Meta:
         model = models.Indicador
         fields = export_order = (
+            'id',
             'fecha',
+            'jurisdiccion_id',
             'jurisdiccion_nombre',
-            'indicador_tipo__nombre',
-            'indicador_valor'
+            'indicador_valor',
+            'indicador_id'
         )
 
 
@@ -53,13 +55,41 @@ class IndicatorAdmin(ImportExportModelAdmin):
         return extra_urls + urls
 
 
+class IndexingIndicatorResource(resources.ModelResource):
+
+    class Meta:
+        model = models.IndicadorFederador
+        fields = export_order = (
+            'id',
+            'fecha',
+            'jurisdiccion_id',
+            'jurisdiccion_nombre',
+            'indicador_valor',
+            'indicador_id'
+        )
+
+
+class IndexingIndicatorAdmin(ImportExportModelAdmin):
+    list_filter = ('jurisdiccion_id',)
+
+    resource_class = IndexingIndicatorResource
+
+    def get_urls(self):
+        urls = super(IndexingIndicatorAdmin, self).get_urls()
+        extra_urls = [url(r'^(?P<node_id>.+)/series-indicadores/$',
+                          indicators_csv, name='node_series',
+                          kwargs={'indexing': True}), ]
+        return extra_urls + urls
+
+
 class IndicadorRedResource(resources.ModelResource):
     class Meta:
         model = models.IndicadorRed
         fields = export_order = (
+            'id',
             'fecha',
-            'indicador_tipo__nombre',
-            'indicador_valor'
+            'indicador_valor',
+            'indicador_tipo'
         )
 
 
@@ -82,7 +112,8 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
                'summarize', 'desummarize',
                'show', 'hide',
                'add_to_aggregated_series', 'remove_from_aggregated_series',
-               'add_to_nodes_series', 'remove_from_nodes_series')
+               'add_to_nodes_series', 'remove_from_nodes_series',
+               'add_to_indexing_series', 'remove_from_indexing_series')
 
     def get_urls(self):
         urls = super(IndicatorTypeAdmin, self).get_urls()
@@ -137,6 +168,14 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
     remove_from_nodes_series = switch({'series_nodos': False})
     remove_from_nodes_series.short_description = \
         'Quitar de las series de tiempo de nodos'
+
+    add_to_indexing_series = switch({'series_indexadores': True})
+    add_to_indexing_series.short_description = \
+        'Agregar a las series de tiempo de nodos indexadores'
+
+    remove_from_indexing_series = switch({'series_indexadores': False})
+    remove_from_indexing_series.short_description = \
+        'Quitar de las series de tiempo de nodos indexadores'
 
 
 class HarvestingNodeAdmin(admin.ModelAdmin):
@@ -213,7 +252,7 @@ admin.site.register(models.FederationTask, FederationAdmin)
 admin.site.register(models.IndicatorsGenerationTask, IndicatorTaskAdmin)
 admin.site.register(models.HarvestingNode, HarvestingNodeAdmin)
 admin.site.register(models.Indicador, IndicatorAdmin)
-admin.site.register(models.IndicadorFederador, IndicatorAdmin)
+admin.site.register(models.IndicadorFederador, IndexingIndicatorAdmin)
 admin.site.register(models.IndicadorRed, IndicatorRedAdmin)
 admin.site.register(models.IndicatorType, IndicatorTypeAdmin)
 admin.site.register(models.TableColumn, TableColumnAdmin)

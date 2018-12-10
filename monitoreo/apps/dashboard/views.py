@@ -1,7 +1,7 @@
 # coding=utf-8
 from datetime import date, timedelta
 from django.shortcuts import render
-from .models import Indicador, IndicadorRed, TableColumn
+from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
 from .helpers import fetch_latest_indicadors, download_time_series
 
 
@@ -92,11 +92,16 @@ def populate_table(tabla):
     return context
 
 
-def indicators_csv(request, node_id=None):
-    if node_id:
-        queryset = Indicador.objects.filter(indicador_tipo__series_nodos=True)
+def indicators_csv(request, node_id=None, indexing=False):
+    if node_id is None:
+        queryset = IndicadorRed.objects.\
+            filter(indicador_tipo__series_red=True)
+    elif indexing:
+        queryset = IndicadorFederador.objects.\
+            filter(indicador_tipo__series_indexadores=True)
     else:
-        queryset = IndicadorRed.objects.filter(indicador_tipo__series_red=True)
+        queryset = Indicador.objects.\
+            filter(indicador_tipo__series_nodos=True)
 
     indicators = queryset.numerical_indicators_by_date(node_id=node_id)
     return download_time_series(indicators, node_id=node_id)

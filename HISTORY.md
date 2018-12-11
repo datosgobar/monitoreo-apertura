@@ -1,3 +1,9 @@
+0.0.27 (11-12-18)
+-------------------
+
+* Agrega management command para importar indicadores de un csv.
+
+
 0.0.26 (4-12-18)
 -------------------
 

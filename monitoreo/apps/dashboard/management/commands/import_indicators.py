@@ -2,8 +2,8 @@ from __future__ import unicode_literals
 
 import argparse
 
-from tablib import Dataset
 from contextlib import contextmanager
+from tablib import Dataset
 from import_export.resources import modelresource_factory
 
 from django.core.management.base import BaseCommand

@@ -11,8 +11,11 @@ from monitoreo.apps.dashboard.models import IndicadorRed, Indicador
 
 
 class Command(BaseCommand):
-    help = """Toma el path a un csv de la forma (forma) y crea o actualiza los
-    indicadores"""
+    help = """Toma el path a un csv de la forma
+    [id, fecha, indicador_valor, indicador_tipo] para indicadores de red y
+    [id, fecha, jurisdiccion_id, jurisdiccion_nombre, indicador_valor,
+    indicador_tipo] para indicadores de nodos. Con esos datos crea o actualiza
+    los rows de la base de datos correspondientes."""
 
     def add_arguments(self, parser):
         parser.add_argument('file', type=argparse.FileType('rw'))

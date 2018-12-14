@@ -8,10 +8,11 @@ from django.db.utils import DataError
 from django_rq import job
 
 from pydatajson.core import DataJson
+from django_datajsonar.models import Node
 
 from .models import IndicatorsGenerationTask, TableColumn, IndicatorType,\
-    Indicador, IndicadorFederador, IndicadorRed
-from .helpers import load_catalogs, load_federator_catalogs
+    Indicador, IndicadorFederador, IndicadorRed, HarvestingNode
+from .helpers import load_catalogs
 
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 CENTRAL = URL + 'datosgobar/data.json'
@@ -25,7 +26,7 @@ def indicators_run():
 @job('indicators')
 def generate_indicators(task):
     data_json = DataJson()
-    catalogs = load_catalogs(task)
+    catalogs = load_catalogs(task, Node.objects.filter(indexable=True))
     indics, network_indics = data_json.generate_catalogs_indicators(
         catalogs,
         CENTRAL)
@@ -33,7 +34,8 @@ def generate_indicators(task):
     save_indicators(indics, task)
     save_network_indics(network_indics, 'RED', task)
 
-    federator_catalogs = load_federator_catalogs(task)
+    federator_catalogs = load_catalogs(
+        task, HarvestingNode.objects.filter(enabled=True), harvesting=True)
     federator_indics, _ = data_json.generate_catalogs_indicators(
         federator_catalogs)
 

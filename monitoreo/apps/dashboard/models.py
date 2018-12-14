@@ -168,6 +168,7 @@ class HarvestingNode(models.Model):
     def __str__(self):
         return self.__unicode__()
 
+    catalog_id = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100)
     url = models.URLField(help_text='URL del nodo federador ej: http://datos.gob.ar')
     apikey = models.CharField(max_length=50)

@@ -9,9 +9,9 @@ from urlparse import urljoin
 
 from django.http import HttpResponse
 
-from django_datajsonar.models import Dataset, Node
+from django_datajsonar.models import Dataset
 
-from .models import IndicatorsGenerationTask, IndicatorType, HarvestingNode
+from .models import IndicatorsGenerationTask, IndicatorType
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
 
@@ -37,33 +37,19 @@ def fetch_latest_indicadors(indicators):
     return latest
 
 
-def load_catalogs(task):
-    nodes = Node.objects.filter(indexable=True)
+def load_catalogs(task, nodes, harvesting=False):
     catalogs = []
     for node in nodes:
         try:
-            catalog = DataJson(node.catalog_url)
+            url = urljoin(node.url, 'data.json') \
+                if harvesting else node.catalog_url
+            catalog = DataJson(url)
         except Exception as e:
             msg = u'Error accediendo al catálogo {}: {}'.format(node.catalog_id, str(e))
             IndicatorsGenerationTask.info(task, msg)
             continue
 
         catalog['identifier'] = node.catalog_id
-        catalogs.append(catalog)
-    return catalogs
-
-
-def load_federator_catalogs(task):
-    nodes = HarvestingNode.objects.filter(enabled=True)
-    catalogs = []
-    for node in nodes:
-        try:
-            catalog = DataJson(urljoin(node.url, 'data.json'))
-        except Exception as e:
-            msg = u'Error accediendo al catálogo {}: {}'.format(node.catalog_url, str(e))
-            IndicatorsGenerationTask.info(task, msg)
-            continue
-        catalog['identifier'] = node.name
         catalogs.append(catalog)
     return catalogs
 

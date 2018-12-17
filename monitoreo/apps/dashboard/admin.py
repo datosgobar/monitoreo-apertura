@@ -77,7 +77,7 @@ class IndexingIndicatorAdmin(ImportExportModelAdmin):
     def get_urls(self):
         urls = super(IndexingIndicatorAdmin, self).get_urls()
         extra_urls = [url(r'^(?P<node_id>.+)/series-indicadores/$',
-                          indicators_csv, name='node_series',
+                          indicators_csv, name='indexing_series',
                           kwargs={'indexing': True}), ]
         return extra_urls + urls
 

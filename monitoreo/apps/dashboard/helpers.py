@@ -3,9 +3,9 @@ import json
 import csv
 import datetime
 
+from urlparse import urljoin
 from six import text_type
 from pydatajson import DataJson
-from urlparse import urljoin
 
 from django.http import HttpResponse
 

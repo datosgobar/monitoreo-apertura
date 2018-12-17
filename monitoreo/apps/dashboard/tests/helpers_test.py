@@ -3,7 +3,7 @@ import os
 import json
 from datetime import date, timedelta
 from django.test import TestCase
-from django_datajsonar.models import Node
+from django_datajsonar.models import Node, ReadDataJsonTask
 from monitoreo.apps.dashboard.models import Indicador, IndicatorType
 from monitoreo.apps.dashboard.helpers import fetch_latest_indicadors, \
     load_catalogs
@@ -58,15 +58,13 @@ class LoadCatalogsTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        url = 'https://raw.githubusercontent.com/datosgobar/libreria' \
-              '-catalogos/master/'
         cls.node = Node(catalog_id=cls.catalog_id,
                         catalog_url=os.path.join(dir_path, 'full_data.json'),
                         indexable=True)
         cls.node.catalog = json.dumps(DataJson(cls.node.catalog_url))
         cls.node.save()
-
-        cls.catalogs = load_catalogs(url)
+        task = ReadDataJsonTask.objects.create()
+        cls.catalogs = load_catalogs(task, Node.objects.all())
 
     def test_method_returns_non_empty_list(self):
         self.assertTrue(self.catalogs, 'Lista no vacía')

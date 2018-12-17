@@ -8,7 +8,8 @@ from django.utils.timezone import localdate
 
 from django_datajsonar.models import Node
 
-from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, IndicatorType
+from monitoreo.apps.dashboard.models import Indicador, IndicadorRed,\
+    IndicatorType, IndicadorFederador
 
 
 class ViewsTest(TestCase):
@@ -38,12 +39,6 @@ class ViewsTest(TestCase):
                   '100', '1']
         self._create_indicators(types, values)
 
-        values = ['23', '[["d1", "l1"]]', '{"k2": 1}', '500', '2']
-        self._create_indicators(types, values, node_id='id1', node_name='nodo1')
-
-        values = ['19', '[["d2", "l2"]]', '{"k1": 1, "k2": 1}', '50', '2']
-        self._create_indicators(types, values, node_id='id2', node_name='nodo2')
-
         # Necesario para agregar los indicadores con fecha distinta a la de hoy
         values = ['23', '[["d1", "l1"]]', '{"k1":1, "k2": 2, "k3": 10}',
                   '50', '0']
@@ -53,16 +48,31 @@ class ViewsTest(TestCase):
         IndicadorRed.objects.filter(id__in=old_ids).update(
             fecha=self.past_date)
 
-    def _create_indicators(self, ind_type, values, node_id=None, node_name=''):
+        values = ['23', '[["d1", "l1"]]', '{"k2": 1}', '500', '2']
+        self._create_indicators(types, values, node_id='id1', node_name='nodo1')
+
+        values = ['19', '[["d2", "l2"]]', '{"k1": 1, "k2": 1}', '50', '2']
+        self._create_indicators(types, values, node_id='id2', node_name='nodo2')
+
+        values = ['21', '[["d1", "l1"]]', '{"k2": 1}', '200', '4']
+        self._create_indicators(types, values, node_id='idx1',
+                                node_name='index1', harvesting=True)
+
+    def _create_indicators(self, ind_type, values,
+                           node_id=None, node_name='', harvesting=False):
         res = []
         for ind_type, value in zip(ind_type, values):
-            if node_id and node_name:
-                created = Indicador.objects.create(
+            if node_id is None:
+                created = IndicadorRed.objects.create(
+                    indicador_tipo=ind_type, indicador_valor=value)
+            elif harvesting:
+                created = IndicadorFederador.objects.create(
                     indicador_tipo=ind_type, indicador_valor=value,
                     jurisdiccion_id=node_id, jurisdiccion_nombre=node_name)
             else:
-                created = IndicadorRed.objects.create(
-                    indicador_tipo=ind_type, indicador_valor=value)
+                created = Indicador.objects.create(
+                    indicador_tipo=ind_type, indicador_valor=value,
+                    jurisdiccion_id=node_id, jurisdiccion_nombre=node_name)
             res.append(created.id)
 
         return res
@@ -135,5 +145,19 @@ class ViewsTest(TestCase):
                         'ind_a': '23',
                         'ind_d': '500',
                         'ind_e': '2'}
+        row = next(series_csv, None)
+        self.assertDictEqual(expected_row, row)
+
+    def test_indexing_series(self):
+        node_response = Client().get(reverse('admin:indexing_series',
+                                             kwargs={'node_id': 'idx1'}))
+        series = node_response.content.splitlines()
+        self.assertEqual(2, len(series))
+        series_csv = csv.DictReader(series)
+        today = self._format_previous_dates(0)
+        expected_row = {'indice_tiempo': today,
+                        'ind_a': '21',
+                        'ind_d': '200',
+                        'ind_e': '4'}
         row = next(series_csv, None)
         self.assertDictEqual(expected_row, row)

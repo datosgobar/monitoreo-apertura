@@ -74,7 +74,8 @@ def save_indicators(indics_list, task, harvesting_nodes=False):
         model = Indicador
 
     indic_models = 0  # Lista con todos los indicadores generados
-    for indicators in indics_list:
+    for indics in indics_list:
+        indicators = indics.copy()
         catalog_name = indicators.pop('title')
         catalog_id = indicators.pop('identifier')
         # Itero sobre los indicadores calculados, creando modelos y

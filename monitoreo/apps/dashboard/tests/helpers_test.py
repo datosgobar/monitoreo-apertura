@@ -3,8 +3,9 @@ import os
 import json
 from datetime import date, timedelta
 from django.test import TestCase
-from django_datajsonar.models import Node, ReadDataJsonTask
-from monitoreo.apps.dashboard.models import Indicador, IndicatorType
+from django_datajsonar.models import Node
+from monitoreo.apps.dashboard.models import Indicador, IndicatorType, \
+    IndicatorsGenerationTask
 from monitoreo.apps.dashboard.helpers import fetch_latest_indicadors, \
     load_catalogs
 from pydatajson import DataJson
@@ -63,7 +64,7 @@ class LoadCatalogsTest(TestCase):
                         indexable=True)
         cls.node.catalog = json.dumps(DataJson(cls.node.catalog_url))
         cls.node.save()
-        task = ReadDataJsonTask.objects.create()
+        task = IndicatorsGenerationTask.objects.create()
         cls.catalogs = load_catalogs(task, Node.objects.all())
 
     def test_method_returns_non_empty_list(self):

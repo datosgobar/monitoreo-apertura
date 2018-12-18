@@ -8,7 +8,8 @@ from django.utils.timezone import now
 from django.utils.dateparse import parse_datetime
 from django.core.management import call_command
 
-from monitoreo.apps.dashboard.models import IndicatorType, TableColumn, IndicadorRed, Indicador
+from monitoreo.apps.dashboard.models import IndicatorType, TableColumn,\
+    IndicadorRed, Indicador, IndicadorFederador
 
 try:
     from mock import patch
@@ -39,34 +40,50 @@ class ModelsTest(TestCase):
 
         # Indicadores agregados
         values = ['42', '[["d1", "l1"], ["d2", "l2"]]', '{"k3":3, "k2": 1, "k1": 2}']
-        for ind_type, value in zip(types, values):
-            IndicadorRed.objects.create(indicador_tipo=ind_type, indicador_valor=value)
+        cls._create_indicators(types, values)
 
         values = ['23', '[["d1", "l1"]]', '{"k1":1, "k2": 2, "k3": 10}']
-        old_ids = []
-        for ind_type, value in zip(types, values):
-            old = IndicadorRed.objects.create(indicador_tipo=ind_type, indicador_valor=value)
-            old_ids.append(old.id)
+        old_ids = cls._create_indicators(types, values)
         # Necesario para agregar los indicadores con fecha distinta a la de hoy
         cls.past_date = parse_datetime('2000-01-01 12:00:00Z')
         IndicadorRed.objects.filter(id__in=old_ids).update(fecha=cls.past_date)
 
         # Indicadores
         values = ['22', '["d1", "l1"]', '{"k3":2, "k1": 2}']
-        for ind_type, value in zip(types, values):
-            Indicador.objects.create(indicador_tipo=ind_type, indicador_valor=value,
-                                     jurisdiccion_nombre='catalogo_de_test_1',
-                                     jurisdiccion_id='test_1')
+        cls._create_indicators(types, values, node_name='catalogo_de_test_1',
+                               node_id='test_1')
 
         values = ['20', '["d2", "l2"]', '{"k3":1, "k2": 1}']
-        for ind_type, value in zip(types, values):
-            Indicador.objects.create(indicador_tipo=ind_type, indicador_valor=value,
-                                     jurisdiccion_nombre='catalogo_de_test_2',
-                                     jurisdiccion_id='test_2')
+        cls._create_indicators(types, values, node_name='catalogo_de_test_2',
+                               node_id='test_2')
 
         Indicador.objects.create(indicador_tipo=type_a, indicador_valor='00',
                                  jurisdiccion_nombre='catalogo_de_test_2',
                                  jurisdiccion_id=None)
+
+        values = ['20', '["d2", "l2"]', '{"k3":1, "k2": 1}']
+        cls._create_indicators(types, values, node_name='catalogo_federador',
+                               node_id='test_3', harvesting=True)
+
+    @classmethod
+    def _create_indicators(self, ind_type, values,
+                           node_id=None, node_name='', harvesting=False):
+        res = []
+        for ind_type, value in zip(ind_type, values):
+            if node_id is None:
+                created = IndicadorRed.objects.create(
+                    indicador_tipo=ind_type, indicador_valor=value)
+            elif harvesting:
+                created = IndicadorFederador.objects.create(
+                    indicador_tipo=ind_type, indicador_valor=value,
+                    jurisdiccion_id=node_id, jurisdiccion_nombre=node_name)
+            else:
+                created = Indicador.objects.create(
+                    indicador_tipo=ind_type, indicador_valor=value,
+                    jurisdiccion_id=node_id, jurisdiccion_nombre=node_name)
+            res.append(created.id)
+
+        return res
 
     def test_indicators_created(self):
         with self.settings(INDICATORS_INFO=self.indicators_info):
@@ -106,10 +123,16 @@ class ModelsTest(TestCase):
         network_indics = IndicadorRed.objects.numerical_indicators_by_date()
         self.assertDictEqual(expected_network_indics, network_indics)
 
-    def test_get_node_network_indicators(self):
+    def test_get_numerical_node_indicators(self):
         expected_node_indics = {now().date(): {'ind_a': 22}}
         node_indics = Indicador.objects.numerical_indicators_by_date(
             node_id='test_1')
+        self.assertDictEqual(expected_node_indics, node_indics)
+
+    def test_get_numerical_indexing_indicators(self):
+        expected_node_indics = {now().date(): {'ind_a': 20}}
+        node_indics = IndicadorFederador.objects.numerical_indicators_by_date(
+            node_id='test_3')
         self.assertDictEqual(expected_node_indics, node_indics)
 
     def test_remove_duplicated_indicators(self):

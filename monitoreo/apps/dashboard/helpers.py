@@ -3,12 +3,13 @@ import json
 import csv
 import datetime
 
+from urlparse import urljoin
 from six import text_type
 from pydatajson import DataJson
 
 from django.http import HttpResponse
 
-from django_datajsonar.models import Dataset, Node
+from django_datajsonar.models import Dataset
 
 from .models import IndicatorsGenerationTask, IndicatorType
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
@@ -36,12 +37,13 @@ def fetch_latest_indicadors(indicators):
     return latest
 
 
-def load_catalogs(task):
-    nodes = Node.objects.filter(indexable=True)
+def load_catalogs(task, nodes, harvesting=False):
     catalogs = []
     for node in nodes:
         try:
-            catalog = DataJson(node.catalog_url)
+            url = urljoin(node.url, 'data.json') \
+                if harvesting else node.catalog_url
+            catalog = DataJson(url)
         except Exception as e:
             msg = u'Error accediendo al catálogo {}: {}'.format(node.catalog_id, str(e))
             IndicatorsGenerationTask.info(task, msg)

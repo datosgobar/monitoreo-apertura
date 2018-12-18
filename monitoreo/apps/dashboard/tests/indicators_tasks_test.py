@@ -13,8 +13,8 @@ from django.utils import timezone
 
 from pydatajson import DataJson
 
-from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, Indicador, IndicadorRed,\
-    TableColumn, IndicatorType
+from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, Indicador,\
+    IndicadorRed, TableColumn, IndicatorType, IndicadorFederador
 from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
 
 
@@ -60,6 +60,8 @@ class IndicatorGenerationsTest(TestCase):
         self.assertEqual(3, IndicadorRed.objects.count())
         self.assertEqual(3, Indicador.objects.filter(jurisdiccion_nombre=self.catalogs[0]['title']).count())
         self.assertEqual(3, Indicador.objects.filter(jurisdiccion_nombre=self.catalogs[1]['title']).count())
+        self.assertEqual(3, IndicadorFederador.objects.filter(jurisdiccion_nombre=self.catalogs[0]['title']).count())
+        self.assertEqual(3, IndicadorFederador.objects.filter(jurisdiccion_nombre=self.catalogs[1]['title']).count())
 
     def test_default_columns_are_created(self, mock_indic, mock_load):
         mock_load.return_value = self.catalogs

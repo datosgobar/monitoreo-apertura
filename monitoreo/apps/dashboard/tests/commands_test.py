@@ -4,7 +4,8 @@ import os
 from django.test import TestCase
 from django.core.management import call_command
 from django.conf import settings
-from django_datajsonar.models import Node, ReadDataJsonTask
+from mock import patch
+from django_datajsonar.models import Node
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, TableColumn, IndicatorsGenerationTask, HarvestingNode
 from monitoreo.apps.dashboard.helpers import load_catalogs
 from pydatajson import DataJson
@@ -44,12 +45,16 @@ class CommandTest(TestCase):
         # Quiero que los cargue por el path, no como url. Uso harvesting=False
         cls.indexing_catalogs = load_catalogs(task,
                                               HarvestingNode.objects.all())
+        central = DataJson(cls.get_sample('full_data.json'))
         cls.indicators, cls.network_indicators = \
-            DataJson().generate_catalogs_indicators(cls.catalogs)
+            DataJson().generate_catalogs_indicators(cls.catalogs,
+                                                    central_catalog=central)
         cls.indexing_indicators, _ = \
             DataJson().generate_catalogs_indicators(cls.indexing_catalogs)
         cls.dj = DataJson()
-        call_command('indicadores')
+        with patch('monitoreo.apps.dashboard.indicators_tasks.CENTRAL',
+                   cls.get_sample('full_data.json')):
+            call_command('indicadores')
 
     def test_indicators_created(self):
         self.assertTrue(Indicador.objects.all())

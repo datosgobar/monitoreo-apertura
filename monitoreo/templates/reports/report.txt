@@ -1,5 +1,7 @@
 Horario de finalización: {{ finish_time }}
-
+{% if logs %}
+{{ logs }}
+{% endif %}
 Resumen:
 
 {% if one_d_summary %}

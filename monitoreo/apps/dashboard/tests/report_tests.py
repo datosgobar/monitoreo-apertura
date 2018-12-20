@@ -94,8 +94,10 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_mail_header(self):
         header, _, _ = filter(None, re.split(r'Resumen:|Detalle:', self.mail.body))
-        finish_time = timezone.localtime(self.indicators_task.finished).strftime('%Y-%m-%d %H:%M:%S')
-        expected_header = 'Horario de finalización: {}\n\n'.format(finish_time)
+        finish_time = timezone.localtime(self.indicators_task.finished)\
+            .strftime('%Y-%m-%d %H:%M:%S')
+        expected_header = 'Horario de finalización: {}\n\ntest task logs\n\n'\
+            .format(finish_time)
         self.assertEqual(expected_header, header)
 
     def test_mail_summary(self):
@@ -135,6 +137,13 @@ class IndicatorReportGenerationTest(TestCase):
         self.assertTrue(1, len(sent_mail.attachments))
         self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv') in
                         sent_mail.attachments)
+
+    def test_task_log(self):
+        self.indicators_report_generator.send_email(self.indicators_report_generator.generate_email(node=self.node2), node=self.node2)
+        staff_mail = mail.outbox[0]
+        node_mail = mail.outbox[1]
+        self.assertTrue('test task logs' in staff_mail.body)
+        self.assertFalse('test task logs' in node_mail.body)
 
     def test_task_is_closed(self):
         self.indicators_report_generator.close_task()

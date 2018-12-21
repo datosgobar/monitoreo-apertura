@@ -1,3 +1,12 @@
+0.0.28 (21-12-18)
+-------------------
+
+* Nuevos modelo indicadores federadores.
+* Series sobre los indicadores de los nodos federadores.
+* Agrega logs del task de indicadores al reporte de staff.
+* Actualiza versión de pydatajson.
+
+
 0.0.27 (11-12-18)
 -------------------
 

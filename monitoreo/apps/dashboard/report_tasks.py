@@ -130,6 +130,9 @@ class IndicatorReportGenerator(AbstractReportGenerator):
         context['one_dimensional_indics'], context['multi_dimensional_indics'], context['listed'] = \
             self._get_current_indicators(queryset, node=node)
 
+        if not node:
+            context['logs'] = self.indicators_task.logs
+
         start_time = self._format_date(self.indicators_task.created)
         subject = u'[{}] Indicadores Monitoreo Apertura: {}'.format(settings.ENV_TYPE, start_time)
         mail = self._render_templates(subject, context)

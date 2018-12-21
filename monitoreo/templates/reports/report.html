@@ -2,6 +2,9 @@
 <html lang="en">
 <body>
     <p>Horario de finalización: {{ finish_time }}</p>
+    {% if logs %}
+    <p>{{ logs|linebreaks }}</p>
+    {% endif %}
     <h4>Resumen</h4>
     {% if  one_d_summary %}
     <p>Resumen indicadores numéricos de {{ target }}:</p>

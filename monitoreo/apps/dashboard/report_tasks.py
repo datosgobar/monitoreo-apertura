@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+from os.path import join
 from smtplib import SMTPException
 from tempfile import NamedTemporaryFile
 
@@ -14,6 +15,7 @@ from django.utils import timezone
 from django_rq import job
 
 from pydatajson.core import DataJson
+from pydatajson.custom_exceptions import NonParseableCatalog
 from django_datajsonar.models import Node
 
 from . import models
@@ -49,11 +51,10 @@ def send_validations(validation_task=None):
     for node in nodes:
         try:
             mail = generator.generate_email(node=node)
-            if mail:
-                generator.send_email(mail, node=node)
-        except (ValueError, RequestException) as e:
-            msg = 'Error enviando la validación de {}: {}'.format(node.catalog_id, str(e))
-            models.ValidationReportTask.info(validation_task, msg)
+        except (NonParseableCatalog, RequestException) as e:
+            mail = generator.generate_error_mail(node, str(e))
+
+        generator.send_email(mail, node=node)
     generator.close_task()
 
 
@@ -162,8 +163,8 @@ class IndicatorReportGenerator(AbstractReportGenerator):
 
 
 class ValidationReportGenerator(AbstractReportGenerator):
-    TXT_TEMPLATE = 'reports/validation.txt'
-    HTML_TEMPLATE = 'reports/validation.html'
+    TXT_TEMPLATE = 'validation.txt'
+    HTML_TEMPLATE = 'validation.html'
 
     def __init__(self, report_task):
         self.report_task = report_task
@@ -187,7 +188,7 @@ class ValidationReportGenerator(AbstractReportGenerator):
             'dataset_list': validation['error']['dataset']
         }
 
-        subject = u'[{}] Validacion de catalogo {}: {}'.format(
+        subject = u'[{}] Validacion de catálogo {}: {}'.format(
             settings.ENV_TYPE, node.catalog_id, validation_time)
         mail = self._render_templates(subject, context)
 
@@ -198,9 +199,24 @@ class ValidationReportGenerator(AbstractReportGenerator):
 
         return mail
 
-    def _render_templates(self, subject, context):
-        msg = render_to_string(self.TXT_TEMPLATE, context=context)
-        html_msg = render_to_string(self.HTML_TEMPLATE, context=context)
+    def generate_error_mail(self, node, error):
+        context = {'error': error}
+        validation_time = self._format_date(timezone.now())
+        subject = u'[{}] Error validando catálogo {}: {}'.format(
+            settings.ENV_TYPE, node.catalog_id, validation_time)
+        mail = self._render_templates(subject, context, error=True)
+        return mail
+
+    def _render_templates(self, subject, context, error=False):
+        base_dir = 'errors' if error else 'reports'
+        txt_template = join(base_dir, self.TXT_TEMPLATE)
+        html_template = join(base_dir, self.HTML_TEMPLATE)
+        msg = render_to_string(txt_template, context=context)
+        html_msg = render_to_string(html_template, context=context)
         mail = EmailMultiAlternatives(subject, msg, settings.EMAIL_HOST_USER)
         mail.attach_alternative(html_msg, 'text/html')
         return mail
+
+    def send_email(self, mail, node=None):
+        if mail is not None:
+            super(ValidationReportGenerator, self).send_email(mail, node=node)

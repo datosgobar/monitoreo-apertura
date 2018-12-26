@@ -1,0 +1,2 @@
+Ocurrió un error intentando acceder al catálogo:
+{{ error }}

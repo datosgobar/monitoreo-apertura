@@ -46,7 +46,7 @@ def send_reports(report_task=None):
 @job('reports')
 def send_validations(validation_task=None):
     validation_task = validation_task or \
-                      models.ValidationReportTask.objects.create()
+        models.ValidationReportTask.objects.create()
     generator = ValidationReportGenerator(validation_task)
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
@@ -88,21 +88,21 @@ class TemplateRenderer(object):
 
     def __init__(self, template_dir, txt_template, html_template,
                  error_dir=None):
-        self.TXT_TEMPLATE = os.path.join(template_dir, txt_template)
-        self.HTML_TEMPLATE = os.path.join(template_dir, html_template)
+        self.txt_template = os.path.join(template_dir, txt_template)
+        self.html_template = os.path.join(template_dir, html_template)
         if error_dir:
-            self.ERROR_TXT_TEMPLATE = os.path.join(error_dir, txt_template)
-            self.ERROR_HTML_TEMPLATE = os.path.join(error_dir, html_template)
+            self.error_txt_template = os.path.join(error_dir, txt_template)
+            self.error_html_template = os.path.join(error_dir, html_template)
         else:
-            self.ERROR_TXT_TEMPLATE = self.ERROR_HTML_TEMPLATE = None
+            self.error_txt_template = self.error_html_template = None
 
     def render_templates(self, context):
-        return self._render(self.TXT_TEMPLATE, self.HTML_TEMPLATE, context)
+        return self._render(self.txt_template, self.html_template, context)
 
     def render_error_templates(self, context):
-        assert self.ERROR_TXT_TEMPLATE is not None
-        assert self.ERROR_HTML_TEMPLATE is not None
-        return self._render(self.ERROR_HTML_TEMPLATE, self.ERROR_TXT_TEMPLATE,
+        assert self.error_txt_template is not None
+        assert self.error_html_template is not None
+        return self._render(self.error_html_template, self.error_txt_template,
                             context)
 
     def _render(self, txt_template, html_template, context):

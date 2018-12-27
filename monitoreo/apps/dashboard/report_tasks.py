@@ -148,14 +148,14 @@ class IndicatorReportGenerator(AbstractReportGenerator):
 
     def __init__(self, indicators_task, report_task):
         self.indicators_task = indicators_task
-        renderer = EmailRenderer('reports', 'indicators.txt',
-                                    'indicators.html')
+        renderer = EmailRenderer('reports', 'indicators.txt', 'indicators.html')
         super(IndicatorReportGenerator, self).__init__(report_task, renderer)
 
     def generate_email(self, node=None):
-        """Genera y manda el mail con el reporte de indexación. Si node es especificado, genera el reporte
-        con valores de entidades pertenecientes únicamente a ese nodo (reporte individual). Caso contrario
-        (default), genera el reporte de indexación global
+        """Genera y manda el mail con el reporte de indexación. Si node es
+        especificado, genera el reporte con valores de entidades pertenecientes
+        únicamente a ese nodo (reporte individual). Caso contrario (default),
+        genera el reporte de indexación global
         """
 
         context = {
@@ -201,8 +201,8 @@ class IndicatorReportGenerator(AbstractReportGenerator):
 class ValidationReportGenerator(AbstractReportGenerator):
     def __init__(self, report_task):
         self.report_task = report_task
-        renderer = EmailRenderer('reports', 'validation.txt',
-                                    'validation.html', error_dir='errors')
+        renderer = EmailRenderer('reports', 'validation.txt', 'validation.html',
+                                 error_dir='errors')
         super(ValidationReportGenerator, self).__init__(report_task, renderer)
 
     def generate_email(self, node=None):

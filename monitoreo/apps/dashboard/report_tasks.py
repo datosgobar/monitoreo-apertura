@@ -84,7 +84,7 @@ class ReportSender(object):
         self.report_task.info(self.report_task, msg)
 
 
-class TemplateRenderer(object):
+class EmailRenderer(object):
 
     def __init__(self, template_dir, txt_template, html_template,
                  error_dir=None):
@@ -148,7 +148,7 @@ class IndicatorReportGenerator(AbstractReportGenerator):
 
     def __init__(self, indicators_task, report_task):
         self.indicators_task = indicators_task
-        renderer = TemplateRenderer('reports', 'indicators.txt',
+        renderer = EmailRenderer('reports', 'indicators.txt',
                                     'indicators.html')
         super(IndicatorReportGenerator, self).__init__(report_task, renderer)
 
@@ -201,7 +201,7 @@ class IndicatorReportGenerator(AbstractReportGenerator):
 class ValidationReportGenerator(AbstractReportGenerator):
     def __init__(self, report_task):
         self.report_task = report_task
-        renderer = TemplateRenderer('reports', 'validation.txt',
+        renderer = EmailRenderer('reports', 'validation.txt',
                                     'validation.html', error_dir='errors')
         super(ValidationReportGenerator, self).__init__(report_task, renderer)
 

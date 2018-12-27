@@ -1,7 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-from os.path import join
+import os
 from smtplib import SMTPException
 from tempfile import NamedTemporaryFile
 
@@ -45,13 +45,17 @@ def send_reports(report_task=None):
 
 @job('reports')
 def send_validations(validation_task=None):
-    validation_task = validation_task or models.ValidationReportTask.objects.create()
+    validation_task = validation_task or \
+                      models.ValidationReportTask.objects.create()
     generator = ValidationReportGenerator(validation_task)
     nodes = Node.objects.filter(indexable=True)
     for node in nodes:
         try:
             mail = generator.generate_email(node=node)
         except (NonParseableCatalog, RequestException) as e:
+            msg = 'Error enviando la validación de {}: {}'\
+                .format(node.catalog_id, str(e))
+            models.ValidationReportTask.info(validation_task, msg)
             mail = generator.generate_error_mail(node, str(e))
 
         generator.send_email(mail, node=node)
@@ -80,12 +84,43 @@ class ReportSender(object):
         self.report_task.info(self.report_task, msg)
 
 
+class TemplateRenderer(object):
+
+    def __init__(self, template_dir, txt_template, html_template,
+                 error_dir=None):
+        self.TXT_TEMPLATE = os.path.join(template_dir, txt_template)
+        self.HTML_TEMPLATE = os.path.join(template_dir, html_template)
+        if error_dir:
+            self.ERROR_TXT_TEMPLATE = os.path.join(error_dir, txt_template)
+            self.ERROR_HTML_TEMPLATE = os.path.join(error_dir, html_template)
+        else:
+            self.ERROR_TXT_TEMPLATE = self.ERROR_HTML_TEMPLATE = None
+
+    def render_templates(self, context):
+        return self._render(self.TXT_TEMPLATE, self.HTML_TEMPLATE, context)
+
+    def render_error_templates(self, context):
+        assert self.ERROR_TXT_TEMPLATE is not None
+        assert self.ERROR_HTML_TEMPLATE is not None
+        return self._render(self.ERROR_HTML_TEMPLATE, self.ERROR_TXT_TEMPLATE,
+                            context)
+
+    def _render(self, txt_template, html_template, context):
+        msg = render_to_string(txt_template, context=context)
+        html_msg = render_to_string(html_template, context=context)
+        mail = EmailMultiAlternatives(body=msg,
+                                      from_email=settings.EMAIL_HOST_USER)
+        mail.attach_alternative(html_msg, 'text/html')
+        return mail
+
+
 class AbstractReportGenerator(object):
     DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
-    def __init__(self, report_task):
+    def __init__(self, report_task, renderer):
         self.report_task = report_task
         self.sender = ReportSender(report_task)
+        self.renderer = renderer
 
     def generate_email(self, node=None):
         raise NotImplementedError
@@ -102,14 +137,20 @@ class AbstractReportGenerator(object):
     def send_email(self, mail, node=None):
         self.sender.send_email(mail, node=node)
 
+    def render_templates(self, context):
+        return self.renderer.render_templates(context)
+
+    def render_error_templates(self, context):
+        return self.renderer.render_error_templates(context)
+
 
 class IndicatorReportGenerator(AbstractReportGenerator):
-    TXT_TEMPLATE = 'reports/report.txt'
-    HTML_TEMPLATE = 'reports/report.html'
 
     def __init__(self, indicators_task, report_task):
         self.indicators_task = indicators_task
-        super(IndicatorReportGenerator, self).__init__(report_task)
+        renderer = TemplateRenderer('reports', 'indicators.txt',
+                                    'indicators.html')
+        super(IndicatorReportGenerator, self).__init__(report_task, renderer)
 
     def generate_email(self, node=None):
         """Genera y manda el mail con el reporte de indexación. Si node es especificado, genera el reporte
@@ -136,14 +177,17 @@ class IndicatorReportGenerator(AbstractReportGenerator):
 
         start_time = self._format_date(self.indicators_task.created)
         subject = u'[{}] Indicadores Monitoreo Apertura: {}'.format(settings.ENV_TYPE, start_time)
-        mail = self._render_templates(subject, context)
+        mail = self.render_templates(context)
+        mail.subject = subject
 
         listed = context['listed']
         if not node:
             mail.attach('info.log', self.indicators_task.logs, 'text/plain')
         for indicator in listed:
             if listed[indicator]:
-                body = render_to_string('reports/datasets.csv', context={'dataset_list': listed[indicator]})
+                body = render_to_string(
+                    'reports/datasets.csv',
+                    context={'dataset_list': listed[indicator]})
                 mail.attach('{}.csv'.format(indicator), body, 'text/csv')
         return mail
 
@@ -153,22 +197,13 @@ class IndicatorReportGenerator(AbstractReportGenerator):
                 timezone.get_current_timezone()).date(),
             node)
 
-    def _render_templates(self, subject, context):
-        msg = render_to_string(self.TXT_TEMPLATE, context=context)
-        html_msg = render_to_string(self.HTML_TEMPLATE, context=context)
-        mail = EmailMultiAlternatives(subject, msg,
-                                      settings.EMAIL_HOST_USER)
-        mail.attach_alternative(html_msg, 'text/html')
-        return mail
-
 
 class ValidationReportGenerator(AbstractReportGenerator):
-    TXT_TEMPLATE = 'validation.txt'
-    HTML_TEMPLATE = 'validation.html'
-
     def __init__(self, report_task):
         self.report_task = report_task
-        super(ValidationReportGenerator, self).__init__(report_task)
+        renderer = TemplateRenderer('reports', 'validation.txt',
+                                    'validation.html', error_dir='errors')
+        super(ValidationReportGenerator, self).__init__(report_task, renderer)
 
     def generate_email(self, node=None):
         if not node:
@@ -188,9 +223,10 @@ class ValidationReportGenerator(AbstractReportGenerator):
             'dataset_list': validation['error']['dataset']
         }
 
+        mail = self.render_templates(context)
         subject = u'[{}] Validacion de catálogo {}: {}'.format(
             settings.ENV_TYPE, node.catalog_id, validation_time)
-        mail = self._render_templates(subject, context)
+        mail.subject = subject
 
         with NamedTemporaryFile(suffix='.xlsx') as tmpfile:
             catalog.validate_catalog(export_path=tmpfile.name)
@@ -202,21 +238,14 @@ class ValidationReportGenerator(AbstractReportGenerator):
     def generate_error_mail(self, node, error):
         context = {'error': error}
         validation_time = self._format_date(timezone.now())
+        mail = self.render_error_templates(context)
         subject = u'[{}] Error validando catálogo {}: {}'.format(
             settings.ENV_TYPE, node.catalog_id, validation_time)
-        mail = self._render_templates(subject, context, error=True)
-        return mail
-
-    def _render_templates(self, subject, context, error=False):
-        base_dir = 'errors' if error else 'reports'
-        txt_template = join(base_dir, self.TXT_TEMPLATE)
-        html_template = join(base_dir, self.HTML_TEMPLATE)
-        msg = render_to_string(txt_template, context=context)
-        html_msg = render_to_string(html_template, context=context)
-        mail = EmailMultiAlternatives(subject, msg, settings.EMAIL_HOST_USER)
-        mail.attach_alternative(html_msg, 'text/html')
+        mail.subject = subject
         return mail
 
     def send_email(self, mail, node=None):
+        # Si mail es None, la validación no encontró errores.
+        # No hay nada que mandar
         if mail is not None:
             super(ValidationReportGenerator, self).send_email(mail, node=node)

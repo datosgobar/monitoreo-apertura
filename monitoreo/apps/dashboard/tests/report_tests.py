@@ -18,6 +18,7 @@ from django.test import TestCase
 
 from django_datajsonar.models import Node
 from pydatajson.core import DataJson
+from pydatajson.custom_exceptions import NonParseableCatalog
 
 from monitoreo.apps.dashboard.models import ReportGenerationTask, IndicatorsGenerationTask,\
     IndicatorType, IndicadorRed, Indicador, ValidationReportTask
@@ -196,7 +197,7 @@ class ValidationReportGenerationTest(TestCase):
         self.assertEqual(['admin1@test.com'], self.mail.to)
 
     def test_subject(self):
-        subject = u'[tst] Validacion de catalogo id1: 2010-10-10 07:00:00'
+        subject = u'[tst] Validacion de catálogo id1: 2010-10-10 07:00:00'
         self.assertEqual(subject, self.mail.subject)
 
     def test_mail_header(self):
@@ -226,9 +227,26 @@ class ValidationReportGenerationTest(TestCase):
 
     def test_task_is_closed(self):
         self.validation_report_generator.close_task()
-        self.assertEqual(ValidationReportTask.FINISHED, self.validation_report_generator.report_task.status)
+        self.assertEqual(ValidationReportTask.FINISHED,
+                         self.validation_report_generator.report_task.status)
 
     def test_send_report(self):
         mail.outbox = []
         send_validations()
         self.assertEqual(1, len(mail.outbox))
+
+    def test_send_error_mail(self):
+        def mock_side_effect(catalog):
+            raise NonParseableCatalog(catalog, 'Test Error')
+
+        mail.outbox = []
+        with patch('monitoreo.apps.dashboard.report_tasks.DataJson',
+                   side_effect=mock_side_effect):
+            send_validations()
+
+        expected_header = 'Ocurrió un error intentando acceder al catálogo:'
+        expected_error = 'Test Error'
+        error_mail = mail.outbox[0]
+        self.assertEqual(2, len(mail.outbox))
+        self.assertTrue(expected_header in error_mail.body)
+        self.assertTrue(expected_error in error_mail.body)

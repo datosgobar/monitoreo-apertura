@@ -105,7 +105,7 @@ class IndicatorRedAdmin(ImportExportModelAdmin):
 
 class IndicatorTypeAdmin(OrderedModelAdmin):
     list_display = ('nombre', 'order', 'resumen', 'mostrar',
-                    'series_red', 'series_nodos',
+                    'series_red', 'series_nodos', 'series_indexadores',
                     'move_up_down_links', 'position_actions')
     list_filter = ('resumen', 'mostrar')
     actions = ('queryset_to_top', 'queryset_to_bottom',

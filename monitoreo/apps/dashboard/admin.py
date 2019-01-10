@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from ordered_model.admin import OrderedModelAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+from solo.admin import SingletonModelAdmin
 
 from django_datajsonar.admin import AbstractTaskAdmin
 
@@ -256,3 +257,4 @@ admin.site.register(models.IndicadorFederador, IndexingIndicatorAdmin)
 admin.site.register(models.IndicadorRed, IndicatorRedAdmin)
 admin.site.register(models.IndicatorType, IndicatorTypeAdmin)
 admin.site.register(models.TableColumn, TableColumnAdmin)
+admin.site.register(models.CentralNode, SingletonModelAdmin)

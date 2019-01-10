@@ -8,6 +8,7 @@ from collections import OrderedDict
 from django.db import models
 from django.conf import settings
 from ordered_model.models import OrderedModel
+from solo.models import SingletonModel
 from django_datajsonar.models import AbstractTask
 
 
@@ -173,6 +174,11 @@ class HarvestingNode(models.Model):
     url = models.URLField(help_text='URL del nodo federador ej: http://datos.gob.ar')
     apikey = models.CharField(max_length=50)
     enabled = models.BooleanField(default=False)
+
+
+class CentralNode(SingletonModel):
+    node = models.OneToOneField(HarvestingNode, on_delete=models.CASCADE,
+                                null=True, blank=True)
 
 
 class FederationTask(AbstractTask):

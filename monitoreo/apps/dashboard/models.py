@@ -177,6 +177,8 @@ class HarvestingNode(models.Model):
 
 
 class CentralNode(SingletonModel):
+    class Meta:
+        verbose_name = "Nodo central"
     node = models.OneToOneField(HarvestingNode, on_delete=models.CASCADE,
                                 null=True, blank=True)
 

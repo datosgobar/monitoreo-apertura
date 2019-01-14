@@ -3,9 +3,9 @@
 import os
 
 try:
-    from mock import patch, MagicMock, ANY
+    from mock import patch, MagicMock
 except ImportError:
-    from unittest.mock import patch, MagicMock, ANY
+    from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
 from django.conf import settings

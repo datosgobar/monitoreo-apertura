@@ -159,6 +159,7 @@ VENDOR_APPS = (
     'django_rq',
     'scheduler',
     'des',
+    'solo',
 )
 
 APPS = (

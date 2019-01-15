@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import json
+from urlparse import urljoin
 from django.conf import settings
 from django.utils import timezone
 from django.db.utils import DataError
@@ -11,7 +12,7 @@ from pydatajson.core import DataJson
 from django_datajsonar.models import Node
 
 from .models import IndicatorsGenerationTask, TableColumn, IndicatorType,\
-    Indicador, IndicadorFederador, IndicadorRed, HarvestingNode
+    Indicador, IndicadorFederador, IndicadorRed, HarvestingNode, CentralNode
 from .helpers import load_catalogs
 
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
@@ -27,9 +28,13 @@ def indicators_run():
 def generate_indicators(task):
     data_json = DataJson()
     catalogs = load_catalogs(task, Node.objects.filter(indexable=True))
+    try:
+        central_node = CentralNode.objects.get()
+        central_catalog = urljoin(central_node.node.url, 'data.json')
+    except (CentralNode.DoesNotExist, AttributeError):
+        central_catalog = CENTRAL
     indics, network_indics = data_json.generate_catalogs_indicators(
-        catalogs,
-        CENTRAL)
+        catalogs, central_catalog)
 
     save_indicators(indics, task)
     save_network_indics(network_indics, 'RED', task)

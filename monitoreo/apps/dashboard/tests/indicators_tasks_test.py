@@ -13,9 +13,11 @@ from django.utils import timezone
 
 from pydatajson import DataJson
 
-from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, Indicador,\
-    IndicadorRed, TableColumn, IndicatorType, IndicadorFederador
-from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
+from monitoreo.apps.dashboard.models import IndicatorsGenerationTask, Indicador
+from monitoreo.apps.dashboard.models import IndicadorRed, TableColumn
+from monitoreo.apps.dashboard.models import IndicatorType, IndicadorFederador
+from monitoreo.apps.dashboard.models import HarvestingNode, CentralNode
+from monitoreo.apps.dashboard.indicators_tasks import generate_indicators, CENTRAL
 
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
@@ -121,3 +123,32 @@ class IndicatorGenerationsTest(TestCase):
         ind_type = IndicatorType.objects.get(nombre='ind_b', tipo='RED')
         self.assertEqual('10', Indicador.objects.get(jurisdiccion_nombre=self.catalogs[1]['title'],
                                                      indicador_tipo=ind_type).indicador_valor)
+
+    def test_central_node_default(self, mock_indic, mock_load):
+        mock_load.return_value = self.catalogs
+        mock_indic.return_value = (self.indicators, self.network_indicators)
+        task = IndicatorsGenerationTask.objects.create()
+        generate_indicators(task)
+        mock_indic.assert_any_call(DataJson(), self.catalogs)
+        mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL)
+
+    def test_undefined_central_node_uses_default(self, mock_indic, mock_load):
+        mock_load.return_value = self.catalogs
+        mock_indic.return_value = (self.indicators, self.network_indicators)
+        CentralNode.objects.create()
+        task = IndicatorsGenerationTask.objects.create()
+        generate_indicators(task)
+        mock_indic.assert_any_call(DataJson(), self.catalogs)
+        mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL)
+
+    def test_defined_central_node_catalog(self, mock_indic, mock_load):
+        mock_load.return_value = self.catalogs
+        mock_indic.return_value = (self.indicators, self.network_indicators)
+        harvesting = HarvestingNode.objects.create(
+            name='aName', url='harvest_url/', apikey='apikey', enabled=True)
+        CentralNode.objects.create(node=harvesting)
+        task = IndicatorsGenerationTask.objects.create()
+        generate_indicators(task)
+        mock_indic.assert_any_call(DataJson(), self.catalogs)
+        mock_indic.assert_any_call(DataJson(), self.catalogs,
+                                   'harvest_url/data.json')

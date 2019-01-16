@@ -1,3 +1,11 @@
+0.0.29 (16-01-19)
+-------------------
+
+* Singleton para modelo central
+* Reportes de error cuando no se puede parsear un catálogo
+* Actualiza versión de pydatajson y django_datajsonar
+
+
 0.0.28 (21-12-18)
 -------------------
 

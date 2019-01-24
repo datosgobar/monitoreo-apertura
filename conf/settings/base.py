@@ -353,3 +353,36 @@ DEFAULT_PROCESSES = [
         ],
     },
 ]
+
+DATAJSONAR_STAGES = {
+    'Read Datajson (complete)': {
+        'callable_str': 'django_datajsonar.tasks.schedule_full_read_task',
+        'queue': 'indexing',
+        'task': 'django_datajsonar.models.ReadDataJsonTask',
+    },
+    'Read Datajson (metadata only)': {
+        'callable_str': 'django_datajsonar.tasks.schedule_metadata_read_task',
+        'queue': 'indexing',
+        'task': 'django_datajsonar.models.ReadDataJsonTask',
+    },
+    'Federation': {
+        'callable_str': 'monitoreo.apps.dashboard.tasks.federation_run',
+        'queue': 'federation',
+        'task': 'monitoreo.apps.dashboard.models.FederationTask'
+    },
+    'Indicators': {
+        'callable_str': 'monitoreo.apps.dashboard.indicators_tasks.indicators_run',
+        'queue': 'indicators',
+        'task': 'monitoreo.apps.dashboard.models.IndicatorsGenerationTask'
+    },
+    'Indicator reports': {
+        'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_reports',
+        'queue': 'reports',
+        'task': 'monitoreo.apps.dashboard.models.ReportGenerationTask'
+    },
+    'Validation reports': {
+        'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_validations',
+        'queue': 'reports',
+        'task': 'monitoreo.apps.dashboard.models.ValidationReportTask'
+    }
+}

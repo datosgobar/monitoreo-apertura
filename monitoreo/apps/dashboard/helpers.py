@@ -100,14 +100,15 @@ def list_errors(msg, errors):
     return msg
 
 
-def download_time_series(indicators, node_id=None):
+def download_time_series(queryset, node_id=None):
     response = HttpResponse(content_type='text/csv')
     filename = 'series-indicadores-{}.csv'.format(node_id or 'red')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
-    return generate_time_series(indicators, response, node_id is None)
+    return generate_time_series(queryset, response)
 
 
-def generate_time_series(indicators, output, aggregated=False):
+def generate_time_series(queryset, output):
+    indicators = queryset.numerical_indicators_by_date()
     dates = indicators.keys()
     if dates:
         min_date = min(dates)
@@ -117,12 +118,8 @@ def generate_time_series(indicators, output, aggregated=False):
     else:
         date_range = []
 
-    if aggregated:
-        ind_types = IndicatorType.objects.filter(series_red=True)
-    else:
-        ind_types = IndicatorType.objects.filter(series_nodos=True)
-
-    columns = list(ind_types.values_list('nombre', flat=True))
+    columns = list(set(queryset.values_list(
+        'indicador_tipo__nombre', flat=True)))
     fieldnames = ['indice_tiempo']
     fieldnames = fieldnames + columns
 

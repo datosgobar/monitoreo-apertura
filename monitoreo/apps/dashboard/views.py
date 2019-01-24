@@ -98,10 +98,11 @@ def indicators_csv(request, node_id=None, indexing=False):
             filter(indicador_tipo__series_red=True)
     elif indexing:
         queryset = IndicadorFederador.objects.\
-            filter(indicador_tipo__series_indexadores=True)
+            filter(indicador_tipo__series_indexadores=True,
+                   jurisdiccion_id=node_id)
     else:
         queryset = Indicador.objects.\
-            filter(indicador_tipo__series_nodos=True)
+            filter(indicador_tipo__series_nodos=True,
+                   jurisdiccion_id=node_id)
 
-    indicators = queryset.numerical_indicators_by_date(node_id=node_id)
-    return download_time_series(indicators, node_id=node_id)
+    return download_time_series(queryset, node_id=node_id)

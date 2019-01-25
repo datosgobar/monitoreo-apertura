@@ -26,10 +26,12 @@ class ViewsTest(TestCase):
                                               series_nodos=False)
         type_c = IndicatorType.objects.create(nombre='ind_c', tipo='RED',
                                               resumen=True, series_red=False,
-                                              series_nodos=False)
+                                              series_nodos=False,
+                                              series_indexadores=False)
         type_d = IndicatorType.objects.create(nombre='ind_d', tipo='RED',
                                               resumen=True, mostrar=False,
-                                              series_red=False)
+                                              series_red=False,
+                                              series_indexadores=False)
         type_e = IndicatorType.objects.create(nombre='ind_e', tipo='RED',
                                               mostrar=False)
 
@@ -157,7 +159,7 @@ class ViewsTest(TestCase):
         today = self._format_previous_dates(0)
         expected_row = {'indice_tiempo': today,
                         'ind_a': '21',
-                        'ind_d': '200',
+                        'ind_b': '',
                         'ind_e': '4'}
         row = next(series_csv, None)
         self.assertDictEqual(expected_row, row)

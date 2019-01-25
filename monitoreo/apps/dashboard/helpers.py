@@ -100,16 +100,16 @@ def list_errors(msg, errors):
     return msg
 
 
-def download_time_series(queryset, node_id=None):
+def download_time_series(indicators_queryset, node_id=None):
     response = HttpResponse(content_type='text/csv')
     filename = 'series-indicadores-{}.csv'.format(node_id or 'red')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
-    return generate_time_series(queryset, response)
+    return generate_time_series(indicators_queryset, response)
 
 
-def generate_time_series(queryset, output):
-    indicators = queryset.numerical_indicators_by_date()
-    dates = indicators.keys()
+def generate_time_series(indicators_queryset, output):
+    indicators_table = indicators_queryset.numerical_indicators_by_date()
+    dates = indicators_table.keys()
     if dates:
         min_date = min(dates)
         max_date = max(dates)
@@ -118,7 +118,7 @@ def generate_time_series(queryset, output):
     else:
         date_range = []
 
-    columns = list(set(queryset.values_list(
+    columns = list(set(indicators_queryset.values_list(
         'indicador_tipo__nombre', flat=True)))
     fieldnames = ['indice_tiempo']
     fieldnames = fieldnames + columns
@@ -126,7 +126,7 @@ def generate_time_series(queryset, output):
     writer = csv.DictWriter(output, fieldnames, extrasaction='ignore')
     writer.writeheader()
     for date in date_range:
-        indicators.setdefault(date, {})
-        indicators[date].update({'indice_tiempo': date})
-        writer.writerow(indicators[date])
+        indicators_table.setdefault(date, {})
+        indicators_table[date].update({'indice_tiempo': date})
+        writer.writerow(indicators_table[date])
     return output

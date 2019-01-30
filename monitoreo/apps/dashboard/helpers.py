@@ -8,10 +8,11 @@ from six import text_type
 from pydatajson import DataJson
 
 from django.http import HttpResponse
+from django_rq import job
 
 from django_datajsonar.models import Dataset
 
-from .models import IndicatorsGenerationTask, IndicatorType
+from .models import IndicatorsGenerationTask
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
 
@@ -130,3 +131,13 @@ def generate_time_series(indicators_queryset, output):
         indicators_table[date].update({'indice_tiempo': date})
         writer.writerow(indicators_table[date])
     return output
+
+
+@job('indexing')
+def infinite_job():
+    try:
+        while True:
+            pass
+    except Exception:
+        while True:
+            pass

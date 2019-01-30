@@ -131,13 +131,3 @@ def generate_time_series(indicators_queryset, output):
         indicators_table[date].update({'indice_tiempo': date})
         writer.writerow(indicators_table[date])
     return output
-
-
-@job('indexing')
-def infinite_job():
-    try:
-        while True:
-            pass
-    except Exception:
-        while True:
-            pass

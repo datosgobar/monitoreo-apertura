@@ -8,7 +8,6 @@ from six import text_type
 from pydatajson import DataJson
 
 from django.http import HttpResponse
-from django_rq import job
 
 from django_datajsonar.models import Dataset
 

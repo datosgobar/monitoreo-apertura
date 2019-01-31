@@ -11,7 +11,7 @@ from django.http import HttpResponse
 
 from django_datajsonar.models import Dataset
 
-from .models import IndicatorsGenerationTask, IndicatorType
+from .models import IndicatorsGenerationTask
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
 

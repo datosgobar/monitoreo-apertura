@@ -9,4 +9,4 @@ worker_group: "{{ application_group }}"
 worker_dir: "{{ application_base_dir }}workers/"
 worker_bins_dir: "{{ worker_dir }}bins/"
 worker_run_bin: "{{ worker_bins_dir }}run_rqworker.sh"
-workers_queues: indexing federation indicators reports synchro
+workers_queues: indexing federation indicators reports synchro default

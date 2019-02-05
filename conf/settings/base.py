@@ -220,6 +220,11 @@ DEFAULT_REDIS_PORT = env("DEFAULT_REDIS_PORT", default="6379")
 DEFAULT_REDIS_DB = env("DEFAULT_REDIS_DB", default="0")
 
 RQ_QUEUES = {
+    'default': {
+        'HOST': DEFAULT_REDIS_HOST,
+        'PORT': DEFAULT_REDIS_PORT,
+        'DB': DEFAULT_REDIS_DB,
+    },
     'indexing': {
         'HOST': DEFAULT_REDIS_HOST,
         'PORT': DEFAULT_REDIS_PORT,

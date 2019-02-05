@@ -19,6 +19,7 @@ URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
 CENTRAL = URL + 'datosgobar/data.json'
 
 
+@job('indicators')
 def indicators_run():
     task = IndicatorsGenerationTask.objects.create()
     generate_indicators.delay(task)

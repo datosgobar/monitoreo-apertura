@@ -11,6 +11,7 @@ from .models import HarvestingNode, FederationTask
 from .strings import UNREACHABLE_CATALOG, TASK_ERROR
 
 
+@job('federation')
 def federation_run():
     harvesting_nodes = HarvestingNode.objects.filter(enabled=True)
     for harvester in harvesting_nodes:

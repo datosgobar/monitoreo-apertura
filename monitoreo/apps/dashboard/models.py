@@ -9,7 +9,9 @@ from django.db import models
 from django.conf import settings
 from ordered_model.models import OrderedModel
 from solo.models import SingletonModel
-from django_datajsonar.models import AbstractTask
+from des.models import DynamicEmailConfiguration
+from django_datajsonar.models import AbstractTask, DatasetIndexingFile,\
+    ReadDataJsonTask
 
 
 class IndicatorQuerySet(models.QuerySet):
@@ -87,7 +89,7 @@ class AbstractIndicator(models.Model):
 class Indicador(AbstractIndicator):
     class Meta:
         # Nombre en plural para el admin panel de Django
-        verbose_name_plural = "Indicadores"
+        verbose_name_plural = "Tabla de indicadores de nodos"
 
     def __unicode__(self):
         string = 'Indicador "{0}" de {1}, {2}'
@@ -102,7 +104,7 @@ class Indicador(AbstractIndicator):
 class IndicadorFederador(AbstractIndicator):
     class Meta:
         # Nombre en plural para el admin panel de Django
-        verbose_name_plural = "Indicadores nodos federadores"
+        verbose_name_plural = "Tabla de indicadores de nodos federadores"
 
     def __unicode__(self):
         string = 'Indicador "{0}" de {1}, {2}'
@@ -117,7 +119,7 @@ class IndicadorFederador(AbstractIndicator):
 class IndicadorRed(models.Model):
     class Meta:
         # Nombre en plural para el admin panel de Django
-        verbose_name_plural = "Indicadores agregados"
+        verbose_name_plural = "Tabla de indicadores de red"
         get_latest_by = 'fecha'
 
     fecha = models.DateField(auto_now_add=True)
@@ -185,20 +187,41 @@ class CentralNode(SingletonModel):
 
 class FederationTask(AbstractTask):
     class Meta:
-        verbose_name_plural = "Corridas de Federación"
+        verbose_name_plural = "Corridas de federación"
     harvesting_node = models.ForeignKey(HarvestingNode, models.CASCADE, null=True)
 
 
 class IndicatorsGenerationTask(AbstractTask):
     class Meta:
-        verbose_name_plural = "Corridas de Indicadores"
+        verbose_name_plural = "Corridas de indicadores"
 
 
 class ReportGenerationTask(AbstractTask):
     class Meta:
-        verbose_name_plural = "Envío de Reportes"
+        verbose_name_plural = "Reportes de indicadores"
 
 
 class ValidationReportTask(AbstractTask):
     class Meta:
         verbose_name_plural = "Reportes de Validación"
+
+
+class DatasetFederationFile(DatasetIndexingFile):
+    class Meta:
+        proxy = True
+        app_label = 'django_datajsonar'
+        verbose_name_plural = "Dataset federation files"
+
+
+class NodeReadTask(ReadDataJsonTask):
+    class Meta:
+        proxy = True
+        app_label = 'django_datajsonar'
+        verbose_name_plural = "Node read tasks"
+
+
+class ConfiguracionEmail(DynamicEmailConfiguration):
+    class Meta:
+        proxy = True
+        app_label = 'des'
+        verbose_name = "Configuración correo electrónico"

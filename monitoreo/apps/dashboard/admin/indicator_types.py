@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from ordered_model.admin import OrderedModelAdmin
 from monitoreo.apps.dashboard.models import IndicatorType, TableColumn
 
-from utils import switch
+from monitoreo.apps.dashboard.admin.utils import switch
 
 
 @admin.site.register(TableColumn)
@@ -48,7 +48,7 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
     position_actions.allow_tags = True
 
     def order_move(self, request, model_id, direction):
-        indicator_type = models.IndicatorType.objects.get(pk=model_id)
+        indicator_type = IndicatorType.objects.get(pk=model_id)
         if direction == 'top':
             indicator_type.top()
         elif direction == 'bottom':

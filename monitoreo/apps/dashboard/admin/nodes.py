@@ -8,7 +8,7 @@ from monitoreo.apps.dashboard.tasks import federate_catalogs
 from monitoreo.apps.dashboard.models import HarvestingNode, FederationTask, \
     CentralNode
 
-from utils import switch
+from monitoreo.apps.dashboard.admin.utils import switch
 
 
 @admin.site.register(HarvestingNode)

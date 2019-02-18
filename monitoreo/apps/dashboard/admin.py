@@ -13,7 +13,12 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from solo.admin import SingletonModelAdmin
 
-from django_datajsonar.admin import AbstractTaskAdmin
+from des.models import DynamicEmailConfiguration
+from des.admin import DynamicEmailConfigurationAdmin
+
+from django_datajsonar.admin import AbstractTaskAdmin, \
+    DatasetIndexingFileAdmin, DataJsonAdmin
+from django_datajsonar.models import ReadDataJsonTask, DatasetIndexingFile
 
 from . import models
 from .tasks import federate_catalogs
@@ -246,6 +251,14 @@ class ValidationReportAdmin(AbstractTaskAdmin):
     task = send_validations
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_validations'
 
+
+admin.site.unregister(DatasetIndexingFile)
+admin.site.unregister(ReadDataJsonTask)
+admin.site.unregister(DynamicEmailConfiguration)
+
+admin.site.register(models.DatasetFederationFile, DatasetIndexingFileAdmin)
+admin.site.register(models.NodeReadTask, DataJsonAdmin)
+admin.site.register(models.ConfiguracionEmail, DynamicEmailConfigurationAdmin)
 
 admin.site.register(models.ValidationReportTask, ValidationReportAdmin)
 admin.site.register(models.ReportGenerationTask, ReportAdmin)

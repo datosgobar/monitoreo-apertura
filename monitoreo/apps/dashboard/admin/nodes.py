@@ -11,7 +11,7 @@ from monitoreo.apps.dashboard.models import HarvestingNode, FederationTask, \
 from monitoreo.apps.dashboard.admin.utils import switch
 
 
-@admin.site.register(HarvestingNode)
+@admin.register(HarvestingNode)
 class HarvestingNodeAdmin(admin.ModelAdmin):
     list_display = ('name', 'url', 'enabled')
     actions = ('federate', 'enable', 'disable')

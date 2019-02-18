@@ -25,7 +25,7 @@ class IndicatorResource(resources.ModelResource):
         )
 
 
-@admin.site.register(Indicador)
+@admin.register(Indicador)
 class IndicatorAdmin(ImportExportModelAdmin):
     list_filter = ('jurisdiccion_id',)
     resource_class = IndicatorResource
@@ -50,7 +50,7 @@ class IndexingIndicatorResource(resources.ModelResource):
         )
 
 
-@admin.site.register(IndicadorFederador)
+@admin.register(IndicadorFederador)
 class IndexingIndicatorAdmin(ImportExportModelAdmin):
     list_filter = ('jurisdiccion_id',)
     resource_class = IndexingIndicatorResource
@@ -74,7 +74,7 @@ class IndicadorRedResource(resources.ModelResource):
         )
 
 
-@admin.site.register(IndicadorRed)
+@admin.register(IndicadorRed)
 class IndicatorRedAdmin(ImportExportModelAdmin):
     resource_class = IndicadorRedResource
 

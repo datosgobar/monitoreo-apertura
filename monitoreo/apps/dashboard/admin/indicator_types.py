@@ -13,12 +13,12 @@ from monitoreo.apps.dashboard.models import IndicatorType, TableColumn
 from monitoreo.apps.dashboard.admin.utils import switch
 
 
-@admin.site.register(TableColumn)
+@admin.register(TableColumn)
 class TableColumnAdmin(OrderedModelAdmin):
     list_display = ('full_name', 'move_up_down_links')
 
 
-@admin.site.register(IndicatorType)
+@admin.register(IndicatorType)
 class IndicatorTypeAdmin(OrderedModelAdmin):
     list_display = ('nombre', 'order', 'resumen', 'mostrar',
                     'series_red', 'series_nodos', 'series_indexadores',

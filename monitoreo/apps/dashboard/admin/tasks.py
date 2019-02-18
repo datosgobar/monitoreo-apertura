@@ -10,7 +10,7 @@ from monitoreo.apps.dashboard.report_tasks import send_reports, send_validations
 from monitoreo.apps.dashboard import models
 
 
-@admin.site.register(models.FederationTask)
+@admin.register(models.FederationTask)
 class FederationAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs',)
     exclude = ('status', 'finished',)
@@ -34,7 +34,7 @@ class FederationAdmin(AbstractTaskAdmin):
             .formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-@admin.site.register(models.IndicatorsGenerationTask)
+@admin.register(models.IndicatorsGenerationTask)
 class IndicatorTaskAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs', 'status', 'finished')
     list_display = ('__unicode__',)
@@ -44,7 +44,7 @@ class IndicatorTaskAdmin(AbstractTaskAdmin):
     callable_str = 'monitoreo.apps.dashboard.indicators_tasks.indicators_run'
 
 
-@admin.site.register(models.ReportGenerationTask)
+@admin.register(models.ReportGenerationTask)
 class ReportAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs', 'status', 'finished')
     list_display = ('__unicode__',)
@@ -54,7 +54,7 @@ class ReportAdmin(AbstractTaskAdmin):
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_reports'
 
 
-@admin.site.register(models.ValidationReportTask)
+@admin.register(models.ValidationReportTask)
 class ValidationReportAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs', 'status', 'finished')
     list_display = ('__unicode__',)

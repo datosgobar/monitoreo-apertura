@@ -158,13 +158,13 @@ VENDOR_APPS = (
     'import_export',
     'django_rq',
     'scheduler',
-    'des',
     'solo',
 )
 
 APPS = (
     'monitoreo.apps.dashboard',
-    'django_datajsonar'
+    'django_datajsonar',
+    'monitoreo.apps.dashboard.apps.CustomDesConfig',
 )
 
 INSTALLED_APPS = DJANGO_BASE_APPS + VENDOR_APPS + APPS

@@ -5,7 +5,8 @@ from django.contrib import admin
 from des.models import DynamicEmailConfiguration
 from des.admin import DynamicEmailConfigurationAdmin
 
-from django_datajsonar.admin import DatasetIndexingFileAdmin, DataJsonAdmin
+from django_datajsonar.admin.node import DatasetIndexingFileAdmin
+from django_datajsonar.admin.tasks import DataJsonAdmin
 from django_datajsonar.models import ReadDataJsonTask, DatasetIndexingFile
 
 from monitoreo.apps.dashboard.models import DatasetFederationFile, \

@@ -1,3 +1,19 @@
+0.0.32 (19-02-19)
+-------------------
+
+* Actualiza versión de pydatajson y django_datajsonar
+* Revisón de nombres y refactor del admin
+* Aseguro la existencia de un upkeep job para los synchronizers
+
+
+0.0.31 (05-02-19)
+-------------------
+
+* Actualiza versión de django_datajsonar
+* Fix a la recolección de indicadores de nodos federadores
+* Restart de los workers en deploy
+
+
 0.0.30 (17-01-19)
 -------------------
 

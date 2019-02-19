@@ -1,0 +1,32 @@
+---
+
+- name: Setup worker restart cron
+  cron:
+    name: "Restart workers"
+    minute: "0"
+    hour: "05"
+    job: "systemctl restart rqworker*"
+  become_user: "root"
+  become_method: sudo
+  become: yes
+
+- name: Add run schedule upkeep script
+  template:
+    src: schedule_upkeep.sh
+    dest: /usr/local/bin/schedule_upkeep.sh
+    mode: 0770
+    owner: "{{ application_user }}"
+    group: "{{ application_group }}"
+  become_user: "root"
+  become_method: sudo
+  become: yes
+
+- name: Setup schedule_upkeep cron
+  cron:
+    name: "Schedule upkeep"
+    minute: "05"
+    hour: "05"
+    job: "bash /usr/local/bin/schedule_upkeep.sh"
+  become_user: "{{ application_user }}"
+  become_method: sudo
+  become: yes

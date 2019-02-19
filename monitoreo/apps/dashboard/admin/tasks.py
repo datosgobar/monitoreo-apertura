@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from django_datajsonar.admin import AbstractTaskAdmin
+from django_datajsonar.admin.tasks import AbstractTaskAdmin
 
 from monitoreo.apps.dashboard.tasks import federate_catalogs
 from monitoreo.apps.dashboard.indicators_tasks import generate_indicators

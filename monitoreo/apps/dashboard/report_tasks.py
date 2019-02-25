@@ -9,6 +9,7 @@ from requests.exceptions import RequestException
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.mail import get_connection
 from django.core.mail.message import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -65,6 +66,7 @@ def send_validations(validation_task=None):
 class ReportSender(object):
     def __init__(self, report_task):
         self.report_task = report_task
+        self.connection = get_connection()
 
     def _get_recipients(self, node=None):
         if not node:
@@ -76,12 +78,16 @@ class ReportSender(object):
     def send_email(self, mail, node=None):
         target = node.catalog_id if node else 'Red'
         mail.to = self._get_recipients(node=node)
+        mail.connection = self.connection
         try:
             mail.send()
             msg = "Reporte de {} enviado exitosamente".format(target)
         except SMTPException as e:
             msg = "Error enviando reporte de {}:\n {}".format(target, str(e))
         self.report_task.info(self.report_task, msg)
+
+    def close_connection(self):
+        self.connection.close()
 
 
 class EmailRenderer(object):
@@ -126,6 +132,7 @@ class AbstractReportGenerator(object):
         raise NotImplementedError
 
     def close_task(self):
+        self.sender.close_connection()
         self.report_task.refresh_from_db()
         self.report_task.status = self.report_task.FINISHED
         self.report_task.finished = timezone.now()

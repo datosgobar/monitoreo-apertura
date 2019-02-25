@@ -4,7 +4,7 @@
   cron:
     name: "Restart workers"
     minute: "0"
-    hour: "05"
+    hour: "0"
     job: "systemctl restart rqworker*"
   become_user: "root"
   become_method: sudo
@@ -24,8 +24,8 @@
 - name: Setup schedule_upkeep cron
   cron:
     name: "Schedule upkeep"
-    minute: "05"
-    hour: "05"
+    minute: "0"
+    hour: "0"
     job: "bash /usr/local/bin/schedule_upkeep.sh"
   become_user: "{{ application_user }}"
   become_method: sudo

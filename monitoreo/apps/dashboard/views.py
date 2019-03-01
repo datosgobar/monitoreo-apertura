@@ -98,7 +98,7 @@ def indicators_csv(request, node_id=None, indexing=False):
             filter(indicador_tipo__series_red=True)
     elif indexing:
         queryset = IndicadorFederador.objects.\
-            filter(indicador_tipo__series_indexadores=True,
+            filter(indicador_tipo__series_federadores=True,
                    jurisdiccion_id=node_id)
     else:
         queryset = Indicador.objects.\

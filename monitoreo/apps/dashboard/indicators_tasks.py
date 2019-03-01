@@ -101,12 +101,14 @@ def save_indicators(indics_list, task, harvesting_nodes=False):
 
                 indic_models += 1
             except DataError:
-                IndicatorsGenerationTask.info(task, u"Error guardando indicador: {0} - {1}: {2}"
-                                              .format(catalog_name, indic_type, json.dumps(value)))
+                IndicatorsGenerationTask.info(
+                    task, u"Error guardando indicador: {0} - {1}: {2}"
+                    .format(catalog_name, indic_type, json.dumps(value)))
+
     msg = u'Calculados {0} indicadores en {1} catálogos'\
         .format(indic_models, len(indics_list))
     if harvesting_nodes:
-        msg += ' indexadores'
+        msg += ' federadores'
     IndicatorsGenerationTask.info(task, msg)
 
 

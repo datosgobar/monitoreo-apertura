@@ -21,7 +21,7 @@ class TableColumnAdmin(OrderedModelAdmin):
 @admin.register(IndicatorType)
 class IndicatorTypeAdmin(OrderedModelAdmin):
     list_display = ('nombre', 'order', 'resumen', 'mostrar',
-                    'series_red', 'series_nodos', 'series_indexadores',
+                    'series_red', 'series_nodos', 'series_federadores',
                     'move_up_down_links', 'position_actions')
     list_filter = ('resumen', 'mostrar')
     actions = ('queryset_to_top', 'queryset_to_bottom',
@@ -85,10 +85,10 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
     remove_from_nodes_series.short_description = \
         'Quitar de las series de tiempo de nodos'
 
-    add_to_indexing_series = switch({'series_indexadores': True})
+    add_to_indexing_series = switch({'series_federadores': True})
     add_to_indexing_series.short_description = \
-        'Agregar a las series de tiempo de nodos indexadores'
+        'Agregar a las series de tiempo de nodos federadores'
 
-    remove_from_indexing_series = switch({'series_indexadores': False})
+    remove_from_indexing_series = switch({'series_federadores': False})
     remove_from_indexing_series.short_description = \
-        'Quitar de las series de tiempo de nodos indexadores'
+        'Quitar de las series de tiempo de nodos federadores'

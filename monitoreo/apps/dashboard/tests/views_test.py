@@ -27,11 +27,11 @@ class ViewsTest(TestCase):
         type_c = IndicatorType.objects.create(nombre='ind_c', tipo='RED',
                                               resumen=True, series_red=False,
                                               series_nodos=False,
-                                              series_indexadores=False)
+                                              series_federadores=False)
         type_d = IndicatorType.objects.create(nombre='ind_d', tipo='RED',
                                               resumen=True, mostrar=False,
                                               series_red=False,
-                                              series_indexadores=False)
+                                              series_federadores=False)
         type_e = IndicatorType.objects.create(nombre='ind_e', tipo='RED',
                                               mostrar=False)
 

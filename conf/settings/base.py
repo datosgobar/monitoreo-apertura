@@ -93,6 +93,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
 )
 
 ANONYMOUS_USER_ID = -1
@@ -158,13 +159,14 @@ VENDOR_APPS = (
     'import_export',
     'django_rq',
     'scheduler',
+    'des',
     'solo',
+    'admin_reorder',
 )
 
 APPS = (
     'monitoreo.apps.dashboard',
     'django_datajsonar',
-    'monitoreo.apps.dashboard.apps.CustomDesConfig',
 )
 
 INSTALLED_APPS = DJANGO_BASE_APPS + VENDOR_APPS + APPS
@@ -391,3 +393,12 @@ DATAJSONAR_STAGES = {
         'task': 'monitoreo.apps.dashboard.models.ValidationReportTask'
     }
 }
+
+ADMIN_REORDER = (
+    str('auth'),
+    str('django_datajsonar'),
+    str('dashboard'),
+    {'app': 'des', 'label': 'Configuración correo'},
+    str('scheduler'),
+    str('sites'),
+)

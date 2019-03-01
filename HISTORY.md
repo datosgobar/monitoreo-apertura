@@ -1,3 +1,11 @@
+0.0.33 (01-03-19)
+-------------------
+
+* Cambia el horario de mantenimiento a las 00:00
+* Reutiliza las conexiones smtp para el envío de reportes
+* Actualiza versión de pydatajson y django_datajsonar
+
+
 0.0.32 (19-02-19)
 -------------------
 

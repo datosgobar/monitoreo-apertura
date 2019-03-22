@@ -118,8 +118,8 @@ def generate_time_series(indicators_queryset, output):
     else:
         date_range = []
 
-    ind_types = set(indicators_queryset.values_list('indicador_tipo__id',
-                                                    flat=True))
+    ind_types = indicators_queryset\
+        .values_list('indicador_tipo__id', flat=True).distinct()
     fieldnames = ['indice_tiempo']
     columns = IndicatorType.objects.filter(id__in=ind_types).order_by('order')\
         .values_list('nombre', flat=True)

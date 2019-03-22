@@ -105,9 +105,9 @@ class ViewsTest(TestCase):
     def test_series_header(self):
         network_response = Client().get(reverse('admin:network_series'))
         series = csv.reader(network_response.content.splitlines())
-        expected_headers = {'indice_tiempo', 'ind_a', 'ind_b', 'ind_e'}
+        expected_headers = ['indice_tiempo', 'ind_a', 'ind_b', 'ind_e']
         headers = next(series, None)
-        self.assertSetEqual(expected_headers, set(headers))
+        self.assertListEqual(expected_headers, headers)
 
     def test_header_respects_indicator_type_order(self):
         type_a = IndicatorType.objects.get(nombre='ind_a')
@@ -116,9 +116,9 @@ class ViewsTest(TestCase):
 
         network_response = Client().get(reverse('admin:network_series'))
         series = csv.reader(network_response.content.splitlines())
-        expected_headers = {'indice_tiempo', 'ind_e', 'ind_b', 'ind_a'}
+        expected_headers = ['indice_tiempo', 'ind_e', 'ind_b', 'ind_a']
         headers = next(series, None)
-        self.assertSetEqual(expected_headers, set(headers))
+        self.assertListEqual(expected_headers, headers)
 
     def test_series_rows(self):
         network_response = Client().get(reverse('admin:network_series'))

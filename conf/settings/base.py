@@ -398,7 +398,13 @@ ADMIN_REORDER = (
     str('auth'),
     str('django_datajsonar'),
     str('dashboard'),
-    {'app': 'des', 'label': 'Configuración correo'},
+    {'app': 'des',
+     'label': 'Configuración correo',
+     'models': (
+        {'model': 'des.DynamicEmailConfiguration',
+         'label': 'Configuración correo electrónico'},
+     )
+     },
     str('scheduler'),
     str('sites'),
 )

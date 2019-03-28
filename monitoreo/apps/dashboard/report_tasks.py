@@ -14,6 +14,7 @@ from django.core.mail.message import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django_rq import job
+from des.models import DynamicEmailConfiguration
 
 from pydatajson.core import DataJson
 from pydatajson.custom_exceptions import NonParseableCatalog
@@ -79,6 +80,7 @@ class ReportSender(object):
         target = node.catalog_id if node else 'Red'
         mail.to = self._get_recipients(node=node)
         mail.connection = self.connection
+        mail.from_email = DynamicEmailConfiguration.get_solo().from_email
         try:
             mail.send()
             msg = "Reporte de {} enviado exitosamente".format(target)

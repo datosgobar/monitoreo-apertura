@@ -15,6 +15,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.utils.html import escape
 from django.test import TestCase
+from des.models import DynamicEmailConfiguration
 
 from django_datajsonar.models import Node
 from pydatajson.core import DataJson
@@ -38,6 +39,10 @@ class IndicatorReportGenerationTest(TestCase):
     def setUpTestData(cls):
         # set mock env
         settings.ENV_TYPE = 'tst'
+
+        config = DynamicEmailConfiguration.get_solo()
+        config.from_email = 'from_test@test.com'
+        config.save()
 
         # set mock task
         cls.indicators_task = IndicatorsGenerationTask.objects.create(finished=timezone.now(), logs='test task logs')
@@ -87,6 +92,10 @@ class IndicatorReportGenerationTest(TestCase):
     def test_mail_is_sent_to_staff_members(self):
         self.assertEqual(1, len(mail.outbox))
         self.assertEqual(['staff@test.com'], self.mail.to)
+
+    def test_mail_uses_des_from(self):
+        self.assertEqual(1, len(mail.outbox))
+        self.assertEqual('from_test@test.com', self.mail.from_email)
 
     def test_subject(self):
         start_time = timezone.localtime(self.indicators_task.created).strftime('%Y-%m-%d %H:%M:%S')
@@ -168,6 +177,10 @@ class ValidationReportGenerationTest(TestCase):
         # set mock env
         settings.ENV_TYPE = 'tst'
 
+        config = DynamicEmailConfiguration.get_solo()
+        config.from_email = 'from_test@test.com'
+        config.save()
+
         # set mock nodes
         cls.node1 = Node.objects.create(catalog_id='id1', catalog_url=cls.get_sample('several_assorted_errors.json'), indexable=True)
         cls.node2 = Node.objects.create(catalog_id='id2', catalog_url=cls.get_sample('full_data.json'), indexable=True)
@@ -199,6 +212,10 @@ class ValidationReportGenerationTest(TestCase):
     def test_subject(self):
         subject = u'[tst] Validacion de catálogo id1: 2010-10-10 07:00:00'
         self.assertEqual(subject, self.mail.subject)
+
+    def test_mail_uses_des_from(self):
+        self.assertEqual(1, len(mail.outbox))
+        self.assertEqual('from_test@test.com', self.mail.from_email)
 
     def test_mail_header(self):
         header, _, _ = filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))

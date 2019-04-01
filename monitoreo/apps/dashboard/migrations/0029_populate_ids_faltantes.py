@@ -16,7 +16,7 @@ def fill_indicators_id(apps, schema_editor):
     Indicador = apps.get_model("dashboard", "Indicador")
     for title, identifier in title_to_id_map.items():
         Indicador.objects.filter(jurisdiccion_nombre=title).update(jurisdiccion_id=identifier)
-        print u"Migrados los indicadores de {}".format(identifier)
+        print(u"Migrados los indicadores de {}".format(identifier))
 
 
 class Migration(migrations.Migration):

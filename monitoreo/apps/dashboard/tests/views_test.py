@@ -10,6 +10,7 @@ from django_datajsonar.models import Node
 
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed,\
     IndicatorType, IndicadorFederador
+from monitoreo.apps.dashboard.tests.test_utils.read_bytes_as_csv import read_content_as_csv
 
 
 class ViewsTest(TestCase):
@@ -104,7 +105,8 @@ class ViewsTest(TestCase):
 
     def test_series_header(self):
         network_response = Client().get(reverse('admin:network_series'))
-        series = csv.reader(network_response.content.splitlines())
+        series = read_content_as_csv(network_response.content)
+
         expected_headers = ['indice_tiempo', 'ind_a', 'ind_b', 'ind_e']
         headers = next(series, None)
         self.assertListEqual(expected_headers, headers)
@@ -115,15 +117,14 @@ class ViewsTest(TestCase):
         type_a.swap(type_e)
 
         network_response = Client().get(reverse('admin:network_series'))
-        series = csv.reader(network_response.content.splitlines())
+        series = read_content_as_csv(network_response.content)
         expected_headers = ['indice_tiempo', 'ind_e', 'ind_b', 'ind_a']
         headers = next(series, None)
-        self.assertListEqual(expected_headers, headers)
+        self.assertEqual(expected_headers, headers)
 
     def test_series_rows(self):
         network_response = Client().get(reverse('admin:network_series'))
-        series = network_response.content.splitlines()
-        self.assertEqual(4, len(series))
+        series = network_response.content.decode('utf-8').splitlines()
         series_csv = csv.DictReader(series)
         two_days_ago = self._format_previous_dates(2)
         expected_row = {'indice_tiempo': two_days_ago,
@@ -150,7 +151,7 @@ class ViewsTest(TestCase):
     def test_node_series(self):
         node_response = Client().get(reverse('admin:node_series',
                                              kwargs={'node_id': 'id1'}))
-        series = node_response.content.splitlines()
+        series = node_response.content.decode('utf-8').splitlines()
         self.assertEqual(2, len(series))
         series_csv = csv.DictReader(series)
         today = self._format_previous_dates(0)
@@ -164,7 +165,7 @@ class ViewsTest(TestCase):
     def test_indexing_series(self):
         node_response = Client().get(reverse('admin:indexing_series',
                                              kwargs={'node_id': 'idx1'}))
-        series = node_response.content.splitlines()
+        series = node_response.content.decode('utf-8').splitlines()
         self.assertEqual(2, len(series))
         series_csv = csv.DictReader(series)
         today = self._format_previous_dates(0)

@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 dataset = Dataset().load(indicators_csv.read())
                 indicator_resource = modelresource_factory(model=model)()
                 result = indicator_resource.import_data(dataset)
-                print result.totals
+                print(result.totals)
 
 
 @contextmanager

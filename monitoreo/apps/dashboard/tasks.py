@@ -78,5 +78,5 @@ def get_catalog_from_node(node):
         if dictionary:
             catalog = DataJson(dictionary)
             return catalog
-        else:
-            return None
+
+        return None

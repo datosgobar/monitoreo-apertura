@@ -64,7 +64,7 @@ def send_validations(validation_task=None):
     generator.close_task()
 
 
-class ReportSender(object):
+class ReportSender:
     def __init__(self, report_task):
         self.report_task = report_task
         self.connection = get_connection()
@@ -92,7 +92,7 @@ class ReportSender(object):
         self.connection.close()
 
 
-class EmailRenderer(object):
+class EmailRenderer:
 
     def __init__(self, template_dir, txt_template, html_template,
                  error_dir=None):
@@ -122,7 +122,7 @@ class EmailRenderer(object):
         return mail
 
 
-class AbstractReportGenerator(object):
+class AbstractReportGenerator:
     DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
     def __init__(self, report_task, renderer):

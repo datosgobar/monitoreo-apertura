@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import json
-from urlparse import urljoin
+from urllib.parse import urljoin
 from django.conf import settings
 from django.utils import timezone
 from django.db.utils import DataError

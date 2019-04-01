@@ -1,9 +1,39 @@
 ---
 
+- name: Add python3 repository
+  apt_repository:
+    repo: "ppa:deadsnakes/ppa"
+  become: yes
+  become_method: sudo
+  become_user: root
+
+- name: Install python 3.6
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  become: yes
+  become_user: root
+  with_items:
+    - python3.6
+    - python3.6-dev
+
+- name: Check if py2 virtualenv exists
+  stat:
+    path: "{{ application_virtualenv_dir }}bin/python2"
+  register: virtualenv_python2_installed
+
+- name: Remove python 2 virtualenv
+  file:
+    path: "{{ application_virtualenv_dir }}"
+    state: absent
+  when: virtualenv_python2_installed.stat.exists == True
+  become: yes
+  become_user: root
+
 - name: Init virtualenv
   pip: 
     virtualenv: "{{ application_virtualenv_dir }}"
-    virtualenv_python: python2.7
+    virtualenv_python: python3.6
     requirements: "{{ application_requirements }}"
   tags: quickly
 

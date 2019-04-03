@@ -66,7 +66,7 @@ class ModelsTest(TestCase):
                                node_id='test_3', harvesting=True)
 
     @classmethod
-    def _create_indicators(self, ind_type, values,
+    def _create_indicators(cls, ind_type, values,
                            node_id=None, node_name='', harvesting=False):
         res = []
         for ind_type, value in zip(ind_type, values):

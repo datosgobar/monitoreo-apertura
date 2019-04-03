@@ -23,8 +23,8 @@ class FederationAdmin(AbstractTaskAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj:
             return self.readonly_fields + ('harvesting_node',)
-        else:
-            return self.readonly_fields
+
+        return self.readonly_fields
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "harvesting_node":

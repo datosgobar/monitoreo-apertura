@@ -97,9 +97,8 @@ class HarvestRunTest(TestCase):
         node1 = Node.objects.get(catalog_id='id1')
         datajson = DataJson(self.get_sample('full_data.json'))
         valid, _, _ = sort_datasets_by_condition(node1, datajson)
-        self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c777',
-                               '99db6631-d1c9-470b-a73e-c62daa32c420'],
-                              valid)
+        self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c777', '99db6631-d1c9-470b-a73e-c62daa32c420'},
+                            valid)
         dataset = Dataset.objects.get(catalog__identifier='id1',
                                       identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset.identifier = 'new_identifier'
@@ -107,38 +106,38 @@ class HarvestRunTest(TestCase):
         dataset = datajson.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset['identifier'] = 'new_identifier'
         valid, _, _ = sort_datasets_by_condition(node1, datajson)
-        self.assertItemsEqual(['new_identifier',
-                               '99db6631-d1c9-470b-a73e-c62daa32c420'],
-                              valid)
+        self.assertSetEqual({'new_identifier',
+                             '99db6631-d1c9-470b-a73e-c62daa32c420'},
+                            valid)
         dataset = Dataset.objects.get(catalog__identifier='id1',
                                       identifier='new_identifier')
         dataset.indexable = False
         dataset.save()
         valid, _, _ = sort_datasets_by_condition(node1, datajson)
-        self.assertItemsEqual(['99db6631-d1c9-470b-a73e-c62daa32c420'],
-                              valid)
+        self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c420'},
+                            valid)
 
     def test_dataset_list_returns_empty_if_no_related_datasets(self):
         new_node = Node(catalog_id='id4', catalog_url=self.get_sample('full_data.json'), indexable=True)
         valid, _, _ = sort_datasets_by_condition(new_node, DataJson(self.get_sample('full_data.json')))
-        self.assertItemsEqual([], valid)
+        self.assertSetEqual(set(), valid)
 
     def test_get_dataset_does_not_return_invalid_datasets(self):
         node = Node.objects.get(catalog_id='id3')
         datajson = DataJson(self.get_sample('missing_dataset_title.json'))
         valid, invalid, _ = sort_datasets_by_condition(node, datajson)
-        self.assertItemsEqual(set(), valid)
-        self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, invalid)
+        self.assertSetEqual(set(), valid)
+        self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, invalid)
         dataset = datajson.get_dataset(identifier='99db6631-d1c9-470b-a73e-c62daa32c777')
         dataset['title'] = 'aTitle'
         valid, invalid, _ = sort_datasets_by_condition(node, datajson)
-        self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, valid)
-        self.assertItemsEqual(set(), invalid)
+        self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, valid)
+        self.assertSetEqual(set(), invalid)
 
     def test_get_dataset_does_not_return_missing_datasets(self):
         node = Node.objects.get(catalog_id='id1')
         datajson = DataJson(self.get_sample('full_data.json'))
         datajson.datasets.pop(0)
         valid, _, missing = sort_datasets_by_condition(node, datajson)
-        self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c420'}, valid)
-        self.assertItemsEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, missing)
+        self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c420'}, valid)
+        self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, missing)

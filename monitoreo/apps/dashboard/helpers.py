@@ -3,7 +3,7 @@ import json
 import csv
 import datetime
 
-from urlparse import urljoin
+from urllib.parse import urljoin
 from six import text_type
 from pydatajson import DataJson
 
@@ -30,7 +30,7 @@ def fetch_latest_indicadors(indicators):
     latest = {}
     for i in indicators:
         if i.indicador_tipo.nombre not in latest:
-            if isinstance(i.indicador_valor, (str, unicode)):
+            if isinstance(i.indicador_valor, str):
                 latest[i.indicador_tipo.nombre] = i.indicador_valor
             else:
                 latest[i.indicador_tipo.nombre] = json.loads(str(i.indicador_valor))

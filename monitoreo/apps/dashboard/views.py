@@ -92,7 +92,7 @@ def populate_table(tabla):
     return context
 
 
-def indicators_csv(request, node_id=None, indexing=False):
+def indicators_csv(_request, node_id=None, indexing=False):
     if node_id is None:
         queryset = IndicadorRed.objects.\
             filter(indicador_tipo__series_red=True)

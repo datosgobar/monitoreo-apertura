@@ -231,7 +231,9 @@ class ValidationReportGenerationTest(TestCase):
     def test_dataset_validation(self):
         _, catalog_validation, dataset_validation =\
             filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
-        for error in self.report['error']['dataset'][0]['errors']:
+
+        dataset_errors = list(self.report['error']['dataset'])
+        for error in dataset_errors[0]['errors']:
             self.assertTrue(escape(error['message']) in dataset_validation)
 
     def test_mail_attachment(self):

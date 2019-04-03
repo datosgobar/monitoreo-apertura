@@ -35,7 +35,7 @@ def generate_indicators(task):
     except (CentralNode.DoesNotExist, AttributeError):
         central_catalog = CENTRAL
     indics, network_indics = data_json.generate_catalogs_indicators(
-        catalogs, central_catalog)
+        catalogs, central_catalog, identifier_search=True)
 
     save_indicators(indics, task)
     save_network_indics(network_indics, 'RED', task)
@@ -43,7 +43,7 @@ def generate_indicators(task):
     federator_catalogs = load_catalogs(
         task, HarvestingNode.objects.filter(enabled=True), harvesting=True)
     federator_indics, _ = data_json.generate_catalogs_indicators(
-        federator_catalogs)
+        federator_catalogs, identifier_search=True)
 
     save_indicators(federator_indics, task, harvesting_nodes=True)
     # Creo columnas default si no existen

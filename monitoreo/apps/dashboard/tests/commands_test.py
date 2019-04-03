@@ -48,9 +48,11 @@ class CommandTest(TestCase):
         central = DataJson(cls.get_sample('full_data.json'))
         cls.indicators, cls.network_indicators = \
             DataJson().generate_catalogs_indicators(cls.catalogs,
-                                                    central_catalog=central)
+                                                    central_catalog=central,
+                                                    identifier_search=True)
         cls.indexing_indicators, _ = \
-            DataJson().generate_catalogs_indicators(cls.indexing_catalogs)
+            DataJson().generate_catalogs_indicators(cls.indexing_catalogs,
+                                                    identifier_search=True)
         cls.dj = DataJson()
         with patch('monitoreo.apps.dashboard.indicators_tasks.CENTRAL',
                    cls.get_sample('full_data.json')):

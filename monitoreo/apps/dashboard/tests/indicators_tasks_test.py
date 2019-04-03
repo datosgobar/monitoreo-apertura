@@ -129,8 +129,10 @@ class IndicatorGenerationsTest(TestCase):
         mock_indic.return_value = (self.indicators, self.network_indicators)
         task = IndicatorsGenerationTask.objects.create()
         generate_indicators(task)
-        mock_indic.assert_any_call(DataJson(), self.catalogs)
-        mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL)
+        mock_indic.assert_any_call(DataJson(), self.catalogs,
+                                   identifier_search=True)
+        mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL,
+                                   identifier_search=True)
 
     def test_undefined_central_node_uses_default(self, mock_indic, mock_load):
         mock_load.return_value = self.catalogs
@@ -138,8 +140,10 @@ class IndicatorGenerationsTest(TestCase):
         CentralNode.objects.create()
         task = IndicatorsGenerationTask.objects.create()
         generate_indicators(task)
-        mock_indic.assert_any_call(DataJson(), self.catalogs)
-        mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL)
+        mock_indic.assert_any_call(DataJson(), self.catalogs,
+                                   identifier_search=True)
+        mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL,
+                                   identifier_search=True)
 
     def test_defined_central_node_catalog(self, mock_indic, mock_load):
         mock_load.return_value = self.catalogs
@@ -149,6 +153,8 @@ class IndicatorGenerationsTest(TestCase):
         CentralNode.objects.create(node=harvesting)
         task = IndicatorsGenerationTask.objects.create()
         generate_indicators(task)
-        mock_indic.assert_any_call(DataJson(), self.catalogs)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
-                                   'harvest_url/data.json')
+                                   identifier_search=True)
+        mock_indic.assert_any_call(DataJson(), self.catalogs,
+                                   'harvest_url/data.json',
+                                   identifier_search=True)

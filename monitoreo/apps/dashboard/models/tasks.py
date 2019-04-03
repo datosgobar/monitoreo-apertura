@@ -24,4 +24,4 @@ class ReportGenerationTask(AbstractTask):
 
 class ValidationReportTask(AbstractTask):
     class Meta:
-        verbose_name_plural = "Reportes de Validación"
+        verbose_name_plural = "Reportes de validación"

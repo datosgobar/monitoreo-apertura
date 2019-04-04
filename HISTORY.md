@@ -1,3 +1,15 @@
+Versiones
+=========
+0.0.35 (01-04-04)
+-------------------
+
+* Ordena las columnas de los csv de series de tiempo
+* Revisión de nombres
+* Fix del campo from en los mails
+* Port a python 3
+* Actualiza versión de pydatajson y django_datajsonar
+
+
 0.0.34 (01-03-19)
 -------------------
 

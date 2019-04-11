@@ -1,12 +1,11 @@
 from __future__ import unicode_literals
 
 import argparse
-
+import csv
 from contextlib import contextmanager
-from tablib import Dataset
-from import_export.resources import modelresource_factory
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
 from monitoreo.apps.dashboard.models import IndicadorRed, Indicador
 
@@ -19,18 +18,28 @@ class Command(BaseCommand):
     los rows de la base de datos correspondientes."""
 
     def add_arguments(self, parser):
-        parser.add_argument('file', type=argparse.FileType('rw'))
+        parser.add_argument('file', type=argparse.FileType('r'))
         parser.add_argument('--aggregated', action='store_true')
 
     def handle(self, *args, **options):
         model = IndicadorRed if options['aggregated'] else Indicador
-
+        indicators = []
         with options['file'] as indicators_csv:
+            csv_reader = csv.DictReader(indicators_csv)
             with suppress_autotime(model, ['fecha']):
-                dataset = Dataset().load(indicators_csv.read())
-                indicator_resource = modelresource_factory(model=model)()
-                result = indicator_resource.import_data(dataset)
-                print(result.totals)
+                with transaction.atomic():
+                    for row in csv_reader:
+                        # sacarle el valor al row antes
+                        filter_fields = {
+                            field: row[field] for field in row if
+                            field in ('fecha',
+                                      'indicador_tipo',
+                                      'jurisdiccion_id')
+                        }
+                        model.objects.filter(**filter_fields).delete()
+                        indicators.append(model(**row))
+
+                    model.objects.bulk_create(indicators)
 
 
 @contextmanager

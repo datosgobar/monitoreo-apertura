@@ -229,7 +229,7 @@ class ValidationReportGenerator(AbstractReportGenerator):
             'validation_time': validation_time,
             'status': validation['status'],
             'catalog': validation['error']['catalog'],
-            'dataset_list': validation['error']['dataset']
+            'dataset_list': list(validation['error']['dataset'])
         }
 
         mail = self.render_templates(context)

@@ -11,11 +11,9 @@ from monitoreo.apps.dashboard.admin.indicators import IndicadorRedResource, Indi
 
 
 class Command(BaseCommand):
-    help = """Toma el path a un csv de la forma
-    [id, fecha, indicador_valor, indicador_tipo] para indicadores de red y
-    [id, fecha, jurisdiccion_id, jurisdiccion_nombre, indicador_valor,
-    indicador_tipo] para indicadores de nodos. Con esos datos crea o actualiza
-    los rows de la base de datos correspondientes."""
+    help = """Exporta la base de indicadores en un csv. Por default exporta los
+    indicadores de nodo. Para exportar los indicadores de red, pasar
+    --aggregated."""
 
     def add_arguments(self, parser):
         parser.add_argument('file', type=argparse.FileType('w'))

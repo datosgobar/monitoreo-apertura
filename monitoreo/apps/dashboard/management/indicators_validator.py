@@ -7,7 +7,7 @@ from monitoreo.apps.dashboard.models import IndicatorType
 csvvalidator.basestring = str
 
 
-class IndicatorValidatorGenerator(object):
+class IndicatorValidatorGenerator:
     def __init__(self, aggregated):
         indicator_names = IndicatorType.objects.all()\
             .values_list('nombre', flat=True)

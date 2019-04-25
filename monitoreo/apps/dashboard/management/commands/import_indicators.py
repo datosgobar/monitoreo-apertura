@@ -30,9 +30,8 @@ class Command(BaseCommand):
         aggregated = options['aggregated']
         model = IndicadorRed if aggregated else Indicador
         indicators = []
-        types_ids = IndicatorType.objects.values('nombre', 'id')
-        types_mapping = {ind_type['nombre']: ind_type['id'] for
-                         ind_type in types_ids}
+        types_mapping = {ind_type.nombre: ind_type for
+                         ind_type in IndicatorType.objects.all()}
         with options['file'] as indicators_csv:
             # Validación de datos
             if invalid_indicators_csv(indicators_csv, aggregated):
@@ -40,13 +39,13 @@ class Command(BaseCommand):
                       'Correr el comando validate_indicators_csv para un ' \
                       'reporte detallado'
                 raise ValidationError(msg)
-
+            indicators_csv.seek(0)
             csv_reader = csv.DictReader(indicators_csv)
             with suppress_autotime(model, ['fecha']):
                 with transaction.atomic():
                     for row in csv_reader:
                         row['indicador_tipo'] = \
-                            types_mapping[row['indicador_tipo__nombre']]
+                            types_mapping[row.pop('indicador_tipo__nombre')]
                         filter_fields = {
                             field: row[field] for field in row if
                             field in ('fecha',

@@ -2,6 +2,7 @@
 
 import os
 import tempfile
+import csv
 
 from datetime import date
 
@@ -17,13 +18,17 @@ from monitoreo.apps.dashboard.context_managers import suppress_autotime
 
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
+RESULTS_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results')
 
 
 class IndicatorImportExportTest(TestCase):
-
     @classmethod
     def get_sample(cls, sample_filename):
         return os.path.join(SAMPLES_DIR, sample_filename)
+
+    @classmethod
+    def get_result(cls, result_filename):
+        return os.path.join(RESULTS_DIR, result_filename)
 
     @classmethod
     def setUpTestData(cls):
@@ -62,12 +67,54 @@ class IndicatorImportExportTest(TestCase):
                                          jurisdiccion_nombre='nodo2',
                                          fecha=creation_date)
 
+    def compare_csv(self, expected_file, result_file):
+        expected_csv = set(map(tuple, csv.reader(expected_file)))
+        result_csv = set(map(tuple, csv.reader(result_file)))
+        self.assertSetEqual(expected_csv, result_csv)
+
     def test_indicators_are_imported_correctly(self):
         indicators_csv = self.get_sample('indicators_sample.csv')
         call_command('import_indicators', indicators_csv)
+        future_date = date(2100, 12, 31)
+        self.assertEqual(20, Indicador.objects.all().count())
+        self.assertEqual(10, Indicador.objects.all().
+                         filter(fecha=future_date).count())
+        self.assertEqual('337',
+                         Indicador.objects.get(
+                             fecha=future_date,
+                             indicador_tipo__nombre='ind_a',
+                             jurisdiccion_id='id1').indicador_valor)
+        self.assertEqual('[["d3", "l3"]]',
+                         Indicador.objects.get(
+                             fecha=future_date,
+                             indicador_tipo__nombre='ind_b',
+                             jurisdiccion_id='id1').indicador_valor)
+        self.assertEqual('{"k1": 100, "k2": 10}',
+                         Indicador.objects.get(
+                             fecha=future_date,
+                             indicador_tipo__nombre='ind_c',
+                             jurisdiccion_id='id2').indicador_valor)
 
     def test_indicators_are_updated(self):
-        pass
+        indicators_csv = self.get_sample('updated_indicators.csv')
+        call_command('import_indicators', indicators_csv)
+        past_date = date(2000, 1, 1)
+        self.assertEqual(10, Indicador.objects.all().count())
+        self.assertEqual('337',
+                         Indicador.objects.get(
+                             fecha=past_date,
+                             indicador_tipo__nombre='ind_a',
+                             jurisdiccion_id='id1').indicador_valor)
+        self.assertEqual('[["d3", "l3"]]',
+                         Indicador.objects.get(
+                             fecha=past_date,
+                             indicador_tipo__nombre='ind_b',
+                             jurisdiccion_id='id1').indicador_valor)
+        self.assertEqual('{"k1": 100, "k2": 10}',
+                         Indicador.objects.get(
+                             fecha=past_date,
+                             indicador_tipo__nombre='ind_c',
+                             jurisdiccion_id='id2').indicador_valor)
 
     def test_network_indicators_are_imported_correctly(self):
         indicators_csv = self.get_sample('network_indicators_sample.csv')
@@ -86,15 +133,15 @@ class IndicatorImportExportTest(TestCase):
                 call_command('import_indicators', indicators_csv)
 
     def test_indicators_are_exported_corectly(self):
-        tmpfile = tempfile.NamedTemporaryFile(delete=False, suffix='.csv')
-        tmpfile.close()
-        call_command('export_indicators', tmpfile.name)
-        os.remove(tmpfile.name)
-        # self.assertSetEqual()
+        result_filename = self.get_result('expected_indicators.csv')
+        with tempfile.NamedTemporaryFile(mode='w+t') as tmp_result:
+            call_command('export_indicators', tmp_result.name)
+            with open(result_filename, 'r') as expected_csv:
+                self.compare_csv(expected_csv, tmp_result)
 
     def test_network_indicators_are_exported_corectly(self):
-        tmpfile = tempfile.NamedTemporaryFile(delete=False, suffix='.csv')
-        tmpfile.close()
-        call_command('export_indicators', tmpfile.name, aggregated=True)
-        os.remove(tmpfile.name)
-        # self.assertSetEqual()
+        result_filename = self.get_result('expected_indicators.csv')
+        with tempfile.NamedTemporaryFile(mode='w+t') as tmp_result:
+            call_command('export_indicators', tmp_result.name)
+            with open(result_filename, 'r') as expected_csv:
+                self.compare_csv(expected_csv, tmp_result)

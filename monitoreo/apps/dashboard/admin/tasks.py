@@ -6,7 +6,7 @@ from django_datajsonar.admin.tasks import AbstractTaskAdmin
 
 from monitoreo.apps.dashboard.tasks import federate_catalogs
 from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
-from monitoreo.apps.dashboard.report_tasks import send_reports, send_validations
+from monitoreo.apps.dashboard.report_tasks import indicators_run, validation_run
 from monitoreo.apps.dashboard import models
 
 
@@ -50,7 +50,7 @@ class ReportAdmin(AbstractTaskAdmin):
     list_display = ('__unicode__',)
 
     model = models.ReportGenerationTask
-    task = send_reports
+    task = indicators_run
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_reports'
 
 
@@ -60,5 +60,5 @@ class ValidationReportAdmin(AbstractTaskAdmin):
     list_display = ('__unicode__',)
 
     model = models.ValidationReportTask
-    task = send_validations
+    task = validation_run
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_validations'

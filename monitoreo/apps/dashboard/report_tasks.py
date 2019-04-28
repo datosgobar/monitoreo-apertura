@@ -24,7 +24,19 @@ from . import models
 
 
 @job('reports')
-def send_reports(report_task=None):
+def send_reports(node=None):
+    report_task = models.ReportGenerationTask.objects.create()
+    indicators_run(report_task, node=node)
+
+
+@job('reports')
+def send_validations(node=None):
+    validation_task = models.ValidationReportTask.objects.create()
+    validation_run(validation_task, node=node)
+
+
+@job('reports')
+def indicators_run(report_task, node=None):
     try:
         indicators_task = models.IndicatorsGenerationTask.objects\
             .filter(status=models.IndicatorsGenerationTask.FINISHED).latest('finished')
@@ -32,13 +44,11 @@ def send_reports(report_task=None):
         # No hay un task cargado
         return
 
-    report_task = report_task or models.ReportGenerationTask.objects.create()
-
     generator = IndicatorReportGenerator(indicators_task, report_task)
     mail = generator.generate_email()
     generator.send_email(mail)
 
-    nodes = Node.objects.filter(indexable=True)
+    nodes = [node] if node else Node.objects.filter(indexable=True)
     for node in nodes:
         mail = generator.generate_email(node)
         generator.send_email(mail, node=node)
@@ -46,11 +56,9 @@ def send_reports(report_task=None):
 
 
 @job('reports')
-def send_validations(validation_task=None):
-    validation_task = validation_task or \
-        models.ValidationReportTask.objects.create()
+def validation_run(validation_task, node=None):
     generator = ValidationReportGenerator(validation_task)
-    nodes = Node.objects.filter(indexable=True)
+    nodes = [node] if node else Node.objects.filter(indexable=True)
     for node in nodes:
         try:
             mail = generator.generate_email(node=node)

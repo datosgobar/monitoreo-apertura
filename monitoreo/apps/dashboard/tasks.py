@@ -12,18 +12,18 @@ from .strings import UNREACHABLE_CATALOG, TASK_ERROR
 
 
 @job('federation')
-def federation_run():
+def federation_run(node=None):
     harvesting_nodes = HarvestingNode.objects.filter(enabled=True)
     for harvester in harvesting_nodes:
         task = FederationTask.objects.create(harvesting_node=harvester)
-        federate_catalogs(task)
+        federate_catalogs(task, node=node)
 
 
 @job('federation')
-def federate_catalogs(task):
+def federate_catalogs(task, node=None):
     portal_url = task.harvesting_node.url
     apikey = task.harvesting_node.apikey
-    nodes = Node.objects.filter(indexable=True)
+    nodes = [node] if node else Node.objects.filter(indexable=True)
     for node in nodes:
         federate_catalog.delay(node, portal_url, apikey, task.pk)
     # Necesario para usar el abstractTaskAdmin. Terminar todas las tareas

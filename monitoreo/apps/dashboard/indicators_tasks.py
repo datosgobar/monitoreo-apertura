@@ -20,7 +20,7 @@ CENTRAL = URL + 'datosgobar/data.json'
 
 
 @job('indicators')
-def indicators_run():
+def indicators_run(node=None):
     task = IndicatorsGenerationTask.objects.create()
     generate_indicators.delay(task)
 

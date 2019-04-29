@@ -1,0 +1,11 @@
+fecha,indicador_tipo__nombre,indicador_valor,jurisdiccion_id,jurisdiccion_nombre
+2000-01-01,ind_a,23,id1,nodo1
+2000-01-01,ind_b,"[[""d1"", ""l1""]]",id1,nodo1
+2000-01-01,ind_c,"{""k2"": 1}",id1,nodo1
+2000-01-01,ind_d,500,id1,nodo1
+2000-01-01,ind_e,2,id1,nodo1
+2000-01-01,ind_a,19,id2,nodo2
+2000-01-01,ind_b,"[[""d2"", ""l2""]]",id2,nodo2
+2000-01-01,ind_c,"{""k1"": 1, ""k2"": 1}",id2,nodo2
+2000-01-01,ind_d,50,id2,nodo2
+2000-01-01,ind_e,2,id2,nodo2

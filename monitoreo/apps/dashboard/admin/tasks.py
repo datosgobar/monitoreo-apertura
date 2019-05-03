@@ -38,6 +38,7 @@ class FederationAdmin(AbstractTaskAdmin):
 class IndicatorTaskAdmin(AbstractTaskAdmin):
     readonly_fields = ('created', 'logs', 'status', 'finished')
     list_display = ('__unicode__',)
+    exclude = ('node',)
 
     model = models.IndicatorsGenerationTask
     task = generate_indicators

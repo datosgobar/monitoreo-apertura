@@ -49,9 +49,9 @@ def indicators_run(report_task, node=None):
     generator.send_email(mail)
 
     nodes = [node] if node else Node.objects.filter(indexable=True)
-    for node in nodes:
-        mail = generator.generate_email(node)
-        generator.send_email(mail, node=node)
+    for target_node in nodes:
+        mail = generator.generate_email(target_node)
+        generator.send_email(mail, node=target_node)
     generator.close_task()
 
 
@@ -59,16 +59,16 @@ def indicators_run(report_task, node=None):
 def validation_run(validation_task, node=None):
     generator = ValidationReportGenerator(validation_task)
     nodes = [node] if node else Node.objects.filter(indexable=True)
-    for node in nodes:
+    for target_node in nodes:
         try:
-            mail = generator.generate_email(node=node)
+            mail = generator.generate_email(node=target_node)
         except (NonParseableCatalog, RequestException) as e:
             msg = 'Error enviando la validación de {}: {}'\
-                .format(node.catalog_id, str(e))
+                .format(target_node.catalog_id, str(e))
             models.ValidationReportTask.info(validation_task, msg)
-            mail = generator.generate_error_mail(node, str(e))
+            mail = generator.generate_error_mail(target_node, str(e))
 
-        generator.send_email(mail, node=node)
+        generator.send_email(mail, node=target_node)
     generator.close_task()
 
 

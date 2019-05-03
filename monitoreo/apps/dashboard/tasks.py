@@ -24,8 +24,8 @@ def federate_catalogs(task, node=None):
     portal_url = task.harvesting_node.url
     apikey = task.harvesting_node.apikey
     nodes = [node] if node else Node.objects.filter(indexable=True)
-    for node in nodes:
-        federate_catalog.delay(node, portal_url, apikey, task.pk)
+    for harvestable_node in nodes:
+        federate_catalog.delay(harvestable_node, portal_url, apikey, task.pk)
     # Necesario para usar el abstractTaskAdmin. Terminar todas las tareas
     task.status = FederationTask.FINISHED
     task.save()

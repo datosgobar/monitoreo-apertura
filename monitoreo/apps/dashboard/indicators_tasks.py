@@ -21,6 +21,9 @@ CENTRAL = URL + 'datosgobar/data.json'
 
 @job('indicators')
 def indicators_run(_node=None):
+    # El framework de tareas de django_datajsonar pasa para todos los casos un
+    # nodo por parámetro. Esta tarea no hace uso de ese parámtro por el
+    # momento
     task = IndicatorsGenerationTask.objects.create()
     generate_indicators.delay(task)
 

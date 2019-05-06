@@ -1,12 +1,19 @@
 Versiones
 =========
-0.0.36 (01-04-15)
+0.0.37 (15-04-19)
+-------------------
+
+* Actualiza versión de django-datajsonar
+* Agrega management command para importar/exportar csv de indicadores
+
+
+0.0.36 (15-04-19)
 -------------------
 
 * Actualiza versión de pydatajson
 
 
-0.0.35 (01-04-04)
+0.0.35 (04-04-19)
 -------------------
 
 * Ordena las columnas de los csv de series de tiempo

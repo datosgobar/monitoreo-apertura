@@ -1,6 +1,7 @@
 #! coding: utf-8
 
 import json
+import logging
 from django_rq import job
 
 from pydatajson.core import DataJson
@@ -9,6 +10,8 @@ from django_datajsonar.models import Node, Dataset
 from .helpers import generate_task_log
 from .models import HarvestingNode, FederationTask
 from .strings import UNREACHABLE_CATALOG, TASK_ERROR
+
+LOGGER = logging.getLogger(__name__)
 
 
 @job('federation')
@@ -40,7 +43,8 @@ def federate_catalog(node, portal_url, apikey, task_id):
     if not catalog:
         msg += UNREACHABLE_CATALOG.format(node.catalog_id)
         FederationTask.info(task, msg)
-        raise Exception(msg)
+        LOGGER.warning(msg)
+        return msg
     catalog.generate_distribution_ids()
     valid, invalid, missing = sort_datasets_by_condition(node, catalog)
 
@@ -48,12 +52,14 @@ def federate_catalog(node, portal_url, apikey, task_id):
         harvested_ids, federation_errors = harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, list(valid))
         msg += generate_task_log(catalog, catalog_id, invalid, missing, harvested_ids, federation_errors)
         FederationTask.info(task, msg)
+        LOGGER.warning(msg)
         return msg
 
     except Exception as e:
         msg += TASK_ERROR.format(catalog_id, list(valid), e)
         FederationTask.info(task, msg)
-        raise Exception(msg)
+        LOGGER.warning(msg)
+        return msg
 
 
 def sort_datasets_by_condition(node, catalog):

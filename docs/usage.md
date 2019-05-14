@@ -244,4 +244,16 @@ Es posible descargar los indicadores como series de tiempo en formato `.csv`. En
 `admin/dashboard/indicador/<id de nodo>/series-indicadores` se encuentran las series para nodos particulares.
 
 Se pueden definir en el admin de tipos de indicadores cuales se desean mostrar en las series. Marcando los booleanos,
-`series red` y `series nodos` se especifican los tipos a presentar. 
+`series red` y `series nodos` se especifican los tipos a presentar.
+
+## Importar/Exportar indicadores
+
+Se pueden bajar la base de indicadores e indicadores de red mediante el management command: `/manage.py export_indicators [file] [--aggregated]`.
+El argumento `file` es un path al archivo donde se van a escribir los indicadores. El parametro opcional `--aggregated` indica si se trata de
+indicadores red, por default se asume indicadores de nodos.
+
+A su vez es posible importar a la base de indicadores mediante el management command `/manage.py import_indicators [file] [--aggregated]`
+Los parámetros `file` y `--aggregated` indican lo mismo que para el comando anterior. Se espera un csv válido con la forma:
+`fecha, indicador_tipo, indicador_valor [, jurisdiccion_id, jurisdiccion_nombre]` para indicadores de red y de nodos
+respectivamente. La operación es un upsert, es decir se actualizaran los valores en caso que ya existen y se crearan
+indicadores nuevos si estos no están presentes.

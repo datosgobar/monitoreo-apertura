@@ -1,5 +1,11 @@
 Versiones
 =========
+0.0.39 (14-05-19)
+-------------------
+
+* Actualiza version de django_datajsonar para agregar la ruta nodes.json
+
+
 0.0.39 (16-04-19)
 -------------------
 

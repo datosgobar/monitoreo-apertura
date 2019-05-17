@@ -1,0 +1,832 @@
+
+
+
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="Documentación de la aplicación web de monitoreo y operación de la red de nodos de datos abiertos de la Administración Pública Nacional de la República Argentina.">
+      
+      
+        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/usage/">
+      
+      
+        <meta name="author" content="Datos Argentina">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copiar al portapapeles">
+      
+        <meta name="lang:clipboard.copied" content="Copiado al portapapeles">
+      
+        <meta name="lang:search.language" content="es">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No se encontraron documentos">
+      
+        <meta name="lang:search.result.one" content="1 documento encontrado">
+      
+        <meta name="lang:search.result.other" content="# documentos encontrados">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
+    
+    
+      
+        <title>Usage - Monitoreo Apertura</title>
+      
+    
+    
+	
+      <link rel="stylesheet" href="../assets/stylesheets/application.3020aac5.css">
+      
+      
+    
+	<link rel="stylesheet" href="../css/extra.css">
+
+    
+    
+      <script src="../assets/javascripts/modernizr.01ccdecf.js"></script>
+    
+    <script src="../js/extra.js"></script>
+
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../css/extra_rtd.css">
+    
+    
+      
+        
+<script>
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+  /* Setup integration and send page view */
+  ga("create", "UA-91435482-1", "https://portal-andino.readthedocs.io/")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#indice" tabindex="1" class="md-skip">
+        Saltar a contenido
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://datosgobar.github.io/monitoreo-apertura" title="Monitoreo Apertura" class="md-header-nav__button md-logo">
+          
+            <img src="../images/logo.svg" width="24" height="24">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Monitoreo Apertura
+            </span>
+            <span class="md-header-nav__topic">
+              Usage
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Escriba para comenzar la búsqueda
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/datosgobar/monitoreo-apertura/" title="Ir al repositorio" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <!--
+  Copyright (c) 2016-2018 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Main navigation -->
+<nav class="md-nav md-nav--primary" data-md-level="0">
+
+        <!-- Site title -->
+        <label class="md-nav__title md-nav__title--site" for="__drawer">
+          <a href="https://datosgobar.github.io/monitoreo-apertura"
+              title="Monitoreo Apertura" class="md-nav__button md-logo">
+            
+              <img src="../images/logo.svg" width="48" height="48" />
+            
+          </a>
+          Monitoreo Apertura
+        </label>
+      
+        <!-- Repository containing source -->
+        
+          <div class="md-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/datosgobar/monitoreo-apertura/" title="Ir al repositorio" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+          </div>
+        
+      
+        <!-- Render item list -->
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+            
+            
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Inicio" class="md-nav__link">
+      Inicio
+    </a>
+  </li>
+
+            <hr/>
+          
+            
+            
+            
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Usuarios
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Usuarios
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../quickstart.md" title="Comienzo rápido" class="md-nav__link">
+      Comienzo rápido
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+            <hr/>
+          
+            
+            
+            
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Desarrolladores
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Desarrolladores
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/install.md" title="Instalación" class="md-nav__link">
+      Instalación
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/update.md" title="Actualización" class="md-nav__link">
+      Actualización
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/checklist.md" title="Recomendaciones para salir a producción" class="md-nav__link">
+      Recomendaciones para salir a producción
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/migration.md" title="Migracion" class="md-nav__link">
+      Migracion
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/maintenance.md" title="Mantenimiento" class="md-nav__link">
+      Mantenimiento
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/https.md" title="Configuración HTTPS" class="md-nav__link">
+      Configuración HTTPS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/dns.md" title="Configuración de DNS" class="md-nav__link">
+      Configuración de DNS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/docker.md" title="Generación de imágenes Docker" class="md-nav__link">
+      Generación de imágenes Docker
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/development.md" title="Desarrollo" class="md-nav__link">
+      Desarrollo
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/tests.md" title="Tests" class="md-nav__link">
+      Tests
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+            <hr/>
+          
+        </ul>
+      </nav>
+      
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/usage.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<h2 id="indice">Indice</h2>
+<ul>
+<li><a href="#uso">Uso</a></li>
+<li><a href="#carga-de-nodos">Carga de Nodos</a><ul>
+<li><a href="#configuraci%C3%B3n-de-datasets-indexables">Configuración de datasets indexables</a></li>
+<li><a href="#generaci%C3%B3n-de-archivos-de-configuraci%C3%B3n">Generación de archivos de configuración</a></li>
+</ul>
+</li>
+<li><a href="#lectura-de-catalogos">Lectura de catalogos</a><ul>
+<li><a href="#cierre-de-la-tarea">Cierre de la tarea</a></li>
+<li><a href="#lectura-periodica">Lectura periodica</a></li>
+</ul>
+</li>
+<li><a href="#generaci%C3%B3n-de-indicadores">Generación de indicadores</a><ul>
+<li><a href="#generaci%C3%B3n-peri%C3%B3dica">Generación periódica</a></li>
+<li><a href="#reporte-de-indicadores">Reporte de indicadores</a></li>
+</ul>
+</li>
+<li><a href="#creaci%C3%B3n-de-procesos">Creación de procesos</a></li>
+<li><a href="#series-de-tiempo">Series de tiempo</a></li>
+<li><a href="#importarexportar-indicadores">Importar/Exportar indicadores</a></li>
+</ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<h1 id="uso">Uso</h1>
+<h2 id="carga-de-nodos">Carga de Nodos</h2>
+<p>Despues de iniciar sesion como Administrador, debemos cargar un nuevo <code>Node Register file</code>.
+Esta pagina se encuentra en la ruta <code>/admin/django_datajsonar/noderegisterfile/</code>.
+Este archivo tiene un registro de los nodos <em>a federar</em>. Ese un archivo de extencion <code>.yml</code> y
+tiene un aspecto como el siguiente:</p>
+<div class="codehilite"><pre><span></span><span class="nt">datosgobar</span><span class="p">:</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="s">&quot;http://datos.gob.ar/data.json&quot;</span>
+  <span class="nt">formato</span><span class="p">:</span> <span class="s">&quot;json&quot;</span>
+  <span class="nt">federado</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">transporte-bis</span><span class="p">:</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="s">&quot;http://datos.transporte.gob.ar/data.json&quot;</span>
+  <span class="nt">formato</span><span class="p">:</span> <span class="s">&quot;json&quot;</span>
+  <span class="nt">federado</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="c1"># Mas nodos...</span>
+</pre></div>
+
+
+<p>Luego de que creamos la nueva instancia, volvemos a la pagina del listado y deberiamos ver algo como 
+la siguiente imagen:</p>
+<p><img alt="Node register file list" src="../images/node_register_file.png" /></p>
+<p>Luego seleccionamos la instancia y usamos la accion "Process node file", como se muestra en la imagen:</p>
+<p><img alt="Process Node register file list" src="../images/process_node_register_file.png" /></p>
+<p>Eso procesara el archivo (puede tardar un poco), y al terminar veremos los nodos detectados en
+<code>/admin/django_datajsonar/node/</code>, algo parecido a</p>
+<p><img alt="Nodes list" src="../images/nodes_list.png" /></p>
+<h3 id="configuracion-de-datasets-indexables">Configuración de datasets indexables</h3>
+<p>Hay 2 formas de marcar un nodo como indexable, manualmente o cargando un csv de configuración. Para el caso manual, se
+puede marcar en el modelo, o marcar un subconjunto de los datasets y ejecutar la acción "Marcar como indexable".</p>
+<p>El otro método es cargando un nuevo <code>Dataset Indexing file</code>. Esta pagina se encuentra en la ruta
+<code>/admin/django_datajsonar/datasetindexingfile/</code>. El archivo tiene un registro de los datasets <em>indexables</em>.
+Es un archivo de extensión <code>.csv</code> y tiene un aspecto como el siguiente:</p>
+<div class="codehilite"><pre><span></span>catalog_id,dataset_identifier
+sspm,399
+sspm,330
+enacom,REGIS-DE-PROVE-POSTA
+acumar,cb351aa5-731b-458b-8227-a0c5b828356f
+# Más entradas
+</pre></div>
+
+
+<p>La primera columna tiene el identificador del catálogo, y la segunda el identificador del dataset que se desea marcar
+como indexable.</p>
+<p>Luego de que creamos la nueva instancia, volvemos a la página del listado y deberíamos ver algo como
+la siguiente imagen:</p>
+<p><img alt="Node register file list" src="../images/dataset_indexing_file.png" /></p>
+<p>Luego seleccionamos la instancia y usamos la acción "Process node file", como se muestra en la imagen:</p>
+<p><img alt="Process Node register file list" src="../images/process_indexing_file.png" /></p>
+<p>Eso procesa el archivo (puede tardar un poco), y al terminar veremos los datasets marcados como indexables en
+<code>/admin/django_datajsonar/node/</code>.</p>
+<h3 id="generacion-de-archivos-de-configuracion">Generación de archivos de configuración</h3>
+<p>Hay 2 formas de generar los archivos de configuración con los datasets indexables. La primera es entrando en la ruta:
+<code>admin/dataset/federacion-config.csv</code>. De esa manera, se descarga un csv con todos datasets marcados como indexables.</p>
+<p>La segunda es mediante una acción de Django. Podemos seleccionar un subconjunto de datasets y ejecutar la acción
+<code>Generar csv de configuración</code></p>
+<p><img alt="Generar csv de configuración" src="../images/config_csv_action.png" /></p>
+<p>De esta manera conseguimos el csv de configuración con los datasets indexables del subconjunto elegido.</p>
+<h2 id="lectura-de-catalogos">Lectura de catalogos</h2>
+<p>Para lanzar una lectura de todos los catalogos de los nodos, podemos instancia una <code>ReadDataJsonTask</code>.
+Para eso nos dirigimos a la ruta <code>/admin/django_datajsonar/readdatajsontask/</code>.
+Esta instancia no requiere ningun parametro, ya que leera los datos necesarios de las instancias <code>Node</code>
+del proceso anterior.
+Esta instancia ira registrando los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
+<p><img alt="Read DataJson Task" src="../images/read_datajson_task.png" /></p>
+<h3 id="cierre-de-la-tarea">Cierre de la tarea</h3>
+<p>Por una cuestion de concurrencia, las tareas no quedaran en estado "Finalizada" por si solas.
+Para que el sistema verifique es estado de las tareas, debemos instanciar un <code>RepeatableJob</code>.
+Para eso vamos a la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
+<ul>
+<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Cerrar lecturas de red").</li>
+<li>En el campo <strong>callable</strong> debemos poner <code>django_datajsonar.indexing.tasks.close_read_datajson_task</code>.</li>
+<li>En el campo <strong>Queue</strong> ponemos <code>indexing</code>.</li>
+<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
+<li>Finalmente en <strong>interval</strong> ponemos <code>10</code> y en <strong>interval unit</strong> <code>minutes</code>.</li>
+</ul>
+<p>Luego de guardar la instancia deberiamos tener algo como:</p>
+<p><img alt="Close Read DataJson Task" src="../images/close_read_datajson_task.png" /></p>
+<h3 id="lectura-periodica">Lectura periodica</h3>
+<p>Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un <code>RepeatableJob</code>.</p>
+<p>Para eso vamos a la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
+<ul>
+<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "New Read Datajson Task").</li>
+<li>En el campo <strong>callable</strong> debemos poner <code>django_datajsonar.tasks.schedule_new_read_datajson_task</code>.</li>
+<li>En el campo <strong>Queue</strong> ponemos <code>indexing</code>.</li>
+<li>Habilitar el campo <strong>Enabled</strong>.</li>
+<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
+<li>Finalmente en <strong>interval</strong> ponemos <code>1</code> y en <strong>interval unit</strong> <code>days</code>.</li>
+</ul>
+<p>Luego de guardar la instancia deberiamos tener algo como:</p>
+<p><img alt="New Read DataJson Task" src="../images/new_read_datajson_task.png" /></p>
+<h2 id="generacion-de-indicadores">Generación de indicadores</h2>
+<p>Hay 2 formas de comenzar una corrida de generación de indicadores de la red de nodos: podemos instanciar una
+Corrida de indicadores. Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask/</code>.
+Esta instancia no requiere ningun parametro, lee los catálogos a partir de la librería de Github.
+Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
+<p><img alt="Indicators Generation Task" src="../images/indicators_generation_task.png" /></p>
+<p>La otra forma es mediante un management command de Django. El comando <code>python manage.py indicadores</code> dispara de manera
+sincrónica una tarea de generación de indicadores. De la misma manera que el anterior, el resultado se guarda en los
+logs del <code>IndicatorsGenerationTask</code> correspondiente.</p>
+<h3 id="generacion-periodica">Generación periódica</h3>
+<p>Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un <code>RepeatableJob</code>.</p>
+<p>Para eso vamos a la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
+<ul>
+<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Generación indicadores").</li>
+<li>En el campo <strong>callable</strong> debemos poner <code>monitoreo.apps.dashboard.indicators_tasks.indicators_run</code>.</li>
+<li>En el campo <strong>Queue</strong> ponemos <code>indicators</code>.</li>
+<li>Habilitar el campo <strong>Enabled</strong>.</li>
+<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
+<li>Finalmente en <strong>interval</strong> ponemos <code>1</code> y en <strong>interval unit</strong> <code>days</code>.</li>
+</ul>
+<p>Luego de guardar la instancia deberiamos tener algo como:</p>
+<p><img alt="Generación indicadores" src="../images/generacion_indicadores.png" /></p>
+<h3 id="reporte-de-indicadores">Reporte de indicadores</h3>
+<p>Es posible programar una tarea para enviar un reporte de los indicadores de la red de nodos a los responsables
+pertinentes. Se hace también con un <code>RepeatableJob</code>.</p>
+<p>En la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
+<ul>
+<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Reporte indicadores").</li>
+<li>En el campo <strong>callable</strong> debemos poner <code>monitoreo.apps.dashboard.report_tasks.send_reports</code>.</li>
+<li>En el campo <strong>Queue</strong> ponemos <code>reports</code>.</li>
+<li>Habilitar el campo <strong>Enabled</strong>.</li>
+<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
+<li>Finalmente en <strong>interval</strong> ponemos <code>1</code> y en <strong>interval unit</strong> <code>days</code>.</li>
+</ul>
+<p>Luego de guardar la instancia deberiamos tener algo como:</p>
+<p><img alt="Generación indicadores" src="../images/tarea_reportes.png" /></p>
+<p>Los mails de reporte de red se envian al staff del proyecto. Para marcar un usuario como staff, hay que acceder
+a la ruta <code>/admin/auth/user/</code> y en la vista del usuario particular, marcar la opción:</p>
+<p><img alt="Marcar staff" src="../images/staff_checkmark.png" /></p>
+<h2 id="creacion-de-procesos">Creación de procesos</h2>
+<p>Es posible, crear procesos que engloben las tareas descriptas anteriormente y las ejecuten secuencialmente.
+Para lograr eso vamos a la ruta <code>/admin/django_datajsonar/synchronizer/</code>. Allí vamos a <code>Create new process</code> y nos
+encontramos con un formulario de este estilo:</p>
+<p><img alt="Primer formulario" src="../images/synchro_form_1.png" /></p>
+<p>En el primer campo ponemos el nombre del proceso y en el segundo la cantidad de etapas que tendrá. Al dar submit,
+nos encontramos con la segunda parte del formulario:</p>
+<p><img alt="Segundo formulario" src="../images/synchro_form_2.png" /></p>
+<p>Cada fila representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente para configurar las
+tareas ya existentes se deben pasar estos valores:</p>
+<table>
+<thead>
+<tr>
+<th>Tarea</th>
+<th>Callable Str</th>
+<th>Queue</th>
+<th>Task</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lectura de la red de nodos (default)</td>
+<td>django_datajsonar.tasks.schedule_new_read_datajson_task</td>
+<td>indexing</td>
+<td>ReadDataJsonTask</td>
+</tr>
+<tr>
+<td>Lectura de la red de nodos (completa)</td>
+<td>django_datajsonar.tasks.schedule_full_read_task</td>
+<td>indexing</td>
+<td>ReadDataJsonTask</td>
+</tr>
+<tr>
+<td>Lectura de la red de nodos (metadatos)</td>
+<td>django_datajsonar.tasks.schedule_metadata_read_task</td>
+<td>indexing</td>
+<td>ReadDataJsonTask</td>
+</tr>
+<tr>
+<td>Federación de metadatos</td>
+<td>monitoreo.apps.dashboard.tasks.federation_run</td>
+<td>federation</td>
+<td>FederationTask</td>
+</tr>
+<tr>
+<td>Cálculo de indicadores</td>
+<td>monitoreo.apps.dashboard.indicators_tasks.indicators_run</td>
+<td>indicators</td>
+<td>IndicatorsGenerationTask</td>
+</tr>
+<tr>
+<td>Envío de reportes</td>
+<td>monitoreo.apps.dashboard.report_tasks.send_reports</td>
+<td>reports</td>
+<td>ReportGenerationTask</td>
+</tr>
+</tbody>
+</table>
+<p>Si no están creadas, es necesario schedulear 2 tareas de mantenimiento periódicas. Se crean mediante repeatableJobs:</p>
+<p>En la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
+<p>Primero vamos a crear la tarea que comienza los procesos en stand-by.</p>
+<ul>
+<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Comenzar synchronizers").</li>
+<li>En el campo <strong>callable</strong> debemos poner <code>django_datajsonar.synchronizer_tasks.start_synchros</code>.</li>
+<li>En el campo <strong>Queue</strong> ponemos <code>synchro</code>.</li>
+<li>Habilitar el campo <strong>Enabled</strong>.</li>
+<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
+<li>Finalmente en <strong>interval</strong> ponemos <code>1</code> y en <strong>interval unit</strong> <code>days</code>.</li>
+</ul>
+<p>Luego de guardar la instancia deberiamos tener algo como:</p>
+<p><img alt="Generación indicadores" src="../images/tarea_start_synchros.png" /></p>
+<p>La siguiente es la tarea que avanza las tareas a medida que van terminando:</p>
+<ul>
+<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Avanzar synchronizers").</li>
+<li>En el campo <strong>callable</strong> debemos poner <code>django_datajsonar.synchronizer_tasks.upkeep</code>.</li>
+<li>En el campo <strong>Queue</strong> ponemos <code>synchro</code>.</li>
+<li>Habilitar el campo <strong>Enabled</strong>.</li>
+<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
+<li>Finalmente en <strong>interval</strong> ponemos <code>5</code> y en <strong>interval unit</strong> <code>minutes</code>.</li>
+</ul>
+<p>Luego de guardar la instancia deberiamos tener algo como:</p>
+<p><img alt="Generación indicadores" src="../images/tarea_upkeep.png" /></p>
+<h2 id="series-de-tiempo">Series de tiempo</h2>
+<p>Es posible descargar los indicadores como series de tiempo en formato <code>.csv</code>. Entrando en la ruta
+<code>admin/dashboard/indicadorred/series-indicadores</code> podemos descargar las series de los indicadores agregados; y en la ruta
+<code>admin/dashboard/indicador/&lt;id de nodo&gt;/series-indicadores</code> se encuentran las series para nodos particulares.</p>
+<p>Se pueden definir en el admin de tipos de indicadores cuales se desean mostrar en las series. Marcando los booleanos,
+<code>series red</code> y <code>series nodos</code> se especifican los tipos a presentar.</p>
+<h2 id="importarexportar-indicadores">Importar/Exportar indicadores</h2>
+<p>Se pueden bajar la base de indicadores e indicadores de red mediante el management command: <code>/manage.py export_indicators [file] [--aggregated]</code>.
+El argumento <code>file</code> es un path al archivo donde se van a escribir los indicadores. El parametro opcional <code>--aggregated</code> indica si se trata de
+indicadores red, por default se asume indicadores de nodos.</p>
+<p>A su vez es posible importar a la base de indicadores mediante el management command <code>/manage.py import_indicators [file] [--aggregated]</code>
+Los parámetros <code>file</code> y <code>--aggregated</code> indican lo mismo que para el comando anterior. Se espera un csv válido con la forma:
+<code>fecha, indicador_tipo, indicador_valor [, jurisdiccion_id, jurisdiccion_nombre]</code> para indicadores de red y de nodos
+respectivamente. La operación es un upsert, es decir se actualizaran los valores en caso que ya existen y se crearan
+indicadores nuevos si estos no están presentes.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.dc02f8ce.js"></script>
+      
+        
+        
+          
+          <script src="../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
+          
+            
+              
+              
+                <script src="../assets/javascripts/lunr/lunr.es.js"></script>
+              
+            
+          
+          
+        
+      
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+    
+  </body>
+</html>

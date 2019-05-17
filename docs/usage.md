@@ -1,3 +1,23 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Indice
+
+- [Uso](#uso)
+  - [Carga de Nodos](#carga-de-nodos)
+    - [Configuración de datasets indexables](#configuraci%C3%B3n-de-datasets-indexables)
+    - [Generación de archivos de configuración](#generaci%C3%B3n-de-archivos-de-configuraci%C3%B3n)
+  - [Lectura de catalogos](#lectura-de-catalogos)
+    - [Cierre de la tarea](#cierre-de-la-tarea)
+    - [Lectura periodica](#lectura-periodica)
+  - [Generación de indicadores](#generaci%C3%B3n-de-indicadores)
+    - [Generación periódica](#generaci%C3%B3n-peri%C3%B3dica)
+    - [Reporte de indicadores](#reporte-de-indicadores)
+  - [Creación de procesos](#creaci%C3%B3n-de-procesos)
+  - [Series de tiempo](#series-de-tiempo)
+  - [Importar/Exportar indicadores](#importarexportar-indicadores)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Uso
 
 ## Carga de Nodos

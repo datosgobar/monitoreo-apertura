@@ -1,0 +1,32 @@
+site_name: Monitoreo Apertura
+site_url: https://datosgobar.github.io/monitoreo-apertura
+site_description: Documentación de la aplicación web de monitoreo y operación de la red de nodos de datos abiertos de la Administración Pública Nacional de la República Argentina.
+site_author: Datos Argentina
+repo_url: https://github.com/datosgobar/monitoreo-apertura/
+
+nav:
+  - Inicio: 'index.md'
+  - Usuarios:
+    - Comienzo rápido: 'quickstart.md'
+  # - Manual de uso: 'usage.md'
+  - Desarrolladores:
+    - Instalación: 'developers/install.md'
+    - Actualización: 'developers/update.md'
+    - Recomendaciones para salir a producción: 'developers/checklist.md'
+    - Migracion: 'developers/migration.md'
+    - Mantenimiento: 'developers/maintenance.md'
+    - Configuración HTTPS: 'developers/https.md'
+    - Configuración de DNS: 'developers/dns.md'
+    - Generación de imágenes Docker: 'developers/docker.md'
+    - Desarrollo: 'developers/development.md'
+    - Tests: 'developers/tests.md'
+  # - Historial de versiones: history.md
+
+theme: datosgobar_docs
+
+markdown_extensions: [fenced_code, codehilite, admonition]
+
+extra_css:
+  - css/extra_rtd.css
+
+google_analytics: ['UA-91435482-1', "https://portal-andino.readthedocs.io/"]

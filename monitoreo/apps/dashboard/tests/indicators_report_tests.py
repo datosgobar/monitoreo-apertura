@@ -13,18 +13,19 @@ from django.core import mail
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.utils.html import escape
 from django.test import TestCase
 from des.models import DynamicEmailConfiguration
 
 from django_datajsonar.models import Node
-from pydatajson.core import DataJson
-from pydatajson.custom_exceptions import NonParseableCatalog
 
-from monitoreo.apps.dashboard.models import ReportGenerationTask, IndicatorsGenerationTask,\
-    IndicatorType, IndicadorRed, Indicador, ValidationReportTask
-from monitoreo.apps.dashboard.report_tasks import IndicatorReportGenerator, send_reports,\
-    ValidationReportGenerator, send_validations
+from monitoreo.apps.dashboard.models.tasks import \
+    ReportGenerationTask, IndicatorsGenerationTask
+from monitoreo.apps.dashboard.models.indicators import \
+    IndicatorType, IndicadorRed, Indicador, IndicadorFederador
+from monitoreo.apps.dashboard.models.nodes import \
+    HarvestingNode, CentralNode
+from monitoreo.apps.dashboard.report_tasks import \
+    IndicatorReportGenerator, send_reports
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
 
@@ -59,6 +60,11 @@ class IndicatorReportGenerationTest(TestCase):
         cls.node1.admins.create(username='admin1', password='regular', email='admin1@test.com', is_staff=False)
         cls.node2.admins.create(username='admin2', password='regular', email='admin2@test.com', is_staff=False)
 
+        cls.harvest_node = HarvestingNode.objects.create(catalog_id='harvest_id', name='harvest node', url='http://datos.test.ar', apikey='apikey', enabled=True)
+        central_node = CentralNode.get_solo()
+        central_node.node = cls.harvest_node
+        central_node.save()
+
         cls.report_task = ReportGenerationTask.objects.create()
 
         # set mock indicators
@@ -80,10 +86,17 @@ class IndicatorReportGenerationTest(TestCase):
         for t, v in zip(types, values):
             Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id2',
                                      jurisdiccion_nombre='nodo2')
+
+        values = ['23', '[["d2", "l2"]]', '{"k2": 1}', '2', '3']
+        for t, v in zip(types, values):
+            IndicadorFederador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='harvest_id',
+                                              jurisdiccion_nombre='harvest node')
         cls.indicators_report_generator = IndicatorReportGenerator(cls.indicators_task, cls.report_task)
 
     def setUp(self):
-        self.indicators_report_generator.send_email(self.indicators_report_generator.generate_email())
+        email = self.indicators_report_generator\
+            .generate_network_indicators_email()
+        self.indicators_report_generator.send_email(email)
         self.mail = mail.outbox[0]
 
     def tearDown(self):
@@ -99,7 +112,7 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_subject(self):
         start_time = timezone.localtime(self.indicators_task.created).strftime('%Y-%m-%d %H:%M:%S')
-        subject = u'[tst] Indicadores Monitoreo Apertura: {}'.format(start_time)
+        subject = u'[tst] Indicadores Monitoreo Apertura (Red): {}'.format(start_time)
         self.assertEqual(subject, self.mail.subject)
 
     def test_mail_header(self):
@@ -139,7 +152,9 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_nodes_email_outbox(self):
         mail.outbox = []
-        self.indicators_report_generator.send_email(self.indicators_report_generator.generate_email(node=self.node2), node=self.node2)
+        email = self.indicators_report_generator.\
+            generate_node_indicators_email(node=self.node2)
+        self.indicators_report_generator.send_email(email, node=self.node2)
         self.assertEqual(1, len(mail.outbox))
         sent_mail = mail.outbox[0]
         self.assertEqual(['admin2@test.com'], sent_mail.to)
@@ -149,7 +164,9 @@ class IndicatorReportGenerationTest(TestCase):
                         sent_mail.attachments)
 
     def test_task_log(self):
-        self.indicators_report_generator.send_email(self.indicators_report_generator.generate_email(node=self.node2), node=self.node2)
+        email = self.indicators_report_generator.\
+            generate_node_indicators_email(node=self.node2)
+        self.indicators_report_generator.send_email(email, node=self.node2)
         staff_mail = mail.outbox[0]
         node_mail = mail.outbox[1]
         self.assertTrue('test task logs' in staff_mail.body)
@@ -157,115 +174,26 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_task_is_closed(self):
         self.indicators_report_generator.close_task()
-        self.assertEqual(ReportGenerationTask.FINISHED, self.indicators_report_generator.report_task.status)
+        self.assertEqual(ReportGenerationTask.FINISHED,
+                         self.indicators_report_generator.report_task.status)
 
     def test_send_report(self):
         mail.outbox = []
         send_reports()
-        self.assertEqual(3, len(mail.outbox))
+        # Red, nodo central y 2 de nodos
+        self.assertEqual(4, len(mail.outbox))
 
-
-class ValidationReportGenerationTest(TestCase):
-    NOW_FOR_TESTING = timezone.datetime(2010, 10, 10, 10, tzinfo=timezone.utc)
-
-    @classmethod
-    def get_sample(cls, sample_filename):
-        return os.path.join(SAMPLES_DIR, sample_filename)
-
-    @classmethod
-    def setUpTestData(cls):
-        # set mock env
-        settings.ENV_TYPE = 'tst'
-
-        config = DynamicEmailConfiguration.get_solo()
-        config.from_email = 'from_test@test.com'
-        config.save()
-
-        # set mock nodes
-        cls.node1 = Node.objects.create(catalog_id='id1', catalog_url=cls.get_sample('several_assorted_errors.json'), indexable=True)
-        cls.node2 = Node.objects.create(catalog_id='id2', catalog_url=cls.get_sample('full_data.json'), indexable=True)
-
-        cls.node1.admins.create(username='admin1', password='regular', email='admin1@test.com', is_staff=False)
-        cls.node2.admins.create(username='admin2', password='regular', email='admin2@test.com', is_staff=False)
-
-        cls.report_task = ValidationReportTask.objects.create()
-
-        cls.validation_report_generator = ValidationReportGenerator(cls.report_task)
-
-        catalog = DataJson(cls.get_sample('several_assorted_errors.json'))
-        cls.report = catalog.validate_catalog(only_errors=True)
-
-    def setUp(self):
-        with patch('django.utils.timezone.now', return_value=self.NOW_FOR_TESTING):
-            self.validation_report_generator.send_email(
-                self.validation_report_generator.generate_email(self.node1),
-                node=self.node1)
-            self.mail = mail.outbox[0]
-
-    def tearDown(self):
+    def test_send_central_node_indicators(self):
         mail.outbox = []
-
-    def test_mail_is_sent_to_node_admin(self):
+        central_node = CentralNode.get_solo().node
+        email = self.indicators_report_generator. \
+            generate_federation_indicators_email(central_node)
+        self.indicators_report_generator.send_email(email)
         self.assertEqual(1, len(mail.outbox))
-        self.assertEqual(['admin1@test.com'], self.mail.to)
-
-    def test_subject(self):
-        subject = u'[tst] Validacion de catálogo id1: 2010-10-10 07:00:00'
-        self.assertEqual(subject, self.mail.subject)
-
-    def test_mail_uses_des_from(self):
-        self.assertEqual(1, len(mail.outbox))
-        self.assertEqual('from_test@test.com', self.mail.from_email)
-
-    def test_mail_header(self):
-        header, _, _ = filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
-        expected_header = 'Horario de inspección:'
-        self.assertTrue(header.startswith(expected_header))
-
-    def test_catalog_validation(self):
-        _, catalog_validation, dataset_validation =\
-            filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
-        for error in self.report['error']['catalog']['errors']:
-            self.assertTrue(escape(error['message']) in catalog_validation)
-
-    def test_dataset_validation(self):
-        _, catalog_validation, dataset_validation =\
-            filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
-
-        dataset_errors = list(self.report['error']['dataset'])
-        for error in dataset_errors[0]['errors']:
-            self.assertTrue(escape(error['message']) in dataset_validation)
-
-    def test_mail_attachment(self):
-        attachments = [attachment[0] for attachment in self.mail.attachments]
-        self.assertTrue('reporte_validacion_id1.xlsx' in attachments)
-
-    def test_valid_node_does_not_trigger_email(self):
-        valid_node_mail = self.validation_report_generator.generate_email(node=self.node2)
-        self.assertIsNone(valid_node_mail)
-
-    def test_task_is_closed(self):
-        self.validation_report_generator.close_task()
-        self.assertEqual(ValidationReportTask.FINISHED,
-                         self.validation_report_generator.report_task.status)
-
-    def test_send_report(self):
-        mail.outbox = []
-        send_validations()
-        self.assertEqual(1, len(mail.outbox))
-
-    def test_send_error_mail(self):
-        def mock_side_effect(catalog):
-            raise NonParseableCatalog(catalog, 'Test Error')
-
-        mail.outbox = []
-        with patch('monitoreo.apps.dashboard.report_tasks.DataJson',
-                   side_effect=mock_side_effect):
-            send_validations()
-
-        expected_header = 'Ocurrió un error intentando acceder al catálogo:'
-        expected_error = 'Test Error'
-        error_mail = mail.outbox[0]
-        self.assertEqual(2, len(mail.outbox))
-        self.assertTrue(expected_header in error_mail.body)
-        self.assertTrue(expected_error in error_mail.body)
+        sent_mail = mail.outbox[0]
+        self.assertEqual(['staff@test.com'], sent_mail.to)
+        self.assertTrue('ind_a: 23' in sent_mail.body)
+        self.assertTrue(1, len(sent_mail.attachments))
+        self.assertTrue(
+            ('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv') in
+            sent_mail.attachments)

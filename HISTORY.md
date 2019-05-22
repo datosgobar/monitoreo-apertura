@@ -1,6 +1,13 @@
 Versiones
 =========
-0.0.39 (14-05-19)
+0.0.41 (22-05-19)
+-------------------
+
+* Actualiza version de django_datajsonar para agregar la ruta nodes.csv y nodos.csv
+* Agrega además el campo landingPage al admin de dataset 
+
+
+0.0.40 (14-05-19)
 -------------------
 
 * Actualiza version de django_datajsonar para agregar la ruta nodes.json

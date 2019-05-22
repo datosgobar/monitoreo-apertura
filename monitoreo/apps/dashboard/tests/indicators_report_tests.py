@@ -60,7 +60,8 @@ class IndicatorReportGenerationTest(TestCase):
         cls.node1.admins.create(username='admin1', password='regular', email='admin1@test.com', is_staff=False)
         cls.node2.admins.create(username='admin2', password='regular', email='admin2@test.com', is_staff=False)
 
-        cls.harvest_node = HarvestingNode.objects.create(catalog_id='harvest_id', name='harvest node', url='http://datos.test.ar', apikey='apikey', enabled=True)
+        cls.harvest_node = HarvestingNode.objects.create(catalog_id='harvest_id', name='harvest node',
+                                                         url='http://datos.test.ar', apikey='apikey', enabled=True)
         central_node = CentralNode.get_solo()
         central_node.node = cls.harvest_node
         central_node.save()

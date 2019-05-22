@@ -21,9 +21,6 @@ class AbstractReportGenerator:
         self.sender = ReportSender(report_task)
         self.renderer = renderer
 
-    def generate_email(self, node=None):
-        raise NotImplementedError
-
     def close_task(self):
         self.sender.close_connection()
         self.report_task.refresh_from_db()
@@ -51,7 +48,7 @@ class IndicatorReportGenerator(AbstractReportGenerator):
         renderer = EmailRenderer('reports', 'indicators.txt', 'indicators.html')
         super(IndicatorReportGenerator, self).__init__(report_task, renderer)
 
-    def generate_email(self, context):
+    def _generate_email(self, context):
         """Genera y manda el mail con el reporte de indexación. Si node es
         especificado, genera el reporte con valores de entidades pertenecientes
         únicamente a ese nodo (reporte individual). Caso contrario (default),
@@ -83,7 +80,7 @@ class IndicatorReportGenerator(AbstractReportGenerator):
             self._get_summary_and_details_indicators(models.IndicadorRed)
         )
         context['logs'] = self.indicators_task.logs
-        mail = self.generate_email(context)
+        mail = self._generate_email(context)
         mail.attach('info.log', self.indicators_task.logs, 'text/plain')
         return mail
 
@@ -98,7 +95,7 @@ class IndicatorReportGenerator(AbstractReportGenerator):
         )
         context['logs'] = self.indicators_task.logs
 
-        mail = self.generate_email(context)
+        mail = self._generate_email(context)
         return mail
 
     def generate_node_indicators_email(self, node):
@@ -109,7 +106,7 @@ class IndicatorReportGenerator(AbstractReportGenerator):
         context.update(
             self._get_summary_and_details_indicators(models.Indicador, node)
         )
-        mail = self.generate_email(context)
+        mail = self._generate_email(context)
         return mail
 
     def _get_current_indicators(self, queryset, node=None):

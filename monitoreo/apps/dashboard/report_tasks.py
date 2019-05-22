@@ -42,9 +42,7 @@ def indicators_run(report_task, node=None):
         generator.close_task()
         return
 
-    mails = [
-        (generator.generate_network_indicators_email(), None),
-        ]
+    mails = [(generator.generate_network_indicators_email(), None)]
 
     central_node = models.CentralNode.get_solo().node
     if central_node:
@@ -77,5 +75,3 @@ def validation_run(validation_task, node=None):
 
         generator.send_email(mail, node=target_node)
     generator.close_task()
-
-

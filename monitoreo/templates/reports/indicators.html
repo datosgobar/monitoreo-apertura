@@ -1,55 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    td, th:first-child {
+        width: 75%;
+    }
+
+    td, th:last-child {
+        width: 25%;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+    </style>
+</head>
 <body>
     <p>Horario de finalización: {{ finish_time }}</p>
     {% if logs %}
     <p>{{ logs|linebreaks }}</p>
     {% endif %}
-    <h4>Resumen</h4>
+    <h2>Resumen</h2>
     {% if  one_d_summary %}
-    <p>Resumen indicadores numéricos de {{ target }}:</p>
-    <ul>
+    <h3>Resumen indicadores numéricos de {{ target }}:</h3>
+    <table>
+        <tr><th>Indicador</th> <th>Valor</th></tr>
         {% for key, value in one_d_summary.items %}
-        <li>{{ key }}: {{ value }}</li>
+            <tr><td>{{ key }}</td> <td>{{ value }}</td></tr>
         {% endfor %}
-    </ul>
+    </table>
     {% endif %}
+
     {% if  multi_d_summary %}
-    <p>Resumen indicadores no numéricos de {{ target }}:</p>
-    <ul>
-        {% for key, nested in multi_d_summary.items %}
-        <li>{{ key }}:
-            <ul>{% for key, value in nested.items %}
-                <li>{{ key|default:"None" }}: {{ value }}</li>
-            {% endfor %}
-            </ul>
-            <br>
-        </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-    <h4>Detalle</h4>
-    {% if  one_dimensional_indics %}
-    <p>Indicadores numéricos de {{ target }}:</p>
-    <ul>
-        {% for key, value in one_dimensional_indics.items %}
-        <li>{{ key }}: {{ value }}</li>
+    <h3>Resumen indicadores no numéricos de {{ target }}:</h3>
+    {% for key, nested in multi_d_summary.items %}
+    <table>
+        <tr><th>{{ key }}</th> <th>Valor</th></tr>
+        {% for key, value in nested.items %}
+            <tr><td>{{ key }}</td> <td>{{ value }}</td></tr>
         {% endfor %}
-    </ul>
+    </table>
+    {% endfor %}
+    {% endif %}
+
+    <h2>Detalle</h2>
+    {% if  one_dimensional_indics %}
+    <h3>Indicadores numéricos de {{ target }}:</h3>
+    <table>
+        <tr><th>Indicador</th> <th>Valor</th></tr>
+        {% for key, value in one_dimensional_indics.items %}
+            <tr><td>{{ key }}</td> <td>{{ value }}</td></tr>
+        {% endfor %}
+    </table>
     {% endif %}
     {% if  multi_dimensional_indics %}
-    <p>Indicadores no numéricos de {{ target }}:</p>
-    <ul>
-        {% for key, nested in multi_dimensional_indics.items %}
-        <li>{{ key }}:
-            <ul>{% for key, value in nested.items %}
-                <li>{{ key|default:"None" }}: {{ value }}</li>
-            {% endfor %}
-            </ul>
-            <br>
-        </li>
+    <h3>Indicadores no numéricos de {{ target }}:</h3>
+    {% for key, nested in multi_dimensional_indics.items %}
+    <table>
+        <tr><th>{{ key }}</th> <th>Valor</th></tr>
+        {% for key, value in nested.items %}
+            <tr><td>{{ key }}</td> <td>{{ value }}</td></tr>
         {% endfor %}
-    </ul>
+    </table>
+    {% endfor %}
     {% endif %}
 </body>
 </html>

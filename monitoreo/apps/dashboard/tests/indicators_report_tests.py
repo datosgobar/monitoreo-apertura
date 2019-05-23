@@ -161,7 +161,7 @@ class IndicatorReportGenerationTest(TestCase):
         sent_mail = mail.outbox[0]
         self.assertIn('admin2@test.com', sent_mail.to)
         self.assertIn('ind_a: 19', sent_mail.body)
-        self.assertTrue(1, len(sent_mail.attachments))
+        self.assertEqual(1, len(sent_mail.attachments))
         self.assertIn(('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv'),
                       sent_mail.attachments)
 

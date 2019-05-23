@@ -105,7 +105,7 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_mail_is_sent_to_staff_members(self):
         self.assertEqual(1, len(mail.outbox))
-        self.assertEqual(['staff@test.com'], self.mail.to)
+        self.assertIn('staff@test.com', self.mail.to)
 
     def test_mail_uses_des_from(self):
         self.assertEqual(1, len(mail.outbox))
@@ -126,30 +126,31 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_mail_summary(self):
         _, summary, detail = filter(None, re.split(r'Resumen:|Detalle:', self.mail.body))
-        self.assertTrue('ind_d: 100' in summary)
-        self.assertTrue('ind_c:\n' in summary)
-        self.assertTrue('k1: 1' in summary)
-        self.assertTrue('k2: 2' in summary)
-        self.assertTrue('ind_a' not in summary)
-        self.assertTrue('ind_d' not in detail)
-        self.assertTrue('ind_c' in detail)
+        self.assertIn('ind_d: 100', summary)
+        self.assertIn('ind_c:\n', summary)
+        self.assertIn('k1: 1', summary)
+        self.assertIn('k2: 2', summary)
+        self.assertNotIn('ind_a', summary)
+        self.assertNotIn('ind_d', detail)
+        self.assertIn('ind_c', detail)
 
     def test_mail_detail(self):
         _, summary, detail = filter(None, re.split(r'Resumen:|Detalle:', self.mail.body))
-        self.assertTrue('ind_a: 42' in detail)
-        self.assertTrue('ind_c:\n' in detail)
-        self.assertTrue('k1: 1' in detail)
-        self.assertTrue('k2: 2' in detail)
-        self.assertTrue('ind_d' not in detail)
-        self.assertTrue('ind_a' not in summary)
-        self.assertTrue('ind_c' in summary)
+        self.assertIn('ind_a: 42', detail)
+        self.assertIn('ind_c:\n', detail)
+        self.assertIn('k1: 1', detail)
+        self.assertIn('k2: 2', detail)
+        self.assertNotIn('ind_d', detail)
+        self.assertNotIn('ind_a', summary)
+        self.assertIn('ind_c', summary)
 
     def test_info_attachment(self):
-        self.assertTrue(('info.log', 'test task logs', 'text/plain') in self.mail.attachments)
+        self.assertIn(('info.log', 'test task logs', 'text/plain'),
+                      self.mail.attachments)
 
     def test_list_attachment(self):
-        self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd1, l1\nd2, l2\n', 'text/csv') in
-                        self.mail.attachments)
+        self.assertIn(('ind_b.csv', 'dataset_title,landing_page\nd1, l1\nd2, l2\n', 'text/csv'),
+                      self.mail.attachments)
 
     def test_nodes_email_outbox(self):
         mail.outbox = []
@@ -158,11 +159,11 @@ class IndicatorReportGenerationTest(TestCase):
         self.indicators_report_generator.send_email(email, node=self.node2)
         self.assertEqual(1, len(mail.outbox))
         sent_mail = mail.outbox[0]
-        self.assertEqual(['admin2@test.com'], sent_mail.to)
-        self.assertTrue('ind_a: 19' in sent_mail.body)
+        self.assertIn('admin2@test.com', sent_mail.to)
+        self.assertIn('ind_a: 19', sent_mail.body)
         self.assertTrue(1, len(sent_mail.attachments))
-        self.assertTrue(('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv') in
-                        sent_mail.attachments)
+        self.assertIn(('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv'),
+                      sent_mail.attachments)
 
     def test_task_log(self):
         email = self.indicators_report_generator.\
@@ -170,8 +171,8 @@ class IndicatorReportGenerationTest(TestCase):
         self.indicators_report_generator.send_email(email, node=self.node2)
         staff_mail = mail.outbox[0]
         node_mail = mail.outbox[1]
-        self.assertTrue('test task logs' in staff_mail.body)
-        self.assertFalse('test task logs' in node_mail.body)
+        self.assertIn('test task logs', staff_mail.body)
+        self.assertNotIn('test task logs', node_mail.body)
 
     def test_task_is_closed(self):
         self.indicators_report_generator.close_task()
@@ -192,9 +193,9 @@ class IndicatorReportGenerationTest(TestCase):
         self.indicators_report_generator.send_email(email)
         self.assertEqual(1, len(mail.outbox))
         sent_mail = mail.outbox[0]
-        self.assertEqual(['staff@test.com'], sent_mail.to)
-        self.assertTrue('ind_a: 23' in sent_mail.body)
+        self.assertIn('staff@test.com', sent_mail.to)
+        self.assertIn('ind_a: 23', sent_mail.body)
         self.assertTrue(1, len(sent_mail.attachments))
-        self.assertTrue(
-            ('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv') in
+        self.assertIn(
+            ('ind_b.csv', 'dataset_title,landing_page\nd2, l2\n', 'text/csv'),
             sent_mail.attachments)

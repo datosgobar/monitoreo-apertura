@@ -42,21 +42,19 @@ def indicators_run(report_task, node=None):
         generator.close_task()
         return
 
-    mails = [(generator.generate_network_indicators_email(), None)]
+    mail = generator.generate_network_indicators_email()
+    generator.send_email(mail)
 
     central_node = models.CentralNode.get_solo().node
     if central_node:
-        mails.append(
-            (generator.generate_federation_indicators_email(central_node), None)
-        )
+        mail = generator.generate_federation_indicators_email(central_node)
+        generator.send_email(mail)
 
     nodes = Node.objects.filter(indexable=True)
     for target_node in nodes:
         mail = generator.generate_node_indicators_email(target_node)
-        mails.append((mail, target_node))
-
-    for mail, target_node in mails:
         generator.send_email(mail, target_node)
+
     generator.close_task()
 
 

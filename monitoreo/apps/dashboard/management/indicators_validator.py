@@ -71,10 +71,7 @@ Problems
         if not summarize:
             ptitle = '\n%s - %s\n' % (problem['code'], problem['message'])
             write(ptitle)
-            underline = ''
-            for j in range(len(ptitle.strip())):
-                underline += '-'
-            underline += '\n'
+            underline = '-' * len(ptitle.strip()) + '\n'
             write(underline)
             for problem_key in \
                     sorted(problem.keys() - {'code', 'message', 'context'}):

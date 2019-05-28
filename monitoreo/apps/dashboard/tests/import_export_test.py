@@ -118,7 +118,31 @@ class IndicatorImportExportTest(TestCase):
 
     def test_network_indicators_are_imported_correctly(self):
         indicators_csv = self.get_sample('network_indicators_sample.csv')
-        call_command('import_indicators', indicators_csv, aggregated=True)
+        future_date = date(2100, 12, 31)
+        call_command('import_indicators', indicators_csv, type='network')
+        self.assertEqual(10, IndicadorRed.objects.all().count())
+        self.assertEqual(5, IndicadorRed.objects.all().
+                         filter(fecha=future_date).count())
+        self.assertEqual('1337',
+                         IndicadorRed.objects.get(
+                             fecha=future_date,
+                             indicador_tipo__nombre='ind_a').indicador_valor)
+        self.assertEqual('[["d3", "l3"], ["d4", "l4"]]',
+                         IndicadorRed.objects.get(
+                             fecha=future_date,
+                             indicador_tipo__nombre='ind_b').indicador_valor)
+        self.assertEqual('{"k1": 100, "k2": 20}',
+                         IndicadorRed.objects.get(
+                             fecha=future_date,
+                             indicador_tipo__nombre='ind_c').indicador_valor)
+        self.assertEqual('6500',
+                         IndicadorRed.objects.get(
+                             fecha=future_date,
+                             indicador_tipo__nombre='ind_d').indicador_valor)
+        self.assertEqual('-1',
+                         IndicadorRed.objects.get(
+                             fecha=future_date,
+                             indicador_tipo__nombre='ind_e').indicador_valor)
 
     def test_malformed_indicators_raise_errors(self):
         error_samples = [
@@ -140,8 +164,8 @@ class IndicatorImportExportTest(TestCase):
                 self.compare_csv(expected_csv, tmp_result)
 
     def test_network_indicators_are_exported_corectly(self):
-        result_filename = self.get_result('expected_indicators.csv')
+        result_filename = self.get_result('expected_indicators_aggregated.csv')
         with tempfile.NamedTemporaryFile(mode='w+t') as tmp_result:
-            call_command('export_indicators', tmp_result.name)
+            call_command('export_indicators', tmp_result.name, type='network')
             with open(result_filename, 'r') as expected_csv:
                 self.compare_csv(expected_csv, tmp_result)

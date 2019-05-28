@@ -21,6 +21,8 @@ def validate_indicators_csv(csv_file, model):
     validator_generator = IndicatorValidatorGenerator(model)
     validator = validator_generator.generate()
     error_list = validator.validate(csv_reader)
+    csv_file.seek(0)
+    csv_file.detach()
     return error_list
 
 
@@ -45,3 +47,4 @@ def import_indicators(indicators_file, model):
                 model.objects.filter(**filter_fields).delete()
                 indicators.append(model(**row))
             model.objects.bulk_create(indicators)
+    indicators_file.detach()

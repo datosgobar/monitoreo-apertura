@@ -6,8 +6,15 @@ from import_export.resources import modelresource_factory
 
 from django.core.management.base import BaseCommand
 
-from monitoreo.apps.dashboard.models import IndicadorRed, Indicador
+from monitoreo.apps.dashboard.models import IndicadorRed, Indicador, \
+    IndicadorFederador
 from monitoreo.apps.dashboard.admin.indicators import IndicadorRedResource, IndicatorResource
+
+MODEL_CHOICES = {
+    'node': (Indicador, IndicatorResource),
+    'network': (IndicadorRed, IndicadorRedResource),
+    'federator': (IndicadorFederador, IndicatorResource)
+}
 
 
 class Command(BaseCommand):
@@ -17,11 +24,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('file', type=argparse.FileType('w'))
-        parser.add_argument('--aggregated', action='store_true')
+        parser.add_argument('--type',
+                            choices=['node', 'network', 'federator'],
+                            default='node')
 
     def handle(self, *args, **options):
-        model = IndicadorRed if options['aggregated'] else Indicador
-        model_resource = IndicadorRedResource if options['aggregated'] else IndicatorResource
+        model = MODEL_CHOICES[options['type']][0]
+        model_resource = MODEL_CHOICES[options['type']][1]
         indicator_resource = modelresource_factory(model,
                                                    resource_class=model_resource)()
         result = indicator_resource.export()

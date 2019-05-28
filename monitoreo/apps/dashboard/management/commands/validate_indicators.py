@@ -4,7 +4,7 @@ import argparse
 import json
 
 from django.core.management.base import BaseCommand
-from monitoreo.apps.dashboard.management.command_utils import \
+from monitoreo.apps.dashboard.management.import_utils import \
     validate_indicators_csv
 
 

@@ -247,7 +247,7 @@ RQ_QUEUES = {
         'PORT': DEFAULT_REDIS_PORT,
         'DB': DEFAULT_REDIS_DB,
     },
-    'synchro': {
+    'imports': {
         'HOST': DEFAULT_REDIS_HOST,
         'PORT': DEFAULT_REDIS_PORT,
         'DB': DEFAULT_REDIS_DB,

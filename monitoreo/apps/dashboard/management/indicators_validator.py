@@ -3,12 +3,13 @@ import csvvalidator
 from csvvalidator import CSVValidator, datetime_string, enumeration
 
 from monitoreo.apps.dashboard.models import IndicatorType
+from monitoreo.apps.dashboard.models.indicators import AbstractIndicator
 
 csvvalidator.basestring = str
 
 
 class IndicatorValidatorGenerator:
-    def __init__(self, aggregated):
+    def __init__(self, model):
         indicator_names = IndicatorType.objects.all()\
             .values_list('nombre', flat=True)
         self.value_checks = [
@@ -18,7 +19,7 @@ class IndicatorValidatorGenerator:
         ]
         self.unique_checks = ('fecha',
                               'indicador_tipo__nombre', )
-        if not aggregated:
+        if not isinstance(model, AbstractIndicator):
             self.value_checks = self.value_checks + [
                 ('jurisdiccion_id', str),
                 ('jurisdiccion_nombre', str), ]

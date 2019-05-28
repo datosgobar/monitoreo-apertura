@@ -1,13 +1,11 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-import csv
 from io import TextIOWrapper
 
 import django
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.conf.urls import url
-from django.db import transaction
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 
@@ -15,14 +13,11 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.forms import ImportForm
 
-from monitoreo.apps.dashboard.context_managers import suppress_autotime
-from monitoreo.apps.dashboard.management.command_utils import \
-    invalid_indicators_csv
-from monitoreo.apps.dashboard.management.indicators_validator import \
-    ValidationError
+from monitoreo.apps.dashboard.management.import_utils import \
+    invalid_indicators_csv, import_indicators
 from monitoreo.apps.dashboard.views import indicators_csv
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
-    IndicadorFederador, IndicatorType
+    IndicadorFederador
 
 
 class IndicatorResource(resources.ModelResource):
@@ -65,41 +60,6 @@ class IndicatorAdmin(ImportExportModelAdmin):
                           request.POST or None,
                           request.FILES or None)
 
-        if request.POST and form.is_valid():
-            model = self.model
-            indicators = []
-            types_mapping = {ind_type.nombre: ind_type for
-                             ind_type in IndicatorType.objects.all()}
-            indicators_file = TextIOWrapper(form.cleaned_data['import_file'])
-            # Validación de datos
-            if invalid_indicators_csv(indicators_file, None):
-                msg = 'El csv de indicadores es inválido. ' \
-                      'Correr el comando validate_indicators_csv para un ' \
-                      'reporte detallado'
-                raise ValidationError(msg)
-            indicators_file.seek(0)
-            csv_reader = csv.DictReader(indicators_file)
-            with suppress_autotime(model, ['fecha']):
-                with transaction.atomic():
-                    for row in csv_reader:
-                        row['indicador_tipo'] = \
-                            types_mapping[row.pop('indicador_tipo__nombre')]
-                        filter_fields = {
-                            field: row[field] for field in row if
-                            field in ('fecha',
-                                      'indicador_tipo',
-                                      'jurisdiccion_id')
-                        }
-                        model.objects.filter(**filter_fields).delete()
-                        indicators.append(model(**row))
-                    model.objects.bulk_create(indicators)
-                    return redirect('/')
-
-        if django.VERSION >= (1, 8, 0):
-            context.update(self.admin_site.each_context(request))
-        elif django.VERSION >= (1, 7, 0):
-            context.update(self.admin_site.each_context())
-
         context['title'] = "Import"
         context['form'] = form
         context['opts'] = self.model._meta
@@ -107,6 +67,29 @@ class IndicatorAdmin(ImportExportModelAdmin):
                              resource.get_user_visible_fields()]
 
         request.current_app = self.admin_site.name
+
+        if request.POST and form.is_valid():
+            model = self.model
+            indicators_binary_file = form.cleaned_data['import_file']
+            indicators_text_file = TextIOWrapper(indicators_binary_file)
+            # Validación de datos
+            if invalid_indicators_csv(indicators_text_file, model):
+                msg = 'El csv de indicadores es inválido. ' \
+                      'Correr el comando validate_indicators_csv para un ' \
+                      'reporte detallado'
+                messages.error(request, msg)
+                return TemplateResponse(request, [self.import_template_name],
+                                        context)
+            indicators_text_file.seek(0)
+            import_indicators.delay(indicators_binary_file, model)
+            return redirect(
+                'admin:dashboard_' + model._meta.model_name + '_changelist')
+
+        if django.VERSION >= (1, 8, 0):
+            context.update(self.admin_site.each_context(request))
+        elif django.VERSION >= (1, 7, 0):
+            context.update(self.admin_site.each_context())
+
         return TemplateResponse(request, [self.import_template_name],
                                 context)
 

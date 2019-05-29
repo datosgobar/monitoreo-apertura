@@ -1,5 +1,11 @@
 Versiones
 =========
+0.0.42 (29-05-19)
+-------------------
+
+* Overridea la función de import de indicadores para usar una asincrónica
+
+
 0.0.41 (22-05-19)
 -------------------
 

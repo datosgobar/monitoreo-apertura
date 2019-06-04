@@ -29,7 +29,8 @@ def send_validations(node=None):
 def indicators_run(report_task, node=None):
     try:
         indicators_task = models.IndicatorsGenerationTask.objects\
-            .filter(status=models.IndicatorsGenerationTask.FINISHED).latest('finished')
+            .filter(status=models.IndicatorsGenerationTask.FINISHED)\
+            .exclude(finished__isnull=True).latest('finished')
     except models.IndicatorsGenerationTask.DoesNotExist:
         # No hay un task cargado
         return

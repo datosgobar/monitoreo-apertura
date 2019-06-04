@@ -1,5 +1,11 @@
 Versiones
 =========
+0.0.43 (04-06-19)
+-------------------
+
+* Actualiza versiones de pydatajson y django_datajsonar
+
+
 0.0.42 (29-05-19)
 -------------------
 

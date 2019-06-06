@@ -1,6 +1,8 @@
 # coding=utf-8
+import csv
 from datetime import date, timedelta
 from django.shortcuts import render
+from django.http import StreamingHttpResponse
 from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
 from .helpers import fetch_latest_indicadors, download_time_series
 
@@ -106,3 +108,43 @@ def indicators_csv(_request, node_id=None, indexing=False):
                    jurisdiccion_id=node_id)
 
     return download_time_series(queryset, node_id=node_id)
+
+
+class Echo(object):
+    """
+    An object that implements just the write method of the file-like interface.
+    """
+
+    def write(self, value):
+        return value
+
+
+def custom_row_generator(writer, rows):
+    '''
+    This is done because writer.writeheader() returns None
+    '''
+    yield writer.writerow({'fecha': 'fecha',
+                           'indicador_tipo__nombre': 'indicador_tipo__nombre',
+                           'indicador_valor': 'indicador_valor'})
+
+    for row in rows:
+        yield writer.writerow(row)
+
+
+def nodos_indicadores_csv(request):
+    queryset = IndicadorRed.objects.values('fecha', 'indicador_tipo__nombre', 'indicador_valor')
+
+    rows = list(queryset)
+    pseudo_buffer = Echo()
+    fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
+    writer = csv.DictWriter(pseudo_buffer, fieldnames=fieldnames)
+
+    response = StreamingHttpResponse(custom_row_generator(writer, rows),
+                                     content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename=nodos-red-indicadores.csv'
+
+    return response
+
+
+
+

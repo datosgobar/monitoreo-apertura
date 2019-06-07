@@ -133,3 +133,15 @@ def generate_time_series(indicators_queryset, output):
         indicators_table[date].update({'indice_tiempo': date})
         writer.writerow(indicators_table[date])
     return output
+
+
+def custom_row_generator(writer, rows):
+    '''
+    La primera row se arma 'a mano' porque 'writer.writeheader()' devuelve None
+    '''
+    yield writer.writerow({'fecha': 'fecha',
+                           'indicador_tipo__nombre': 'indicador_tipo__nombre',
+                           'indicador_valor': 'indicador_valor'})
+
+    for row in rows:
+        yield writer.writerow(row)

@@ -85,12 +85,7 @@ class LoadCatalogsTest(TestCase):
 class RowGeneratorTest(TestCase):
 
     def setUp(self):
-        queryset = IndicadorRed.objects.values('fecha', 'indicador_tipo__nombre', 'indicador_valor')
-        rows = list(queryset)
-        pseudo_buffer = Echo()
         self.fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
-        writer = csv.DictWriter(pseudo_buffer, fieldnames=self.fieldnames)
-
         self.rows_list = list(custom_row_generator())
 
     def test_generated_rows_are_not_empty(self):

@@ -4,9 +4,9 @@ from datetime import date, timedelta
 from django.shortcuts import render
 from django.http import StreamingHttpResponse
 
-from monitoreo.apps.dashboard.echo import Echo
 from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
-from .helpers import fetch_latest_indicadors, download_time_series, custom_row_generator
+from .helpers import fetch_latest_indicadors, download_time_series
+from .custom_generators import custom_row_generator
 
 
 def landing(request):
@@ -113,7 +113,6 @@ def indicators_csv(_request, node_id=None, indexing=False):
 
 
 def nodos_indicadores_csv(_request):
-
     response = StreamingHttpResponse(custom_row_generator(), content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename=nodos-red-indicadores.csv'
 

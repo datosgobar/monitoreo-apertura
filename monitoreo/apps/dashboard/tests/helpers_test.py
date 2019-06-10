@@ -8,11 +8,10 @@ from datetime import date, timedelta
 from django.test import TestCase
 from django_datajsonar.models import Node
 
-from monitoreo.apps.dashboard.echo import Echo
 from monitoreo.apps.dashboard.models import Indicador, IndicatorType, \
-    IndicatorsGenerationTask, IndicadorRed
+    IndicatorsGenerationTask
 from monitoreo.apps.dashboard.helpers import fetch_latest_indicadors, \
-    load_catalogs, custom_row_generator
+    load_catalogs
 from pydatajson import DataJson
 
 dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
@@ -80,18 +79,3 @@ class LoadCatalogsTest(TestCase):
         indicators, _ = DataJson().generate_catalogs_indicators(one_catalog)
         # Asumo que si tiene el indicador de datasets fue parseado exitosamente
         self.assertTrue(indicators[0]['datasets_cant'], 'Catálogo no parseado')
-
-
-class RowGeneratorTest(TestCase):
-
-    def setUp(self):
-        self.fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
-        self.rows_list = list(custom_row_generator())
-
-    def test_generated_rows_are_not_empty(self):
-        self.assertIsNotNone(self.rows_list)
-
-    def test_first_generated_row_are_fieldnames(self):
-        first_row = self.rows_list[0].split(',')
-        first_row_contents = [row.strip() for row in first_row]
-        self.assertEquals(self.fieldnames, first_row_contents)

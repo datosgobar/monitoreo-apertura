@@ -91,7 +91,7 @@ class RowGeneratorTest(TestCase):
         self.fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
         writer = csv.DictWriter(pseudo_buffer, fieldnames=self.fieldnames)
 
-        self.rows_list = list(custom_row_generator(writer, rows))
+        self.rows_list = list(custom_row_generator())
 
     def test_generated_rows_are_not_empty(self):
         self.assertIsNotNone(self.rows_list)

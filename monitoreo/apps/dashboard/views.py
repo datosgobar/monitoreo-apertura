@@ -113,14 +113,8 @@ def indicators_csv(_request, node_id=None, indexing=False):
 
 
 def nodos_indicadores_csv(_request):
-    queryset = IndicadorRed.objects.values('fecha', 'indicador_tipo__nombre', 'indicador_valor')
-    rows = list(queryset)
-    pseudo_buffer = Echo()
-    fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
-    writer = csv.DictWriter(pseudo_buffer, fieldnames=fieldnames)
 
-    response = StreamingHttpResponse(custom_row_generator(writer, rows),
-                                     content_type="text/csv")
+    response = StreamingHttpResponse(custom_row_generator(), content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename=nodos-red-indicadores.csv'
 
     return response

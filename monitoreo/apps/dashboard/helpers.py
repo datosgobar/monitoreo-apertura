@@ -11,6 +11,8 @@ from django.http import HttpResponse
 
 from django_datajsonar.models import Dataset
 
+from monitoreo.apps.dashboard.echo import Echo
+from monitoreo.apps.dashboard.models import IndicadorRed
 from .models import IndicatorsGenerationTask, IndicatorType
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
@@ -135,7 +137,12 @@ def generate_time_series(indicators_queryset, output):
     return output
 
 
-def custom_row_generator(writer, rows):
+def custom_row_generator():
+    queryset = IndicadorRed.objects.values('fecha', 'indicador_tipo__nombre', 'indicador_valor')
+    rows = list(queryset)
+    pseudo_buffer = Echo()
+    fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
+    writer = csv.DictWriter(pseudo_buffer, fieldnames=fieldnames)
     '''
     La primera row se arma 'a mano' porque 'writer.writeheader()' devuelve None
     '''

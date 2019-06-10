@@ -1,8 +1,6 @@
 #! coding: utf-8
-import csv
 import os
 import json
-import re
 from datetime import date, timedelta
 
 from django.test import TestCase

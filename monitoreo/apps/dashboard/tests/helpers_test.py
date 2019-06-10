@@ -98,7 +98,5 @@ class RowGeneratorTest(TestCase):
 
     def test_first_generated_row_are_fieldnames(self):
         first_row = self.rows_list[0].split(',')
-        first_row_contents = []
-        for row in first_row:
-            first_row_contents.append(re.sub('[^\w]', '', row))
+        first_row_contents = [row.strip() for row in first_row]
         self.assertEquals(self.fieldnames, first_row_contents)

@@ -2,9 +2,9 @@
 import csv
 import os
 import json
+import re
 from datetime import date, timedelta
 
-from django.http import StreamingHttpResponse
 from django.test import TestCase
 from django_datajsonar.models import Node
 
@@ -97,13 +97,8 @@ class RowGeneratorTest(TestCase):
         self.assertIsNotNone(self.rows_list)
 
     def test_first_generated_row_are_fieldnames(self):
-        import re
         first_row = self.rows_list[0].split(',')
         first_row_contents = []
         for row in first_row:
             first_row_contents.append(re.sub('[^\w]', '', row))
         self.assertEquals(self.fieldnames, first_row_contents)
-
-    def test_remaining_generated_rows_have_content(self):
-        rows_with_content = self.rows_list[1:]
-        self.assertIsNotNone(rows_with_content)

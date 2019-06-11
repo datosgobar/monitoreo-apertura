@@ -112,7 +112,7 @@ def indicators_csv(_request, node_id=None, indexing=False):
     return download_time_series(queryset, node_id=node_id)
 
 
-def nodos_indicadores_csv(_request):
+def indicadores_red_csv(_request):
     response = StreamingHttpResponse(custom_row_generator(), content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename=nodos-red-indicadores.csv'
 

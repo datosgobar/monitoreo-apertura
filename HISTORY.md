@@ -1,5 +1,12 @@
 Versiones
 =========
+0.0.44 (11-06-19)
+-------------------
+
+* Actualiza versión de django_datajsonar
+* Agrega endpoint de `/nodos-red-indicadores.csv`
+
+
 0.0.43 (04-06-19)
 -------------------
 

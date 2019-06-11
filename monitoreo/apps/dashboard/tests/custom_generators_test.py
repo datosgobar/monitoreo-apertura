@@ -34,7 +34,6 @@ class RowGeneratorTest(TestCase):
         first_row_contents = [row.strip() for row in first_row]
         self.assertEquals(self.fieldnames, first_row_contents)
 
-
     def test_dates_column_has_dates(self):
         data_rows = self.rows_list[1:]
         dates_column = [row.split(',')[0] for row in data_rows]

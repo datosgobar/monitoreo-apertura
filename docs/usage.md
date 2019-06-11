@@ -151,7 +151,7 @@ a la ruta `/admin/auth/user/` y en la vista del usuario particular, marcar la op
 
 Es posible correr manualmente un proceso de envío de reportes instanciando un modelo de Django.
 Para eso nos dirigimos a la ruta `/admin/dashboard/indicatorsgenerationtask/`.
-Esta instancia no requiere ningun parametro, lee los indicadores calculados en la última corrida de indicadores.
+Esta instancia no requiere ningun parámetro, lee los indicadores calculados en la última corrida de indicadores.
 Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:
 
 ![Indicators Report Task](./images/indicators_report.png)
@@ -165,11 +165,11 @@ encontramos con un formulario de este estilo:
 
 ![Synchro Form](images/synchro_form.png)
 
-El campo **name** identifica al synchronizer, **frequency** determina los días cuando se correran los procesos.
+El campo **name** identifica al synchronizer, **frequency** determina los días cuando se correrán los procesos.
 Finalmente, **scheduled time** indica la hora a correr la primer etapa del synchronizer.
 
-Cada fila del campo task representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente para
-configurar las tareas ya existentes se pueden pasar los siguientes procesos:
+Cada fila del campo task representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente, para
+configurar las tareas ya existentes, se pueden pasar los siguientes procesos:
 
     - Read Datajson (complete)
     - Read Datajson (metadata only)
@@ -201,13 +201,13 @@ Los parámetros `file` y `--aggregated` indican lo mismo que para el comando ant
 respectivamente. La operación es un upsert, es decir se actualizaran los valores en caso que ya existen y se crearan
 indicadores nuevos si estos no están presentes.
 
-Alternativamente, se puede importar mediante UI un csv con los indicadores (Importante: el csv debe tener la misma forma
+Alternativamente, se puede importar mediante UI un csv con los indicadores (**Importante**: el csv debe tener la misma forma
 que el descripto por el punto anterior). Desde la vista de lista de la tabla de indicadores correspondientes, se ingresa
 con el botón importar. Debería caer al siguiente form:
 
 ![Indicator Import](images/ui_indicator_import.png)
 
-El primer campo toma el archivo de csv a subir, el segundo el formato del archivo. Actualmente, el único formato que
+El primer campo toma el archivo de csv a subir; el segundo, el formato del archivo. Actualmente, el único formato que
 acepta es csv.
 
 Además, accediendo a la ruta `/nodos-red-indicadores.csv` se puede descargar un dump de la base de indicadores de red

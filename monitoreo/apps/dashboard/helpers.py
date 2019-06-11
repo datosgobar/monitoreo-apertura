@@ -10,7 +10,6 @@ from pydatajson import DataJson
 from django.http import HttpResponse
 
 from django_datajsonar.models import Dataset
-
 from .models import IndicatorsGenerationTask, IndicatorType
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 

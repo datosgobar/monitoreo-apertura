@@ -2,8 +2,10 @@
 import os
 import json
 from datetime import date, timedelta
+
 from django.test import TestCase
 from django_datajsonar.models import Node
+
 from monitoreo.apps.dashboard.models import Indicador, IndicatorType, \
     IndicatorsGenerationTask
 from monitoreo.apps.dashboard.helpers import fetch_latest_indicadors, \

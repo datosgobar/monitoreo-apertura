@@ -1,3 +1,4 @@
+import datetime
 import re
 
 from django.test import TestCase
@@ -41,3 +42,24 @@ class RowGeneratorTest(TestCase):
         for date in dates_column:
             matched_pattern = re.match("\d{4}-\d{2}-\d{2}", date)
             self.assertTrue(matched_pattern)
+
+    def test_dates_column_contains_indicator_created_date(self):
+        dates_column = [row.split(',')[0] for row in self.rows_list[1:]]
+        current_date = datetime.date.today().strftime('%Y-%m-%d')
+
+        for date in dates_column:
+            self.assertEquals(current_date, date)
+
+    def test_generator_rows_quantity_is_indicators_quantity(self):
+        indicators_quantity = IndicadorRed.objects\
+            .values('fecha', 'indicador_tipo__nombre', 'indicador_valor').count()
+        data_rows_quantity = len(self.rows_list[1:])
+
+        self.assertEquals(indicators_quantity, data_rows_quantity)
+
+    def test_rows_contain_correct_value(self):
+        first_data_row = self.rows_list[1].split(',')
+        last_data_row = self.rows_list[-1].split(',')
+
+        self.assertEquals('42', first_data_row[2].strip())
+        self.assertEquals('1', last_data_row[2].strip())

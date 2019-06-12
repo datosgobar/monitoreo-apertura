@@ -25,7 +25,7 @@ class RowGeneratorTest(TestCase):
 
     def setUp(self):
         self.fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
-        self.rows_list = list(custom_row_generator())
+        self.rows_list = list(custom_row_generator(IndicadorRed))
 
     def test_generated_rows_are_not_empty(self):
         self.assertIsNotNone(self.rows_list)

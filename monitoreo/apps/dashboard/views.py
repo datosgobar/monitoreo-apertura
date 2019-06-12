@@ -113,7 +113,21 @@ def indicators_csv(_request, node_id=None, indexing=False):
 
 
 def indicadores_red_csv(_request):
-    response = StreamingHttpResponse(custom_row_generator(), content_type="text/csv")
+    response = StreamingHttpResponse(custom_row_generator(IndicadorRed), content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename=nodos-red-indicadores.csv'
+
+    return response
+
+
+def nodos_indicadores_csv(_request):
+    response = StreamingHttpResponse(custom_row_generator(IndicadorFederador), content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename=nodos-indicadores.csv'
+
+    return response
+
+
+def nodos_indicadores_federadores_csv(_request):
+    response = StreamingHttpResponse(custom_row_generator(Indicador), content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename=nodos-indicadores-federadores.csv'
 
     return response

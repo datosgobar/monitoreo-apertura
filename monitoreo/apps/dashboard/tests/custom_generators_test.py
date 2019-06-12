@@ -4,7 +4,8 @@ import re
 from django.test import TestCase
 
 from monitoreo.apps.dashboard.custom_generators import custom_row_generator
-from monitoreo.apps.dashboard.models import IndicatorType, IndicadorRed
+from monitoreo.apps.dashboard.models import IndicatorType, IndicadorRed, Indicador, \
+    IndicadorFederador
 
 
 class RowGeneratorTest(TestCase):
@@ -24,19 +25,29 @@ class RowGeneratorTest(TestCase):
             IndicadorRed.objects.create(indicador_tipo=t, indicador_valor=v)
 
     def setUp(self):
-        self.fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
-        self.rows_list = list(custom_row_generator(IndicadorRed))
+        self.indicador_red_fieldnames = IndicadorRed.get_fieldnames()
+        self.indicador_red_rows_list = list(custom_row_generator(IndicadorRed))
+        self.indicador_fieldnames = Indicador.get_fieldnames()
+        self.indicador_rows_list = list(custom_row_generator(Indicador))
+        self.indicador_federador_fieldnames = IndicadorFederador.get_fieldnames()
+        self.indicador_federador_rows_list = list(custom_row_generator(IndicadorFederador))
 
-    def test_generated_rows_are_not_empty(self):
-        self.assertIsNotNone(self.rows_list)
+    def test_generated_indicador_red_rows_are_not_empty(self):
+        self.assertTrue(self.indicador_red_rows_list)
+
+    def test_generated_indicador_rows_are_not_empty(self):
+        self.assertTrue(self.indicador_rows_list)
+
+    def test_generated_indicador_federador_rows_are_not_empty(self):
+        self.assertTrue(self.indicador_federador_rows_list)
 
     def test_first_generated_row_are_fieldnames(self):
-        first_row = self.rows_list[0].split(',')
+        first_row = self.indicador_red_rows_list[0].split(',')
         first_row_contents = [row.strip() for row in first_row]
-        self.assertEquals(self.fieldnames, first_row_contents)
+        self.assertEquals(self.indicador_red_fieldnames, first_row_contents)
 
     def test_dates_column_has_dates(self):
-        data_rows = self.rows_list[1:]
+        data_rows = self.indicador_red_rows_list[1:]
         dates_column = [row.split(',')[0] for row in data_rows]
 
         for date in dates_column:
@@ -44,7 +55,7 @@ class RowGeneratorTest(TestCase):
             self.assertTrue(matched_pattern)
 
     def test_dates_column_contains_indicator_created_date(self):
-        dates_column = [row.split(',')[0] for row in self.rows_list[1:]]
+        dates_column = [row.split(',')[0] for row in self.indicador_red_rows_list[1:]]
         current_date = datetime.date.today().strftime('%Y-%m-%d')
 
         for date in dates_column:
@@ -53,13 +64,13 @@ class RowGeneratorTest(TestCase):
     def test_generator_rows_quantity_is_indicators_quantity(self):
         indicators_quantity = IndicadorRed.objects\
             .values('fecha', 'indicador_tipo__nombre', 'indicador_valor').count()
-        data_rows_quantity = len(self.rows_list[1:])
+        data_rows_quantity = len(self.indicador_red_rows_list[1:])
 
         self.assertEquals(indicators_quantity, data_rows_quantity)
 
     def test_rows_contain_correct_value(self):
-        first_data_row = self.rows_list[1].split(',')
-        last_data_row = self.rows_list[-1].split(',')
+        first_data_row = self.indicador_red_rows_list[1].split(',')
+        last_data_row = self.indicador_red_rows_list[-1].split(',')
 
         self.assertEquals('42', first_data_row[2].strip())
         self.assertEquals('1', last_data_row[2].strip())

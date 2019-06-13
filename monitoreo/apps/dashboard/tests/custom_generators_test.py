@@ -65,15 +65,15 @@ class RowGeneratorTest(TestCase):
         self.assert_first_row_is_header(Indicador)
         self.assert_first_row_is_header(IndicadorFederador)
 
-    def assert_headers_different_from_fieldnames(self, model):
-        first_row = list(custom_row_generator(model))[0].split(',')
-        headers = [row.strip() for row in first_row]
-        self.assertNotEquals(model.get_fieldnames(), headers)
-
-    def test_indicador_headers_is_not_the_same_as_its_fieldnames(self):
-        self.assert_headers_different_from_fieldnames(Indicador)
-        self.assert_headers_different_from_fieldnames(IndicadorRed)
-        self.assert_headers_different_from_fieldnames(IndicadorFederador)
+    def test_fieldnames_to_headers_returns_expected_headers_in_correct_order(self):
+        self.assertEquals(fieldnames_to_headers(Indicador),
+                          ['fecha', 'indicador_tipo', 'indicador_valor',
+                           'jurisdiccion_nombre', 'jurisdiccion_id'])
+        self.assertEquals(fieldnames_to_headers(IndicadorFederador),
+                          ['fecha', 'indicador_tipo', 'indicador_valor',
+                           'jurisdiccion_nombre', 'jurisdiccion_id'])
+        self.assertEquals(fieldnames_to_headers(IndicadorRed),
+                          ['fecha', 'indicador_tipo', 'indicador_valor'])
 
     def indicador_federador_headers_is_not_the_same_as_its_fieldnames(self):
         indicador_federador_first_row = self.indicador_federador_rows_list[0].split(',')

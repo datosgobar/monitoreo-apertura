@@ -98,12 +98,6 @@ class RowGeneratorTest(TestCase):
         self.assertEquals(indicators_count, data_rows_quantity)
 
     def test_generated_rows_quantity_is_indicators_count(self):
-        indicators_quantity = IndicadorRed.objects\
-            .values('fecha', 'indicador_tipo__nombre', 'indicador_valor').count()
-        data_rows_quantity = len(self.indicador_red_rows_list[1:])
-
-        self.assertEquals(indicators_quantity, data_rows_quantity)
-
         self.assert_generated_rows_equals_indicator_count(IndicadorRed)
         self.assert_generated_rows_equals_indicator_count(Indicador)
         self.assert_generated_rows_equals_indicator_count(IndicadorFederador)

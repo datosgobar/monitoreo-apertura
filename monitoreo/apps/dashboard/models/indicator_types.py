@@ -22,7 +22,7 @@ class IndicatorType(OrderedModel):
         return self.nombre
 
     def __str__(self):
-        return self.__unicode__().encode('utf-8')
+        return self.__unicode__()
 
 
 class TableColumn(OrderedModel):
@@ -38,7 +38,7 @@ class TableColumn(OrderedModel):
         return 'Columna {}'.format(self.full_name)
 
     def __str__(self):
-        return self.__unicode__().encode('utf-8')
+        return self.__unicode__()
 
     def clean(self):
         if not self.full_name:

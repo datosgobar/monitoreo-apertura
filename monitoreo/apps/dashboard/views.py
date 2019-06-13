@@ -3,7 +3,6 @@ import csv
 from datetime import date, timedelta
 from django.shortcuts import render
 from django.http import StreamingHttpResponse
-from django.utils.text import slugify
 
 from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
 from .helpers import fetch_latest_indicadors, download_time_series

@@ -3,6 +3,7 @@ import csv
 from datetime import date, timedelta
 from django.shortcuts import render
 from django.http import StreamingHttpResponse
+from django.utils.text import slugify
 
 from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
 from .helpers import fetch_latest_indicadors, download_time_series
@@ -112,22 +113,20 @@ def indicators_csv(_request, node_id=None, indexing=False):
     return download_time_series(queryset, node_id=node_id)
 
 
-def indicadores_red_csv(_request):
-    response = StreamingHttpResponse(custom_row_generator(IndicadorRed), content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename=nodos-red-indicadores.csv'
 
+def create_response_from_indicator_model(model, filename):
+    response = StreamingHttpResponse(custom_row_generator(model), content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename={}.csv'.format(filename)
     return response
+
+
+def indicadores_red_csv(_request):
+    return create_response_from_indicator_model(IndicadorRed, 'nodos-indicadores-red')
 
 
 def nodos_indicadores_csv(_request):
-    response = StreamingHttpResponse(custom_row_generator(IndicadorFederador), content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename=nodos-indicadores.csv'
-
-    return response
+    return create_response_from_indicator_model(Indicador, 'nodos-indicadores')
 
 
 def nodos_indicadores_federadores_csv(_request):
-    response = StreamingHttpResponse(custom_row_generator(Indicador), content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename=nodos-indicadores-federadores.csv'
-
-    return response
+    return create_response_from_indicator_model(IndicadorFederador, 'nodos-indicadores-federadores')

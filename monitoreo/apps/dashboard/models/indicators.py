@@ -42,7 +42,7 @@ class Indicador(AbstractIndicator):
                              self.fecha)
 
     def __str__(self):
-        return self.__unicode__().encode('utf-8')
+        return self.__unicode__()
 
 
 class IndicadorFederador(AbstractIndicator):
@@ -57,7 +57,7 @@ class IndicadorFederador(AbstractIndicator):
                              self.fecha)
 
     def __str__(self):
-        return self.__unicode__().encode('utf-8')
+        return self.__unicode__()
 
 
 class IndicadorRed(models.Model):
@@ -77,7 +77,7 @@ class IndicadorRed(models.Model):
         return string.format(self.indicador_tipo.nombre, self.fecha)
 
     def __str__(self):
-        return self.__unicode__().encode('utf-8')
+        return self.__unicode__()
 
     @staticmethod
     def get_fieldnames():

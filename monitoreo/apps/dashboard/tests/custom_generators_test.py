@@ -91,14 +91,24 @@ class RowGeneratorTest(TestCase):
         self.assert_dates_column_contains_indicator_created_date(Indicador)
         self.assert_dates_column_contains_indicator_created_date(IndicadorFederador)
 
-    def test_generator_rows_quantity_is_indicators_quantity(self):
+    def assert_generated_rows_equals_indicator_count(self, model):
+        indicators_count = model.objects.values(*model.get_fieldnames()).count()
+        data_rows_quantity = len(list(custom_row_generator(model))[1:])
+
+        self.assertEquals(indicators_count, data_rows_quantity)
+
+    def test_generated_rows_quantity_is_indicators_count(self):
         indicators_quantity = IndicadorRed.objects\
             .values('fecha', 'indicador_tipo__nombre', 'indicador_valor').count()
         data_rows_quantity = len(self.indicador_red_rows_list[1:])
 
         self.assertEquals(indicators_quantity, data_rows_quantity)
 
-    def test_rows_contain_correct_value(self):
+        self.assert_generated_rows_equals_indicator_count(IndicadorRed)
+        self.assert_generated_rows_equals_indicator_count(Indicador)
+        self.assert_generated_rows_equals_indicator_count(IndicadorFederador)
+
+    def test_indicador_red_rows_contain_correct_values(self):
         first_data_row = self.indicador_red_rows_list[1].split(',')
         last_data_row = self.indicador_red_rows_list[-1].split(',')
 

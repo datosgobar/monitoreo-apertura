@@ -122,3 +122,17 @@ class RowGeneratorTest(TestCase):
 
         self.assertEquals('42', first_data_row[2].strip())
         self.assertEquals('1', last_data_row[2].strip())
+
+    def test_indicador_rows_contain_correct_values(self):
+        first_data_row = self.indicador_rows_list[1].split(',')
+        last_data_row = self.indicador_rows_list[-1].split(',')
+
+        self.assertEquals('23', first_data_row[2].strip())
+        self.assertEquals('2', last_data_row[2].strip())
+
+    def test_indicador_federador_rows_contain_correct_values(self):
+        first_data_row = self.indicador_federador_rows_list[1].split(',')
+        last_data_row = self.indicador_federador_rows_list[-1].split(',')
+
+        self.assertEquals('23', first_data_row[2].strip())
+        self.assertEquals('3', last_data_row[2].strip())

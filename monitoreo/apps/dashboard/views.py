@@ -119,12 +119,12 @@ def create_response_from_indicator_model(model, filename):
 
 
 def indicadores_red_csv(_request):
-    return create_response_from_indicator_model(IndicadorRed, 'nodos-indicadores-red')
+    return create_response_from_indicator_model(IndicadorRed, 'indicadores-red')
 
 
 def nodos_indicadores_csv(_request):
-    return create_response_from_indicator_model(Indicador, 'nodos-indicadores')
+    return create_response_from_indicator_model(Indicador, 'indicadores-nodo')
 
 
 def nodos_indicadores_federadores_csv(_request):
-    return create_response_from_indicator_model(IndicadorFederador, 'nodos-indicadores-federadores')
+    return create_response_from_indicator_model(IndicadorFederador, 'indicadores-federadores')

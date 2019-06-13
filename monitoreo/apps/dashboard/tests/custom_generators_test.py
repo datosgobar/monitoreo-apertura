@@ -47,7 +47,6 @@ class RowGeneratorTest(TestCase):
         self.assertEquals(first_row, header)
 
     def test_first_generated_row_are_headers(self):
-
         self.assert_first_row_is_header(IndicadorRed)
         self.assert_first_row_is_header(Indicador)
         self.assert_first_row_is_header(IndicadorFederador)
@@ -67,20 +66,30 @@ class RowGeneratorTest(TestCase):
         indicador_federador_headers = [row.strip() for row in indicador_federador_first_row]
         self.assertNotEquals(IndicadorFederador.get_fieldnames(), indicador_federador_headers)
 
-    def test_dates_column_has_dates(self):
-        data_rows = self.indicador_red_rows_list[1:]
+    def assert_dates_column_has_dates_format(self, model):
+        data_rows = list(custom_row_generator(model))[1:]
         dates_column = [row.split(',')[0] for row in data_rows]
 
         for date in dates_column:
             matched_pattern = re.match("\d{4}-\d{2}-\d{2}", date)
             self.assertTrue(matched_pattern)
 
-    def test_dates_column_contains_indicator_created_date(self):
-        dates_column = [row.split(',')[0] for row in self.indicador_red_rows_list[1:]]
+    def test_dates_column_has_dates(self):
+        self.assert_dates_column_has_dates_format(IndicadorRed)
+        self.assert_dates_column_has_dates_format(Indicador)
+        self.assert_dates_column_has_dates_format(IndicadorFederador)
+
+    def assert_dates_column_contains_indicator_created_date(self, model):
+        dates_column = [row.split(',')[0] for row in list(custom_row_generator(model))[1:]]
         current_date = datetime.date.today().strftime('%Y-%m-%d')
 
         for date in dates_column:
             self.assertEquals(current_date, date)
+
+    def test_dates_column_contains_indicator_created_date(self):
+        self.assert_dates_column_contains_indicator_created_date(IndicadorRed)
+        self.assert_dates_column_contains_indicator_created_date(Indicador)
+        self.assert_dates_column_contains_indicator_created_date(IndicadorFederador)
 
     def test_generator_rows_quantity_is_indicators_quantity(self):
         indicators_quantity = IndicadorRed.objects\

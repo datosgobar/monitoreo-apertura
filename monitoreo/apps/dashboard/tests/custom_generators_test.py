@@ -41,20 +41,16 @@ class RowGeneratorTest(TestCase):
     def test_generated_indicador_federador_rows_are_not_empty(self):
         self.assertTrue(self.indicador_federador_rows_list)
 
+    def assert_first_row_is_header(self, model):
+        header = model.get_headers()
+        first_row = [row.strip() for row in list(custom_row_generator(model))[0].split(',')]
+        self.assertEquals(first_row, header)
+
     def test_first_generated_row_are_headers(self):
-        indicador_red_first_row = self.indicador_red_rows_list[0].split(',')
-        indicador_red_first_row_contents = [row.strip() for row in indicador_red_first_row]
 
-        indicador_first_row = self.indicador_rows_list[0].split(',')
-        indicador_first_row_contents = [row.strip() for row in indicador_first_row]
-
-        indicador_federador_first_row = self.indicador_federador_rows_list[0].split(',')
-        indicador_federador_first_row_contents = [row.strip()
-                                                  for row in indicador_federador_first_row]
-
-        self.assertEquals(self.indicador_red_headers, indicador_red_first_row_contents)
-        self.assertEquals(self.indicador_headers, indicador_first_row_contents)
-        self.assertEquals(self.indicador_federador_headers, indicador_federador_first_row_contents)
+        self.assert_first_row_is_header(IndicadorRed)
+        self.assert_first_row_is_header(Indicador)
+        self.assert_first_row_is_header(IndicadorFederador)
 
     def test_indicador_red_headers_is_the_same_as_fieldnames(self):
         first_row = self.indicador_red_rows_list[0].split(',')

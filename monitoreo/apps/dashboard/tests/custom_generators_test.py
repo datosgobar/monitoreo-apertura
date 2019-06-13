@@ -25,11 +25,11 @@ class RowGeneratorTest(TestCase):
             IndicadorRed.objects.create(indicador_tipo=t, indicador_valor=v)
 
     def setUp(self):
-        self.indicador_red_fieldnames = IndicadorRed.get_fieldnames()
+        self.indicador_red_headers = IndicadorRed.get_headers()
         self.indicador_red_rows_list = list(custom_row_generator(IndicadorRed))
-        self.indicador_fieldnames = Indicador.get_fieldnames()
+        self.indicador_headers = Indicador.get_headers()
         self.indicador_rows_list = list(custom_row_generator(Indicador))
-        self.indicador_federador_fieldnames = IndicadorFederador.get_fieldnames()
+        self.indicador_federador_headers = IndicadorFederador.get_headers()
         self.indicador_federador_rows_list = list(custom_row_generator(IndicadorFederador))
 
     def test_generated_indicador_red_rows_are_not_empty(self):
@@ -41,10 +41,35 @@ class RowGeneratorTest(TestCase):
     def test_generated_indicador_federador_rows_are_not_empty(self):
         self.assertTrue(self.indicador_federador_rows_list)
 
-    def test_first_generated_row_are_fieldnames(self):
+    def test_first_generated_row_are_headers(self):
+        indicador_red_first_row = self.indicador_red_rows_list[0].split(',')
+        indicador_red_first_row_contents = [row.strip() for row in indicador_red_first_row]
+
+        indicador_first_row = self.indicador_rows_list[0].split(',')
+        indicador_first_row_contents = [row.strip() for row in indicador_first_row]
+
+        indicador_federador_first_row = self.indicador_federador_rows_list[0].split(',')
+        indicador_federador_first_row_contents = [row.strip()
+                                                  for row in indicador_federador_first_row]
+
+        self.assertEquals(self.indicador_red_headers, indicador_red_first_row_contents)
+        self.assertEquals(self.indicador_headers, indicador_first_row_contents)
+        self.assertEquals(self.indicador_federador_headers, indicador_federador_first_row_contents)
+
+    def test_indicador_red_headers_is_the_same_as_fieldnames(self):
         first_row = self.indicador_red_rows_list[0].split(',')
-        first_row_contents = [row.strip() for row in first_row]
-        self.assertEquals(self.indicador_red_fieldnames, first_row_contents)
+        headers = [row.strip() for row in first_row]
+        self.assertEquals(IndicadorRed.get_fieldnames(), headers)
+
+    def test_indicador_headers_is_not_the_same_as_its_fieldnames(self):
+        indicador_first_row = self.indicador_rows_list[0].split(',')
+        indicador_headers = [row.strip() for row in indicador_first_row]
+        self.assertNotEquals(Indicador.get_fieldnames(), indicador_headers)
+
+    def indicador_federador_headers_is_not_the_same_as_its_fieldnames(self):
+        indicador_federador_first_row = self.indicador_federador_rows_list[0].split(',')
+        indicador_federador_headers = [row.strip() for row in indicador_federador_first_row]
+        self.assertNotEquals(IndicadorFederador.get_fieldnames(), indicador_federador_headers)
 
     def test_dates_column_has_dates(self):
         data_rows = self.indicador_red_rows_list[1:]

@@ -3,7 +3,7 @@ import re
 
 from django.test import TestCase
 
-from monitoreo.apps.dashboard.custom_generators import custom_row_generator
+from monitoreo.apps.dashboard.custom_generators import custom_row_generator, fieldnames_to_headers
 from monitoreo.apps.dashboard.models import IndicatorType, IndicadorRed, Indicador, \
     IndicadorFederador
 
@@ -39,11 +39,11 @@ class RowGeneratorTest(TestCase):
                                               jurisdiccion_nombre='harvest node')
 
     def setUp(self):
-        self.indicador_red_headers = IndicadorRed.get_headers()
+        self.indicador_red_headers = fieldnames_to_headers(IndicadorRed)
         self.indicador_red_rows_list = list(custom_row_generator(IndicadorRed))
-        self.indicador_headers = Indicador.get_headers()
+        self.indicador_headers = fieldnames_to_headers((Indicador))
         self.indicador_rows_list = list(custom_row_generator(Indicador))
-        self.indicador_federador_headers = IndicadorFederador.get_headers()
+        self.indicador_federador_headers = fieldnames_to_headers(IndicadorFederador)
         self.indicador_federador_rows_list = list(custom_row_generator(IndicadorFederador))
 
     def test_generated_indicador_red_rows_are_not_empty(self):
@@ -56,7 +56,7 @@ class RowGeneratorTest(TestCase):
         self.assertTrue(self.indicador_federador_rows_list)
 
     def assert_first_row_is_header(self, model):
-        header = model.get_headers()
+        header = fieldnames_to_headers(model)
         first_row = [row.strip() for row in list(custom_row_generator(model))[0].split(',')]
         self.assertEquals(first_row, header)
 
@@ -65,15 +65,15 @@ class RowGeneratorTest(TestCase):
         self.assert_first_row_is_header(Indicador)
         self.assert_first_row_is_header(IndicadorFederador)
 
-    def test_indicador_red_headers_is_the_same_as_fieldnames(self):
-        first_row = self.indicador_red_rows_list[0].split(',')
+    def assert_headers_different_from_fieldnames(self, model):
+        first_row = list(custom_row_generator(model))[0].split(',')
         headers = [row.strip() for row in first_row]
-        self.assertEquals(IndicadorRed.get_fieldnames(), headers)
+        self.assertNotEquals(model.get_fieldnames(), headers)
 
     def test_indicador_headers_is_not_the_same_as_its_fieldnames(self):
-        indicador_first_row = self.indicador_rows_list[0].split(',')
-        indicador_headers = [row.strip() for row in indicador_first_row]
-        self.assertNotEquals(Indicador.get_fieldnames(), indicador_headers)
+        self.assert_headers_different_from_fieldnames(Indicador)
+        self.assert_headers_different_from_fieldnames(IndicadorRed)
+        self.assert_headers_different_from_fieldnames(IndicadorFederador)
 
     def indicador_federador_headers_is_not_the_same_as_its_fieldnames(self):
         indicador_federador_first_row = self.indicador_federador_rows_list[0].split(',')

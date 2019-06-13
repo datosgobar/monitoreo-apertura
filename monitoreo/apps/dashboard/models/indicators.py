@@ -23,12 +23,6 @@ class AbstractIndicator(models.Model):
         return ['fecha', 'indicador_tipo__nombre', 'indicador_valor',
                 'jurisdiccion_nombre', 'jurisdiccion_id']
 
-    @staticmethod
-    def get_headers():
-        # Igual que get_fieldnames, excepto por 'indicador_tipo'
-        return ['fecha', 'indicador_tipo', 'indicador_valor',
-                'jurisdiccion_nombre', 'jurisdiccion_id']
-
 
 class Indicador(AbstractIndicator):
     class Meta:
@@ -82,7 +76,3 @@ class IndicadorRed(models.Model):
     @staticmethod
     def get_fieldnames():
         return ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
-
-    @staticmethod
-    def get_headers():
-        return IndicadorRed.get_fieldnames()

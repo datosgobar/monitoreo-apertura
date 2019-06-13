@@ -23,6 +23,20 @@ class RowGeneratorTest(TestCase):
         values = ['42', '[["d1", "l1"], ["d2", "l2"]]', '{"k1": 1, "k2": 2}', '100', '1']
         for t, v in zip(types, values):
             IndicadorRed.objects.create(indicador_tipo=t, indicador_valor=v)
+        values = ['23', '[["d1", "l1"]]', '{"k2": 1}', '500', '2']
+        for t, v in zip(types, values):
+            Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id1',
+                                     jurisdiccion_nombre='nodo1')
+        values = ['19', '[["d2", "l2"]]', '{"k1": 1, "k2": 1}', '50', '2']
+        for t, v in zip(types, values):
+            Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id2',
+                                     jurisdiccion_nombre='nodo2')
+
+        values = ['23', '[["d2", "l2"]]', '{"k2": 1}', '2', '3']
+        for t, v in zip(types, values):
+            IndicadorFederador.objects.create(indicador_tipo=t, indicador_valor=v,
+                                              jurisdiccion_id='harvest_id',
+                                              jurisdiccion_nombre='harvest node')
 
     def setUp(self):
         self.indicador_red_headers = IndicadorRed.get_headers()

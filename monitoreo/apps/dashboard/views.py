@@ -113,7 +113,6 @@ def indicators_csv(_request, node_id=None, indexing=False):
     return download_time_series(queryset, node_id=node_id)
 
 
-
 def create_response_from_indicator_model(model, filename):
     response = StreamingHttpResponse(custom_row_generator(model), content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename={}.csv'.format(filename)

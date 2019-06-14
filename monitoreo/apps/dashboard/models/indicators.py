@@ -18,11 +18,6 @@ class AbstractIndicator(models.Model):
 
     objects = IndicatorQuerySet.as_manager()
 
-    @staticmethod
-    def get_fieldnames():
-        return ['fecha', 'indicador_tipo__nombre', 'indicador_valor',
-                'jurisdiccion_nombre', 'jurisdiccion_id']
-
 
 class Indicador(AbstractIndicator):
     class Meta:
@@ -72,7 +67,3 @@ class IndicadorRed(models.Model):
 
     def __str__(self):
         return self.__unicode__()
-
-    @staticmethod
-    def get_fieldnames():
-        return ['fecha', 'indicador_tipo__nombre', 'indicador_valor']

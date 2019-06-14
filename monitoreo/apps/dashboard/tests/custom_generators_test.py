@@ -39,12 +39,20 @@ class RowGeneratorTest(TestCase):
                                               jurisdiccion_nombre='harvest node')
 
     def setUp(self):
-        self.indicador_red_headers = fieldnames_to_headers(IndicadorRed)
-        self.indicador_red_rows_list = list(custom_row_generator(IndicadorRed))
-        self.indicador_headers = fieldnames_to_headers((Indicador))
-        self.indicador_rows_list = list(custom_row_generator(Indicador))
-        self.indicador_federador_headers = fieldnames_to_headers(IndicadorFederador)
-        self.indicador_federador_rows_list = list(custom_row_generator(IndicadorFederador))
+        self.indicador_fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor',
+                                     'jurisdiccion_nombre', 'jurisdiccion_id']
+        self.indicador_federador_fieldnames = self.indicador_fieldnames
+        self.indicador_red_fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
+
+        self.indicador_red_headers = fieldnames_to_headers(self.indicador_red_fieldnames)
+        self.indicador_red_rows_list = list(custom_row_generator(IndicadorRed, self.indicador_red_fieldnames))
+
+        self.indicador_headers = fieldnames_to_headers(self.indicador_fieldnames)
+        self.indicador_rows_list = list(custom_row_generator(Indicador, self.indicador_fieldnames))
+
+        self.indicador_federador_headers = fieldnames_to_headers(self.indicador_federador_fieldnames)
+        self.indicador_federador_rows_list = list(custom_row_generator(IndicadorFederador,
+                                                                       self.indicador_federador_fieldnames))
 
     def test_generated_indicador_red_rows_are_not_empty(self):
         self.assertTrue(self.indicador_red_rows_list)
@@ -55,33 +63,27 @@ class RowGeneratorTest(TestCase):
     def test_generated_indicador_federador_rows_are_not_empty(self):
         self.assertTrue(self.indicador_federador_rows_list)
 
-    def assert_first_row_is_header(self, model):
-        header = fieldnames_to_headers(model)
-        first_row = [row.strip() for row in list(custom_row_generator(model))[0].split(',')]
-        self.assertEquals(first_row, header)
+    def assert_first_row_is_header(self, model, fieldnames, headers):
+        first_row = [row.strip() for row in list(custom_row_generator(model, fieldnames))[0].split(',')]
+        self.assertEquals(first_row, headers)
 
     def test_first_generated_row_are_headers(self):
-        self.assert_first_row_is_header(IndicadorRed)
-        self.assert_first_row_is_header(Indicador)
-        self.assert_first_row_is_header(IndicadorFederador)
+        self.assert_first_row_is_header(IndicadorRed, self.indicador_red_fieldnames, self.indicador_red_headers)
+        self.assert_first_row_is_header(Indicador, self.indicador_fieldnames, self.indicador_headers)
+        self.assert_first_row_is_header(IndicadorFederador, self.indicador_federador_fieldnames,
+                                        self.indicador_federador_headers)
 
     def test_fieldnames_to_headers_returns_expected_headers_in_correct_order(self):
-        self.assertEquals(fieldnames_to_headers(Indicador),
+        self.assertEquals(self.indicador_headers,
                           ['fecha', 'indicador_tipo', 'indicador_valor',
                            'jurisdiccion_nombre', 'jurisdiccion_id'])
-        self.assertEquals(fieldnames_to_headers(IndicadorFederador),
+        self.assertEquals(self.indicador_federador_headers,
                           ['fecha', 'indicador_tipo', 'indicador_valor',
                            'jurisdiccion_nombre', 'jurisdiccion_id'])
-        self.assertEquals(fieldnames_to_headers(IndicadorRed),
-                          ['fecha', 'indicador_tipo', 'indicador_valor'])
+        self.assertEquals(self.indicador_red_headers, ['fecha', 'indicador_tipo', 'indicador_valor'])
 
-    def indicador_federador_headers_is_not_the_same_as_its_fieldnames(self):
-        indicador_federador_first_row = self.indicador_federador_rows_list[0].split(',')
-        indicador_federador_headers = [row.strip() for row in indicador_federador_first_row]
-        self.assertNotEquals(IndicadorFederador.get_fieldnames(), indicador_federador_headers)
-
-    def assert_dates_column_has_dates_format(self, model):
-        data_rows = list(custom_row_generator(model))[1:]
+    def assert_dates_column_has_dates_format(self, model, fieldnames):
+        data_rows = list(custom_row_generator(model, fieldnames))[1:]
         dates_column = [row.split(',')[0] for row in data_rows]
 
         for date in dates_column:
@@ -89,32 +91,33 @@ class RowGeneratorTest(TestCase):
             self.assertTrue(matched_pattern)
 
     def test_dates_column_has_dates(self):
-        self.assert_dates_column_has_dates_format(IndicadorRed)
-        self.assert_dates_column_has_dates_format(Indicador)
-        self.assert_dates_column_has_dates_format(IndicadorFederador)
+        self.assert_dates_column_has_dates_format(IndicadorRed, self.indicador_red_fieldnames)
+        self.assert_dates_column_has_dates_format(Indicador, self.indicador_fieldnames)
+        self.assert_dates_column_has_dates_format(IndicadorFederador, self.indicador_federador_fieldnames)
 
-    def assert_dates_column_contains_indicator_created_date(self, model):
-        dates_column = [row.split(',')[0] for row in list(custom_row_generator(model))[1:]]
+    def assert_dates_column_contains_indicator_created_date(self, model, fieldnames):
+        dates_column = [row.split(',')[0] for row in list(custom_row_generator(model, fieldnames))[1:]]
         current_date = datetime.date.today().strftime('%Y-%m-%d')
 
         for date in dates_column:
             self.assertEquals(current_date, date)
 
     def test_dates_column_contains_indicator_created_date(self):
-        self.assert_dates_column_contains_indicator_created_date(IndicadorRed)
-        self.assert_dates_column_contains_indicator_created_date(Indicador)
-        self.assert_dates_column_contains_indicator_created_date(IndicadorFederador)
+        self.assert_dates_column_contains_indicator_created_date(IndicadorRed, self.indicador_red_fieldnames)
+        self.assert_dates_column_contains_indicator_created_date(Indicador, self.indicador_fieldnames)
+        self.assert_dates_column_contains_indicator_created_date(IndicadorFederador,
+                                                                 self.indicador_federador_fieldnames)
 
-    def assert_generated_rows_equals_indicator_count(self, model):
-        indicators_count = model.objects.values(*model.get_fieldnames()).count()
-        data_rows_quantity = len(list(custom_row_generator(model))[1:])
+    def assert_generated_rows_equals_indicator_count(self, model, fieldnames):
+        indicators_count = model.objects.values(*fieldnames).count()
+        data_rows_quantity = len(list(custom_row_generator(model, fieldnames))[1:])
 
         self.assertEquals(indicators_count, data_rows_quantity)
 
     def test_generated_rows_quantity_is_indicators_count(self):
-        self.assert_generated_rows_equals_indicator_count(IndicadorRed)
-        self.assert_generated_rows_equals_indicator_count(Indicador)
-        self.assert_generated_rows_equals_indicator_count(IndicadorFederador)
+        self.assert_generated_rows_equals_indicator_count(IndicadorRed, self.indicador_red_fieldnames)
+        self.assert_generated_rows_equals_indicator_count(Indicador, self.indicador_fieldnames)
+        self.assert_generated_rows_equals_indicator_count(IndicadorFederador, self.indicador_federador_fieldnames)
 
     def test_indicador_red_rows_contain_correct_values(self):
         first_data_row = self.indicador_red_rows_list[1].split(',')

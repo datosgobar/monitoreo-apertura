@@ -531,12 +531,10 @@
 </ul>
 </li>
 <li><a href="#lectura-de-catalogos">Lectura de catalogos</a><ul>
-<li><a href="#cierre-de-la-tarea">Cierre de la tarea</a></li>
 <li><a href="#lectura-periodica">Lectura periodica</a></li>
 </ul>
 </li>
 <li><a href="#generaci%C3%B3n-de-indicadores">Generación de indicadores</a><ul>
-<li><a href="#generaci%C3%B3n-peri%C3%B3dica">Generación periódica</a></li>
 <li><a href="#reporte-de-indicadores">Reporte de indicadores</a></li>
 </ul>
 </li>
@@ -612,32 +610,14 @@ Esta instancia no requiere ningun parametro, ya que leera los datos necesarios d
 del proceso anterior.
 Esta instancia ira registrando los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
 <p><img alt="Read DataJson Task" src="../images/read_datajson_task.png" /></p>
-<h3 id="cierre-de-la-tarea">Cierre de la tarea</h3>
-<p>Por una cuestion de concurrencia, las tareas no quedaran en estado "Finalizada" por si solas.
-Para que el sistema verifique es estado de las tareas, debemos instanciar un <code>RepeatableJob</code>.
-Para eso vamos a la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
-<ul>
-<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Cerrar lecturas de red").</li>
-<li>En el campo <strong>callable</strong> debemos poner <code>django_datajsonar.indexing.tasks.close_read_datajson_task</code>.</li>
-<li>En el campo <strong>Queue</strong> ponemos <code>indexing</code>.</li>
-<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
-<li>Finalmente en <strong>interval</strong> ponemos <code>10</code> y en <strong>interval unit</strong> <code>minutes</code>.</li>
-</ul>
-<p>Luego de guardar la instancia deberiamos tener algo como:</p>
-<p><img alt="Close Read DataJson Task" src="../images/close_read_datajson_task.png" /></p>
 <h3 id="lectura-periodica">Lectura periodica</h3>
-<p>Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un <code>RepeatableJob</code>.</p>
-<p>Para eso vamos a la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
-<ul>
-<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "New Read Datajson Task").</li>
-<li>En el campo <strong>callable</strong> debemos poner <code>django_datajsonar.tasks.schedule_new_read_datajson_task</code>.</li>
-<li>En el campo <strong>Queue</strong> ponemos <code>indexing</code>.</li>
-<li>Habilitar el campo <strong>Enabled</strong>.</li>
-<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
-<li>Finalmente en <strong>interval</strong> ponemos <code>1</code> y en <strong>interval unit</strong> <code>days</code>.</li>
-</ul>
-<p>Luego de guardar la instancia deberiamos tener algo como:</p>
-<p><img alt="New Read DataJson Task" src="../images/new_read_datajson_task.png" /></p>
+<p>Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un <code>Synchronizer</code>.</p>
+<p>En la vista de lista de <code>Read Node Tasks</code> podemos crear un nuevo synchronizer. Accediendo en la opción
+<code>schedule task</code>.</p>
+<p><img alt="Schedule Task" src="../images/schedule_read_task.png" /></p>
+<p>Antes de guardar la instancia deberiamos tener algo como:</p>
+<p><img alt="New Read DataJson Task" src="../images/read_datajson_synchro.png" /></p>
+<p>En los campos del form podemos definir el horario a correr, los días y el nombre del synchronizer.</p>
 <h2 id="generacion-de-indicadores">Generación de indicadores</h2>
 <p>Hay 2 formas de comenzar una corrida de generación de indicadores de la red de nodos: podemos instanciar una
 Corrida de indicadores. Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask/</code>.
@@ -647,118 +627,33 @@ Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver a
 <p>La otra forma es mediante un management command de Django. El comando <code>python manage.py indicadores</code> dispara de manera
 sincrónica una tarea de generación de indicadores. De la misma manera que el anterior, el resultado se guarda en los
 logs del <code>IndicatorsGenerationTask</code> correspondiente.</p>
-<h3 id="generacion-periodica">Generación periódica</h3>
-<p>Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un <code>RepeatableJob</code>.</p>
-<p>Para eso vamos a la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
-<ul>
-<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Generación indicadores").</li>
-<li>En el campo <strong>callable</strong> debemos poner <code>monitoreo.apps.dashboard.indicators_tasks.indicators_run</code>.</li>
-<li>En el campo <strong>Queue</strong> ponemos <code>indicators</code>.</li>
-<li>Habilitar el campo <strong>Enabled</strong>.</li>
-<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
-<li>Finalmente en <strong>interval</strong> ponemos <code>1</code> y en <strong>interval unit</strong> <code>days</code>.</li>
-</ul>
-<p>Luego de guardar la instancia deberiamos tener algo como:</p>
-<p><img alt="Generación indicadores" src="../images/generacion_indicadores.png" /></p>
 <h3 id="reporte-de-indicadores">Reporte de indicadores</h3>
-<p>Es posible programar una tarea para enviar un reporte de los indicadores de la red de nodos a los responsables
-pertinentes. Se hace también con un <code>RepeatableJob</code>.</p>
-<p>En la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
-<ul>
-<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Reporte indicadores").</li>
-<li>En el campo <strong>callable</strong> debemos poner <code>monitoreo.apps.dashboard.report_tasks.send_reports</code>.</li>
-<li>En el campo <strong>Queue</strong> ponemos <code>reports</code>.</li>
-<li>Habilitar el campo <strong>Enabled</strong>.</li>
-<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
-<li>Finalmente en <strong>interval</strong> ponemos <code>1</code> y en <strong>interval unit</strong> <code>days</code>.</li>
-</ul>
-<p>Luego de guardar la instancia deberiamos tener algo como:</p>
-<p><img alt="Generación indicadores" src="../images/tarea_reportes.png" /></p>
 <p>Los mails de reporte de red se envian al staff del proyecto. Para marcar un usuario como staff, hay que acceder
 a la ruta <code>/admin/auth/user/</code> y en la vista del usuario particular, marcar la opción:</p>
 <p><img alt="Marcar staff" src="../images/staff_checkmark.png" /></p>
+<p>Es posible correr manualmente un proceso de envío de reportes instanciando un modelo de Django.
+Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask/</code>.
+Esta instancia no requiere ningun parámetro, lee los indicadores calculados en la última corrida de indicadores.
+Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
+<p><img alt="Indicators Report Task" src="../images/indicators_report.png" /></p>
 <h2 id="creacion-de-procesos">Creación de procesos</h2>
 <p>Es posible, crear procesos que engloben las tareas descriptas anteriormente y las ejecuten secuencialmente.
-Para lograr eso vamos a la ruta <code>/admin/django_datajsonar/synchronizer/</code>. Allí vamos a <code>Create new process</code> y nos
+Para lograr eso vamos a la ruta <code>/admin/django_datajsonar/synchronizer/</code>. Allí vamos a <code>Agregar synchronizer</code> y nos
 encontramos con un formulario de este estilo:</p>
-<p><img alt="Primer formulario" src="../images/synchro_form.png" /></p>
-<p>En el primer campo ponemos el nombre del proceso y en el segundo la cantidad de etapas que tendrá. Al dar submit,
-nos encontramos con la segunda parte del formulario:</p>
-<p><img alt="Segundo formulario" src="../images/synchro_form_2.png" /></p>
-<p>Cada fila representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente para configurar las
-tareas ya existentes se deben pasar estos valores:</p>
-<table>
-<thead>
-<tr>
-<th>Tarea</th>
-<th>Callable Str</th>
-<th>Queue</th>
-<th>Task</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Lectura de la red de nodos (default)</td>
-<td>django_datajsonar.tasks.schedule_new_read_datajson_task</td>
-<td>indexing</td>
-<td>ReadDataJsonTask</td>
-</tr>
-<tr>
-<td>Lectura de la red de nodos (completa)</td>
-<td>django_datajsonar.tasks.schedule_full_read_task</td>
-<td>indexing</td>
-<td>ReadDataJsonTask</td>
-</tr>
-<tr>
-<td>Lectura de la red de nodos (metadatos)</td>
-<td>django_datajsonar.tasks.schedule_metadata_read_task</td>
-<td>indexing</td>
-<td>ReadDataJsonTask</td>
-</tr>
-<tr>
-<td>Federación de metadatos</td>
-<td>monitoreo.apps.dashboard.tasks.federation_run</td>
-<td>federation</td>
-<td>FederationTask</td>
-</tr>
-<tr>
-<td>Cálculo de indicadores</td>
-<td>monitoreo.apps.dashboard.indicators_tasks.indicators_run</td>
-<td>indicators</td>
-<td>IndicatorsGenerationTask</td>
-</tr>
-<tr>
-<td>Envío de reportes</td>
-<td>monitoreo.apps.dashboard.report_tasks.send_reports</td>
-<td>reports</td>
-<td>ReportGenerationTask</td>
-</tr>
-</tbody>
-</table>
-<p>Si no están creadas, es necesario schedulear 2 tareas de mantenimiento periódicas. Se crean mediante repeatableJobs:</p>
-<p>En la ruta <code>/admin/scheduler/repeatablejob/</code>.</p>
-<p>Primero vamos a crear la tarea que comienza los procesos en stand-by.</p>
-<ul>
-<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Comenzar synchronizers").</li>
-<li>En el campo <strong>callable</strong> debemos poner <code>django_datajsonar.synchronizer_tasks.start_synchros</code>.</li>
-<li>En el campo <strong>Queue</strong> ponemos <code>synchro</code>.</li>
-<li>Habilitar el campo <strong>Enabled</strong>.</li>
-<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
-<li>Finalmente en <strong>interval</strong> ponemos <code>1</code> y en <strong>interval unit</strong> <code>days</code>.</li>
-</ul>
-<p>Luego de guardar la instancia deberiamos tener algo como:</p>
-<p><img alt="Generación indicadores" src="../images/tarea_start_synchros.png" /></p>
-<p>La siguiente es la tarea que avanza las tareas a medida que van terminando:</p>
-<ul>
-<li>En el campo <strong>nombre</strong> podemos poner lo que deseemos (como "Avanzar synchronizers").</li>
-<li>En el campo <strong>callable</strong> debemos poner <code>django_datajsonar.synchronizer_tasks.upkeep</code>.</li>
-<li>En el campo <strong>Queue</strong> ponemos <code>synchro</code>.</li>
-<li>Habilitar el campo <strong>Enabled</strong>.</li>
-<li>En los campos <strong>fecha</strong> y <strong>hora</strong> de <strong>scheduled time</strong> hacemos click en "Hoy" y "Ahora".</li>
-<li>Finalmente en <strong>interval</strong> ponemos <code>5</code> y en <strong>interval unit</strong> <code>minutes</code>.</li>
-</ul>
-<p>Luego de guardar la instancia deberiamos tener algo como:</p>
-<p><img alt="Generación indicadores" src="../images/tarea_upkeep.png" /></p>
+<p><img alt="Synchro Form" src="../images/synchro_form.png" /></p>
+<p>El campo <strong>name</strong> identifica al synchronizer, <strong>frequency</strong> determina los días cuando se correrán los procesos.
+Finalmente, <strong>scheduled time</strong> indica la hora a correr la primer etapa del synchronizer.</p>
+<p>Cada fila del campo task representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente, para
+configurar las tareas ya existentes, se pueden pasar los siguientes procesos:</p>
+<div class="codehilite"><pre><span></span>- Read Datajson (complete)
+- Read Datajson (metadata only)
+- Federation
+- Indicators
+- Indicators reports
+- Validation reports
+</pre></div>
+
+
 <h2 id="series-de-tiempo">Series de tiempo</h2>
 <p>Es posible descargar los indicadores como series de tiempo en formato <code>.csv</code>. Entrando en la ruta
 <code>admin/dashboard/indicadorred/series-indicadores</code> podemos descargar las series de los indicadores agregados; y en la ruta
@@ -774,6 +669,14 @@ Los parámetros <code>file</code> y <code>--aggregated</code> indican lo mismo q
 <code>fecha, indicador_tipo, indicador_valor [, jurisdiccion_id, jurisdiccion_nombre]</code> para indicadores de red y de nodos
 respectivamente. La operación es un upsert, es decir se actualizaran los valores en caso que ya existen y se crearan
 indicadores nuevos si estos no están presentes.</p>
+<p>Alternativamente, se puede importar mediante UI un csv con los indicadores (<strong>Importante</strong>: el csv debe tener la misma forma
+que el descripto por el punto anterior). Desde la vista de lista de la tabla de indicadores correspondientes, se ingresa
+con el botón importar. Debería caer al siguiente form:</p>
+<p><img alt="Indicator Import" src="../images/ui_indicator_import.png" /></p>
+<p>El primer campo toma el archivo de csv a subir; el segundo, el formato del archivo. Actualmente, el único formato que
+acepta es csv.</p>
+<p>Además, accediendo a la ruta <code>/nodos-red-indicadores.csv</code> se puede descargar un dump de la base de indicadores de red
+en formato.csv  </p>
                 
                   
                 

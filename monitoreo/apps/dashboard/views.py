@@ -113,7 +113,6 @@ def indicators_csv(_request, node_id=None, indexing=False):
 
 
 def create_response_from_indicator_model(model, fieldnames, filename):
-    fieldnames = []
     response = StreamingHttpResponse(custom_row_generator(model, fieldnames), content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename={}.csv'.format(filename)
     return response
@@ -131,4 +130,4 @@ def nodos_indicadores_csv(_request):
 
 def nodos_indicadores_federadores_csv(_request):
     fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor', 'jurisdiccion_nombre', 'jurisdiccion_id']
-    return create_response_from_indicator_model(IndicadorFederador, 'indicadores-federadores')
+    return create_response_from_indicator_model(IndicadorFederador, fieldnames, 'indicadores-federadores')

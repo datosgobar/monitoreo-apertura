@@ -112,8 +112,22 @@ def indicators_csv(_request, node_id=None, indexing=False):
     return download_time_series(queryset, node_id=node_id)
 
 
-def indicadores_red_csv(_request):
-    response = StreamingHttpResponse(custom_row_generator(), content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename=nodos-red-indicadores.csv'
-
+def create_response_from_indicator_model(model, fieldnames, filename):
+    response = StreamingHttpResponse(custom_row_generator(model, fieldnames), content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename={}.csv'.format(filename)
     return response
+
+
+def indicadores_red_csv(_request):
+    fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
+    return create_response_from_indicator_model(IndicadorRed, fieldnames, 'indicadores-red')
+
+
+def nodos_indicadores_csv(_request):
+    fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor', 'jurisdiccion_nombre', 'jurisdiccion_id']
+    return create_response_from_indicator_model(Indicador, fieldnames, 'indicadores-nodo')
+
+
+def nodos_indicadores_federadores_csv(_request):
+    fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor', 'jurisdiccion_nombre', 'jurisdiccion_id']
+    return create_response_from_indicator_model(IndicadorFederador, fieldnames, 'indicadores-federadores')

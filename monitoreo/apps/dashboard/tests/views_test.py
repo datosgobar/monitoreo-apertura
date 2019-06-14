@@ -191,11 +191,14 @@ class ViewsTest(TestCase):
 
         self.assertEqual(expected_rows_quantity, rows_quantity)
 
-    def test_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
-        network_response = Client().get(reverse('dashboard:indicadores-red-csv'))
-        node_response = Client().get(reverse('dashboard:indicadores-nodo-csv'))
-        federator_response = Client().get(reverse('dashboard:indicadores-federadores-csv'))
-
+    def test_networks_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
+        network_response = self.client.get(reverse('dashboard:indicadores-red-csv'))
         self.assert_not_empty_and_has_content_in_rows(IndicadorRed, network_response)
+
+    def test_node_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
+        node_response = self.client.get(reverse('dashboard:indicadores-nodo-csv'))
         self.assert_not_empty_and_has_content_in_rows(Indicador, node_response)
+
+    def test_federator_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
+        federator_response = self.client.get(reverse('dashboard:indicadores-federadores-csv'))
         self.assert_not_empty_and_has_content_in_rows(IndicadorFederador, federator_response)

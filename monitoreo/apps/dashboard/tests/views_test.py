@@ -176,23 +176,26 @@ class ViewsTest(TestCase):
         row = next(series_csv, None)
         self.assertDictEqual(expected_row, row)
 
-    def assert_not_empty_and_has_content_in_rows(self, model, indicators_list):
-        for row in indicators_list:
+    def assert_not_empty_and_has_content_in_rows(self, model, response):
+        indicators_contents_as_string = []
+        for content in response.streaming_content:
+            indicators_contents_as_string.append(content.decode('utf-8'))
+
+        rows_quantity = 0
+        indicators = csv.DictReader(indicators_contents_as_string)
+        for row in indicators:
+            rows_quantity += 1
             self.assertIsNotNone(row)
 
-        indicators_csv_rows_amout = model.objects.count() + 1
+        expected_rows_quantity = model.objects.count()
 
-        self.assertEqual(indicators_csv_rows_amout, len(indicators_list))
+        self.assertEqual(expected_rows_quantity, rows_quantity)
 
     def test_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
-        response_network = Client().get(reverse('dashboard:indicadores-red-csv'))
-        response_node = Client().get(reverse('dashboard:indicadores-nodo-csv'))
-        response_federator = Client().get(reverse('dashboard:indicadores-federadores-csv'))
+        network_response = Client().get(reverse('dashboard:indicadores-red-csv'))
+        node_response = Client().get(reverse('dashboard:indicadores-nodo-csv'))
+        federator_response = Client().get(reverse('dashboard:indicadores-federadores-csv'))
 
-        network_indicators = list(response_network.streaming_content)
-        node_indicators = list(response_node.streaming_content)
-        federator_indicators = list(response_federator.streaming_content)
-
-        self.assert_not_empty_and_has_content_in_rows(IndicadorRed, network_indicators)
-        self.assert_not_empty_and_has_content_in_rows(Indicador, node_indicators)
-        self.assert_not_empty_and_has_content_in_rows(IndicadorFederador, federator_indicators)
+        self.assert_not_empty_and_has_content_in_rows(IndicadorRed, network_response)
+        self.assert_not_empty_and_has_content_in_rows(Indicador, node_response)
+        self.assert_not_empty_and_has_content_in_rows(IndicadorFederador, federator_response)

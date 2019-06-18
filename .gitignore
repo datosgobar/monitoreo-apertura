@@ -133,7 +133,7 @@ ENV/
 deploy/site.retry
 .nvmrc
 media/
-static/
+deploy/static/
 
 # Ruby
 .ruby-version

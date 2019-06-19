@@ -222,3 +222,5 @@ en formatos **csv** o **xlsx** cambiando la extension de archivo en el url
 -  `/distribuciones.csv`: descarga un dump con toda la información de las distribuciones
 - `/admin/django_datajsonar/dataset/federacion-config.csv`: descarga un dump con los identificadores
 de los DataSets y la id del catálogo al que pertenecen
+- `/admin/dashboard/indicadorred/series-indicadores`:  descarga un archivo csv con información sobre
+todos los datasets

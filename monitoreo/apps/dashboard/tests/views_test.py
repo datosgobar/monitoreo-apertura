@@ -84,11 +84,6 @@ class ViewsTest(TestCase):
         return (localdate() - datetime.timedelta(days=delta))\
             .strftime('%Y-%m-%d')
 
-    def test_landing_with_no_indicators_loaded_returns_500(self):
-        IndicadorRed.objects.all().delete()
-        response = Client().get(reverse('dashboard:landing'))
-        self.assertEqual(response.status_code, 500)
-
     def test_series_headers(self):
         network_response = Client().get(reverse('admin:network_series'))
         expected_disposition =\

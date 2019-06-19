@@ -1,7 +1,7 @@
 #! coding: utf-8
 from django.conf.urls import url
 
-from monitoreo.apps.dashboard.views import landing, red_nodos, indicadores_red_csv, \
+from monitoreo.apps.dashboard.views import red_nodos, indicadores_red_csv, \
     nodos_indicadores_csv, nodos_indicadores_federadores_csv
 
 urlpatterns = [

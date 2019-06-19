@@ -1,34 +1,11 @@
 # coding=utf-8
-import csv
 from datetime import date, timedelta
 from django.shortcuts import render
 from django.http import StreamingHttpResponse
 
 from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
-from .helpers import fetch_latest_indicadors, download_time_series
+from .helpers import download_time_series
 from .custom_generators import custom_row_generator
-
-
-def landing(request):
-    indicators = IndicadorRed.objects.all()
-    # Obtengo los indicadores más recientes, empaquetados en un diccionario
-    indicators = fetch_latest_indicadors(indicators)
-
-    if not indicators:  # Error, no hay indicadores cargados
-        return render(request, '500.html', status=500)
-
-    catalogos_cant = indicators['catalogos_cant']
-    datasets_cant = indicators['datasets_cant']
-    ok_pct = indicators['datasets_meta_ok_pct']
-    actualizados_pct = indicators['datasets_actualizados_pct']
-
-    context = {
-        'catalogos': catalogos_cant,
-        'datasets': datasets_cant,
-        'ok_pct': ok_pct,
-        'actualizados_pct': actualizados_pct
-    }
-    return render(request, 'dashboard/landing.html', context)
 
 
 def red_nodos(request):

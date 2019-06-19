@@ -208,5 +208,17 @@ con el botón importar. Debería caer al siguiente form:
 El primer campo toma el archivo de csv a subir; el segundo, el formato del archivo. Actualmente, el único formato que
 acepta es csv.
 
-Además, accediendo a la ruta `/nodos-red-indicadores.csv` se puede descargar un dump de la base de indicadores de red
-en formato.csv  
+Además, accediendo a las siguientes rutas, se pueden descargar los siguientes dumps:
+
+- `/indicadores-red.csv`: descarga un dump de la base de indicadores de red
+en formato.csv
+- `/indicadores-nodo.csv`: descarga un dump de los indicadores de nodos
+- `/indicadores-federadores.csv`: descarga un dump de los indicadores federadores
+- `/nodos.json`: devuelve (no descarga) la información de todos los nodos (id y nombre de los nodos,
+nombre de jurisdicción, urls de descarga de datos, etc). Se puede descargar esta información en
+formato **csv** o **xlsx** accediendo a `/nodos.csv` o `/nodos.xlsx` respectivamente
+- `/nodes.json`: idem al url anterior, pero con los datos en inglés. También se pueden descargar
+en formatos **csv** o **xlsx** cambiando la extension de archivo en el url
+-  `/distribuciones.csv`: descarga un dump con toda la información de las distribuciones
+- `/admin/django_datajsonar/dataset/federacion-config.csv`: descarga un dump con los identificadores
+de los DataSets y la id del catálogo al que pertenecen

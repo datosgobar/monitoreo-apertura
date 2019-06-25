@@ -39,3 +39,5 @@ RAVEN_CONFIG = {
 }
 
 INSTALLED_APPS += 'raven.contrib.django.raven_compat',
+
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')

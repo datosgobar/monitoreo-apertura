@@ -13,7 +13,7 @@
         <meta name="description" content="Documentación de la aplicación web de monitoreo y operación de la red de nodos de datos abiertos de la Administración Pública Nacional de la República Argentina.">
       
       
-        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/usage/">
+        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/quick-start/">
       
       
         <meta name="author" content="Datos Argentina">
@@ -42,7 +42,7 @@
     
     
       
-        <title>Manual de uso - Monitoreo Apertura</title>
+        <title>Comenzar a usar Monitoreo Apertura - Monitoreo Apertura</title>
       
     
     
@@ -156,7 +156,7 @@
               Monitoreo Apertura
             </span>
             <span class="md-header-nav__topic">
-              Manual de uso
+              Comenzar a usar Monitoreo Apertura
             </span>
           
         </div>
@@ -328,18 +328,6 @@
           
           
 
-
-  <li class="md-nav__item">
-    <a href="../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link">
-      Comenzar a usar Monitoreo Apertura
-    </a>
-  </li>
-
-        
-          
-          
-          
-
   
 
 
@@ -350,10 +338,22 @@
       
     
     
-    <a href="./" title="Manual de uso" class="md-nav__link md-nav__link--active">
-      Manual de uso
+    <a href="./" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link md-nav__link--active">
+      Comenzar a usar Monitoreo Apertura
     </a>
     
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../usage/" title="Manual de uso" class="md-nav__link">
+      Manual de uso
+    </a>
   </li>
 
         
@@ -477,7 +477,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/usage.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/quick-start.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -486,159 +486,12 @@
 
 <h2 id="indice">Indice</h2>
 <ul>
-<li><a href="#uso">Uso</a></li>
-<li><a href="#carga-de-nodos">Carga de Nodos</a><ul>
-<li><a href="#configuraci%C3%B3n-de-datasets-indexables">Configuración de datasets indexables</a></li>
-<li><a href="#generaci%C3%B3n-de-archivos-de-configuraci%C3%B3n">Generación de archivos de configuración</a></li>
-</ul>
-</li>
-<li><a href="#lectura-de-catalogos">Lectura de catalogos</a><ul>
-<li><a href="#lectura-periodica">Lectura periodica</a></li>
-</ul>
-</li>
-<li><a href="#generaci%C3%B3n-de-indicadores">Generación de indicadores</a><ul>
-<li><a href="#reporte-de-indicadores">Reporte de indicadores</a></li>
-</ul>
-</li>
-<li><a href="#creaci%C3%B3n-de-procesos">Creación de procesos</a></li>
-<li><a href="#series-de-tiempo">Series de tiempo</a></li>
-<li><a href="#importarexportar-indicadores">Importar/Exportar indicadores</a></li>
+<li><a href="#comenzar-a-usar-monitoreo-apertura">Comenzar a usar Monitoreo Apertura</a></li>
 </ul>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-<h1 id="uso">Uso</h1>
-<h2 id="carga-de-nodos">Carga de Nodos</h2>
-<p>Despues de iniciar sesion como Administrador, debemos cargar un nuevo <code>Node Register file</code>.
-Esta pagina se encuentra en la ruta <code>/admin/django_datajsonar/noderegisterfile/</code>.
-Este archivo tiene un registro de los nodos <em>a federar</em>. Ese un archivo de extencion <code>.yml</code> y
-tiene un aspecto como el siguiente:</p>
-<div class="codehilite"><pre><span></span><span class="nt">datosgobar</span><span class="p">:</span>
-  <span class="nt">url</span><span class="p">:</span> <span class="s">&quot;http://datos.gob.ar/data.json&quot;</span>
-  <span class="nt">formato</span><span class="p">:</span> <span class="s">&quot;json&quot;</span>
-  <span class="nt">federado</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-
-<span class="nt">transporte-bis</span><span class="p">:</span>
-  <span class="nt">url</span><span class="p">:</span> <span class="s">&quot;http://datos.transporte.gob.ar/data.json&quot;</span>
-  <span class="nt">formato</span><span class="p">:</span> <span class="s">&quot;json&quot;</span>
-  <span class="nt">federado</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-
-<span class="c1"># Mas nodos...</span>
-</pre></div>
-
-
-<p>Luego de que creamos la nueva instancia, volvemos a la pagina del listado y deberiamos ver algo como 
-la siguiente imagen:</p>
-<p><img alt="Node register file list" src="../images/node_register_file.png" /></p>
-<p>Luego seleccionamos la instancia y usamos la accion "Process node file", como se muestra en la imagen:</p>
-<p><img alt="Process Node register file list" src="../images/process_node_register_file.png" /></p>
-<p>Eso procesara el archivo (puede tardar un poco), y al terminar veremos los nodos detectados en
-<code>/admin/django_datajsonar/node/</code>, algo parecido a</p>
-<p><img alt="Nodes list" src="../images/nodes_list.png" /></p>
-<h3 id="configuracion-de-datasets-indexables">Configuración de datasets indexables</h3>
-<p>Hay 2 formas de marcar un nodo como indexable, manualmente o cargando un csv de configuración. Para el caso manual, se
-puede marcar en el modelo, o marcar un subconjunto de los datasets y ejecutar la acción "Marcar como indexable".</p>
-<p>El otro método es cargando un nuevo <code>Dataset Indexing file</code>. Esta pagina se encuentra en la ruta
-<code>/admin/django_datajsonar/datasetindexingfile/</code>. El archivo tiene un registro de los datasets <em>indexables</em>.
-Es un archivo de extensión <code>.csv</code> y tiene un aspecto como el siguiente:</p>
-<div class="codehilite"><pre><span></span>catalog_id,dataset_identifier
-sspm,399
-sspm,330
-enacom,REGIS-DE-PROVE-POSTA
-acumar,cb351aa5-731b-458b-8227-a0c5b828356f
-# Más entradas
-</pre></div>
-
-
-<p>La primera columna tiene el identificador del catálogo, y la segunda el identificador del dataset que se desea marcar
-como indexable.</p>
-<p>Luego de que creamos la nueva instancia, volvemos a la página del listado y deberíamos ver algo como
-la siguiente imagen:</p>
-<p><img alt="Node register file list" src="../images/dataset_indexing_file.png" /></p>
-<p>Luego seleccionamos la instancia y usamos la acción "Process node file", como se muestra en la imagen:</p>
-<p><img alt="Process Node register file list" src="../images/process_indexing_file.png" /></p>
-<p>Eso procesa el archivo (puede tardar un poco), y al terminar veremos los datasets marcados como indexables en
-<code>/admin/django_datajsonar/node/</code>.</p>
-<h3 id="generacion-de-archivos-de-configuracion">Generación de archivos de configuración</h3>
-<p>Hay 2 formas de generar los archivos de configuración con los datasets indexables. La primera es entrando en la ruta:
-<code>admin/dataset/federacion-config.csv</code>. De esa manera, se descarga un csv con todos datasets marcados como indexables.</p>
-<p>La segunda es mediante una acción de Django. Podemos seleccionar un subconjunto de datasets y ejecutar la acción
-<code>Generar csv de configuración</code></p>
-<p><img alt="Generar csv de configuración" src="../images/config_csv_action.png" /></p>
-<p>De esta manera conseguimos el csv de configuración con los datasets indexables del subconjunto elegido.</p>
-<h2 id="lectura-de-catalogos">Lectura de catalogos</h2>
-<p>Para lanzar una lectura de todos los catalogos de los nodos, podemos instancia una <code>ReadDataJsonTask</code>.
-Para eso nos dirigimos a la ruta <code>/admin/django_datajsonar/readdatajsontask/</code>.
-Esta instancia no requiere ningun parametro, ya que leera los datos necesarios de las instancias <code>Node</code>
-del proceso anterior.
-Esta instancia ira registrando los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
-<p><img alt="Read DataJson Task" src="../images/read_datajson_task.png" /></p>
-<h3 id="lectura-periodica">Lectura periodica</h3>
-<p>Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un <code>Synchronizer</code>.</p>
-<p>En la vista de lista de <code>Read Node Tasks</code> podemos crear un nuevo synchronizer. Accediendo en la opción
-<code>schedule task</code>.</p>
-<p><img alt="Schedule Task" src="../images/schedule_read_task.png" /></p>
-<p>Antes de guardar la instancia deberiamos tener algo como:</p>
-<p><img alt="New Read DataJson Task" src="../images/read_datajson_synchro.png" /></p>
-<p>En los campos del form podemos definir el horario a correr, los días y el nombre del synchronizer.</p>
-<h2 id="generacion-de-indicadores">Generación de indicadores</h2>
-<p>Hay 2 formas de comenzar una corrida de generación de indicadores de la red de nodos: podemos instanciar una
-Corrida de indicadores. Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask/</code>.
-Esta instancia no requiere ningun parametro, lee los catálogos a partir de la librería de Github.
-Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
-<p><img alt="Indicators Generation Task" src="../images/indicators_generation_task.png" /></p>
-<p>La otra forma es mediante un management command de Django. El comando <code>python manage.py indicadores</code> dispara de manera
-sincrónica una tarea de generación de indicadores. De la misma manera que el anterior, el resultado se guarda en los
-logs del <code>IndicatorsGenerationTask</code> correspondiente.</p>
-<h3 id="reporte-de-indicadores">Reporte de indicadores</h3>
-<p>Los mails de reporte de red se envian al staff del proyecto. Para marcar un usuario como staff, hay que acceder
-a la ruta <code>/admin/auth/user/</code> y en la vista del usuario particular, marcar la opción:</p>
-<p><img alt="Marcar staff" src="../images/staff_checkmark.png" /></p>
-<p>Es posible correr manualmente un proceso de envío de reportes instanciando un modelo de Django.
-Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask/</code>.
-Esta instancia no requiere ningun parámetro, lee los indicadores calculados en la última corrida de indicadores.
-Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
-<p><img alt="Indicators Report Task" src="../images/indicators_report.png" /></p>
-<h2 id="creacion-de-procesos">Creación de procesos</h2>
-<p>Es posible, crear procesos que engloben las tareas descriptas anteriormente y las ejecuten secuencialmente.
-Para lograr eso vamos a la ruta <code>/admin/django_datajsonar/synchronizer/</code>. Allí vamos a <code>Agregar synchronizer</code> y nos
-encontramos con un formulario de este estilo:</p>
-<p><img alt="Synchro Form" src="../images/synchro_form.png" /></p>
-<p>El campo <strong>name</strong> identifica al synchronizer, <strong>frequency</strong> determina los días cuando se correrán los procesos.
-Finalmente, <strong>scheduled time</strong> indica la hora a correr la primer etapa del synchronizer.</p>
-<p>Cada fila del campo task representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente, para
-configurar las tareas ya existentes, se pueden pasar los siguientes procesos:</p>
-<div class="codehilite"><pre><span></span>- Read Datajson (complete)
-- Read Datajson (metadata only)
-- Federation
-- Indicators
-- Indicators reports
-- Validation reports
-</pre></div>
-
-
-<h2 id="series-de-tiempo">Series de tiempo</h2>
-<p>Es posible descargar los indicadores como series de tiempo en formato <code>.csv</code>. Entrando en la ruta
-<code>admin/dashboard/indicadorred/series-indicadores</code> podemos descargar las series de los indicadores agregados; y en la ruta
-<code>admin/dashboard/indicador/&lt;id de nodo&gt;/series-indicadores</code> se encuentran las series para nodos particulares.</p>
-<p>Se pueden definir en el admin de tipos de indicadores cuales se desean mostrar en las series. Marcando los booleanos,
-<code>series red</code> y <code>series nodos</code> se especifican los tipos a presentar.</p>
-<h2 id="importarexportar-indicadores">Importar/Exportar indicadores</h2>
-<p>Se pueden bajar la base de indicadores e indicadores de red mediante el management command: <code>/manage.py export_indicators [file] [--aggregated]</code>.
-El argumento <code>file</code> es un path al archivo donde se van a escribir los indicadores. El parametro opcional <code>--aggregated</code> indica si se trata de
-indicadores red, por default se asume indicadores de nodos.</p>
-<p>A su vez es posible importar a la base de indicadores mediante el management command <code>/manage.py import_indicators [file] [--aggregated]</code>
-Los parámetros <code>file</code> y <code>--aggregated</code> indican lo mismo que para el comando anterior. Se espera un csv válido con la forma:
-<code>fecha, indicador_tipo, indicador_valor [, jurisdiccion_id, jurisdiccion_nombre]</code> para indicadores de red y de nodos
-respectivamente. La operación es un upsert, es decir se actualizaran los valores en caso que ya existen y se crearan
-indicadores nuevos si estos no están presentes.</p>
-<p>Alternativamente, se puede importar mediante UI un csv con los indicadores (<strong>Importante</strong>: el csv debe tener la misma forma
-que el descripto por el punto anterior). Desde la vista de lista de la tabla de indicadores correspondientes, se ingresa
-con el botón importar. Debería caer al siguiente form:</p>
-<p><img alt="Indicator Import" src="../images/ui_indicator_import.png" /></p>
-<p>El primer campo toma el archivo de csv a subir; el segundo, el formato del archivo. Actualmente, el único formato que
-acepta es csv.</p>
-<p>Además, accediendo a la ruta <code>/nodos-red-indicadores.csv</code> se puede descargar un dump de la base de indicadores de red
-en formato.csv  </p>
+<h1 id="comenzar-a-usar-monitoreo-apertura">Comenzar a usar Monitoreo Apertura</h1>
+<p><em>Esta sección debería contener las primeras instrucciones en pasos numerados (inspirarse en https://datosgobar.github.io/series-tiempo-ar-api/quick-start/) para que el usuario pueda sin saber mucho hacer algo útil (cumplir con la función más importante). Tiene el objetivo de que rápidamente el usuario pueda estar usando la aplicación.</em></p>
                 
                   
                 
@@ -659,7 +512,7 @@ en formato.csv  </p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href=".." title="Inicio" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -668,19 +521,19 @@ en formato.csv  </p>
                 <span class="md-footer-nav__direction">
                   Anterior
                 </span>
-                Comenzar a usar Monitoreo Apertura
+                Inicio
               </span>
             </div>
           </a>
         
         
-          <a href="../developers/install/" title="Instalación" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../usage/" title="Manual de uso" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Siguiente
                 </span>
-                Instalación
+                Manual de uso
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

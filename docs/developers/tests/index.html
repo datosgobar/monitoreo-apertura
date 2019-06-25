@@ -13,6 +13,8 @@
         <meta name="description" content="Documentación de la aplicación web de monitoreo y operación de la red de nodos de datos abiertos de la Administración Pública Nacional de la República Argentina.">
       
       
+        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/developers/tests/">
+      
       
         <meta name="author" content="Datos Argentina">
       
@@ -35,22 +37,28 @@
       
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
-      <link rel="shortcut icon" href="/monitoreo-apertura/assets/images/favicon.png">
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
     
     
       
-        <title>Monitoreo Apertura</title>
+        <title>Tests - Monitoreo Apertura</title>
       
     
     
-      <link rel="stylesheet" href="/monitoreo-apertura/assets/stylesheets/application.3020aac5.css">
+	
+      <link rel="stylesheet" href="../../assets/stylesheets/application.3020aac5.css">
       
       
     
+	<link rel="stylesheet" href="../../css/extra.css">
+
     
-      <script src="/monitoreo-apertura/assets/javascripts/modernizr.01ccdecf.js"></script>
     
+      <script src="../../assets/javascripts/modernizr.01ccdecf.js"></script>
+    
+    <script src="../../js/extra.js"></script>
+
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
@@ -58,7 +66,7 @@
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
-    <link rel="stylesheet" href="/monitoreo-apertura/assets/fonts/material-icons.css">
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
     
     
     
@@ -130,7 +138,7 @@
       <div class="md-flex__cell md-flex__cell--shrink">
         <a href="https://datosgobar.github.io/monitoreo-apertura" title="Monitoreo Apertura" class="md-header-nav__button md-logo">
           
-            <img src="/monitoreo-apertura/images/logo.svg" width="24" height="24">
+            <img src="../../images/logo.svg" width="24" height="24">
           
         </a>
       </div>
@@ -144,7 +152,7 @@
               Monitoreo Apertura
             </span>
             <span class="md-header-nav__topic">
-              
+              Tests
             </span>
           
         </div>
@@ -246,7 +254,7 @@
           <a href="https://datosgobar.github.io/monitoreo-apertura"
               title="Monitoreo Apertura" class="md-nav__button md-logo">
             
-              <img src="/monitoreo-apertura/images/logo.svg" width="48" height="48" />
+              <img src="../../images/logo.svg" width="48" height="48" />
             
           </a>
           Monitoreo Apertura
@@ -284,7 +292,7 @@
 
 
   <li class="md-nav__item">
-    <a href="/monitoreo-apertura/." title="Inicio" class="md-nav__link">
+    <a href="../.." title="Inicio" class="md-nav__link">
       Inicio
     </a>
   </li>
@@ -316,7 +324,7 @@
 
 
   <li class="md-nav__item">
-    <a href="/monitoreo-apertura/quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link">
+    <a href="../../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link">
       Comenzar a usar Monitoreo Apertura
     </a>
   </li>
@@ -328,7 +336,7 @@
 
 
   <li class="md-nav__item">
-    <a href="/monitoreo-apertura/usage/" title="Manual de uso" class="md-nav__link">
+    <a href="../../usage/" title="Manual de uso" class="md-nav__link">
       Manual de uso
     </a>
   </li>
@@ -344,10 +352,12 @@
             
             
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
     <label class="md-nav__link" for="nav-3">
       Desarrolladores
@@ -365,7 +375,7 @@
 
 
   <li class="md-nav__item">
-    <a href="/monitoreo-apertura/developers/install/" title="Instalación" class="md-nav__link">
+    <a href="../install/" title="Instalación" class="md-nav__link">
       Instalación
     </a>
   </li>
@@ -377,7 +387,7 @@
 
 
   <li class="md-nav__item">
-    <a href="/monitoreo-apertura/developers/update/" title="Actualización" class="md-nav__link">
+    <a href="../update/" title="Actualización" class="md-nav__link">
       Actualización
     </a>
   </li>
@@ -389,7 +399,7 @@
 
 
   <li class="md-nav__item">
-    <a href="/monitoreo-apertura/developers/development/" title="Desarrollo" class="md-nav__link">
+    <a href="../development/" title="Desarrollo" class="md-nav__link">
       Desarrollo
     </a>
   </li>
@@ -399,11 +409,18 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="/monitoreo-apertura/developers/tests/" title="Tests" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+    <a href="./" title="Tests" class="md-nav__link md-nav__link--active">
       Tests
     </a>
+    
   </li>
 
         
@@ -419,7 +436,7 @@
 
 
   <li class="md-nav__item">
-    <a href="/monitoreo-apertura/HISTORY/" title="Historial de versiones" class="md-nav__link">
+    <a href="../../HISTORY/" title="Historial de versiones" class="md-nav__link">
       Historial de versiones
     </a>
   </li>
@@ -438,8 +455,17 @@
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
-  <h1>404 - Not found</h1>
-
+                
+                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/developers/tests.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                  <h1>Tests</h1>
+                
+                
+                
+                  
+                
+              
               
                 
 
@@ -452,6 +478,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../development/" title="Desarrollo" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Anterior
+                </span>
+                Desarrollo
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../HISTORY/" title="Historial de versiones" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Siguiente
+                </span>
+                Historial de versiones
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -470,24 +531,24 @@
       
     </div>
     
-      <script src="/monitoreo-apertura/assets/javascripts/application.dc02f8ce.js"></script>
+      <script src="../../assets/javascripts/application.dc02f8ce.js"></script>
       
         
         
           
-          <script src="/monitoreo-apertura/assets/javascripts/lunr/lunr.stemmer.support.js"></script>
+          <script src="../../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
           
             
               
               
-                <script src="/monitoreo-apertura/assets/javascripts/lunr/lunr.es.js"></script>
+                <script src="../../assets/javascripts/lunr/lunr.es.js"></script>
               
             
           
           
         
       
-      <script>app.initialize({version:"1.0.4",url:{base:"/monitoreo-apertura"}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       
     
   </body>

@@ -42,7 +42,7 @@ mkdocsdocs:
 	rsync -vau --remove-source-files site/ docs/
 	rm -rf site
 
-docs: doctoc mkdocsdocs
+docs: mkdocsdocs
 
 doctoc: ## generate table of contents, doctoc command line tool required
         ## https://github.com/thlorenz/doctoc

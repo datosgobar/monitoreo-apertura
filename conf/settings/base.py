@@ -408,3 +408,5 @@ ADMIN_REORDER = (
     str('scheduler'),
     str('sites'),
 )
+
+LOGIN_URL = 'admin:login'

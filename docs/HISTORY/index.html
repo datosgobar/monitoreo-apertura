@@ -13,7 +13,7 @@
         <meta name="description" content="Documentación de la aplicación web de monitoreo y operación de la red de nodos de datos abiertos de la Administración Pública Nacional de la República Argentina.">
       
       
-        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/usage/">
+        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/HISTORY/">
       
       
         <meta name="author" content="Datos Argentina">
@@ -42,7 +42,7 @@
     
     
       
-        <title>Manual de uso - Monitoreo Apertura</title>
+        <title>Historial de versiones - Monitoreo Apertura</title>
       
     
     
@@ -156,7 +156,7 @@
               Monitoreo Apertura
             </span>
             <span class="md-header-nav__topic">
-              Manual de uso
+              Historial de versiones
             </span>
           
         </div>
@@ -307,12 +307,10 @@
             
             
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
       Usuarios
@@ -340,20 +338,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-    <a href="./" title="Manual de uso" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../usage/" title="Manual de uso" class="md-nav__link">
       Manual de uso
     </a>
-    
   </li>
 
         
@@ -440,11 +429,20 @@
             
             
 
+  
 
-  <li class="md-nav__item">
-    <a href="../HISTORY/" title="Historial de versiones" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="Historial de versiones" class="md-nav__link md-nav__link--active">
       Historial de versiones
     </a>
+    
   </li>
 
             <hr/>
@@ -477,7 +475,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/usage.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/HISTORY.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
                 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -486,159 +484,270 @@
 
 <h2 id="indice">Indice</h2>
 <ul>
-<li><a href="#uso">Uso</a></li>
-<li><a href="#carga-de-nodos">Carga de Nodos</a><ul>
-<li><a href="#configuraci%C3%B3n-de-datasets-indexables">Configuración de datasets indexables</a></li>
-<li><a href="#generaci%C3%B3n-de-archivos-de-configuraci%C3%B3n">Generación de archivos de configuración</a></li>
-</ul>
-</li>
-<li><a href="#lectura-de-catalogos">Lectura de catalogos</a><ul>
-<li><a href="#lectura-periodica">Lectura periodica</a></li>
-</ul>
-</li>
-<li><a href="#generaci%C3%B3n-de-indicadores">Generación de indicadores</a><ul>
-<li><a href="#reporte-de-indicadores">Reporte de indicadores</a></li>
-</ul>
-</li>
-<li><a href="#creaci%C3%B3n-de-procesos">Creación de procesos</a></li>
-<li><a href="#series-de-tiempo">Series de tiempo</a></li>
-<li><a href="#importarexportar-indicadores">Importar/Exportar indicadores</a></li>
+<li><a href="#versiones">Versiones</a></li>
+<li><a href="#0044-11-06-19">0.0.44 (11-06-19)</a></li>
+<li><a href="#0043-04-06-19">0.0.43 (04-06-19)</a></li>
+<li><a href="#0042-29-05-19">0.0.42 (29-05-19)</a></li>
+<li><a href="#0041-22-05-19">0.0.41 (22-05-19)</a></li>
+<li><a href="#0040-14-05-19">0.0.40 (14-05-19)</a></li>
+<li><a href="#0039-16-04-19">0.0.39 (16-04-19)</a></li>
+<li><a href="#0038-16-04-19">0.0.38 (16-04-19)</a></li>
+<li><a href="#0037-15-04-19">0.0.37 (15-04-19)</a></li>
+<li><a href="#0036-15-04-19">0.0.36 (15-04-19)</a></li>
+<li><a href="#0035-04-04-19">0.0.35 (04-04-19)</a></li>
+<li><a href="#0034-01-03-19">0.0.34 (01-03-19)</a></li>
+<li><a href="#0033-01-03-19">0.0.33 (01-03-19)</a></li>
+<li><a href="#0032-19-02-19">0.0.32 (19-02-19)</a></li>
+<li><a href="#0031-05-02-19">0.0.31 (05-02-19)</a></li>
+<li><a href="#0030-17-01-19">0.0.30 (17-01-19)</a></li>
+<li><a href="#0029-16-01-19">0.0.29 (16-01-19)</a></li>
+<li><a href="#0028-21-12-18">0.0.28 (21-12-18)</a></li>
+<li><a href="#0027-11-12-18">0.0.27 (11-12-18)</a></li>
+<li><a href="#0026-4-12-18">0.0.26 (4-12-18)</a></li>
+<li><a href="#0025-28-11-18">0.0.25 (28-11-18)</a></li>
+<li><a href="#0024-05-11-18">0.0.24 (05-11-18)</a></li>
+<li><a href="#0023-23-10-18">0.0.23 (23-10-18)</a></li>
+<li><a href="#0022-11-10-18">0.0.22 (11-10-18)</a></li>
+<li><a href="#0022-prod-11-10-18">0.0.22-prod (11-10-18)</a></li>
+<li><a href="#0021-11-10-18">0.0.21 (11-10-18)</a></li>
+<li><a href="#0020-8-10-18">0.0.20 (8-10-18)</a></li>
+<li><a href="#0019-5-10-18">0.0.19 (5-10-18)</a></li>
+<li><a href="#0018-19-09-18">0.0.18 (19-09-18)</a></li>
+<li><a href="#0017-13-09-18">0.0.17 (13-09-18)</a></li>
+<li><a href="#0016-5-09-18">0.0.16 (5-09-18)</a></li>
+<li><a href="#0015-4-09-18">0.0.15 (4-09-18)</a></li>
+<li><a href="#0014-29-08-18">0.0.14 (29-08-18)</a></li>
+<li><a href="#0012-07-08-18">0.0.12 (07-08-18)</a></li>
+<li><a href="#0011-03-08-18">0.0.11 (03-08-18)</a></li>
+<li><a href="#0010-26-07-18">0.0.10 (26-07-18)</a></li>
+<li><a href="#009-23-07-18">0.0.9 (23-07-18)</a></li>
+<li><a href="#008-20-07-18">0.0.8 (20-07-18)</a></li>
+<li><a href="#007-18-07-18">0.0.7 (18-07-18)</a></li>
+<li><a href="#006-12-07-18">0.0.6 (12-07-18)</a></li>
+<li><a href="#005-04-07-18">0.0.5 (04-07-18)</a></li>
+<li><a href="#004-02-07-18">0.0.4 (02-07-18)</a></li>
+<li><a href="#003-19-06-18">0.0.3 (19-06-18)</a></li>
+<li><a href="#002-13-06-18">0.0.2 (13-06-18)</a></li>
+<li><a href="#001-13-06-18">0.0.1 (13-06-18)</a></li>
 </ul>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-<h1 id="uso">Uso</h1>
-<h2 id="carga-de-nodos">Carga de Nodos</h2>
-<p>Despues de iniciar sesion como Administrador, debemos cargar un nuevo <code>Node Register file</code>.
-Esta pagina se encuentra en la ruta <code>/admin/django_datajsonar/noderegisterfile/</code>.
-Este archivo tiene un registro de los nodos <em>a federar</em>. Ese un archivo de extencion <code>.yml</code> y
-tiene un aspecto como el siguiente:</p>
-<div class="codehilite"><pre><span></span><span class="nt">datosgobar</span><span class="p">:</span>
-  <span class="nt">url</span><span class="p">:</span> <span class="s">&quot;http://datos.gob.ar/data.json&quot;</span>
-  <span class="nt">formato</span><span class="p">:</span> <span class="s">&quot;json&quot;</span>
-  <span class="nt">federado</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-
-<span class="nt">transporte-bis</span><span class="p">:</span>
-  <span class="nt">url</span><span class="p">:</span> <span class="s">&quot;http://datos.transporte.gob.ar/data.json&quot;</span>
-  <span class="nt">formato</span><span class="p">:</span> <span class="s">&quot;json&quot;</span>
-  <span class="nt">federado</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-
-<span class="c1"># Mas nodos...</span>
-</pre></div>
-
-
-<p>Luego de que creamos la nueva instancia, volvemos a la pagina del listado y deberiamos ver algo como 
-la siguiente imagen:</p>
-<p><img alt="Node register file list" src="../images/node_register_file.png" /></p>
-<p>Luego seleccionamos la instancia y usamos la accion "Process node file", como se muestra en la imagen:</p>
-<p><img alt="Process Node register file list" src="../images/process_node_register_file.png" /></p>
-<p>Eso procesara el archivo (puede tardar un poco), y al terminar veremos los nodos detectados en
-<code>/admin/django_datajsonar/node/</code>, algo parecido a</p>
-<p><img alt="Nodes list" src="../images/nodes_list.png" /></p>
-<h3 id="configuracion-de-datasets-indexables">Configuración de datasets indexables</h3>
-<p>Hay 2 formas de marcar un nodo como indexable, manualmente o cargando un csv de configuración. Para el caso manual, se
-puede marcar en el modelo, o marcar un subconjunto de los datasets y ejecutar la acción "Marcar como indexable".</p>
-<p>El otro método es cargando un nuevo <code>Dataset Indexing file</code>. Esta pagina se encuentra en la ruta
-<code>/admin/django_datajsonar/datasetindexingfile/</code>. El archivo tiene un registro de los datasets <em>indexables</em>.
-Es un archivo de extensión <code>.csv</code> y tiene un aspecto como el siguiente:</p>
-<div class="codehilite"><pre><span></span>catalog_id,dataset_identifier
-sspm,399
-sspm,330
-enacom,REGIS-DE-PROVE-POSTA
-acumar,cb351aa5-731b-458b-8227-a0c5b828356f
-# Más entradas
-</pre></div>
-
-
-<p>La primera columna tiene el identificador del catálogo, y la segunda el identificador del dataset que se desea marcar
-como indexable.</p>
-<p>Luego de que creamos la nueva instancia, volvemos a la página del listado y deberíamos ver algo como
-la siguiente imagen:</p>
-<p><img alt="Node register file list" src="../images/dataset_indexing_file.png" /></p>
-<p>Luego seleccionamos la instancia y usamos la acción "Process node file", como se muestra en la imagen:</p>
-<p><img alt="Process Node register file list" src="../images/process_indexing_file.png" /></p>
-<p>Eso procesa el archivo (puede tardar un poco), y al terminar veremos los datasets marcados como indexables en
-<code>/admin/django_datajsonar/node/</code>.</p>
-<h3 id="generacion-de-archivos-de-configuracion">Generación de archivos de configuración</h3>
-<p>Hay 2 formas de generar los archivos de configuración con los datasets indexables. La primera es entrando en la ruta:
-<code>admin/dataset/federacion-config.csv</code>. De esa manera, se descarga un csv con todos datasets marcados como indexables.</p>
-<p>La segunda es mediante una acción de Django. Podemos seleccionar un subconjunto de datasets y ejecutar la acción
-<code>Generar csv de configuración</code></p>
-<p><img alt="Generar csv de configuración" src="../images/config_csv_action.png" /></p>
-<p>De esta manera conseguimos el csv de configuración con los datasets indexables del subconjunto elegido.</p>
-<h2 id="lectura-de-catalogos">Lectura de catalogos</h2>
-<p>Para lanzar una lectura de todos los catalogos de los nodos, podemos instancia una <code>ReadDataJsonTask</code>.
-Para eso nos dirigimos a la ruta <code>/admin/django_datajsonar/readdatajsontask/</code>.
-Esta instancia no requiere ningun parametro, ya que leera los datos necesarios de las instancias <code>Node</code>
-del proceso anterior.
-Esta instancia ira registrando los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
-<p><img alt="Read DataJson Task" src="../images/read_datajson_task.png" /></p>
-<h3 id="lectura-periodica">Lectura periodica</h3>
-<p>Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un <code>Synchronizer</code>.</p>
-<p>En la vista de lista de <code>Read Node Tasks</code> podemos crear un nuevo synchronizer. Accediendo en la opción
-<code>schedule task</code>.</p>
-<p><img alt="Schedule Task" src="../images/schedule_read_task.png" /></p>
-<p>Antes de guardar la instancia deberiamos tener algo como:</p>
-<p><img alt="New Read DataJson Task" src="../images/read_datajson_synchro.png" /></p>
-<p>En los campos del form podemos definir el horario a correr, los días y el nombre del synchronizer.</p>
-<h2 id="generacion-de-indicadores">Generación de indicadores</h2>
-<p>Hay 2 formas de comenzar una corrida de generación de indicadores de la red de nodos: podemos instanciar una
-Corrida de indicadores. Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask/</code>.
-Esta instancia no requiere ningun parametro, lee los catálogos a partir de la librería de Github.
-Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
-<p><img alt="Indicators Generation Task" src="../images/indicators_generation_task.png" /></p>
-<p>La otra forma es mediante un management command de Django. El comando <code>python manage.py indicadores</code> dispara de manera
-sincrónica una tarea de generación de indicadores. De la misma manera que el anterior, el resultado se guarda en los
-logs del <code>IndicatorsGenerationTask</code> correspondiente.</p>
-<h3 id="reporte-de-indicadores">Reporte de indicadores</h3>
-<p>Los mails de reporte de red se envian al staff del proyecto. Para marcar un usuario como staff, hay que acceder
-a la ruta <code>/admin/auth/user/</code> y en la vista del usuario particular, marcar la opción:</p>
-<p><img alt="Marcar staff" src="../images/staff_checkmark.png" /></p>
-<p>Es posible correr manualmente un proceso de envío de reportes instanciando un modelo de Django.
-Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask/</code>.
-Esta instancia no requiere ningun parámetro, lee los indicadores calculados en la última corrida de indicadores.
-Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
-<p><img alt="Indicators Report Task" src="../images/indicators_report.png" /></p>
-<h2 id="creacion-de-procesos">Creación de procesos</h2>
-<p>Es posible, crear procesos que engloben las tareas descriptas anteriormente y las ejecuten secuencialmente.
-Para lograr eso vamos a la ruta <code>/admin/django_datajsonar/synchronizer/</code>. Allí vamos a <code>Agregar synchronizer</code> y nos
-encontramos con un formulario de este estilo:</p>
-<p><img alt="Synchro Form" src="../images/synchro_form.png" /></p>
-<p>El campo <strong>name</strong> identifica al synchronizer, <strong>frequency</strong> determina los días cuando se correrán los procesos.
-Finalmente, <strong>scheduled time</strong> indica la hora a correr la primer etapa del synchronizer.</p>
-<p>Cada fila del campo task representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente, para
-configurar las tareas ya existentes, se pueden pasar los siguientes procesos:</p>
-<div class="codehilite"><pre><span></span>- Read Datajson (complete)
-- Read Datajson (metadata only)
-- Federation
-- Indicators
-- Indicators reports
-- Validation reports
-</pre></div>
-
-
-<h2 id="series-de-tiempo">Series de tiempo</h2>
-<p>Es posible descargar los indicadores como series de tiempo en formato <code>.csv</code>. Entrando en la ruta
-<code>admin/dashboard/indicadorred/series-indicadores</code> podemos descargar las series de los indicadores agregados; y en la ruta
-<code>admin/dashboard/indicador/&lt;id de nodo&gt;/series-indicadores</code> se encuentran las series para nodos particulares.</p>
-<p>Se pueden definir en el admin de tipos de indicadores cuales se desean mostrar en las series. Marcando los booleanos,
-<code>series red</code> y <code>series nodos</code> se especifican los tipos a presentar.</p>
-<h2 id="importarexportar-indicadores">Importar/Exportar indicadores</h2>
-<p>Se pueden bajar la base de indicadores e indicadores de red mediante el management command: <code>/manage.py export_indicators [file] [--aggregated]</code>.
-El argumento <code>file</code> es un path al archivo donde se van a escribir los indicadores. El parametro opcional <code>--aggregated</code> indica si se trata de
-indicadores red, por default se asume indicadores de nodos.</p>
-<p>A su vez es posible importar a la base de indicadores mediante el management command <code>/manage.py import_indicators [file] [--aggregated]</code>
-Los parámetros <code>file</code> y <code>--aggregated</code> indican lo mismo que para el comando anterior. Se espera un csv válido con la forma:
-<code>fecha, indicador_tipo, indicador_valor [, jurisdiccion_id, jurisdiccion_nombre]</code> para indicadores de red y de nodos
-respectivamente. La operación es un upsert, es decir se actualizaran los valores en caso que ya existen y se crearan
-indicadores nuevos si estos no están presentes.</p>
-<p>Alternativamente, se puede importar mediante UI un csv con los indicadores (<strong>Importante</strong>: el csv debe tener la misma forma
-que el descripto por el punto anterior). Desde la vista de lista de la tabla de indicadores correspondientes, se ingresa
-con el botón importar. Debería caer al siguiente form:</p>
-<p><img alt="Indicator Import" src="../images/ui_indicator_import.png" /></p>
-<p>El primer campo toma el archivo de csv a subir; el segundo, el formato del archivo. Actualmente, el único formato que
-acepta es csv.</p>
-<p>Además, accediendo a la ruta <code>/nodos-red-indicadores.csv</code> se puede descargar un dump de la base de indicadores de red
-en formato.csv  </p>
+<h1 id="versiones">Versiones</h1>
+<h2 id="0044-11-06-19">0.0.44 (11-06-19)</h2>
+<ul>
+<li>Actualiza versión de django_datajsonar</li>
+<li>Agrega endpoint de <code>/nodos-red-indicadores.csv</code></li>
+</ul>
+<h2 id="0043-04-06-19">0.0.43 (04-06-19)</h2>
+<ul>
+<li>Actualiza versiones de pydatajson y django_datajsonar</li>
+</ul>
+<h2 id="0042-29-05-19">0.0.42 (29-05-19)</h2>
+<ul>
+<li>Overridea la función de import de indicadores para usar una asincrónica</li>
+</ul>
+<h2 id="0041-22-05-19">0.0.41 (22-05-19)</h2>
+<ul>
+<li>Actualiza version de django_datajsonar para agregar la ruta nodes.csv y nodos.csv</li>
+<li>Agrega además el campo landingPage al admin de dataset </li>
+</ul>
+<h2 id="0040-14-05-19">0.0.40 (14-05-19)</h2>
+<ul>
+<li>Actualiza version de django_datajsonar para agregar la ruta nodes.json</li>
+</ul>
+<h2 id="0039-16-04-19">0.0.39 (16-04-19)</h2>
+<ul>
+<li>Actualiza version de pydatajson</li>
+</ul>
+<h2 id="0038-16-04-19">0.0.38 (16-04-19)</h2>
+<ul>
+<li>Actualiza y corrige logueo de sentry</li>
+</ul>
+<h2 id="0037-15-04-19">0.0.37 (15-04-19)</h2>
+<ul>
+<li>Actualiza versión de django-datajsonar</li>
+<li>Agrega management command para importar/exportar csv de indicadores</li>
+</ul>
+<h2 id="0036-15-04-19">0.0.36 (15-04-19)</h2>
+<ul>
+<li>Actualiza versión de pydatajson</li>
+</ul>
+<h2 id="0035-04-04-19">0.0.35 (04-04-19)</h2>
+<ul>
+<li>Ordena las columnas de los csv de series de tiempo</li>
+<li>Revisión de nombres</li>
+<li>Fix del campo from en los mails</li>
+<li>Port a python 3</li>
+<li>Actualiza versión de pydatajson y django_datajsonar</li>
+</ul>
+<h2 id="0034-01-03-19">0.0.34 (01-03-19)</h2>
+<ul>
+<li>Reordena apps del admin</li>
+</ul>
+<h2 id="0033-01-03-19">0.0.33 (01-03-19)</h2>
+<ul>
+<li>Cambia el horario de mantenimiento a las 00:00</li>
+<li>Reutiliza las conexiones smtp para el envío de reportes</li>
+<li>Actualiza versión de pydatajson y django_datajsonar</li>
+</ul>
+<h2 id="0032-19-02-19">0.0.32 (19-02-19)</h2>
+<ul>
+<li>Actualiza versión de pydatajson y django_datajsonar</li>
+<li>Revisón de nombres y refactor del admin</li>
+<li>Aseguro la existencia de un upkeep job para los synchronizers</li>
+</ul>
+<h2 id="0031-05-02-19">0.0.31 (05-02-19)</h2>
+<ul>
+<li>Actualiza versión de django_datajsonar</li>
+<li>Fix a la recolección de indicadores de nodos federadores</li>
+<li>Restart de los workers en deploy</li>
+</ul>
+<h2 id="0030-17-01-19">0.0.30 (17-01-19)</h2>
+<ul>
+<li>Actualiza versión de pydatajson</li>
+</ul>
+<h2 id="0029-16-01-19">0.0.29 (16-01-19)</h2>
+<ul>
+<li>Singleton para modelo central</li>
+<li>Reportes de error cuando no se puede parsear un catálogo</li>
+<li>Actualiza versión de pydatajson y django_datajsonar</li>
+</ul>
+<h2 id="0028-21-12-18">0.0.28 (21-12-18)</h2>
+<ul>
+<li>Nuevos modelo indicadores federadores.</li>
+<li>Series sobre los indicadores de los nodos federadores.</li>
+<li>Agrega logs del task de indicadores al reporte de staff.</li>
+<li>Actualiza versión de pydatajson.</li>
+</ul>
+<h2 id="0027-11-12-18">0.0.27 (11-12-18)</h2>
+<ul>
+<li>Agrega management command para importar indicadores de un csv.</li>
+</ul>
+<h2 id="0026-4-12-18">0.0.26 (4-12-18)</h2>
+<ul>
+<li>Agrega series de tiempo para indicadores de red y de nodos (<code>admin/indicadorred/series-indicadores</code> y <code>admin/indicador/&lt;id de catalogo&gt;/series-indicadores</code> respectivamente)</li>
+</ul>
+<h2 id="0025-28-11-18">0.0.25 (28-11-18)</h2>
+<ul>
+<li>Agrega reportes de validación para los nodos de la red</li>
+</ul>
+<h2 id="0024-05-11-18">0.0.24 (05-11-18)</h2>
+<ul>
+<li>Actualiza versión de pydatajson y django_datajsonar.</li>
+<li>Agrega documentación de synchronizers y config files.</li>
+</ul>
+<h2 id="0023-23-10-18">0.0.23 (23-10-18)</h2>
+<ul>
+<li>Bugfix en reportes que llegaban vacíos.</li>
+</ul>
+<h2 id="0022-11-10-18">0.0.22 (11-10-18)</h2>
+<ul>
+<li>Actualiza versión de pydatajson y django_datajsonar (Incluye los synchronizers).</li>
+</ul>
+<h2 id="0022-prod-11-10-18">0.0.22-prod (11-10-18)</h2>
+<ul>
+<li>Actualiza versión de pydatajson (No incluye los synchronizers).</li>
+</ul>
+<h2 id="0021-11-10-18">0.0.21 (11-10-18)</h2>
+<ul>
+<li>En el command para borrar duplicados, me quedo con el último registrado.</li>
+<li>Separa las tareas en queues para hacer uso de los sincronizadores.</li>
+<li>Actualiza versión de django_datajsonar.</li>
+</ul>
+<h2 id="0020-8-10-18">0.0.20 (8-10-18)</h2>
+<ul>
+<li>Fix en el deploy de rqscheduler. </li>
+</ul>
+<h2 id="0019-5-10-18">0.0.19 (5-10-18)</h2>
+<ul>
+<li>Actualiza versión de django_datajsonar. </li>
+<li>Actualiza versión de pydatajson.</li>
+<li>Bugfix de generación de indicadores duplicados.</li>
+</ul>
+<h2 id="0018-19-09-18">0.0.18 (19-09-18)</h2>
+<ul>
+<li>Actualiza versión de django_datajsonar.</li>
+</ul>
+<h2 id="0017-13-09-18">0.0.17 (13-09-18)</h2>
+<ul>
+<li>Bugfix en el schedule form de reportes.</li>
+<li>Bugfix en la creación de corridas de federación. </li>
+</ul>
+<h2 id="0016-5-09-18">0.0.16 (5-09-18)</h2>
+<ul>
+<li>Actualiza versión de pydatajson.</li>
+</ul>
+<h2 id="0015-4-09-18">0.0.15 (4-09-18)</h2>
+<ul>
+<li>Management command para programar tareas default.</li>
+<li>Form para simplificar la programación de tareas periódicas.</li>
+</ul>
+<h2 id="0014-29-08-18">0.0.14 (29-08-18)</h2>
+<ul>
+<li>Actualiza versión de pydatajson.</li>
+</ul>
+<h2 id="0012-07-08-18">0.0.12 (07-08-18)</h2>
+<ul>
+<li>Saca temporalmente acciones de top y bottom para los tipos de indicadores.</li>
+</ul>
+<h2 id="0011-03-08-18">0.0.11 (03-08-18)</h2>
+<ul>
+<li>Agrega sección de resumen al reporte de indicadores.</li>
+<li>Permite ordenar los indicadores en el reporte.</li>
+<li>Permite ocultar indicadores del reporte.</li>
+<li>Ordena los indicadores no numéricos por valor de manera descendiente.</li>
+</ul>
+<h2 id="0010-26-07-18">0.0.10 (26-07-18)</h2>
+<ul>
+<li>Ahora es posible disparar la tarea de generación de reportes desde el admin de django, creando un <code>ReportGenerationTask</code>.</li>
+</ul>
+<h2 id="009-23-07-18">0.0.9 (23-07-18)</h2>
+<ul>
+<li>Funcionalidad de mail de reporte de la red de nodos para los administradores de nodos.</li>
+</ul>
+<h2 id="008-20-07-18">0.0.8 (20-07-18)</h2>
+<ul>
+<li>Funcionalidad de mail de reporte de la red de nodos para usuarios staff.</li>
+</ul>
+<h2 id="007-18-07-18">0.0.7 (18-07-18)</h2>
+<ul>
+<li>Fix de timezones</li>
+<li>Migración para indicadores con ids faltantes.</li>
+<li>Usa nueva versión de django datajsonar con columna reviewed para datasets.</li>
+</ul>
+<h2 id="006-12-07-18">0.0.6 (12-07-18)</h2>
+<ul>
+<li>Agrega id de nodos a los indicadores.</li>
+<li>Genera los indicadores de red a partir de los nodos indexables.</li>
+<li>Actualiza la versión de <code>pydatajson</code> para calcular los 3 nuevos indicadores. </li>
+</ul>
+<h2 id="005-04-07-18">0.0.5 (04-07-18)</h2>
+<ul>
+<li>Agrega help text de url de nodos (tag para probar el deploy).</li>
+</ul>
+<h2 id="004-02-07-18">0.0.4 (02-07-18)</h2>
+<ul>
+<li>Modelado de corridas de indicadores.</li>
+<li>Posibilidad de correr calculos de indicadores desde la UI.</li>
+<li>Descarga de datasets config files.</li>
+<li>Se dispara una corrida de federación al guardar un FederationTask desde la UI.</li>
+<li>Logueo de errores de federación y validación en FederationTask.</li>
+</ul>
+<h2 id="003-19-06-18">0.0.3 (19-06-18)</h2>
+<ul>
+<li>Fijar versión de <code>pydatajson</code>.</li>
+<li>Arreglos en migraciones.</li>
+</ul>
+<h2 id="002-13-06-18">0.0.2 (13-06-18)</h2>
+<ul>
+<li>Arreglos para CD en staging. </li>
+</ul>
+<h2 id="001-13-06-18">0.0.1 (13-06-18)</h2>
+<ul>
+<li>Incorporación de <code>django_datajsonar</code> con la posibilidad de modelar la red de nodos.</li>
+<li>Modelado de los nodos federadores y corridas de federación.</li>
+<li>Posibilidad de correr federaciones desde la UI.</li>
+</ul>
                 
                   
                 
@@ -659,7 +768,7 @@ en formato.csv  </p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../developers/tests/" title="Tests" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -668,25 +777,11 @@ en formato.csv  </p>
                 <span class="md-footer-nav__direction">
                   Anterior
                 </span>
-                Comenzar a usar Monitoreo Apertura
+                Tests
               </span>
             </div>
           </a>
         
-        
-          <a href="../developers/install/" title="Instalación" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Siguiente
-                </span>
-                Instalación
-              </span>
-            </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-            </div>
-          </a>
         
       </nav>
     </div>

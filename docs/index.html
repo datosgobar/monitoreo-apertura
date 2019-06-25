@@ -69,8 +69,6 @@
     <link rel="stylesheet" href="assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="css/extra_rtd.css">
-    
     
       
         
@@ -80,7 +78,7 @@
   }
   ga.l = +new Date
   /* Setup integration and send page view */
-  ga("create", "UA-91435482-1", "https://portal-andino.readthedocs.io/")
+  ga("create", "UA-91435482-1", "https://datosgobar.github.io/monitoreo-apertura")
   ga("set", "anonymizeIp", true)
   ga("send", "pageview")
   /* Register handler to log search on blur */
@@ -339,8 +337,20 @@
 
 
   <li class="md-nav__item">
-    <a href="quickstart.md" title="Comienzo rápido" class="md-nav__link">
-      Comienzo rápido
+    <a href="quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link">
+      Comenzar a usar Monitoreo Apertura
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="usage/" title="Manual de uso" class="md-nav__link">
+      Manual de uso
     </a>
   </li>
 
@@ -376,7 +386,7 @@
 
 
   <li class="md-nav__item">
-    <a href="developers/install.md" title="Instalación" class="md-nav__link">
+    <a href="developers/install/" title="Instalación" class="md-nav__link">
       Instalación
     </a>
   </li>
@@ -388,7 +398,7 @@
 
 
   <li class="md-nav__item">
-    <a href="developers/update.md" title="Actualización" class="md-nav__link">
+    <a href="developers/update/" title="Actualización" class="md-nav__link">
       Actualización
     </a>
   </li>
@@ -400,79 +410,7 @@
 
 
   <li class="md-nav__item">
-    <a href="developers/checklist.md" title="Recomendaciones para salir a producción" class="md-nav__link">
-      Recomendaciones para salir a producción
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="developers/migration.md" title="Migracion" class="md-nav__link">
-      Migracion
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="developers/maintenance.md" title="Mantenimiento" class="md-nav__link">
-      Mantenimiento
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="developers/https.md" title="Configuración HTTPS" class="md-nav__link">
-      Configuración HTTPS
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="developers/dns.md" title="Configuración de DNS" class="md-nav__link">
-      Configuración de DNS
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="developers/docker.md" title="Generación de imágenes Docker" class="md-nav__link">
-      Generación de imágenes Docker
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="developers/development.md" title="Desarrollo" class="md-nav__link">
+    <a href="developers/development/" title="Desarrollo" class="md-nav__link">
       Desarrollo
     </a>
   </li>
@@ -484,7 +422,7 @@
 
 
   <li class="md-nav__item">
-    <a href="developers/tests.md" title="Tests" class="md-nav__link">
+    <a href="developers/tests/" title="Tests" class="md-nav__link">
       Tests
     </a>
   </li>
@@ -492,6 +430,19 @@
         
       </ul>
     </nav>
+  </li>
+
+            <hr/>
+          
+            
+            
+            
+
+
+  <li class="md-nav__item">
+    <a href="HISTORY/" title="Historial de versiones" class="md-nav__link">
+      Historial de versiones
+    </a>
   </li>
 
             <hr/>
@@ -543,25 +494,8 @@
 [![GitHub version](https://badge.fury.io/gh/datosgobar%2Fmonitoreo-apertura.svg)](https://badge.fury.io/gh/datosgobar%2Fmonitoreo-apertura)
  -->
 
-<p><strong>Versión</strong>: 0.0.31</p>
-<p><strong>Monitoreo Apertura</strong> es un desarrollo de la Administración Pública Nacional que utiliza el framework Django para organizar una serie de módulos y funciones dbasado en <a href="https://ckan.org/">CKAN</a>. Es la tecnología detrás del <a href="https://datos.gob.ar/">Portal Nacional de Datos Abiertos</a> y de otros portales de datos abiertos de organismos de la APN, provincias y municipios.</p>
-<ul>
-<li><a href="quickstart.md">Comienzo rápido</a>
-<!-- - <a href="usage.md">Manual de uso</a> --></li>
-<li>Desarrolladores<ul>
-<li><a href="developers/install.md">Instalación</a></li>
-<li><a href="developers/update.md">Actualización</a></li>
-<li><a href="developers/checklist.md">Checklist para la puesta en producción</a></li>
-<li><a href="developers/migration.md">Migración</a></li>
-<li><a href="developers/maintenance.md">Mantenimiento</a></li>
-<li><a href="developers/https.md">Configuración HTTPS</a></li>
-<li><a href="developers/dns.md">Configuración de DNS</a></li>
-<li><a href="developers/development.md">Desarrollo</a></li>
-<li><a href="developers/tests.md">Tests</a>
-<!-- - <a href="history.md">Historial de versiones</a> --></li>
-</ul>
-</li>
-</ul>
+<p><strong>Versión</strong>: 0.0.44</p>
+<p><strong>Monitoreo Apertura</strong> es un desarrollo de la Administración Pública Nacional que utiliza el framework Django para organizar una serie de módulos con funciones que permiten administrar, monitorear y configurar reportes de seguimiento de la red de nodos de datos abiertos.</p>
                 
                   
                 
@@ -578,6 +512,27 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+        
+          <a href="quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Siguiente
+                </span>
+                Comenzar a usar Monitoreo Apertura
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

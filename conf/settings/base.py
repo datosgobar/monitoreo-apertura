@@ -409,4 +409,6 @@ ADMIN_REORDER = (
     str('sites'),
 )
 
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
 LOGIN_URL = 'admin:login'

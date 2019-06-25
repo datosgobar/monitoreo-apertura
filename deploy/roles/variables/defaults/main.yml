@@ -12,6 +12,8 @@ postgresql_readonly_password:
 
 checkout_branch: master
 
+default_from_email: infra.datos.gob.ar@modernizacion.gob.ar
+
 # Application user and group
 application_user: datosgobar
 application_group: datosgobar

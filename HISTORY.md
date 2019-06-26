@@ -1,5 +1,14 @@
 Versiones
 =========
+0.0.45 (26-06-19)
+-------------------
+
+* Agrega endpoints de `/indicadores-nodos.csv` y `/indicadores-federadores.csv`
+* Estilos institucionales del login
+* Feature para recuperar contraseña
+* Actualiza versión de pydatajson
+
+
 0.0.44 (11-06-19)
 -------------------
 

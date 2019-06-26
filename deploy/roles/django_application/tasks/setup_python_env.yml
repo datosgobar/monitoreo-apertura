@@ -72,7 +72,7 @@
       {% for variable_name, value in django_settings.items() %}
       {{ variable_name }}="{{ value }}"
       {% endfor %}
-      DEFAUL_FROM_EMAIL={{ default_from_email }}
+      DEFAULT_FROM_EMAIL={{ default_from_email }}
       DJANGO_SECRET_KEY="{{ django_secret_key }}"
       {% if sentry_dsn %}
       RAVEN_DSN="{{ sentry_dsn }}"

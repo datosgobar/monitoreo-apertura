@@ -1,11 +1,11 @@
-fecha,indicador_tipo__nombre,indicador_valor,jurisdiccion_id,jurisdiccion_nombre
-2100-12-31,ind_a,337,id1,nodo1
-2100-12-31,ind_b,"[[""d3"", ""l3""]]",id1,nodo1
-2100-12-31,ind_c,"{""k2"": 10}",id1,nodo1
-2100-12-31,ind_d,5000,id1,nodo1
-2100-12-31,ind_e,2,id1,nodo1
-2100-12-31,ind_a,1000,id2,nodo2
-2100-12-31,ind_b,"[[""d4"", ""l4""]]",id2,nodo2
-2100-12-31,ind_c,"{""k1"": 100, ""k2"": 10}",id2,nodo2
-2100-12-31,ind_d,1500,id2,nodo2
-31-12-2100,ind_e,-3,id2,nodo2
+fecha,indicador_tipo,indicador_valor,jurisdiccion_nombre,jurisdiccion_id
+2100-12-31,ind_a,337,nodo1,id1
+2100-12-31,ind_b,"[[""d3"", ""l3""]]",nodo1,id1
+2100-12-31,ind_c,"{""k2"": 10}",nodo1,id1
+2100-12-31,ind_d,5000,nodo1,id1
+2100-12-31,ind_e,2,nodo1,id1
+2100-12-31,ind_a,1000,nodo2,id2
+2100-12-31,ind_b,"[[""d4"", ""l4""]]",nodo2,id2
+2100-12-31,ind_c,"{""k1"": 100, ""k2"": 10}",nodo2,id2
+2100-12-31,ind_d,1500,nodo2,id2
+31-12-2100,ind_e,-3,nodo2,id2

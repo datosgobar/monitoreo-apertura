@@ -14,15 +14,15 @@ class IndicatorValidatorGenerator:
             .values_list('nombre', flat=True)
         self.value_checks = [
             ('fecha', datetime_string('%Y-%m-%d')),
-            ('indicador_tipo__nombre', enumeration(list(indicator_names))),
+            ('indicador_tipo', enumeration(list(indicator_names))),
             ('indicador_valor', str),
         ]
         self.unique_checks = ('fecha',
-                              'indicador_tipo__nombre', )
+                              'indicador_tipo', )
         if issubclass(model, AbstractIndicator):
             self.value_checks = self.value_checks + [
-                ('jurisdiccion_id', str),
-                ('jurisdiccion_nombre', str), ]
+                ('jurisdiccion_nombre', str),
+                ('jurisdiccion_id', str), ]
             self.unique_checks = self.unique_checks + ('jurisdiccion_id', )
 
         self.field_names = [check[0] for check in self.value_checks]

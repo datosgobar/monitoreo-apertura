@@ -1,19 +1,21 @@
 from __future__ import unicode_literals
 
 import argparse
-
-from import_export.resources import modelresource_factory
+import csv
 
 from django.core.management.base import BaseCommand
 
+from monitoreo.apps.dashboard.custom_generators import fieldnames_to_headers
 from monitoreo.apps.dashboard.models import IndicadorRed, Indicador, \
     IndicadorFederador
-from monitoreo.apps.dashboard.admin.indicators import IndicadorRedResource, IndicatorResource
+
+AGGREGATED_FIELDNAMES = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
+NODE_FIELDNAMES = AGGREGATED_FIELDNAMES + ['jurisdiccion_nombre', 'jurisdiccion_id']
 
 MODEL_CHOICES = {
-    'node': (Indicador, IndicatorResource),
-    'network': (IndicadorRed, IndicadorRedResource),
-    'federator': (IndicadorFederador, IndicatorResource)
+    'node': (Indicador, NODE_FIELDNAMES),
+    'network': (IndicadorRed, AGGREGATED_FIELDNAMES),
+    'federator': (IndicadorFederador, NODE_FIELDNAMES)
 }
 
 
@@ -30,9 +32,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         model = MODEL_CHOICES[options['type']][0]
-        model_resource = MODEL_CHOICES[options['type']][1]
-        indicator_resource = modelresource_factory(model,
-                                                   resource_class=model_resource)()
-        result = indicator_resource.export()
-        with options['file'] as export_csv:
-            export_csv.write(result.csv)
+        fieldnames = MODEL_CHOICES[options['type']][1]
+        headers = fieldnames_to_headers(fieldnames)
+        queryset = model.objects.values(*fieldnames)
+        rows = list(queryset)
+        writer = csv.DictWriter(options['file'], fieldnames=fieldnames)
+        writer.writerow(dict(zip(fieldnames, headers)))
+        for row in rows:
+            writer.writerow(row)

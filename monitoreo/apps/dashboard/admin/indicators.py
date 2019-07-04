@@ -76,10 +76,10 @@ class IndicatorResource(resources.ModelResource):
         model = Indicador
         fields = export_order = (
             'fecha',
-            'indicador_tipo__nombre',
+            'indicador_tipo',
             'indicador_valor',
-            'jurisdiccion_id',
             'jurisdiccion_nombre',
+            'jurisdiccion_id',
         )
 
 
@@ -100,7 +100,7 @@ class IndexingIndicatorResource(resources.ModelResource):
         model = IndicadorFederador
         fields = export_order = (
             'fecha',
-            'indicador_tipo__nombre',
+            'indicador_tipo',
             'indicador_valor',
             'jurisdiccion_id',
             'jurisdiccion_nombre',
@@ -125,7 +125,7 @@ class IndicadorRedResource(resources.ModelResource):
         model = IndicadorRed
         fields = export_order = (
             'fecha',
-            'indicador_tipo__nombre',
+            'indicador_tipo',
             'indicador_valor',
         )
 

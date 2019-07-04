@@ -1,4 +1,4 @@
-fecha,indicador_tipo__nombre,indicador_valor
+fecha,indicador_tipo,indicador_valor
 2000-01-01,ind_a,42
 2000-01-01,ind_b,"[[""d1"", ""l1""], [""d2"", ""l2""]]"
 2000-01-01,ind_c,"{""k1"": 1, ""k2"": 2}"

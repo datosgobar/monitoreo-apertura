@@ -38,7 +38,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.1">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
     
     
       
@@ -47,7 +47,7 @@
     
     
 	
-      <link rel="stylesheet" href="../assets/stylesheets/application.3020aac5.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
       
       
     
@@ -55,14 +55,14 @@
 
     
     
-      <script src="../assets/javascripts/modernizr.01ccdecf.js"></script>
+      <script src="../assets/javascripts/modernizr.74668098.js"></script>
     
     <script src="../js/extra.js"></script>
 
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -156,7 +156,9 @@
               Monitoreo Apertura
             </span>
             <span class="md-header-nav__topic">
-              Manual de uso
+              
+                Manual de uso
+              
             </span>
           
         </div>
@@ -540,12 +542,12 @@ puede marcar en el modelo, o marcar un subconjunto de los datasets y ejecutar la
 <p>El otro método es cargando un nuevo <code>Dataset Indexing file</code>. Esta pagina se encuentra en la ruta
 <code>/admin/django_datajsonar/datasetindexingfile/</code>. El archivo tiene un registro de los datasets <em>indexables</em>.
 Es un archivo de extensión <code>.csv</code> y tiene un aspecto como el siguiente:</p>
-<div class="codehilite"><pre><span></span>catalog_id,dataset_identifier
-sspm,399
-sspm,330
-enacom,REGIS-DE-PROVE-POSTA
-acumar,cb351aa5-731b-458b-8227-a0c5b828356f
-# Más entradas
+<div class="codehilite"><pre><span></span><span class="n">catalog_id</span><span class="p">,</span><span class="n">dataset_identifier</span>
+<span class="n">sspm</span><span class="p">,</span><span class="mi">399</span>
+<span class="n">sspm</span><span class="p">,</span><span class="mi">330</span>
+<span class="n">enacom</span><span class="p">,</span><span class="n">REGIS</span><span class="o">-</span><span class="n">DE</span><span class="o">-</span><span class="n">PROVE</span><span class="o">-</span><span class="n">POSTA</span>
+<span class="n">acumar</span><span class="p">,</span><span class="n">cb351aa5</span><span class="o">-</span><span class="mi">731</span><span class="n">b</span><span class="o">-</span><span class="mi">458</span><span class="n">b</span><span class="o">-</span><span class="mi">8227</span><span class="o">-</span><span class="n">a0c5b828356f</span>
+<span class="o">#</span> <span class="n">Más</span> <span class="n">entradas</span>
 </pre></div>
 
 
@@ -607,12 +609,12 @@ encontramos con un formulario de este estilo:</p>
 Finalmente, <strong>scheduled time</strong> indica la hora a correr la primer etapa del synchronizer.</p>
 <p>Cada fila del campo task representa una etapa, y se ejecutan en orden siendo la de arriba la primera. Actualmente, para
 configurar las tareas ya existentes, se pueden pasar los siguientes procesos:</p>
-<div class="codehilite"><pre><span></span>- Read Datajson (complete)
-- Read Datajson (metadata only)
-- Federation
-- Indicators
-- Indicators reports
-- Validation reports
+<div class="codehilite"><pre><span></span><span class="o">-</span> <span class="k">Read</span> <span class="n">Datajson</span> <span class="p">(</span><span class="n">complete</span><span class="p">)</span>
+<span class="o">-</span> <span class="k">Read</span> <span class="n">Datajson</span> <span class="p">(</span><span class="n">metadata</span> <span class="k">only</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">Federation</span>
+<span class="o">-</span> <span class="n">Indicators</span>
+<span class="o">-</span> <span class="n">Indicators</span> <span class="n">reports</span>
+<span class="o">-</span> <span class="n">Validation</span> <span class="n">reports</span>
 </pre></div>
 
 
@@ -637,8 +639,23 @@ con el botón importar. Debería caer al siguiente form:</p>
 <p><img alt="Indicator Import" src="../images/ui_indicator_import.png" /></p>
 <p>El primer campo toma el archivo de csv a subir; el segundo, el formato del archivo. Actualmente, el único formato que
 acepta es csv.</p>
-<p>Además, accediendo a la ruta <code>/nodos-red-indicadores.csv</code> se puede descargar un dump de la base de indicadores de red
-en formato.csv  </p>
+<p>Además, accediendo a las siguientes rutas, se pueden descargar los siguientes dumps:</p>
+<ul>
+<li><code>/indicadores-red.csv</code>: descarga un dump de la base de indicadores de red
+en formato.csv</li>
+<li><code>/indicadores-nodo.csv</code>: descarga un dump de los indicadores de nodos</li>
+<li><code>/indicadores-federadores.csv</code>: descarga un dump de los indicadores federadores</li>
+<li><code>/nodos.json</code>: devuelve (no descarga) la información de todos los nodos (id y nombre de los nodos,
+nombre de jurisdicción, urls de descarga de datos, etc). Se puede descargar esta información en
+formato <strong>csv</strong> o <strong>xlsx</strong> accediendo a <code>/nodos.csv</code> o <code>/nodos.xlsx</code> respectivamente</li>
+<li><code>/nodes.json</code>: idem al url anterior, pero con los datos en inglés. También se pueden descargar
+en formatos <strong>csv</strong> o <strong>xlsx</strong> cambiando la extension de archivo en el url</li>
+<li><code>/distribuciones.csv</code>: descarga un dump con toda la información de las distribuciones</li>
+<li><code>/admin/django_datajsonar/dataset/federacion-config.csv</code>: descarga un dump con los identificadores
+de los DataSets y la id del catálogo al que pertenecen</li>
+<li><code>/admin/dashboard/indicadorred/series-indicadores</code>:  descarga un archivo csv con información sobre
+todos los datasets</li>
+</ul>
                 
                   
                 
@@ -708,7 +725,7 @@ en formato.csv  </p>
       
     </div>
     
-      <script src="../assets/javascripts/application.dc02f8ce.js"></script>
+      <script src="../assets/javascripts/application.245445c6.js"></script>
       
         
         

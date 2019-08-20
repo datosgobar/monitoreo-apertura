@@ -139,7 +139,7 @@ class ValidationReportGenerator(AbstractReportGenerator):
         if not node:
             # No genera mail de staff
             return None
-        catalog = DataJson(node.catalog_url)
+        catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format)
         validation = catalog.validate_catalog(only_errors=True)
         validation_time = self._format_date(timezone.now())
         if validation['status'] == 'OK':

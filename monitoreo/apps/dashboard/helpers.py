@@ -20,7 +20,7 @@ def load_catalogs(task, nodes, harvesting=False):
         try:
             url = urljoin(node.url, 'data.json') \
                 if harvesting else node.catalog_url
-            catalog = DataJson(url)
+            catalog = DataJson(url, catalog_format=node.catalog_format)
         except Exception as e:
             msg = u'Error accediendo al catálogo {}: {}'.format(node.catalog_id, str(e))
             IndicatorsGenerationTask.info(task, msg)

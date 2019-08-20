@@ -38,7 +38,7 @@ class LoadCatalogsTest(TestCase):
         # Asumo que si tiene el indicador de datasets fue parseado exitosamente
         self.assertTrue(indicators[0]['datasets_cant'], 'Catálogo no parseado')
 
-    def test_load_catalog_uses_node_format(self):
+    def test_load_catalog_json_node_format(self):
         def mock_side_effect(catalog, catalog_format=None):
             return {'format': catalog_format}
 
@@ -47,6 +47,10 @@ class LoadCatalogsTest(TestCase):
             result = load_catalogs(self.task, Node.objects.all())
         self.assertEqual([{'identifier': 'test_catalog', 'format': 'json'}],
                          result)
+
+    def test_load_catalog_xlsx_node_format(self):
+        def mock_side_effect(catalog, catalog_format=None):
+            return {'format': catalog_format}
 
         self.node.catalog_format = 'xlsx'
         self.node.save()

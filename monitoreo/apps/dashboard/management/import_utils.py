@@ -1,5 +1,5 @@
 import csv
-from io import TextIOWrapper
+import os
 
 from django.db import transaction
 from django_rq import job
@@ -16,35 +16,37 @@ def invalid_indicators_csv(csv_file, model):
 
 
 def validate_indicators_csv(csv_file, model):
-    csv_file = TextIOWrapper(csv_file)
-    csv_reader = csv.reader(csv_file)
-    validator_generator = IndicatorValidatorGenerator(model)
-    validator = validator_generator.generate()
-    error_list = validator.validate(csv_reader)
-    csv_file.seek(0)
-    csv_file.detach()
+    with open(csv_file) as indicators_csv:
+        csv_reader = csv.reader(indicators_csv)
+        validator_generator = IndicatorValidatorGenerator(model)
+        validator = validator_generator.generate()
+        error_list = validator.validate(csv_reader)
     return error_list
 
 
 @job('imports', timeout=1800)
+def import_from_tempfile(indicators_file, model):
+    import_indicators(indicators_file, model)
+    os.remove(indicators_file)
+
+
 def import_indicators(indicators_file, model):
-    indicators_file = TextIOWrapper(indicators_file)
     types_mapping = {ind_type.nombre: ind_type for
                      ind_type in IndicatorType.objects.all()}
-    indicators = []
-    csv_reader = csv.DictReader(indicators_file)
-    with suppress_autotime(model, ['fecha']):
-        with transaction.atomic():
-            for row in csv_reader:
-                row['indicador_tipo'] = \
-                    types_mapping[row.pop('indicador_tipo')]
-                filter_fields = {
-                    field: row[field] for field in row if
-                    field in ('fecha',
-                              'indicador_tipo',
-                              'jurisdiccion_id')
-                }
-                model.objects.filter(**filter_fields).delete()
-                indicators.append(model(**row))
-            model.objects.bulk_create(indicators)
-    indicators_file.detach()
+    with open(indicators_file) as indicators_csv:
+        indicators = []
+        csv_reader = csv.DictReader(indicators_csv)
+        with suppress_autotime(model, ['fecha']):
+            with transaction.atomic():
+                for row in csv_reader:
+                    row['indicador_tipo'] = \
+                        types_mapping[row.pop('indicador_tipo')]
+                    filter_fields = {
+                        field: row[field] for field in row if
+                        field in ('fecha',
+                                  'indicador_tipo',
+                                  'jurisdiccion_id')
+                    }
+                    model.objects.filter(**filter_fields).delete()
+                    indicators.append(model(**row))
+                model.objects.bulk_create(indicators)

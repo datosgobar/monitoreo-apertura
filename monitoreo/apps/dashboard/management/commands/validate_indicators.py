@@ -22,7 +22,7 @@ class Command(BaseCommand):
     errores. Si se pasa el argumento -w escribe el reporte en ese path."""
 
     def add_arguments(self, parser):
-        parser.add_argument('file', type=argparse.FileType('rb'))
+        parser.add_argument('file')
         parser.add_argument('-w', '--write_path', type=argparse.FileType('w'))
         parser.add_argument('--type',
                             choices=['node', 'network', 'federator'],

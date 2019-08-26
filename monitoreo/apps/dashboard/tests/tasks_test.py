@@ -93,6 +93,11 @@ class HarvestRunTest(TestCase):
         mock_harvest.assert_any_call(DataJson(self.get_sample('missing_dataset_title.json')),
                                      'harvest_url', 'apikey', 'id3', [])
 
+    @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
+    def test_only_sended_node_datasets_get_harvested(self, mock_harvest):
+        federation_run(node=Node.objects.all()[1])
+        self.assertEqual(2, len(mock_harvest.mock_calls))
+
     def test_get_dataset_lists_return_correct_ids(self):
         node1 = Node.objects.get(catalog_id='id1')
         datajson = DataJson(self.get_sample('full_data.json'))

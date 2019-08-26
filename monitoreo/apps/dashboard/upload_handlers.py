@@ -11,6 +11,10 @@ class PersistentTemporaryFileUploadHandler(TemporaryFileUploadHandler):
     Upload handler that streams data into a temporary file. The temporary file
     must be closed explicitly
     """
+    def __init__(self, *args, **kwargs):
+        self.file = None
+        super(PersistentTemporaryFileUploadHandler, self).__init__(*args, **kwargs)
+
     def new_file(self, *args, **kwargs):
         """
         Create the file object to append to as data is coming in.
@@ -26,7 +30,7 @@ class PersistentTemporaryUploadedFile(TemporaryUploadedFile):
     """
     def __init__(self, name, content_type, size, charset, content_type_extra=None):
         file = tempfile.NamedTemporaryFile(suffix='.upload', dir=settings.FILE_UPLOAD_TEMP_DIR, delete=False)
-        super(TemporaryUploadedFile, self).__init__(file, name, content_type, size, charset, content_type_extra)
+        super(PersistentTemporaryUploadedFile, self).__init__(file, name, content_type, size, charset, content_type_extra)
 
     def delete(self):
         return os.remove(self.file.name)

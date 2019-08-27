@@ -12,7 +12,7 @@ class PersistentTemporaryUploadedFile(UploadedFile):
     not delete when closed.
     """
     def __init__(self, name, content_type, size, charset, content_type_extra=None):
-        file = tempfile.NamedTemporaryFile(suffix='.upload', dir=settings.FILE_UPLOAD_TEMP_DIR, delete=False)
+        file = tempfile.NamedTemporaryFile(suffix='.upload', dir=settings.MEDIA_ROOT, delete=False)
         super(PersistentTemporaryUploadedFile, self).__init__(file, name, content_type, size, charset, content_type_extra)
 
     def delete(self):

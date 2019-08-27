@@ -6,6 +6,8 @@ from django.contrib import admin, messages
 from django.conf.urls import url
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
@@ -13,22 +15,32 @@ from import_export.formats import base_formats
 from import_export.forms import ImportForm
 
 from monitoreo.apps.dashboard.management.import_utils import \
-    invalid_indicators_csv, import_indicators
+    invalid_indicators_csv, import_from_tempfile
+from monitoreo.apps.dashboard.upload_handlers import \
+    PersistentTemporaryFileUploadHandler
 from monitoreo.apps.dashboard.views import indicators_csv
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
     IndicadorFederador
 
 
+@method_decorator(csrf_exempt, name='import_action')
+@method_decorator(csrf_protect, name='_import_action')
 class CustomImportAdmin(ImportExportModelAdmin):
     formats = (base_formats.CSV,)
 
     def import_action(self, request, *args, **kwargs):
-        '''
+        request.upload_handlers = [
+            PersistentTemporaryFileUploadHandler(request)
+        ]
+        return self._import_action(request, *args, **kwargs)
+
+    def _import_action(self, request, *args, **kwargs):
+        """
         Perform a dry_run of the import to make sure the import will not
         result in errors.  If there where no error, save the user
         uploaded file to a local temp file that will be used by
         'process_import' for the actual import.
-        '''
+        """
         resource = self.get_import_resource_class()(
             **self.get_import_resource_kwargs(request, *args, **kwargs))
 
@@ -49,7 +61,8 @@ class CustomImportAdmin(ImportExportModelAdmin):
 
         if request.POST and form.is_valid():
             model = self.model
-            indicators_file = form.cleaned_data['import_file']
+            temp_file = form.cleaned_data['import_file']
+            indicators_file = temp_file.temporary_file_path()
             # Validación de datos
             if invalid_indicators_csv(indicators_file, model):
                 msg = 'El csv de indicadores es inválido. ' \
@@ -58,7 +71,7 @@ class CustomImportAdmin(ImportExportModelAdmin):
                 messages.error(request, msg)
                 return TemplateResponse(request, [self.import_template_name],
                                         context)
-            import_indicators.delay(indicators_file, model)
+            import_from_tempfile.delay(indicators_file, model)
             return redirect(
                 'admin:dashboard_' + model._meta.model_name + '_changelist')
 

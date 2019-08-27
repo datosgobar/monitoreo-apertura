@@ -1,5 +1,11 @@
 Versiones
 =========
+0.0.46 (27-08-19)
+-------------------
+* Bugfix a la importación de indicadores
+* Bugfix en federación selectiva
+* Actualiza versión de pydatajson
+
 0.0.45 (26-06-19)
 -------------------
 

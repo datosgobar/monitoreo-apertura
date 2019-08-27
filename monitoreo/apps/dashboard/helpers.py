@@ -18,9 +18,12 @@ def load_catalogs(task, nodes, harvesting=False):
     catalogs = []
     for node in nodes:
         try:
-            url = urljoin(node.url, 'data.json') \
-                if harvesting else node.catalog_url
-            catalog = DataJson(url, catalog_format=node.catalog_format)
+            if harvesting:
+                url = urljoin(node.url, 'data.json')
+                catalog = DataJson(url)
+            else:
+                catalog = DataJson(node.catalog_url,
+                                   catalog_format=node.catalog_format)
         except Exception as e:
             msg = u'Error accediendo al catálogo {}: {}'.format(node.catalog_id, str(e))
             IndicatorsGenerationTask.info(task, msg)

@@ -179,3 +179,10 @@ class ValidationReportGenerator(AbstractReportGenerator):
         # No hay nada que mandar
         if mail is not None:
             super(ValidationReportGenerator, self).send_email(mail, node=node)
+
+
+class DailyDatasetReportGenerator(AbstractReportGenerator):
+    def __init__(self, report_task):
+        self.report_task = report_task
+        renderer = EmailRenderer('reports', 'daily.txt', 'daily.html')
+        super(DailyDatasetReportGenerator, self).__init__(report_task, renderer)

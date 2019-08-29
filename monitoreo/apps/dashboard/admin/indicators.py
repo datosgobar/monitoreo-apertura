@@ -15,7 +15,7 @@ from import_export.formats import base_formats
 from import_export.forms import ImportForm
 
 from monitoreo.apps.dashboard.management.import_utils import \
-    invalid_indicators_csv, import_from_tempfile
+    invalid_indicators_csv, import_from_admin
 from monitoreo.apps.dashboard.upload_handlers import \
     PersistentTemporaryFileUploadHandler
 from monitoreo.apps.dashboard.views import indicators_csv
@@ -63,15 +63,7 @@ class CustomImportAdmin(ImportExportModelAdmin):
             model = self.model
             temp_file = form.cleaned_data['import_file']
             indicators_file = temp_file.temporary_file_path()
-            # Validación de datos
-            if invalid_indicators_csv(indicators_file, model):
-                msg = 'El csv de indicadores es inválido. ' \
-                      'Correr el comando validate_indicators_csv para un ' \
-                      'reporte detallado'
-                messages.error(request, msg)
-                return TemplateResponse(request, [self.import_template_name],
-                                        context)
-            import_from_tempfile.delay(indicators_file, model)
+            import_from_admin.delay(indicators_file, model, request.user)
             return redirect(
                 'admin:dashboard_' + model._meta.model_name + '_changelist')
 

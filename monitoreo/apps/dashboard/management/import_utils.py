@@ -64,12 +64,6 @@ def import_indicators(indicators_file, model):
                 for row in csv_reader:
                     row['indicador_tipo'] = \
                         types_mapping[row.pop('indicador_tipo')]
-                    filter_fields = {
-                        field: row[field] for field in row if
-                        field in ('fecha',
-                                  'indicador_tipo',
-                                  'jurisdiccion_id')
-                    }
                     indicators.append(model(**row))
                 model.objects.all().delete()
                 model.objects.bulk_create(indicators)

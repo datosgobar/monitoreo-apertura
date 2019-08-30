@@ -181,8 +181,12 @@ class ValidationReportGenerator(AbstractReportGenerator):
             super(ValidationReportGenerator, self).send_email(mail, node=node)
 
 
-class DailyDatasetReportGenerator(AbstractReportGenerator):
-    def __init__(self, report_task):
+class NewlyDatasetReportGenerator(AbstractReportGenerator):
+    def __init__(self, report_task, last_newly_report_task):
         self.report_task = report_task
-        renderer = EmailRenderer('reports', 'daily.txt', 'daily.html')
-        super(DailyDatasetReportGenerator, self).__init__(report_task, renderer)
+        self.last_task_date = last_newly_report_task.finished
+        renderer = EmailRenderer('reports', 'newly.txt', 'newly.html')
+        super(NewlyDatasetReportGenerator, self).__init__(report_task, renderer)
+
+    def get_last_report_date(self):
+        return self.last_task_date

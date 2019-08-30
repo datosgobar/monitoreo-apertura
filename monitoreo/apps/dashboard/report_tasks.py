@@ -10,7 +10,7 @@ from django_datajsonar.models import Node
 
 from monitoreo.apps.dashboard import models
 from monitoreo.apps.dashboard.report_generators import \
-    ValidationReportGenerator, IndicatorReportGenerator
+    ValidationReportGenerator, IndicatorReportGenerator, NewlyDatasetReportGenerator
 
 
 @job('reports')
@@ -23,6 +23,12 @@ def send_reports(node=None):
 def send_validations(node=None):
     validation_task = models.ValidationReportTask.objects.create()
     validation_run(validation_task, node=node)
+
+
+@job('reports')
+def send_newly_reports():
+    newly_report_task = models.NewlyReportGenerationTask.objects
+    newly_report_run(newly_report_task)
 
 
 @job('reports')
@@ -74,3 +80,23 @@ def validation_run(validation_task, node=None):
 
         generator.send_email(mail, node=target_node)
     generator.close_task()
+
+
+@job('reports')
+def newly_report_run(newly_report_task):
+    last_newly_report_task = models.NewlyReportGenerationTask.objects \
+        .filter(status=models.IndicatorsGenerationTask.FINISHED) \
+        .exclude(finished__isnull=True).latest('finished')
+    generator = NewlyDatasetReportGenerator(newly_report_task, last_newly_report_task)
+    last_report_date = generator.get_last_report_date()
+
+    # Get datasets newer than last_report_date
+    # Generate emails for each node with new datasets
+    # Generate emails for staff members
+    # Close task
+
+    # nodes_mail = generator.generate_nodes_reports_email()
+    # staff_mail = generator.generate_node_indicators_email()
+    # generator.send_email(nodes_mail)
+    # generator.send_email(staff_mail)
+    # generator.close_task()

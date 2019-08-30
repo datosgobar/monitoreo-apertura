@@ -94,6 +94,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'admin_reorder.middleware.ModelAdminReorder',
+    'async_messages.middleware.AsyncMiddleware'
 )
 
 ANONYMOUS_USER_ID = -1
@@ -195,7 +196,11 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console': {
+           'class': 'logging.StreamHandler',
+           'level': 'INFO',
+        },
     },
     'loggers': {
         'django.security.DisallowedHost': {
@@ -207,6 +212,13 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         }
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp/django_cache',
     }
 }
 

@@ -76,7 +76,9 @@ class IndicatorImportExportTest(TestCase):
         indicators_csv = self.get_sample('indicators_sample.csv')
         call_command('import_indicators', indicators_csv)
         future_date = date(2100, 12, 31)
-        self.assertEqual(20, Indicador.objects.all().count())
+        past_date = date(2000, 1, 1)
+        self.assertEqual(0, Indicador.objects.all().
+                         filter(fecha=past_date).count())
         self.assertEqual(10, Indicador.objects.all().
                          filter(fecha=future_date).count())
         self.assertEqual('337',
@@ -95,7 +97,7 @@ class IndicatorImportExportTest(TestCase):
                              indicador_tipo__nombre='ind_c',
                              jurisdiccion_id='id2').indicador_valor)
 
-    def test_indicators_are_updated(self):
+    def test_indicators_are_overwritten(self):
         indicators_csv = self.get_sample('updated_indicators.csv')
         call_command('import_indicators', indicators_csv)
         past_date = date(2000, 1, 1)
@@ -119,8 +121,10 @@ class IndicatorImportExportTest(TestCase):
     def test_network_indicators_are_imported_correctly(self):
         indicators_csv = self.get_sample('network_indicators_sample.csv')
         future_date = date(2100, 12, 31)
+        past_date = date(2000, 1, 1)
         call_command('import_indicators', indicators_csv, type='network')
-        self.assertEqual(10, IndicadorRed.objects.all().count())
+        self.assertEqual(0, IndicadorRed.objects.all().
+                         filter(fecha=past_date).count())
         self.assertEqual(5, IndicadorRed.objects.all().
                          filter(fecha=future_date).count())
         self.assertEqual('1337',

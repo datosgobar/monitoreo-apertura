@@ -93,7 +93,6 @@ def newly_report_run(newly_report_task):
 
     new_datasets = generator.get_new_datasets()
     if not new_datasets:
-        print("no hay datasets")
         return
 
     catalog_identifiers = [dataset.catalog.identifier for dataset in new_datasets]

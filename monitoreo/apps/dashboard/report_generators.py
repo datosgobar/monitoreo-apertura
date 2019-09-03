@@ -6,7 +6,6 @@ from tempfile import NamedTemporaryFile
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.utils.timezone import now
 from django_datajsonar.models import Dataset, Node, Catalog
 from pydatajson.core import DataJson
 
@@ -186,7 +185,7 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
     def __init__(self, report_task, last_newly_report_date):
         self.report_task = report_task
         self.last_report_date = last_newly_report_date
-        self.new_datasets = Dataset.objects.filter(finished__gt=self.last_report_date)
+        self.new_datasets = Dataset.objects.filter(date_created__gt=self.last_report_date)
         renderer = EmailRenderer('reports', 'newly.txt', 'newly.html')
         super(NewlyDatasetReportGenerator, self).__init__(report_task, renderer)
 
@@ -194,13 +193,13 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
         return self.new_datasets
 
     def generate_email(self, node=None):
-        report_date = self._format_date(now().today())
+        report_date = self._format_date(timezone.now())
         if not node:
-            subject = f'Reporte de novedades para {node} del {report_date}'
+            subject = f'Reporte de novedades del {report_date}'
             nodes_list = self._create_node_and_new_datasets_pairs(self.new_datasets)
             context = {'nodes_list': nodes_list}
         else:
-            subject = f'Reporte de novedades del {report_date}'
+            subject = f'Reporte de novedades para {node} del {report_date}'
             datasets_list = self._get_new_datasets_for_node(node, self.new_datasets)
             context = {
                 'node': node,
@@ -221,8 +220,8 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
         catalog_identifiers = [dataset.catalog.identifier for dataset in all_new_datasets]
         nodes_to_report = Node.objects.filter(catalog_id__in=catalog_identifiers)
 
-        for node_to_report in nodes_to_report:
-            new_datasets_in_node = self._get_new_datasets_for_node(nodes_to_report, all_new_datasets)
-            nodes_and_datasets_pairs.append((node_to_report, new_datasets_in_node))
+        for node in nodes_to_report:
+            new_datasets_in_node = self._get_new_datasets_for_node(node, all_new_datasets)
+            nodes_and_datasets_pairs.append((node, new_datasets_in_node))
 
         return nodes_and_datasets_pairs

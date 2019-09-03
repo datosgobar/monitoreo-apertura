@@ -25,7 +25,7 @@ def send_validations(node=None):
 
 @job('reports')
 def send_newly_reports():
-    newly_report_task = models.NewlyReportGenerationTask.objects.create()
+    newly_report_task = models.tasks.NewlyReportGenerationTask.objects.create()
     newly_report_run(newly_report_task)
 
 
@@ -83,16 +83,17 @@ def validation_run(validation_task, node=None):
 @job('reports')
 def newly_report_run(newly_report_task):
     try:
-        last_newly_report_date = models.NewlyReportGenerationTask.objects \
-            .filter(status=models.NewlyReportGenerationTask.FINISHED) \
+        last_newly_report_date = models.tasks.NewlyReportGenerationTask.objects \
+            .filter(status=models.tasks.NewlyReportGenerationTask.FINISHED) \
             .exclude(finished__isnull=True).latest('finished').finished
-    except models.NewlyReportGenerationTask.DoesNotExist:
+    except models.tasks.NewlyReportGenerationTask.DoesNotExist:
         # Si no hubo reportes previos, es decir, si este es el primer reporte, no enviamos nada
         return
     generator = NewlyDatasetReportGenerator(newly_report_task, last_newly_report_date)
 
     new_datasets = generator.get_new_datasets()
     if not new_datasets:
+        print("no hay datasets")
         return
 
     catalog_identifiers = [dataset.catalog.identifier for dataset in new_datasets]

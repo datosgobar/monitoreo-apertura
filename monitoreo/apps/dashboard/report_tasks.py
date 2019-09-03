@@ -1,12 +1,10 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-from requests.exceptions import RequestException
-
-from django_rq import job
-
-from pydatajson.custom_exceptions import NonParseableCatalog
 from django_datajsonar.models import Node
+from django_rq import job
+from pydatajson.custom_exceptions import NonParseableCatalog
+from requests.exceptions import RequestException
 
 from monitoreo.apps.dashboard import models
 from monitoreo.apps.dashboard.report_generators import \
@@ -27,7 +25,7 @@ def send_validations(node=None):
 
 @job('reports')
 def send_newly_reports():
-    newly_report_task = models.NewlyReportGenerationTask.objects
+    newly_report_task = models.NewlyReportGenerationTask.objects.create()
     newly_report_run(newly_report_task)
 
 
@@ -84,19 +82,27 @@ def validation_run(validation_task, node=None):
 
 @job('reports')
 def newly_report_run(newly_report_task):
-    last_newly_report_task = models.NewlyReportGenerationTask.objects \
-        .filter(status=models.IndicatorsGenerationTask.FINISHED) \
-        .exclude(finished__isnull=True).latest('finished')
-    generator = NewlyDatasetReportGenerator(newly_report_task, last_newly_report_task)
-    last_report_date = generator.get_last_report_date()
+    try:
+        last_newly_report_date = models.NewlyReportGenerationTask.objects \
+            .filter(status=models.NewlyReportGenerationTask.FINISHED) \
+            .exclude(finished__isnull=True).latest('finished').finished
+    except models.NewlyReportGenerationTask.DoesNotExist:
+        # Si no hubo reportes previos, es decir, si este es el primer reporte, no enviamos nada
+        return
+    generator = NewlyDatasetReportGenerator(newly_report_task, last_newly_report_date)
 
-    # Get datasets newer than last_report_date
-    # Generate emails for each node with new datasets
-    # Generate emails for staff members
-    # Close task
+    new_datasets = generator.get_new_datasets()
+    if not new_datasets:
+        return
 
-    # nodes_mail = generator.generate_nodes_reports_email()
-    # staff_mail = generator.generate_node_indicators_email()
-    # generator.send_email(nodes_mail)
-    # generator.send_email(staff_mail)
-    # generator.close_task()
+    catalog_identifiers = [dataset.catalog.identifier for dataset in new_datasets]
+    nodes_to_report = Node.objects.filter(catalog_id__in=catalog_identifiers)
+
+    for node in nodes_to_report:
+        mail = generator.generate_email(node)
+        generator.send_email(mail, node)
+
+    staff_mail = generator.generate_email()
+    generator.send_email(staff_mail)
+
+    generator.close_task()

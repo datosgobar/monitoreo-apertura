@@ -1,5 +1,9 @@
 Versiones
 =========
+1.0.1 (03-09-19)
+-------------------
+* Bugfix a la importación de indicadores de nodos
+
 0.0.46 (27-08-19)
 -------------------
 * Bugfix a la importación de indicadores

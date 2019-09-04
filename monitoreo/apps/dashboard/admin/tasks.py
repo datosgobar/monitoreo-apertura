@@ -4,10 +4,11 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django_datajsonar.admin.tasks import AbstractTaskAdmin
 
-from monitoreo.apps.dashboard.tasks import federate_catalogs
-from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
-from monitoreo.apps.dashboard.report_tasks import indicators_run, validation_run
 from monitoreo.apps.dashboard import models
+from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
+from monitoreo.apps.dashboard.report_tasks import indicators_run, validation_run, \
+    newly_report_run
+from monitoreo.apps.dashboard.tasks import federate_catalogs
 
 
 @admin.register(models.FederationTask)
@@ -63,3 +64,13 @@ class ValidationReportAdmin(AbstractTaskAdmin):
     model = models.ValidationReportTask
     task = validation_run
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_validations'
+
+
+@admin.register(models.tasks.NewlyReportGenerationTask)
+class NewlyReportGenerationTaskAdmin(AbstractTaskAdmin):
+    readonly_fields = ('created', 'logs', 'status', 'finished')
+    list_display = ('__unicode__',)
+
+    model = models.tasks.NewlyReportGenerationTask
+    task = newly_report_run
+    callable_str = 'monitoreo.apps.dashboard.report_tasks.send_newly_reports'

@@ -403,6 +403,11 @@ DATAJSONAR_STAGES = {
         'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_validations',
         'queue': 'reports',
         'task': 'monitoreo.apps.dashboard.models.ValidationReportTask'
+    },
+    'Newly added dataset reports': {
+        'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_newly_reports',
+        'queue': 'reports',
+        'task': 'monitoreo.apps.dashboard.models.NewlyReportGenerationTask'
     }
 }
 

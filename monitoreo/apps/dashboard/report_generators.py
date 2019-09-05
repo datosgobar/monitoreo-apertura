@@ -6,7 +6,7 @@ from tempfile import NamedTemporaryFile
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
-
+from django_datajsonar.models import Dataset, Node, Catalog
 from pydatajson.core import DataJson
 
 from monitoreo.apps.dashboard.email_renderer import ReportSender, EmailRenderer
@@ -179,3 +179,52 @@ class ValidationReportGenerator(AbstractReportGenerator):
         # No hay nada que mandar
         if mail is not None:
             super(ValidationReportGenerator, self).send_email(mail, node=node)
+
+
+class NewlyDatasetReportGenerator(AbstractReportGenerator):
+    def __init__(self, report_task, last_newly_report_date):
+        self.report_task = report_task
+        self.last_report_date = last_newly_report_date
+        self.new_datasets = Dataset.objects.filter(time_created__gt=self.last_report_date)
+        renderer = EmailRenderer('reports', 'newly.txt', 'newly.html')
+        super(NewlyDatasetReportGenerator, self).__init__(report_task, renderer)
+
+    def close_task(self):
+        self.report_task.close_task()
+
+    def get_new_datasets(self):
+        return self.new_datasets
+
+    def generate_email(self, node=None):
+        report_date = timezone.now().date()
+        if not node:
+            subject = f'[monitoreo-apertura] Reporte de novedades del {report_date}'
+            nodes_list = self._create_node_and_new_datasets_pairs(self.new_datasets)
+            context = {'nodes_list': nodes_list}
+        else:
+            subject = f'[monitoreo-apertura] Reporte de novedades para {node} del {report_date}'
+            datasets_list = self._get_new_datasets_for_node(node, self.new_datasets)
+            context = {
+                'node': node,
+                'datasets_list': datasets_list
+            }
+        mail = self.render_templates(context)
+        mail.subject = subject
+        return mail
+
+    def _get_new_datasets_for_node(self, node, all_new_datasets):
+        catalog = Catalog.objects.get(identifier=node.catalog_id)
+        new_datasets_in_node = [dataset for dataset in catalog.dataset_set.all()
+                                if dataset in all_new_datasets]
+        return new_datasets_in_node
+
+    def _create_node_and_new_datasets_pairs(self, all_new_datasets):
+        nodes_and_datasets_pairs = []
+        catalog_identifiers = [dataset.catalog.identifier for dataset in all_new_datasets]
+        nodes_to_report = Node.objects.filter(catalog_id__in=catalog_identifiers)
+
+        for node in nodes_to_report:
+            new_datasets_in_node = self._get_new_datasets_for_node(node, all_new_datasets)
+            nodes_and_datasets_pairs.append((node, new_datasets_in_node))
+
+        return nodes_and_datasets_pairs

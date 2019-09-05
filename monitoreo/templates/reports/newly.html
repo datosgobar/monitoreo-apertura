@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de datasets del nodo {{ nodo }}</title>
+</head>
+<body>
+<h3>Reporte del {% now "d/m/Y" %}</h3>
+{% if nodes_list %}
+
+<ul>
+{% for node, node_datasets in nodes_list %}
+<li>
+    <h2>Datasets agregados al nodo {{ node }}:</h2>
+    <ul>
+        {% for dataset in node_datasets %}
+        <li>
+            <h3>Dataset {{ dataset.title }} creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}</h3>
+        </li>
+        {% endfor %}
+    </ul>
+</li>
+{% endfor %}
+</ul>
+
+{% else %}
+
+<h2>Los siguientes datasets se agregaron al nodo {{ nodo }}</h2>
+<ul>
+    {% for dataset in datasets_list %}
+    <li>
+        <h3>Dataset {{ dataset.title }} creado el {{ dataset.date_created }}</h3>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endif %}
+</body>
+</html>

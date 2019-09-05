@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils import timezone
 from django_datajsonar.models import AbstractTask
 from .nodes import HarvestingNode
 
@@ -25,3 +26,14 @@ class ReportGenerationTask(AbstractTask):
 class ValidationReportTask(AbstractTask):
     class Meta:
         verbose_name_plural = "Reportes de validación"
+
+
+class NewlyReportGenerationTask(AbstractTask):
+    class Meta:
+        verbose_name_plural = "Reportes de novedades de datasets"
+
+    def close_task(self):
+        self.refresh_from_db()
+        self.status = self.FINISHED
+        self.finished = timezone.now()
+        self.save()

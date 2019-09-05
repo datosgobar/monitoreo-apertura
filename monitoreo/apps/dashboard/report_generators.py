@@ -189,6 +189,9 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
         renderer = EmailRenderer('reports', 'newly.txt', 'newly.html')
         super(NewlyDatasetReportGenerator, self).__init__(report_task, renderer)
 
+    def close_task(self):
+        self.report_task.close_task()
+
     def get_new_datasets(self):
         return self.new_datasets
 

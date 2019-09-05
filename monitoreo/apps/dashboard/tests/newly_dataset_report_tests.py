@@ -70,9 +70,9 @@ class NewlyDatasetReportGenerationTest(TestCase):
         cls.dataset2 = Dataset.objects.create(identifier='dataset2', metadata='{}',
                                               catalog=cls.catalog2, indexable=True, present=True, updated=True)
         old_date = timezone.datetime(2000, 10, 10, 10, tzinfo=timezone.utc)
-        with suppress_autotime(Dataset, 'date_created'):
+        with suppress_autotime(Dataset, 'time_created'):
             cls.dataset3 = Dataset.objects.create(identifier='dataset3', metadata='{}',
-                                                  catalog=cls.catalog3, date_created=old_date,
+                                                  catalog=cls.catalog3, time_created=old_date,
                                                   indexable=True, present=True, updated=True)
 
         cls.report_task = NewlyReportGenerationTask.objects.create()
@@ -109,11 +109,11 @@ class NewlyDatasetReportGenerationTest(TestCase):
         self.assertEqual(['staff@test.com'], self.staff_mail.to)
 
     def test_subject_for_nodes(self):
-        subject = 'Reporte de novedades para id1 del 2018-10-10 07:00:00'
+        subject = '[monitoreo-apertura] Reporte de novedades para id1 del 2018-10-10'
         self.assertEqual(subject, self.node1_mail.subject)
 
     def test_subject_for_staff(self):
-        subject = 'Reporte de novedades del 2018-10-10 07:00:00'
+        subject = '[monitoreo-apertura] Reporte de novedades del 2018-10-10'
         self.assertEqual(subject, self.staff_mail.subject)
 
     def test_send_report(self):

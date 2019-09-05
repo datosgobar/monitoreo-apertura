@@ -26,7 +26,6 @@ def send_validations(node=None):
 
 @job('reports')
 def send_newly_reports(_=None):
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
     newly_report_task = models.tasks.NewlyReportGenerationTask.objects.create()
     newly_report_run(newly_report_task)
 

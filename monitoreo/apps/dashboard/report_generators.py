@@ -185,7 +185,7 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
     def __init__(self, report_task, last_newly_report_date):
         self.report_task = report_task
         self.last_report_date = last_newly_report_date
-        self.new_datasets = Dataset.objects.filter(date_created__gt=self.last_report_date)
+        self.new_datasets = Dataset.objects.filter(time_created__gt=self.last_report_date)
         renderer = EmailRenderer('reports', 'newly.txt', 'newly.html')
         super(NewlyDatasetReportGenerator, self).__init__(report_task, renderer)
 
@@ -193,13 +193,13 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
         return self.new_datasets
 
     def generate_email(self, node=None):
-        report_date = self._format_date(timezone.now())
+        report_date = timezone.now().date()
         if not node:
-            subject = f'Reporte de novedades del {report_date}'
+            subject = f'[monitoreo-apertura] Reporte de novedades del {report_date}'
             nodes_list = self._create_node_and_new_datasets_pairs(self.new_datasets)
             context = {'nodes_list': nodes_list}
         else:
-            subject = f'Reporte de novedades para {node} del {report_date}'
+            subject = f'[monitoreo-apertura] Reporte de novedades para {node} del {report_date}'
             datasets_list = self._get_new_datasets_for_node(node, self.new_datasets)
             context = {
                 'node': node,

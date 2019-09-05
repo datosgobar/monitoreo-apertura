@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+from django.utils import timezone
 from django_datajsonar.models import Node
 from django_rq import job
 from pydatajson.custom_exceptions import NonParseableCatalog
@@ -24,7 +25,7 @@ def send_validations(node=None):
 
 
 @job('reports')
-def send_newly_reports():
+def send_newly_reports(_=None):
     newly_report_task = models.tasks.NewlyReportGenerationTask.objects.create()
     newly_report_run(newly_report_task)
 
@@ -85,9 +86,13 @@ def newly_report_run(newly_report_task):
     try:
         last_newly_report_date = models.tasks.NewlyReportGenerationTask.objects \
             .filter(status=models.tasks.NewlyReportGenerationTask.FINISHED) \
-            .exclude(finished__isnull=True).latest('finished').finished
+            .exclude(created__isnull=True).latest('created').created
     except models.tasks.NewlyReportGenerationTask.DoesNotExist:
         # Si no hubo reportes previos, es decir, si este es el primer reporte, no enviamos nada
+        newly_report_task.refresh_from_db()
+        newly_report_task.status = newly_report_task.FINISHED
+        newly_report_task.finished = timezone.now()
+        newly_report_task.save()
         return
     generator = NewlyDatasetReportGenerator(newly_report_task, last_newly_report_date)
 

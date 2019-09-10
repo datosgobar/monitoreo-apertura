@@ -8,8 +8,9 @@ from django.utils.timezone import localdate
 
 from django_datajsonar.models import Node
 
-from monitoreo.apps.dashboard.models import Indicador, IndicadorRed,\
-    IndicatorType, IndicadorFederador
+from monitoreo.apps.dashboard.indicators_tasks import write_time_series_files
+from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
+    IndicatorType, IndicadorFederador, HarvestingNode
 from monitoreo.apps.dashboard.tests.test_utils.read_bytes_as_csv import read_content_as_csv
 
 
@@ -20,6 +21,13 @@ class ViewsTest(TestCase):
                                          indexable=True)
         self.node2 = Node.objects.create(catalog_id='id2', catalog_url='url',
                                          indexable=True)
+
+        self.harvest_node = HarvestingNode.objects.create(
+            catalog_id='idx1',
+            name='index1',
+            url='http://datos.test.ar',
+            apikey='apikey',
+            enabled=True)
 
         # set mock indicators
         type_a = IndicatorType.objects.create(nombre='ind_a', tipo='RED')
@@ -60,6 +68,8 @@ class ViewsTest(TestCase):
         values = ['21', '[["d1", "l1"]]', '{"k2": 1}', '200', '4']
         self._create_indicators(types, values, node_id='idx1',
                                 node_name='index1', harvesting=True)
+
+        write_time_series_files()
 
     def _create_indicators(self, ind_type, values,
                            node_id=None, node_name='', harvesting=False):
@@ -197,3 +207,43 @@ class ViewsTest(TestCase):
     def test_federator_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
         federator_response = self.client.get(reverse('dashboard:indicadores-federadores-csv'))
         self.assert_not_empty_and_has_content_in_rows(IndicadorFederador, federator_response)
+
+    def test_network_indicators_series_response(self):
+        network_response = self.client.get(reverse('dashboard:indicadores-red-series'))
+        self.assertEqual(200, network_response.status_code)
+        self.assertEqual('text/csv',
+                         network_response._headers['content-type'][1])
+        self.assertEqual('attachment; filename=indicadores-red-nodos-series.csv',
+                         network_response._headers['content-disposition'][1])
+
+    def test_node_indicators_series_response(self):
+        nodes_response = self.client.get(
+            reverse('dashboard:indicadores-nodos-series',
+                    args=['indicadores-id1-series.csv']))
+        self.assertEqual(200, nodes_response.status_code)
+        self.assertEqual('text/csv',
+                         nodes_response._headers['content-type'][1])
+        self.assertEqual('attachment; filename=indicadores-id1-series.csv',
+                         nodes_response._headers['content-disposition'][1])
+
+    def test_federator_indicators_series_response(self):
+        federator_response = self.client.get(
+            reverse('dashboard:indicadores-federadores-series',
+                    args=['indicadores-idx1-series.csv']))
+        self.assertEqual(200, federator_response.status_code)
+        self.assertEqual('text/csv',
+                         federator_response._headers['content-type'][1])
+        self.assertEqual('attachment; filename=indicadores-idx1-series.csv',
+                         federator_response._headers['content-disposition'][1])
+
+    def test_non_existant_nodes_indicators_series_response(self):
+        fail_response = self.client.get(
+            reverse('dashboard:indicadores-nodos-series',
+                    args=['indicadores-null-series.csv']))
+        self.assertEqual(400, fail_response.status_code)
+
+    def test_non_existant_federator_indicators_series_response(self):
+        fail_response = self.client.get(
+            reverse('dashboard:indicadores-federadores-series',
+                    args=['indicadores-null-series.csv']))
+        self.assertEqual(400, fail_response.status_code)

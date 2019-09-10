@@ -11,6 +11,7 @@ from django_rq import job
 from pydatajson.core import DataJson
 from django_datajsonar.models import Node
 
+from monitoreo.apps.dashboard.csv_generators import IndicatorSeriesCSVGenerator
 from .models import IndicatorsGenerationTask, TableColumn, IndicatorType,\
     Indicador, IndicadorFederador, IndicadorRed, HarvestingNode, CentralNode
 from .helpers import load_catalogs
@@ -52,6 +53,8 @@ def generate_indicators(task):
     # Creo columnas default si no existen
     if not TableColumn.objects.count():
         init_columns()
+
+    write_time_series_files.delay()
 
     task.refresh_from_db()
     task.status = IndicatorsGenerationTask.FINISHED
@@ -124,3 +127,11 @@ def init_columns():
         column = TableColumn(indicator=indicator)
         column.clean()  # Setea el nombre default
         column.save()
+
+
+@job('indicators')
+def write_time_series_files():
+    generator = IndicatorSeriesCSVGenerator()
+    generator.generate_network_time_series_files()
+    generator.generate_nodes_time_series_files()
+    generator.generate_federator_nodes_time_series_files()

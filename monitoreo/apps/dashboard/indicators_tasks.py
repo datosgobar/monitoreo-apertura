@@ -135,4 +135,3 @@ def write_time_series_files():
     generator.generate_network_time_series_files()
     generator.generate_nodes_time_series_files()
     generator.generate_federator_nodes_time_series_files()
-

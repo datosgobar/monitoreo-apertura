@@ -247,4 +247,3 @@ class ViewsTest(TestCase):
             reverse('dashboard:indicadores-federadores-series',
                     args=['indicadores-null-series.csv']))
         self.assertEqual(400, fail_response.status_code)
-

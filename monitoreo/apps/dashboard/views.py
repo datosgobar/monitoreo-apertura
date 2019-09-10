@@ -1,8 +1,12 @@
 # coding=utf-8
+import os
 from datetime import date, timedelta
-from django.shortcuts import render
-from django.http import StreamingHttpResponse
 
+from django.conf import settings
+from django.shortcuts import render
+from django.http import StreamingHttpResponse, HttpResponseBadRequest
+
+from monitoreo.apps.dashboard.custom_generators import file_line_generator
 from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
 from .helpers import download_time_series
 from .custom_generators import custom_row_generator
@@ -108,3 +112,28 @@ def nodos_indicadores_csv(_request):
 def nodos_indicadores_federadores_csv(_request):
     fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor', 'jurisdiccion_nombre', 'jurisdiccion_id']
     return create_response_from_indicator_model(IndicadorFederador, fieldnames, 'indicadores-federadores')
+
+
+def indicadores_red_series(_request):
+    path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'indicadores-red-series.csv')
+    return streaming_series_response('indicadores-red-nodos-series.csv', path)
+
+
+def indicadores_nodos_series(_request, filename):
+    path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'nodes', filename)
+    return streaming_series_response(filename, path)
+
+
+def indicadores_federadores_series(_request, filename):
+    path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'federator-nodes', filename)
+    return streaming_series_response(filename, path)
+
+
+def streaming_series_response(filename, path):
+    if not os.path.exists(path):
+        return HttpResponseBadRequest("No hay un archivo generado con ese nombre.")
+    response = StreamingHttpResponse(file_line_generator(path),
+                                     content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename={}.csv'.format(
+        filename)
+    return response

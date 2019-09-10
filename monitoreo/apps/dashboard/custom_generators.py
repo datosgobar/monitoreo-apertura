@@ -33,3 +33,9 @@ def custom_row_generator(model, fieldnames):
 
     for row in rows:
         yield writer.writerow(row)
+
+
+def file_line_generator(path):
+    with open(path) as transfer_file:
+        for line in transfer_file:
+            yield line

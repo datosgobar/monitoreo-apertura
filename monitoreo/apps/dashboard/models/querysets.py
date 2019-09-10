@@ -2,8 +2,13 @@
 from __future__ import unicode_literals
 
 import json
+import logging
 from collections import OrderedDict
+from json import JSONDecodeError
+
 from django.db import models
+
+LOGGER = logging.getLogger(__name__)
 
 
 class IndicatorQuerySet(models.QuerySet):
@@ -37,9 +42,12 @@ class IndicatorQuerySet(models.QuerySet):
 
         numerical = OrderedDict()
         for indicator in indicators:
-            value = json.loads(indicator.indicador_valor)
-            if isinstance(value, (float, int)):
-                numerical.setdefault(indicator.fecha, {})\
-                    .update({indicator.indicador_tipo.nombre: value})
-
+            try:
+                value = json.loads(indicator.indicador_valor)
+                if isinstance(value, (float, int)):
+                    numerical.setdefault(indicator.fecha, {})\
+                        .update({indicator.indicador_tipo.nombre: value})
+            except JSONDecodeError as e:
+                msg = f'error parseando el indicador:{indicator.pk}'
+                LOGGER.warning(msg)
         return numerical

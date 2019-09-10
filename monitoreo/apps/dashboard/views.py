@@ -6,7 +6,6 @@ from django.conf import settings
 from django.shortcuts import render
 from django.http import StreamingHttpResponse, HttpResponseBadRequest
 
-from monitoreo.apps.dashboard.custom_generators import file_line_generator
 from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
 from .helpers import download_time_series
 from .custom_generators import custom_row_generator

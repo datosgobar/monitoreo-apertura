@@ -134,6 +134,6 @@ def streaming_series_response(filename, path):
         return HttpResponseBadRequest("No hay un archivo generado con ese nombre.")
     response = StreamingHttpResponse(file_line_generator(path),
                                      content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename={}.csv'.format(
+    response["Content-Disposition"] = 'attachment; filename={}'.format(
         filename)
     return response

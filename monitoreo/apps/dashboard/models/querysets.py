@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import json
 import logging
 from collections import OrderedDict
-from json import JSONDecodeError
 
 from django.db import models
 
@@ -47,7 +46,7 @@ class IndicatorQuerySet(models.QuerySet):
                 if isinstance(value, (float, int)):
                     numerical.setdefault(indicator.fecha, {})\
                         .update({indicator.indicador_tipo.nombre: value})
-            except JSONDecodeError:
+            except json.JSONDecodeError:
                 msg = f'error parseando el indicador:{indicator.pk}'
                 LOGGER.warning(msg)
         return numerical

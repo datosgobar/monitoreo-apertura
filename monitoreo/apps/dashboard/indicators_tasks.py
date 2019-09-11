@@ -129,7 +129,7 @@ def init_columns():
         column.save()
 
 
-@job('indicators')
+@job('indicators', timeout=1800)
 def write_time_series_files():
     generator = IndicatorSeriesCSVGenerator()
     generator.generate_network_time_series_files()

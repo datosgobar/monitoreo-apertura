@@ -47,7 +47,7 @@ class IndicatorQuerySet(models.QuerySet):
                 if isinstance(value, (float, int)):
                     numerical.setdefault(indicator.fecha, {})\
                         .update({indicator.indicador_tipo.nombre: value})
-            except JSONDecodeError as e:
+            except JSONDecodeError:
                 msg = f'error parseando el indicador:{indicator.pk}'
                 LOGGER.warning(msg)
         return numerical

@@ -1,6 +1,8 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+from collections import OrderedDict
+
 from django.db import models
 from .querysets import IndicatorQuerySet
 from .indicator_types import IndicatorType
@@ -9,6 +11,15 @@ from .indicator_types import IndicatorType
 class AbstractIndicator(models.Model):
     class Meta:
         abstract = True
+
+    CSV_PANEL_HEADERS = OrderedDict({
+        'fecha': 'fecha',
+        'indicador_tipo__nombre': 'indicador_nombre',
+        'indicador_apertura': 'indicador_apertura',
+        'indicador_valor': 'indicador_valor',
+        'jurisdiccion_nombre': 'nodo_nombre',
+        'jurisdiccion_id': 'nodo_id'
+    })
 
     fecha = models.DateField(auto_now_add=True)
     jurisdiccion_nombre = models.CharField(max_length=300)
@@ -54,6 +65,13 @@ class IndicadorRed(models.Model):
         # Nombre en plural para el admin panel de Django
         verbose_name_plural = "Tabla de indicadores de red"
         get_latest_by = 'fecha'
+
+    CSV_PANEL_HEADERS = OrderedDict({
+        'fecha': 'fecha',
+        'indicador_tipo__nombre': 'indicador_nombre',
+        'indicador_apertura': 'indicador_apertura',
+        'indicador_valor': 'indicador_valor',
+    })
 
     fecha = models.DateField(auto_now_add=True)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)

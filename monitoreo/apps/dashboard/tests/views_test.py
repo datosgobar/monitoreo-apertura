@@ -192,7 +192,6 @@ class ViewsTest(TestCase):
             rows_quantity += 1
             self.assertIsNotNone(row)
 
-
     def test_networks_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
         network_response = self.client.get(reverse('dashboard:indicadores-red-csv'))
         self.assert_not_empty_and_has_content_in_rows(IndicadorRed, network_response)

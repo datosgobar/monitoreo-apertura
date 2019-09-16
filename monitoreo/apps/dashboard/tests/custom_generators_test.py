@@ -3,6 +3,7 @@ import re
 
 from django.test import TestCase
 
+from monitoreo.apps.dashboard.context_managers import suppress_autotime
 from monitoreo.apps.dashboard.custom_generators import custom_row_generator
 from monitoreo.apps.dashboard.models import IndicatorType, IndicadorRed, Indicador, \
     IndicadorFederador
@@ -12,6 +13,7 @@ class RowGeneratorTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        cls.test_date = datetime.date(year=2000, month=1, day=1)
         type_a = IndicatorType.objects.create(nombre='ind_a', tipo='RED')
         type_b = IndicatorType.objects.create(nombre='ind_b', tipo='RED')
         type_c = IndicatorType.objects.create(nombre='ind_c', tipo='RED', resumen=True)
@@ -22,21 +24,31 @@ class RowGeneratorTest(TestCase):
         types = [type_a, type_b, type_c, type_d, type_e]
         values = ['42', '[["d1", "l1"], ["d2", "l2"]]', '{"k1": 1, "k2": 2}', '100', '1']
         for t, v in zip(types, values):
-            IndicadorRed.objects.create(indicador_tipo=t, indicador_valor=v)
+            with suppress_autotime(IndicadorRed, ['fecha']):
+                IndicadorRed.objects.create(indicador_tipo=t, indicador_valor=v,
+                                            fecha=cls.test_date)
         values = ['23', '[["d1", "l1"]]', '{"k2": 1}', '500', '2']
         for t, v in zip(types, values):
-            Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id1',
-                                     jurisdiccion_nombre='nodo1')
+            with suppress_autotime(Indicador, ['fecha']):
+                Indicador.objects.create(indicador_tipo=t, indicador_valor=v,
+                                         jurisdiccion_id='id1',
+                                         jurisdiccion_nombre='nodo1',
+                                         fecha=cls.test_date)
         values = ['19', '[["d2", "l2"]]', '{"k1": 1, "k2": 1}', '50', '2']
         for t, v in zip(types, values):
-            Indicador.objects.create(indicador_tipo=t, indicador_valor=v, jurisdiccion_id='id2',
-                                     jurisdiccion_nombre='nodo2')
+            with suppress_autotime(Indicador, ['fecha']):
+                Indicador.objects.create(indicador_tipo=t, indicador_valor=v,
+                                         jurisdiccion_id='id2',
+                                         jurisdiccion_nombre='nodo2',
+                                         fecha=cls.test_date)
 
         values = ['23', '[["d2", "l2"]]', '{"k2": 1}', '2', '3']
         for t, v in zip(types, values):
-            IndicadorFederador.objects.create(indicador_tipo=t, indicador_valor=v,
-                                              jurisdiccion_id='harvest_id',
-                                              jurisdiccion_nombre='harvest node')
+            with suppress_autotime(IndicadorFederador, ['fecha']):
+                IndicadorFederador.objects.create(
+                    indicador_tipo=t, indicador_valor=v,
+                    jurisdiccion_id='harvest_id',
+                    jurisdiccion_nombre='harvest node', fecha=cls.test_date)
 
     def setUp(self):
         self.indicador_red_fieldnames = \
@@ -96,10 +108,10 @@ class RowGeneratorTest(TestCase):
 
     def assert_dates_column_contains_indicator_created_date(self, model, fieldnames):
         dates_column = [row.split(',')[0] for row in list(custom_row_generator(model, fieldnames))[1:]]
-        current_date = datetime.date.today().strftime('%Y-%m-%d')
+        expected_date = '2000-01-01'
 
         for date in dates_column:
-            self.assertEquals(current_date, date)
+            self.assertEquals(expected_date, date)
 
     def test_dates_column_contains_indicator_created_date(self):
         self.assert_dates_column_contains_indicator_created_date(IndicadorRed, self.indicador_red_fieldnames)
@@ -126,8 +138,8 @@ class RowGeneratorTest(TestCase):
         first_data_row = self._data_row(self.indicador_red_rows_list, 1)
         last_data_row = self._data_row(self.indicador_red_rows_list, -1)
 
-        expected_first = ['2019-09-13', 'ind_a', 'completo', '42']
-        expected_last = ['2019-09-13', 'ind_e', 'completo', '1']
+        expected_first = ['2000-01-01', 'ind_a', 'completo', '42']
+        expected_last = ['2000-01-01', 'ind_e', 'completo', '1']
 
         self.assertListEqual(expected_first, first_data_row)
         self.assertEquals(expected_last, last_data_row)
@@ -135,9 +147,9 @@ class RowGeneratorTest(TestCase):
     def test_indicador_rows_contain_correct_values(self):
         first_data_row = self._data_row(self.indicador_rows_list, 1)
         last_data_row = self._data_row(self.indicador_rows_list, -1)
-        expected_first = ['2019-09-13', 'ind_a', 'completo',
+        expected_first = ['2000-01-01', 'ind_a', 'completo',
                           '23', 'nodo1', 'id1']
-        expected_last = ['2019-09-13', 'ind_e', 'completo',
+        expected_last = ['2000-01-01', 'ind_e', 'completo',
                          '2', 'nodo2', 'id2']
 
         self.assertListEqual(expected_first, first_data_row)
@@ -146,19 +158,41 @@ class RowGeneratorTest(TestCase):
     def test_indicador_federador_rows_contain_correct_values(self):
         first_data_row = self._data_row(self.indicador_federador_rows_list, 1)
         last_data_row = self._data_row(self.indicador_federador_rows_list, -1)
-        expected_first = ['2019-09-13', 'ind_a', 'completo', '23',
+        expected_first = ['2000-01-01', 'ind_a', 'completo', '23',
                           'harvest node', 'harvest_id']
-        expected_last = ['2019-09-13', 'ind_e', 'completo', '3',
+        expected_last = ['2000-01-01', 'ind_e', 'completo', '3',
                          'harvest node', 'harvest_id']
 
         self.assertListEqual(expected_first, first_data_row)
         self.assertEquals(expected_last, last_data_row)
 
     def test_network_indicators_spread_values(self):
-        pass
+        complete_data_row = self._data_row(self.indicador_red_rows_list, -2)
+        spread_data_row = self._data_row(self.indicador_red_rows_list, 3)
+        expected_complete = ['2000-01-01', 'ind_d', 'completo', '100']
+        expected_spread = ['2000-01-01', 'ind_c', 'k1', '1']
+
+        self.assertListEqual(expected_complete, complete_data_row)
+        self.assertEquals(expected_spread, spread_data_row)
 
     def test_node_indicators_spread_values(self):
-        pass
+        complete_data_row = self._data_row(self.indicador_rows_list, -2)
+        spread_data_row = self._data_row(self.indicador_rows_list, 3)
+        expected_complete = ['2000-01-01', 'ind_d', 'completo', '50',
+                             'nodo2', 'id2']
+        expected_spread = ['2000-01-01', 'ind_c', 'k2', '1',
+                           'nodo1', 'id1']
+
+        self.assertListEqual(expected_complete, complete_data_row)
+        self.assertEquals(expected_spread, spread_data_row)
 
     def test_federator_indicators_spread_values(self):
-        pass
+        complete_data_row = self._data_row(self.indicador_federador_rows_list, -2)
+        spread_data_row = self._data_row(self.indicador_federador_rows_list, 3)
+        expected_complete = ['2000-01-01', 'ind_d', 'completo', '2',
+                             'harvest node', 'harvest_id']
+        expected_spread = ['2000-01-01', 'ind_c', 'k2', '1',
+                           'harvest node', 'harvest_id']
+
+        self.assertListEqual(expected_complete, complete_data_row)
+        self.assertEquals(expected_spread, spread_data_row)

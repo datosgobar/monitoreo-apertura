@@ -29,10 +29,10 @@ def prepare_rows(indicator):
     indicator_value = json.loads(indicator['indicador_valor'])
     rows = []
     if isinstance(indicator_value, dict):
-        for k, v in indicator_value.items():
+        for key, value in indicator_value.items():
             row = indicator.copy()
-            row['indicador_apertura'] = k
-            row['indicador_valor'] = v
+            row['indicador_apertura'] = key
+            row['indicador_valor'] = value
             rows.append(row)
     else:
         row = indicator.copy()

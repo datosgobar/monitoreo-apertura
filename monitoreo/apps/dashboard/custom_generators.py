@@ -53,7 +53,7 @@ def custom_row_generator(model, values_lookup):
     for indicator in indicators:
         try:
             rows = prepare_rows(indicator)
-            yield from map(lambda x: writer.writerow(x), rows)
+            yield from map(writer.writerow, rows)
         except json.JSONDecodeError:
             msg = f'error parseando el indicador:{indicator.pk}'
             LOGGER.warning(msg)

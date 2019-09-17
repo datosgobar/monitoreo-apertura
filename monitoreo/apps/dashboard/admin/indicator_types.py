@@ -22,6 +22,7 @@ class TableColumnAdmin(OrderedModelAdmin):
 class IndicatorTypeAdmin(OrderedModelAdmin):
     list_display = ('nombre', 'order', 'resumen', 'mostrar',
                     'series_red', 'series_nodos', 'series_federadores',
+                    'panel_red', 'panel_nodos', 'panel_federadores',
                     'move_up_down_links', 'position_actions')
     list_filter = ('resumen', 'mostrar')
     actions = ('queryset_to_top', 'queryset_to_bottom',
@@ -29,7 +30,11 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
                'show', 'hide',
                'add_to_aggregated_series', 'remove_from_aggregated_series',
                'add_to_nodes_series', 'remove_from_nodes_series',
-               'add_to_indexing_series', 'remove_from_indexing_series')
+               'add_to_indexing_series', 'remove_from_indexing_series',
+               'add_to_aggregated_panel', 'remove_from_aggregated_panel',
+               'add_to_nodes_panel', 'remove_from_nodes_panel',
+               'add_to_federators_panel', 'remove_from_federators_panel'
+               )
 
     def get_urls(self):
         urls = super(IndicatorTypeAdmin, self).get_urls()
@@ -92,3 +97,27 @@ class IndicatorTypeAdmin(OrderedModelAdmin):
     remove_from_indexing_series = switch({'series_federadores': False})
     remove_from_indexing_series.short_description = \
         'Quitar de las series de tiempo de nodos federadores'
+
+    add_to_aggregated_panel = switch({'panel_red': True})
+    add_to_aggregated_panel.short_description = \
+        'Agregar al panel de indicadores de red'
+
+    remove_from_aggregated_panel = switch({'panel_red': False})
+    remove_from_aggregated_panel.short_description = \
+        'Quitar del panel de indicadores de red'
+
+    add_to_nodes_panel = switch({'panel_nodos': True})
+    add_to_nodes_panel.short_description = \
+        'Agregar al panel de indicadores de nodos'
+
+    remove_from_nodes_panel = switch({'panel_nodos': False})
+    remove_from_nodes_panel.short_description = \
+        'Quitar del panel de indicadores de nodos'
+
+    add_to_federators_panel = switch({'panel_federadores': True})
+    add_to_federators_panel.short_description = \
+        'Agregar al panel de indicadores de nodos federadores'
+
+    remove_from_federators_panel = switch({'panel_federadores': False})
+    remove_from_federators_panel.short_description = \
+        'Quitar del panel de indicadores de nodos federadores'

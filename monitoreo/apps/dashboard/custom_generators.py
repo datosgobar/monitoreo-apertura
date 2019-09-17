@@ -44,7 +44,7 @@ def prepare_rows(indicator):
 
 def custom_row_generator(model, values_lookup):
     headers_map = model.CSV_PANEL_HEADERS
-    indicators = model.objects.values(*values_lookup)
+    indicators = model.objects.csv_panel_indicators().values(*values_lookup)
     pseudo_buffer = Echo()
     writer = csv.DictWriter(pseudo_buffer, fieldnames=(*headers_map,))
 
@@ -55,5 +55,5 @@ def custom_row_generator(model, values_lookup):
             rows = prepare_rows(indicator)
             yield from map(writer.writerow, rows)
         except json.JSONDecodeError:
-            msg = f'error parseando el indicador:{indicator.pk}'
+            msg = f'error parseando el indicador:{indicator}'
             LOGGER.warning(msg)

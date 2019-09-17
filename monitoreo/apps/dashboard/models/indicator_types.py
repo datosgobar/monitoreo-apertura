@@ -14,6 +14,9 @@ class IndicatorType(OrderedModel):
     series_red = models.BooleanField(default=True)
     series_nodos = models.BooleanField(default=True)
     series_federadores = models.BooleanField(default=True)
+    panel_red = models.BooleanField(default=True)
+    panel_nodos = models.BooleanField(default=True)
+    panel_federadores = models.BooleanField(default=True)
 
     class Meta(OrderedModel.Meta):
         verbose_name_plural = "Tipos de indicadores"

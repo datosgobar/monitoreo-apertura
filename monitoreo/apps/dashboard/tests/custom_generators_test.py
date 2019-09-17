@@ -196,3 +196,29 @@ class RowGeneratorTest(TestCase):
 
         self.assertListEqual(expected_complete, complete_data_row)
         self.assertEquals(expected_spread, spread_data_row)
+
+    def test_network_csv_included_indicator_types(self):
+        excluded_types = ('ind_a', 'ind_b', 'ind_c')
+        IndicatorType.objects.filter(nombre__in=excluded_types).update(
+            panel_red=False)
+        for row in custom_row_generator(
+                IndicadorRed, self.indicador_red_fieldnames):
+            for excluded_type in excluded_types:
+                self.assertNotIn(excluded_type, row)
+
+    def test_nodes_csv_included_indicator_types(self):
+        excluded_types = ('ind_b', 'ind_d', 'ind_e')
+        IndicatorType.objects.filter(nombre__in=excluded_types).update(
+            panel_nodos=False)
+        for row in custom_row_generator(Indicador, self.indicador_fieldnames):
+            for excluded_type in excluded_types:
+                self.assertNotIn(excluded_type, row)
+
+    def test_federators_csv_included_indicator_types(self):
+        excluded_types = ('ind_c', 'ind_d', 'ind_e')
+        IndicatorType.objects.filter(nombre__in=excluded_types).update(
+            panel_federadores=False)
+        for row in custom_row_generator(
+                IndicadorFederador, self.indicador_federador_fieldnames):
+            for excluded_type in excluded_types:
+                self.assertNotIn(excluded_type, row)

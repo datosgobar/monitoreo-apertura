@@ -49,7 +49,9 @@ def federate_catalog(node, portal_url, apikey, task_id):
     valid, invalid, missing = sort_datasets_by_condition(node, catalog)
 
     try:
-        harvested_ids, federation_errors = harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, list(valid))
+        harvested_ids, federation_errors = harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, list(valid),
+                                                                   origin_tz=node.timezone,
+                                                                   dst_tz=task.harvesting_node.timezone)
         msg += generate_task_log(catalog, catalog_id, invalid, missing, harvested_ids, federation_errors)
         FederationTask.info(task, msg)
         LOGGER.warning(msg)

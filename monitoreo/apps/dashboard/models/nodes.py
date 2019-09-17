@@ -22,6 +22,7 @@ class HarvestingNode(models.Model):
     enabled = models.BooleanField(default=False)
     timezone = models.CharField(max_length=100, default="America/Buenos_Aires")
 
+
 class CentralNode(SingletonModel):
     class Meta:
         verbose_name = "Nodo central"

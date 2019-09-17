@@ -50,3 +50,9 @@ class IndicatorQuerySet(models.QuerySet):
                 msg = f'error parseando el indicador:{indicator.pk}'
                 LOGGER.warning(msg)
         return numerical
+
+    def csv_panel_indicators(self):
+        lookup_field = self.model.CSV_PANEL_FIELD
+        indicators = self.filter(**{'indicador_tipo__' + lookup_field: True})
+        indicators = indicators.order_by('fecha')
+        return indicators

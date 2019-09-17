@@ -31,6 +31,9 @@ class AbstractIndicator(models.Model):
 
 
 class Indicador(AbstractIndicator):
+
+    CSV_PANEL_FIELD = 'panel_nodos'
+
     class Meta:
         # Nombre en plural para el admin panel de Django
         verbose_name_plural = "Tabla de indicadores de nodos"
@@ -46,6 +49,9 @@ class Indicador(AbstractIndicator):
 
 
 class IndicadorFederador(AbstractIndicator):
+
+    CSV_PANEL_FIELD = 'panel_federadores'
+
     class Meta:
         # Nombre en plural para el admin panel de Django
         verbose_name_plural = "Tabla de indicadores de nodos federadores"
@@ -61,10 +67,6 @@ class IndicadorFederador(AbstractIndicator):
 
 
 class IndicadorRed(models.Model):
-    class Meta:
-        # Nombre en plural para el admin panel de Django
-        verbose_name_plural = "Tabla de indicadores de red"
-        get_latest_by = 'fecha'
 
     CSV_PANEL_HEADERS = OrderedDict({
         'fecha': 'fecha',
@@ -72,6 +74,13 @@ class IndicadorRed(models.Model):
         'indicador_apertura': 'indicador_apertura',
         'indicador_valor': 'indicador_valor',
     })
+
+    CSV_PANEL_FIELD = 'panel_red'
+
+    class Meta:
+        # Nombre en plural para el admin panel de Django
+        verbose_name_plural = "Tabla de indicadores de red"
+        get_latest_by = 'fecha'
 
     fecha = models.DateField(auto_now_add=True)
     indicador_tipo = models.ForeignKey(IndicatorType, models.CASCADE)

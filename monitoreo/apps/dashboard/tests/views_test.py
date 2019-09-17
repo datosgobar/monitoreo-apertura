@@ -181,7 +181,7 @@ class ViewsTest(TestCase):
         row = next(series_csv, None)
         self.assertDictEqual(expected_row, row)
 
-    def assert_not_empty_and_has_content_in_rows(self, model, response):
+    def assert_not_empty_and_has_content_in_rows(self, count, response):
         indicators_contents_as_string = []
         for content in response.streaming_content:
             indicators_contents_as_string.append(content.decode('utf-8'))
@@ -192,21 +192,19 @@ class ViewsTest(TestCase):
             rows_quantity += 1
             self.assertIsNotNone(row)
 
-        expected_rows_quantity = model.objects.count()
-
-        self.assertEqual(expected_rows_quantity, rows_quantity)
+        self.assertEqual(count, rows_quantity)
 
     def test_networks_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
         network_response = self.client.get(reverse('dashboard:indicadores-red-csv'))
-        self.assert_not_empty_and_has_content_in_rows(IndicadorRed, network_response)
+        self.assert_not_empty_and_has_content_in_rows(13, network_response)
 
     def test_node_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
         node_response = self.client.get(reverse('dashboard:indicadores-nodo-csv'))
-        self.assert_not_empty_and_has_content_in_rows(Indicador, node_response)
+        self.assert_not_empty_and_has_content_in_rows(11, node_response)
 
     def test_federator_indicators_csvs_are_not_empty_and_have_all_models_as_rows(self):
         federator_response = self.client.get(reverse('dashboard:indicadores-federadores-csv'))
-        self.assert_not_empty_and_has_content_in_rows(IndicadorFederador, federator_response)
+        self.assert_not_empty_and_has_content_in_rows(5, federator_response)
 
     def test_network_indicators_series_response(self):
         network_response = self.client.get(reverse('dashboard:indicadores-red-series'))

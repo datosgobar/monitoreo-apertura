@@ -152,3 +152,27 @@ class HarvestRunTest(TestCase):
         valid, _, missing = sort_datasets_by_condition(node, datajson)
         self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c420'}, valid)
         self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, missing)
+
+    @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
+    def test_federation_run_receives_node_tz_as_origin_tz(self, mock_harvest):
+        node = Node.objects.get(catalog_id='id2')
+        node.timezone = "Africa/Abidjan"
+        node.save()
+        mock_harvest.return_value = ([], {})
+        federation_run()
+        mock_harvest.assert_any_call(DataJson(self.get_sample('minimum_data.json')),
+                                     'harvest_url', 'apikey', 'id2',
+                                     ['99db6631-d1c9-470b-a73e-c62daa32c777'],
+                                     origin_tz="Africa/Abidjan", dst_tz=DEFAULT_TIMEZONE)
+
+    @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
+    def test_federation_run_receives_harvesting_node_tz_as_dst_tz(self, mock_harvest):
+        harvesting_node = HarvestingNode.objects.get(name='aName')
+        harvesting_node.timezone = "Africa/Abidjan"
+        harvesting_node.save()
+        mock_harvest.return_value = ([], {})
+        federation_run()
+        mock_harvest.assert_any_call(DataJson(self.get_sample('minimum_data.json')),
+                                     'harvest_url', 'apikey', 'id2',
+                                     ['99db6631-d1c9-470b-a73e-c62daa32c777'],
+                                     origin_tz=DEFAULT_TIMEZONE, dst_tz="Africa/Abidjan")

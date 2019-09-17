@@ -9,6 +9,7 @@ except ImportError:
 
 from django.test import TestCase
 from pydatajson.core import DataJson
+from pydatajson.constants import DEFAULT_TIMEZONE
 from django_datajsonar.models import Node, Catalog, Dataset
 from ..tasks import federation_run, sort_datasets_by_condition
 from ..models import HarvestingNode
@@ -72,7 +73,8 @@ class HarvestRunTest(TestCase):
         federation_run()
         mock_harvest.assert_any_call(DataJson(self.get_sample('minimum_data.json')),
                                      'harvest_url', 'apikey', 'id2',
-                                     ['99db6631-d1c9-470b-a73e-c62daa32c777'])
+                                     ['99db6631-d1c9-470b-a73e-c62daa32c777'],
+                                     origin_tz=DEFAULT_TIMEZONE, dst_tz=DEFAULT_TIMEZONE)
 
     @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
     def test_unindexable_datasets_dont_get_harvested(self, mock_harvest):
@@ -80,18 +82,22 @@ class HarvestRunTest(TestCase):
         mock_harvest.return_value = ([], {})
         federation_run()
         mock_harvest.assert_any_call(DataJson(self.get_sample('full_data.json')),
-                                     'harvest_url', 'apikey', 'id1', [])
+                                     'harvest_url', 'apikey', 'id1', [],
+                                     origin_tz=DEFAULT_TIMEZONE, dst_tz=DEFAULT_TIMEZONE)
         mock_harvest.assert_any_call(DataJson(self.get_sample('minimum_data.json')),
-                                     'harvest_url', 'apikey', 'id2', [])
+                                     'harvest_url', 'apikey', 'id2', [],
+                                     origin_tz=DEFAULT_TIMEZONE, dst_tz=DEFAULT_TIMEZONE)
         mock_harvest.assert_any_call(DataJson(self.get_sample('missing_dataset_title.json')),
-                                     'harvest_url', 'apikey', 'id3', [])
+                                     'harvest_url', 'apikey', 'id3', [],
+                                     origin_tz=DEFAULT_TIMEZONE, dst_tz=DEFAULT_TIMEZONE)
 
     @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
     def test_invalid_datasets_dont_get_harvested(self, mock_harvest):
         mock_harvest.return_value = ([], {})
         federation_run()
         mock_harvest.assert_any_call(DataJson(self.get_sample('missing_dataset_title.json')),
-                                     'harvest_url', 'apikey', 'id3', [])
+                                     'harvest_url', 'apikey', 'id3', [],
+                                     origin_tz=DEFAULT_TIMEZONE, dst_tz=DEFAULT_TIMEZONE)
 
     @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
     def test_only_sended_node_datasets_get_harvested(self, mock_harvest):
@@ -146,3 +152,27 @@ class HarvestRunTest(TestCase):
         valid, _, missing = sort_datasets_by_condition(node, datajson)
         self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c420'}, valid)
         self.assertSetEqual({'99db6631-d1c9-470b-a73e-c62daa32c777'}, missing)
+
+    @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
+    def test_federation_run_receives_node_tz_as_origin_tz(self, mock_harvest):
+        node = Node.objects.get(catalog_id='id2')
+        node.timezone = "Africa/Abidjan"
+        node.save()
+        mock_harvest.return_value = ([], {})
+        federation_run()
+        mock_harvest.assert_any_call(DataJson(self.get_sample('minimum_data.json')),
+                                     'harvest_url', 'apikey', 'id2',
+                                     ['99db6631-d1c9-470b-a73e-c62daa32c777'],
+                                     origin_tz="Africa/Abidjan", dst_tz=DEFAULT_TIMEZONE)
+
+    @patch('monitoreo.apps.dashboard.tasks.harvest_catalog_to_ckan', autospec=True)
+    def test_federation_run_receives_harvesting_node_tz_as_dst_tz(self, mock_harvest):
+        harvesting_node = HarvestingNode.objects.get(name='aName')
+        harvesting_node.timezone = "Africa/Abidjan"
+        harvesting_node.save()
+        mock_harvest.return_value = ([], {})
+        federation_run()
+        mock_harvest.assert_any_call(DataJson(self.get_sample('minimum_data.json')),
+                                     'harvest_url', 'apikey', 'id2',
+                                     ['99db6631-d1c9-470b-a73e-c62daa32c777'],
+                                     origin_tz=DEFAULT_TIMEZONE, dst_tz="Africa/Abidjan")

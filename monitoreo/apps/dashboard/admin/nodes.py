@@ -13,7 +13,7 @@ from monitoreo.apps.dashboard.admin.utils import switch
 
 @admin.register(HarvestingNode)
 class HarvestingNodeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url', 'enabled')
+    list_display = ('name', 'url', 'enabled', 'timezone')
     actions = ('federate', 'enable', 'disable')
 
     enable = switch({'enabled': True})

@@ -198,11 +198,13 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
     def generate_email(self, node=None):
         report_date = timezone.now().date()
         if not node:
-            subject = f'[monitoreo-apertura] Reporte de novedades del {report_date}'
+            subject = f'[{settings.ENV_TYPE}] Reporte de novedades de Monitoreo Apertura' \
+                      f' del {report_date}'
             nodes_list = self._create_node_and_new_datasets_pairs(self.new_datasets)
             context = {'nodes_list': nodes_list}
         else:
-            subject = f'[monitoreo-apertura] Reporte de novedades para {node} del {report_date}'
+            subject = f'[{settings.ENV_TYPE}] Reporte de novedades de Monitoreo Apertura' \
+                      f' para {node} del {report_date}'
             datasets_list = self._get_new_datasets_for_node(node, self.new_datasets)
             context = {
                 'node': node,

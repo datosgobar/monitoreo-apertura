@@ -109,11 +109,11 @@ class NewlyDatasetReportGenerationTest(TestCase):
         self.assertEqual(['staff@test.com'], self.staff_mail.to)
 
     def test_subject_for_nodes(self):
-        subject = '[monitoreo-apertura] Reporte de novedades para id1 del 2018-10-10'
+        subject = '[tst] Reporte de novedades de Monitoreo Apertura para id1 del 2018-10-10'
         self.assertEqual(subject, self.node1_mail.subject)
 
     def test_subject_for_staff(self):
-        subject = '[monitoreo-apertura] Reporte de novedades del 2018-10-10'
+        subject = '[tst] Reporte de novedades de Monitoreo Apertura del 2018-10-10'
         self.assertEqual(subject, self.staff_mail.subject)
 
     def test_send_report(self):

@@ -1,5 +1,9 @@
 Versiones
 =========
+1.1.1 (17-09-19)
+-------------------
+* Actualiza versión de pydatajson 
+
 1.1.0 (17-09-19)
 -------------------
 * Reestructuración y renombre de los csv de indicadores

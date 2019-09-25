@@ -21,7 +21,7 @@ PASSWORD_HASHERS = (
 DEBUG = False
 TEMPLATE_DEBUG = False
 TESTS_IN_PROGRESS = True
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+TEST_RUNNER = 'monitoreo.test_runner.MonitoreoTestRunner'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 
 RQ_QUEUES = {

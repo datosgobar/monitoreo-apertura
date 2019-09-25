@@ -29,7 +29,7 @@ def indicators_run(_node=None):
     generate_indicators.delay(task)
 
 
-@job('indicators')
+@job('indicators', timeout=1800)
 def generate_indicators(task):
     data_json = DataJson()
     catalogs = load_catalogs(task, Node.objects.filter(indexable=True))

@@ -29,7 +29,7 @@ def indicators_run(_node=None):
     # momento
     task = IndicatorsGenerationTask.objects.create()
     timeout = TasksTimeouts.get_solo().indicators_timeout
-    enqueue_job_with_timeout('indicators', generate_indicators, timeout, task)
+    enqueue_job_with_timeout('indicators', generate_indicators, timeout, args=(task,))
 
 
 @job('indicators', timeout=1800)

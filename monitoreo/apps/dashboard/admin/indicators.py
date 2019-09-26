@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django_datajsonar.admin.singleton_admin import SingletonAdmin
 
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
@@ -16,6 +17,7 @@ from import_export.forms import ImportForm
 
 from monitoreo.apps.dashboard.management.import_utils import \
     invalid_indicators_csv, import_from_admin
+from monitoreo.apps.dashboard.models.indicators import IndicatorsConfig
 from monitoreo.apps.dashboard.upload_handlers import \
     PersistentTemporaryFileUploadHandler
 from monitoreo.apps.dashboard.views import indicators_csv
@@ -144,3 +146,8 @@ class IndicatorRedAdmin(CustomImportAdmin):
         extra_urls = [url(r'^series-indicadores/$', indicators_csv,
                           name='network_series'), ]
         return extra_urls + urls
+
+
+@admin.register(IndicatorsConfig)
+class IndicatorConfigAdmin(SingletonAdmin):
+    pass

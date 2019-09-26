@@ -12,6 +12,8 @@ from pydatajson.core import DataJson
 from django_datajsonar.models import Node
 
 from monitoreo.apps.dashboard.csv_generators import IndicatorSeriesCSVGenerator
+from monitoreo.apps.dashboard.enqueue_job import enqueue_job_with_timeout
+from monitoreo.apps.dashboard.models.indicators import IndicatorsConfig
 from .models import IndicatorsGenerationTask, TableColumn, IndicatorType,\
     Indicador, IndicadorFederador, IndicadorRed, HarvestingNode, CentralNode
 from .helpers import load_catalogs
@@ -26,10 +28,11 @@ def indicators_run(_node=None):
     # nodo por parámetro. Esta tarea no hace uso de ese parámtro por el
     # momento
     task = IndicatorsGenerationTask.objects.create()
-    generate_indicators.delay(task)
+    timeout = IndicatorsConfig.get_solo().timeout
+    enqueue_job_with_timeout('indicators', generate_indicators, timeout, task)
 
 
-@job('indicators', timeout=1800)
+@job('indicators', timeout=IndicatorsConfig.get_solo().timeout)
 def generate_indicators(task):
     data_json = DataJson()
     catalogs = load_catalogs(task, Node.objects.filter(indexable=True))

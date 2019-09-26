@@ -7,6 +7,8 @@ from requests.exceptions import RequestException
 from django_datajsonar.models import Node
 
 from monitoreo.apps.dashboard import models
+from monitoreo.apps.dashboard.enqueue_job import enqueue_job_with_timeout
+from monitoreo.apps.dashboard.models.tasks import TasksTimeouts
 from monitoreo.apps.dashboard.report_generators import \
     ValidationReportGenerator, IndicatorReportGenerator, NewlyDatasetReportGenerator
 
@@ -20,7 +22,8 @@ def send_reports(node=None):
 @job('reports')
 def send_validations(node=None):
     validation_task = models.ValidationReportTask.objects.create()
-    validation_run(validation_task, node=node)
+    timeout = TasksTimeouts.get_solo().validation_timeout
+    enqueue_job_with_timeout('reports', validation_run, timeout, args=(validation_task,), kwargs={'node': node})
 
 
 @job('reports')

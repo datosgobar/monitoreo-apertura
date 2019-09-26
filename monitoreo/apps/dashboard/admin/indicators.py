@@ -17,7 +17,7 @@ from import_export.forms import ImportForm
 
 from monitoreo.apps.dashboard.management.import_utils import \
     invalid_indicators_csv, import_from_admin
-from monitoreo.apps.dashboard.models.indicators import IndicatorsConfig
+from monitoreo.apps.dashboard.models.tasks import TasksTimeouts
 from monitoreo.apps.dashboard.upload_handlers import \
     PersistentTemporaryFileUploadHandler
 from monitoreo.apps.dashboard.views import indicators_csv
@@ -148,6 +148,6 @@ class IndicatorRedAdmin(CustomImportAdmin):
         return extra_urls + urls
 
 
-@admin.register(IndicatorsConfig)
+@admin.register(TasksTimeouts)
 class IndicatorConfigAdmin(SingletonAdmin):
     pass

@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 
 from django.db import models
-from solo.models import SingletonModel
 
 from .querysets import IndicatorQuerySet
 from .indicator_types import IndicatorType
@@ -96,10 +95,3 @@ class IndicadorRed(models.Model):
 
     def __str__(self):
         return self.__unicode__()
-
-
-class IndicatorsConfig(SingletonModel):
-    timeout = models.IntegerField(default=1800, help_text="En segundos.")
-
-    class Meta:
-        verbose_name = "Configuración de corrida de generación de indicadores"

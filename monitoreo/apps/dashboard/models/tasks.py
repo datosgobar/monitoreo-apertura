@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils import timezone
-from django_datajsonar.models import AbstractTask
 from solo.models import SingletonModel
+from django_datajsonar.models import AbstractTask
 
 from .nodes import HarvestingNode
 

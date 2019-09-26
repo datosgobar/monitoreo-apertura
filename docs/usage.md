@@ -10,6 +10,7 @@
     - [Lectura periodica](#lectura-periodica)
   - [Generación de indicadores](#generaci%C3%B3n-de-indicadores)
     - [Reporte de indicadores](#reporte-de-indicadores)
+  - [Reporte de novedades](#reporte-de-novedades)
   - [Creación de procesos](#creaci%C3%B3n-de-procesos)
   - [Series de tiempo](#series-de-tiempo)
   - [Importar/Exportar indicadores](#importarexportar-indicadores)

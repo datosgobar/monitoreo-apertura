@@ -13,7 +13,7 @@
   - [Creación de procesos](#creaci%C3%B3n-de-procesos)
   - [Series de tiempo](#series-de-tiempo)
   - [Importar/Exportar indicadores](#importarexportar-indicadores)
-  - [Modificar timezone de un Nodo](#modificar-timezone-de-un-nodo)
+  - [Modificar timezone de un Nodo Federador](#modificar-timezone-de-un-nodo-federador)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

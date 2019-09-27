@@ -226,7 +226,7 @@ de los DataSets y la id del catálogo al que pertenecen
 todos los datasets
 
 ## Modificar timezone de un Nodo Federador
-Es posible modificar el timezone de un nodo federador si así se quisiera o en caso de que sea necesario. Para esto,
+Es posible modificar el timezone de un nodo federador si así se deseara o en caso de que sea necesario. Para esto,
 simplemente seteamos el campo **Timezone** cuando creamos un nuevo nodo federador en `/admin/dashboard/harvestingnode/add/`.
 Por defecto, el timezone es 'America/Buenos_Aires'. [Aquí](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)
 se puede consultar una lista completa de los timezones que pueden usarse (columna *TZ database name*).

@@ -13,6 +13,7 @@
   - [Creación de procesos](#creaci%C3%B3n-de-procesos)
   - [Series de tiempo](#series-de-tiempo)
   - [Importar/Exportar indicadores](#importarexportar-indicadores)
+  - [Modificar timezone de un Nodo](#modificar-timezone-de-un-nodo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -99,7 +100,6 @@ La segunda es mediante una acción de Django. Podemos seleccionar un subconjunto
 ![Generar csv de configuración](./images/config_csv_action.png)
 
 De esta manera conseguimos el csv de configuración con los datasets indexables del subconjunto elegido.
-
 
 ## Lectura de catalogos
 
@@ -224,3 +224,9 @@ en formatos **csv** o **xlsx** cambiando la extension de archivo en el url
 de los DataSets y la id del catálogo al que pertenecen
 - `/admin/dashboard/indicadorred/series-indicadores`:  descarga un archivo csv con información sobre
 todos los datasets
+
+## Modificar timezone de un Nodo Federador
+Es posible modificar el timezone de un nodo federador si así se quisiera o en caso de que sea necesario. Para esto,
+simplemente seteamos el campo **Timezone** cuando creamos un nuevo nodo federador en `/admin/dashboard/harvestingnode/add/`.
+Por defecto, el timezone es 'America/Buenos_Aires'. [Aquí](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)
+se puede consultar una lista completa de los timezones que pueden usarse (columna *TZ database name*).

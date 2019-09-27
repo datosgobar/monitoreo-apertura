@@ -1,14 +1,13 @@
 # coding=utf-8
 import os
-from datetime import date, timedelta
 
 from django.conf import settings
-from django.shortcuts import render
-from django.http import StreamingHttpResponse, HttpResponseBadRequest
+from django.http import StreamingHttpResponse, HttpResponseBadRequest, \
+    FileResponse
 
-from .models import Indicador, IndicadorRed, IndicadorFederador, TableColumn
+from .models import Indicador, IndicadorRed, IndicadorFederador
 from .helpers import download_time_series
-from .custom_generators import custom_row_generator
+from .custom_generators import csv_panel_writer
 
 
 def indicators_csv(_request, node_id=None, indexing=False):
@@ -28,7 +27,7 @@ def indicators_csv(_request, node_id=None, indexing=False):
 
 
 def create_response_from_indicator_model(model, fieldnames, filename):
-    response = StreamingHttpResponse(custom_row_generator(model, fieldnames), content_type="text/csv")
+    response = StreamingHttpResponse(csv_panel_writer(model, fieldnames), content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename={}.csv'.format(filename)
     return response
 
@@ -66,7 +65,17 @@ def indicadores_federadores_series(_request, filename):
 def streaming_series_response(filename, path):
     if not os.path.exists(path):
         return HttpResponseBadRequest("No hay un archivo generado con ese nombre.")
-    response = StreamingHttpResponse(open(path), content_type="text/csv")
+    response = FileResponse(open(path), content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename={}'.format(
         filename)
+    return response
+
+
+def file_based_response(filename, path):
+    if not os.path.exists(path):
+        return HttpResponseBadRequest("No hay un archivo generado con ese nombre.")
+    response = FileResponse(open(path), content_type='text/csv')
+    response["Content-Disposition"] = 'attachment; filename={}'.format(
+        filename)
+    response["Content-Encoding"] = 'gzip'
     return response

@@ -42,11 +42,11 @@ def prepare_rows(indicator):
     return rows
 
 
-def custom_row_generator(model, values_lookup):
+def csv_panel_writer(model, values_lookup):
+    buffer = Echo()
     headers_map = model.CSV_PANEL_HEADERS
     indicators = model.objects.csv_panel_indicators().values(*values_lookup)
-    pseudo_buffer = Echo()
-    writer = csv.DictWriter(pseudo_buffer, fieldnames=(*headers_map,))
+    writer = csv.DictWriter(buffer, fieldnames=(*headers_map,))
 
     # La primera row se escribe manualmente porque 'writer.writeheader()' devuelve None
     yield writer.writerow(headers_map)

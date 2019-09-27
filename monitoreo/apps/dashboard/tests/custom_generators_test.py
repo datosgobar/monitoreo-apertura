@@ -4,7 +4,7 @@ import re
 from django.test import TestCase
 
 from monitoreo.apps.dashboard.context_managers import suppress_autotime
-from monitoreo.apps.dashboard.custom_generators import custom_row_generator
+from monitoreo.apps.dashboard.custom_generators import csv_panel_writer
 from monitoreo.apps.dashboard.models import IndicatorType, IndicadorRed, Indicador, \
     IndicadorFederador
 
@@ -61,17 +61,17 @@ class RowGeneratorTest(TestCase):
         self.indicador_red_headers = \
             ['fecha', 'indicador_nombre',
              'indicador_apertura', 'indicador_valor']
-        self.indicador_red_rows_list = list(custom_row_generator(
+        self.indicador_red_rows_list = list(csv_panel_writer(
             IndicadorRed, self.indicador_red_fieldnames))
 
         self.indicador_headers = \
             ['fecha', 'indicador_nombre', 'indicador_apertura',
              'indicador_valor', 'nodo_nombre', 'nodo_id']
-        self.indicador_rows_list = list(custom_row_generator(
+        self.indicador_rows_list = list(csv_panel_writer(
             Indicador, self.indicador_fieldnames))
 
         self.indicador_federador_headers = self.indicador_headers
-        self.indicador_federador_rows_list = list(custom_row_generator(
+        self.indicador_federador_rows_list = list(csv_panel_writer(
             IndicadorFederador, self.indicador_federador_fieldnames))
 
     def test_generated_indicador_red_rows_are_not_empty(self):
@@ -84,7 +84,7 @@ class RowGeneratorTest(TestCase):
         self.assertTrue(self.indicador_federador_rows_list)
 
     def assert_first_row_is_header(self, model, fieldnames, headers):
-        first_row = [row.strip() for row in list(custom_row_generator(model, fieldnames))[0].split(',')]
+        first_row = [row.strip() for row in list(csv_panel_writer(model, fieldnames))[0].split(',')]
         self.assertEquals(first_row, headers)
 
     def test_first_generated_row_are_headers(self):
@@ -94,7 +94,7 @@ class RowGeneratorTest(TestCase):
                                         self.indicador_federador_headers)
 
     def assert_dates_column_has_dates_format(self, model, fieldnames):
-        data_rows = list(custom_row_generator(model, fieldnames))[1:]
+        data_rows = list(csv_panel_writer(model, fieldnames))[1:]
         dates_column = [row.split(',')[0] for row in data_rows]
 
         for date in dates_column:
@@ -107,7 +107,7 @@ class RowGeneratorTest(TestCase):
         self.assert_dates_column_has_dates_format(IndicadorFederador, self.indicador_federador_fieldnames)
 
     def assert_dates_column_contains_indicator_created_date(self, model, fieldnames):
-        dates_column = [row.split(',')[0] for row in list(custom_row_generator(model, fieldnames))[1:]]
+        dates_column = [row.split(',')[0] for row in list(csv_panel_writer(model, fieldnames))[1:]]
         expected_date = '2000-01-01'
 
         for date in dates_column:
@@ -120,7 +120,7 @@ class RowGeneratorTest(TestCase):
                                                                  self.indicador_federador_fieldnames)
 
     def assert_generated_rows_equals_indicator_count(self, model, fieldnames, count):
-        data_rows_quantity = len(list(custom_row_generator(model, fieldnames))[1:])
+        data_rows_quantity = len(list(csv_panel_writer(model, fieldnames))[1:])
         self.assertEquals(count, data_rows_quantity)
 
     def test_generated_rows_quantity_is_indicators_count(self):
@@ -201,7 +201,7 @@ class RowGeneratorTest(TestCase):
         excluded_types = ('ind_a', 'ind_b', 'ind_c')
         IndicatorType.objects.filter(nombre__in=excluded_types).update(
             panel_red=False)
-        for row in custom_row_generator(
+        for row in csv_panel_writer(
                 IndicadorRed, self.indicador_red_fieldnames):
             for excluded_type in excluded_types:
                 self.assertNotIn(excluded_type, row)
@@ -210,7 +210,7 @@ class RowGeneratorTest(TestCase):
         excluded_types = ('ind_b', 'ind_d', 'ind_e')
         IndicatorType.objects.filter(nombre__in=excluded_types).update(
             panel_nodos=False)
-        for row in custom_row_generator(Indicador, self.indicador_fieldnames):
+        for row in csv_panel_writer(Indicador, self.indicador_fieldnames):
             for excluded_type in excluded_types:
                 self.assertNotIn(excluded_type, row)
 
@@ -218,7 +218,7 @@ class RowGeneratorTest(TestCase):
         excluded_types = ('ind_c', 'ind_d', 'ind_e')
         IndicatorType.objects.filter(nombre__in=excluded_types).update(
             panel_federadores=False)
-        for row in custom_row_generator(
+        for row in csv_panel_writer(
                 IndicadorFederador, self.indicador_federador_fieldnames):
             for excluded_type in excluded_types:
                 self.assertNotIn(excluded_type, row)

@@ -13,7 +13,7 @@
   - [Creación de procesos](#creaci%C3%B3n-de-procesos)
   - [Series de tiempo](#series-de-tiempo)
   - [Importar/Exportar indicadores](#importarexportar-indicadores)
-  - [Modificar timezone de un Nodo Federador](#modificar-timezone-de-un-nodo-federador)
+  - [Modificar timezone de un Nodo](#modificar-timezone-de-un-nodo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -225,8 +225,9 @@ de los DataSets y la id del catálogo al que pertenecen
 - `/admin/dashboard/indicadorred/series-indicadores`:  descarga un archivo csv con información sobre
 todos los datasets
 
-## Modificar timezone de un Nodo Federador
-Es posible modificar el timezone de un nodo federador si así se deseara o en caso de que sea necesario. Para esto,
-simplemente cambiamos el campo **Timezone** cuando creamos un nuevo nodo federador en `/admin/dashboard/harvestingnode/add/`.
+## Modificar timezone de un Nodo
+Es posible modificar el timezone de un nodo si así se deseara o en caso de que sea necesario. Para esto,
+simplemente cambiamos el campo **Timezone** cuando creamos un nuevo nodo federador en `/admin/dashboard/harvestingnode/add/`,
+o bien un nodo en django_datajsonar en `/admin/django_datajsonar/node/add/`.
 Por defecto, el timezone es 'America/Buenos_Aires'. [Aquí](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)
 se puede consultar una lista completa de los timezones que pueden usarse (columna *TZ database name*).

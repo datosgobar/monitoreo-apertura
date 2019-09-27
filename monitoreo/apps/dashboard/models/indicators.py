@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 
 from django.db import models
+
 from .querysets import IndicatorQuerySet
 from .indicator_types import IndicatorType
 

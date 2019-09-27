@@ -10,6 +10,7 @@
     - [Lectura periodica](#lectura-periodica)
   - [Generación de indicadores](#generaci%C3%B3n-de-indicadores)
     - [Reporte de indicadores](#reporte-de-indicadores)
+  - [Reporte de novedades](#reporte-de-novedades)
   - [Creación de procesos](#creaci%C3%B3n-de-procesos)
   - [Series de tiempo](#series-de-tiempo)
   - [Importar/Exportar indicadores](#importarexportar-indicadores)
@@ -153,6 +154,25 @@ Esta instancia no requiere ningun parámetro, lee los indicadores calculados en 
 Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:
 
 ![Indicators Report Task](./images/indicators_report.png)
+
+
+## Reporte de novedades
+
+Para hacer un reporte de novedades se puede crear el reporte manualmente (instanciando un modelo Django) o creando
+un proceso que generará reportes periódicamente [creación de procesos](#creaci%C3%B3n-de-procesos)
+Si se quiere crear un reporte manualmente, vamos a `/admin/dashboard/newlyreportgenerationtask/` y seleccionaremos
+**Agregar Newly report generation task**. Podremos ver el siguiente formulario:
+
+![Newly Report Generation Task](./images/newly_report_generation_task.png)
+
+En este formulario solo tenemos que elegir sobre cual nodo haremos el reporte, o dejar el campo en blanco
+si queremos que se generenreportes de novedades sobre todos los nodos. Luego, se enviará un email a los
+administradores de cada nodo con la información de los datasets nuevos en ese nodo, así como otro email
+al staff con la información de *todos* los datasets nuevos.
+
+
+| *IMPORTANTE: Un nuevo reporte de novedades se fija cuándo se hizo el último reporte para determinar los datasets que son nuevos. Es por esto que el primer task de reporte de novedades creado NO generará ningún reporte.* |
+| --- |
 
 
 ## Creación de procesos

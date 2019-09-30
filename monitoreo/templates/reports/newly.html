@@ -29,7 +29,7 @@
 <ul>
     {% for dataset in datasets_list %}
     <li>
-        <h3>Dataset {{ dataset.title }} creado el {{ dataset.date_created }}</h3>
+        <h3>Dataset {{ dataset.title }} creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}</h3>
     </li>
     {% endfor %}
 </ul>

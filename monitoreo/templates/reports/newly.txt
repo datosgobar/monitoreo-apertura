@@ -13,7 +13,7 @@ Reporte del {% now "d/m/Y" %}
 
 Los siguientes datasets se agregaron al nodo {{ node }}
 {% for dataset in datasets_list %}
-- Dataset {{ dataset.title }} creado el {{ dataset.date_created }}
+- Dataset {{ dataset.title }} creado el {{ dataset.time_created }} a las {{ dataset.time_created|date:"H:i" }}
 {% endfor %}
 
 {% endif %}

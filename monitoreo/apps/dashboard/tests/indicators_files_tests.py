@@ -1,8 +1,6 @@
 #! coding: utf-8
 
 import os
-import shutil
-import tempfile
 
 from django_datajsonar.models import Node
 
@@ -11,7 +9,7 @@ try:
 except ImportError:
     from unittest.mock import patch, MagicMock
 
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.conf import settings
 
 from monitoreo.apps.dashboard.models import Indicador
@@ -78,21 +76,33 @@ class IndicatorGenerationsTest(TestCase):
                                               jurisdiccion_id='harvest_id',
                                               jurisdiccion_nombre='harvest node')
 
-    def test_network_static_file_is_created(self):
         write_time_series_files()
+
+    def test_network_static_series_file_is_created(self):
         filepath = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'indicadores-red-series.csv')
         self.assertTrue(os.path.exists(filepath))
 
-    def test_nodes_static_file_are_created(self):
-        write_time_series_files()
+    def test_nodes_static_series_file_are_created(self):
         dir_path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'nodes')
         for node in Node.objects.all():
             filepath = os.path.join(dir_path, f'indicadores-{node.catalog_id}-series.csv')
             self.assertTrue(os.path.exists(filepath))
 
-    def test_federators_files_are_created(self):
-        write_time_series_files()
+    def test_federators_series_files_are_created(self):
         dir_path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'federator-nodes')
         for node in HarvestingNode.objects.all():
             filepath = os.path.join(dir_path, f'indicadores-{node.catalog_id}-series.csv')
             self.assertTrue(os.path.exists(filepath))
+
+    def test_network_panel_zip_is_created(self):
+        filepath = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'indicadores-red.csv.gz')
+        self.assertTrue(os.path.exists(filepath))
+
+    def test_node_panel_zip_is_created(self):
+        filepath = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'nodes', 'indicadores-nodos.csv.gz')
+        self.assertTrue(os.path.exists(filepath))
+
+    def test_federator_panel_zip_is_created(self):
+        filepath = os.path.join(
+            settings.MEDIA_ROOT, 'indicator_files', 'federator-nodes', 'indicadores-nodos-federadores.csv.gz')
+        self.assertTrue(os.path.exists(filepath))

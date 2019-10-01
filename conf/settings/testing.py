@@ -24,6 +24,8 @@ TESTS_IN_PROGRESS = True
 TEST_RUNNER = 'monitoreo.test_runner.MonitoreoTestRunner'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 
+MEDIA_ROOT = '/tmp/test_media_root/'
+
 RQ_QUEUES = {
     'indexing': {
         'HOST': DEFAULT_REDIS_HOST,

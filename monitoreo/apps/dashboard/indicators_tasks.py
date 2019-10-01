@@ -11,7 +11,7 @@ from django_rq import job
 from pydatajson.core import DataJson
 from django_datajsonar.models import Node
 
-from monitoreo.apps.dashboard.csv_generators import IndicatorSeriesCSVGenerator
+from monitoreo.apps.dashboard.series_csv_generators import IndicatorSeriesCSVGenerator
 from monitoreo.apps.dashboard.enqueue_job import enqueue_job_with_timeout
 from monitoreo.apps.dashboard.indicator_csv_zip_generator import IndicatorCSVZipGenerator
 from monitoreo.apps.dashboard.models.tasks import TasksTimeouts

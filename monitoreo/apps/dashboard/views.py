@@ -47,6 +47,24 @@ def indicadores_nodos_federadores_csv(_request):
     return create_response_from_indicator_model(IndicadorFederador, fieldnames, 'indicadores-federadores')
 
 
+def panel_red_zip(_request):
+    filename = 'indicadores-red.csv.gz'
+    path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', filename)
+    return file_based_response('indicadores-red-nodos.csv.gz', path)
+
+
+def panel_nodos_zip(_request):
+    filename = 'indicadores-nodos.csv.gz'
+    path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'nodes', filename)
+    return file_based_response('indicadores-nodos.csv.gz', path)
+
+
+def panel_federadores_zip(_request):
+    filename = 'indicadores-nodos-federadores.csv.gz'
+    path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'federator-nodes', filename)
+    return file_based_response(filename, path)
+
+
 def indicadores_red_series(_request):
     path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'indicadores-red-series.csv')
     return streaming_series_response('indicadores-red-nodos-series.csv', path)

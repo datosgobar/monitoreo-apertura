@@ -11,11 +11,12 @@ from django_rq import job
 from pydatajson.core import DataJson
 from django_datajsonar.models import Node
 
-from monitoreo.apps.dashboard.csv_generators import IndicatorSeriesCSVGenerator
+from monitoreo.apps.dashboard.series_csv_generators import IndicatorSeriesCSVGenerator
 from monitoreo.apps.dashboard.enqueue_job import enqueue_job_with_timeout
+from monitoreo.apps.dashboard.indicator_csv_zip_generator import IndicatorCSVZipGenerator
 from monitoreo.apps.dashboard.models.tasks import TasksTimeouts
-from .models import IndicatorsGenerationTask, TableColumn, IndicatorType,\
-    Indicador, IndicadorFederador, IndicadorRed, HarvestingNode, CentralNode
+from .models import IndicatorsGenerationTask, TableColumn, IndicatorType, Indicador, IndicadorFederador,\
+    IndicadorRed, HarvestingNode, CentralNode
 from .helpers import load_catalogs
 
 URL = "https://raw.githubusercontent.com/datosgobar/libreria-catalogos/master/"
@@ -58,6 +59,7 @@ def generate_indicators(task):
         init_columns()
 
     write_time_series_files.delay()
+    zip_indicators_csv.delay()
 
     task.refresh_from_db()
     task.status = IndicatorsGenerationTask.FINISHED
@@ -138,3 +140,11 @@ def write_time_series_files():
     generator.generate_network_time_series_files()
     generator.generate_nodes_time_series_files()
     generator.generate_federator_nodes_time_series_files()
+
+
+@job('indicators', timeout=1800)
+def zip_indicators_csv():
+    generator = IndicatorCSVZipGenerator()
+    generator.generate_network_panel_zip()
+    generator.generate_node_panel_zip()
+    generator.generate_federator_node_panel_zip()

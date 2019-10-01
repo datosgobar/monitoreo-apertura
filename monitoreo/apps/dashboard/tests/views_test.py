@@ -1,14 +1,20 @@
 #! coding: utf-8
+import gzip
+
 import csv
 import datetime
 
+from io import BytesIO
+
+from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils.timezone import localdate
 
 from django_datajsonar.models import Node
 
-from monitoreo.apps.dashboard.indicators_tasks import write_time_series_files
+from monitoreo.apps.dashboard.custom_generators import csv_panel_writer
+from monitoreo.apps.dashboard.indicators_tasks import write_time_series_files, zip_indicators_csv
 from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
     IndicatorType, IndicadorFederador, HarvestingNode
 from monitoreo.apps.dashboard.tests.test_utils.read_bytes_as_csv import read_content_as_csv
@@ -70,6 +76,12 @@ class ViewsTest(TestCase):
                                 node_name='index1', harvesting=True)
 
         write_time_series_files()
+        zip_indicators_csv()
+
+        test_user = get_user_model()(username='user', email='email@test.com')
+        test_user.set_password('password')
+        test_user.save()
+        self.client.login(username='user', password='password')
 
     def _create_indicators(self, ind_type, values,
                            node_id=None, node_name='', harvesting=False):
@@ -95,21 +107,20 @@ class ViewsTest(TestCase):
             .strftime('%Y-%m-%d')
 
     def test_series_headers(self):
-        network_response = Client().get(reverse('admin:network_series'))
+        network_response = self.client.get(reverse('admin:network_series'))
         expected_disposition =\
             'attachment; filename="series-indicadores-red.csv"'
         self.assertEqual(expected_disposition,
                          network_response['Content-Disposition'])
 
-        node_response = Client().get(reverse('admin:node_series',
-                                             kwargs={'node_id': 'id1'}))
+        node_response = self.client.get(reverse('admin:node_series', kwargs={'node_id': 'id1'}))
         expected_disposition = \
             'attachment; filename="series-indicadores-id1.csv"'
         self.assertEqual(expected_disposition,
                          node_response['Content-Disposition'])
 
     def test_series_header(self):
-        network_response = Client().get(reverse('admin:network_series'))
+        network_response = self.client.get(reverse('admin:network_series'))
         series = read_content_as_csv(network_response.content)
 
         expected_headers = ['indice_tiempo', 'ind_a', 'ind_b', 'ind_e']
@@ -121,14 +132,14 @@ class ViewsTest(TestCase):
         type_e = IndicatorType.objects.filter(nombre='ind_e')
         type_a.swap(type_e)
 
-        network_response = Client().get(reverse('admin:network_series'))
+        network_response = self.client.get(reverse('admin:network_series'))
         series = read_content_as_csv(network_response.content)
         expected_headers = ['indice_tiempo', 'ind_e', 'ind_b', 'ind_a']
         headers = next(series, None)
         self.assertEqual(expected_headers, headers)
 
     def test_series_rows(self):
-        network_response = Client().get(reverse('admin:network_series'))
+        network_response = self.client.get(reverse('admin:network_series'))
         series = network_response.content.decode('utf-8').splitlines()
         series_csv = csv.DictReader(series)
         two_days_ago = self._format_previous_dates(2)
@@ -154,8 +165,7 @@ class ViewsTest(TestCase):
         self.assertDictEqual(expected_row, row)
 
     def test_node_series(self):
-        node_response = Client().get(reverse('admin:node_series',
-                                             kwargs={'node_id': 'id1'}))
+        node_response = self.client.get(reverse('admin:node_series', kwargs={'node_id': 'id1'}))
         series = node_response.content.decode('utf-8').splitlines()
         self.assertEqual(2, len(series))
         series_csv = csv.DictReader(series)
@@ -168,8 +178,7 @@ class ViewsTest(TestCase):
         self.assertDictEqual(expected_row, row)
 
     def test_indexing_series(self):
-        node_response = Client().get(reverse('admin:indexing_series',
-                                             kwargs={'node_id': 'idx1'}))
+        node_response = self.client.get(reverse('admin:indexing_series', kwargs={'node_id': 'idx1'}))
         series = node_response.content.decode('utf-8').splitlines()
         self.assertEqual(2, len(series))
         series_csv = csv.DictReader(series)
@@ -245,3 +254,54 @@ class ViewsTest(TestCase):
             reverse('dashboard:indicadores-federadores-series',
                     args=['indicadores-null-series.csv']))
         self.assertEqual(400, fail_response.status_code)
+
+    def test_network_panel_zip_response(self):
+        response = self.client.get(reverse('dashboard:indicadores-red-zip'))
+        self.assertEqual(200, response.status_code)
+
+    def test_nodes_panel_zip_response(self):
+        response = self.client.get(reverse('dashboard:indicadores-nodo-zip'))
+        self.assertEqual(200, response.status_code)
+
+    def test_federators_panel_zip_response(self):
+        response = self.client.get(reverse('dashboard:indicadores-federadores-zip'))
+        self.assertEqual(200, response.status_code)
+
+    def test_network_panel_zip_content(self):
+        fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor']
+        response = self.client.get(reverse('dashboard:indicadores-red-zip'))
+        with gzip.open(BytesIO(response.content), 'rt') as zipfile:
+            for expected_line, res_line in zip(csv_panel_writer(IndicadorRed, fieldnames), zipfile):
+                self.assertEqual(expected_line.rstrip(), res_line.rstrip())
+
+    def test_nodes_panel_zip_content(self):
+        fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor', 'jurisdiccion_nombre', 'jurisdiccion_id']
+        response = self.client.get(reverse('dashboard:indicadores-nodo-zip'))
+        with gzip.open(BytesIO(response.content), 'rt') as zipfile:
+            for expected_line, res_line in zip(csv_panel_writer(Indicador, fieldnames), zipfile):
+                self.assertEqual(expected_line.rstrip(), res_line.rstrip())
+
+    def test_federators_panel_zip_content(self):
+        fieldnames = ['fecha', 'indicador_tipo__nombre', 'indicador_valor', 'jurisdiccion_nombre', 'jurisdiccion_id']
+        response = self.client.get(reverse('dashboard:indicadores-federadores-zip'))
+        with gzip.open(BytesIO(response.content), 'rt') as zipfile:
+            for expected_line, res_line in zip(csv_panel_writer(IndicadorFederador, fieldnames), zipfile):
+                self.assertEqual(expected_line.rstrip(), res_line.rstrip())
+
+    def test_anonymous_user_on_network_csv_view_redirects_to_login(self):
+        anonymous_client = Client()
+        response = anonymous_client.get(reverse('dashboard:indicadores-red-csv'))
+        self.assertEqual(302, response.status_code)
+        self.assertTrue(response.url.startswith('/admin/login/'))
+
+    def test_anonymous_user_on_node_csv_view_redirects_to_login(self):
+        anonymous_client = Client()
+        response = anonymous_client.get(reverse('dashboard:indicadores-nodo-csv'))
+        self.assertEqual(302, response.status_code)
+        self.assertTrue(response.url.startswith('/admin/login/'))
+
+    def test_anonymous_user_on_federator_csv_view_redirects_to_login(self):
+        anonymous_client = Client()
+        response = anonymous_client.get(reverse('dashboard:indicadores-federadores-csv'))
+        self.assertEqual(302, response.status_code)
+        self.assertTrue(response.url.startswith('/admin/login/'))

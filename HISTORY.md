@@ -1,5 +1,12 @@
 Versiones
 =========
+1.2.0 (1-10-19)
+-------------------
+* Generación offline de gzip de panel de indicadores
+* Bugfix en template de reporte de novedades
+* Normailización de datos de indicadores
+* Actualiza versión de django-datajsonar 
+
 1.1.1 (17-09-19)
 -------------------
 * Actualiza versión de pydatajson 

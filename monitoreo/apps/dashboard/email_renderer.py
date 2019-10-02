@@ -28,7 +28,9 @@ class ReportSender:
         target = node.catalog_id if node else 'Red'
         mail.to = self._get_recipients(node=node)
         mail.connection = self.connection
-        mail.from_email = DynamicEmailConfiguration.get_solo().from_email
+        addresser_email = DynamicEmailConfiguration.get_solo().from_email
+        mail.from_email = addresser_email
+        mail.bcc = [addresser_email]
         try:
             mail.send()
             msg = "Reporte de {} enviado exitosamente".format(target)

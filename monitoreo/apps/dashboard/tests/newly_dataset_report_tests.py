@@ -129,3 +129,8 @@ class NewlyDatasetReportGenerationTest(TestCase):
         self.newly_report_generator.close_task()
         self.assertEqual(NewlyReportGenerationTask.FINISHED,
                          self.newly_report_generator.report_task.status)
+
+    def test_addresser_email_is_added_to_bcc(self):
+        self.assertEqual(['from_test@test.com'], self.node1_mail.bcc)
+        self.assertEqual(['from_test@test.com'], self.node2_mail.bcc)
+        self.assertEqual(['from_test@test.com'], self.staff_mail.bcc)

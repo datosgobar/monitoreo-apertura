@@ -13,7 +13,7 @@
         <meta name="description" content="Documentación de la aplicación web de monitoreo y operación de la red de nodos de datos abiertos de la Administración Pública Nacional de la República Argentina.">
       
       
-        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/developers/tests/">
+        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/arquitectura/">
       
       
         <meta name="author" content="Datos Argentina">
@@ -37,27 +37,27 @@
       
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
-      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
-        <title>Tests - Monitoreo Apertura</title>
+        <title>Arquitectura - Monitoreo Apertura</title>
       
     
     
 	
-      <link rel="stylesheet" href="../../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
       
       
     
-	<link rel="stylesheet" href="../../css/extra.css">
+	<link rel="stylesheet" href="../css/extra.css">
 
     
     
-      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.74668098.js"></script>
     
-    <script src="../../js/extra.js"></script>
+    <script src="../js/extra.js"></script>
 
     
       
@@ -66,7 +66,7 @@
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
-    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
     
@@ -131,6 +131,10 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
+      <a href="#arquitectura" tabindex="1" class="md-skip">
+        Saltar a contenido
+      </a>
+    
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
@@ -138,7 +142,7 @@
       <div class="md-flex__cell md-flex__cell--shrink">
         <a href="https://datosgobar.github.io/monitoreo-apertura" title="Monitoreo Apertura" class="md-header-nav__button md-logo">
           
-            <img src="../../images/logo.svg" width="24" height="24">
+            <img src="../images/logo.svg" width="24" height="24">
           
         </a>
       </div>
@@ -153,7 +157,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Tests
+                Arquitectura
               
             </span>
           
@@ -256,7 +260,7 @@
           <a href="https://datosgobar.github.io/monitoreo-apertura"
               title="Monitoreo Apertura" class="md-nav__button md-logo">
             
-              <img src="../../images/logo.svg" width="48" height="48" />
+              <img src="../images/logo.svg" width="48" height="48" />
             
           </a>
           Monitoreo Apertura
@@ -294,7 +298,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Inicio" class="md-nav__link">
+    <a href=".." title="Inicio" class="md-nav__link">
       Inicio
     </a>
   </li>
@@ -305,11 +309,77 @@
             
             
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../arquitectura/" title="Arquitectura" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Arquitectura
+      </label>
+    
+    <a href="./" title="Arquitectura" class="md-nav__link md-nav__link--active">
       Arquitectura
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Contenidos de la sección</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#servidor-de-aplicaciones-python" class="md-nav__link">
+    Servidor de aplicaciones python
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servidor-web" class="md-nav__link">
+    Servidor web
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servidor-de-ejecucion-de-tareas-asincronicas" class="md-nav__link">
+    Servidor de ejecución de tareas asincrónicas
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servidor-de-bases-de-datos" class="md-nav__link">
+    Servidor de bases de datos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrama-de-arquitectura" class="md-nav__link">
+    Diagrama de arquitectura
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
             <hr/>
@@ -339,7 +409,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link">
+    <a href="../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link">
       Comenzar a usar Monitoreo Apertura
     </a>
   </li>
@@ -351,7 +421,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../usage/" title="Manual de uso" class="md-nav__link">
+    <a href="../usage/" title="Manual de uso" class="md-nav__link">
       Manual de uso
     </a>
   </li>
@@ -367,12 +437,10 @@
             
             
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
     <label class="md-nav__link" for="nav-4">
       Desarrolladores
@@ -390,7 +458,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../install/" title="Instalación" class="md-nav__link">
+    <a href="../developers/install/" title="Instalación" class="md-nav__link">
       Instalación
     </a>
   </li>
@@ -402,7 +470,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../update/" title="Actualización" class="md-nav__link">
+    <a href="../developers/update/" title="Actualización" class="md-nav__link">
       Actualización
     </a>
   </li>
@@ -414,7 +482,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../development/" title="Desarrollo" class="md-nav__link">
+    <a href="../developers/development/" title="Desarrollo" class="md-nav__link">
       Desarrollo
     </a>
   </li>
@@ -424,18 +492,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-    <a href="./" title="Tests" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../developers/tests/" title="Tests" class="md-nav__link">
       Tests
     </a>
-    
   </li>
 
         
@@ -451,7 +512,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../HISTORY/" title="Historial de versiones" class="md-nav__link">
+    <a href="../HISTORY/" title="Historial de versiones" class="md-nav__link">
       Historial de versiones
     </a>
   </li>
@@ -466,17 +527,100 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Contenidos de la sección</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#servidor-de-aplicaciones-python" class="md-nav__link">
+    Servidor de aplicaciones python
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servidor-web" class="md-nav__link">
+    Servidor web
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servidor-de-ejecucion-de-tareas-asincronicas" class="md-nav__link">
+    Servidor de ejecución de tareas asincrónicas
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servidor-de-bases-de-datos" class="md-nav__link">
+    Servidor de bases de datos
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrama-de-arquitectura" class="md-nav__link">
+    Diagrama de arquitectura
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/developers/tests.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/arquitectura.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                  <h1>Tests</h1>
-                
-                
+                <h1 id="arquitectura">Arquitectura</h1>
+<p>La aplicación de monitoreo-apertura está compuesta por un servidor solitario basado en Ubuntu 16.04 LTS que cumple con los siguientes roles:</p>
+<ul>
+<li>Servidor de aplicaciones python</li>
+<li>Servidor web</li>
+<li>Servidor de ejecución de tareas asincrónicas</li>
+<li>Servidor de bases de datos</li>
+</ul>
+<h2 id="servidor-de-aplicaciones-python">Servidor de aplicaciones python</h2>
+<p>Este rol se implementa por medio de una aplicación <code>Python3</code> utilizando el framework web <code>Django</code>, instalándose todas las dependencias de la misma en un entorno virtual (<code>virtualenv</code>). La aplicación <code>python</code> es ejecutada mediante el servicio <code>gunicorn</code>.</p>
+<h2 id="servidor-web">Servidor web</h2>
+<p>El servidor web de la solución se implementa mediante una instalación del servidor web de código abierto <code>nginx</code>. La aplicación web se expone en el puerto 80 del servidor web.</p>
+<h2 id="servidor-de-ejecucion-de-tareas-asincronicas">Servidor de ejecución de tareas asincrónicas</h2>
+<p>Las tareas asincrónicas utilizan las mismas dependencias de la aplicación web <code>Django</code>, pero se ejecuta como dos servicios distintos, basados en <code>django-rq</code>:</p>
+<ul>
+<li><code>rqworker</code>: Uno o más procesos enncargados de la ejecución de las tareas asincrónicas solicitadas por la aplicación web <code>Django</code>.</li>
+<li><code>rqscheduler</code>: Este componente se encarga de disparar las tareas programadas periódicamente.</li>
+</ul>
+<p>Ambos servicios son utlizan el mismo entorno de ejecución, entorno virtual (<code>virtualenv</code>) y la configuración de la aplicación <code>Django</code>.</p>
+<h2 id="servidor-de-bases-de-datos">Servidor de bases de datos</h2>
+<p>El rol de servidor de bases de datos es implementado mediante la configuración de dos motores de bases de datos:</p>
+<ul>
+<li>PostgreSQL 9.6: Base de datos relacional. Utilizada por la aplicación Django para </li>
+<li>Redis: Servidor de base de datos en memoria utilizado como administrador de mensajes para el sistema de ejecución de tareas asincrónicas.</li>
+</ul>
+<h2 id="diagrama-de-arquitectura">Diagrama de arquitectura</h2>
+<p><img alt="arquitectura-monitoreo-apertura.png" src="../arquitectura-monitoreo-apertura.png" /></p>
                 
                   
                 
@@ -497,7 +641,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../development/" title="Desarrollo" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href=".." title="Inicio" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -506,19 +650,19 @@
                 <span class="md-footer-nav__direction">
                   Anterior
                 </span>
-                Desarrollo
+                Inicio
               </span>
             </div>
           </a>
         
         
-          <a href="../../HISTORY/" title="Historial de versiones" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Siguiente
                 </span>
-                Historial de versiones
+                Comenzar a usar Monitoreo Apertura
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -546,24 +690,24 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application.ac79c3b0.js"></script>
+      <script src="../assets/javascripts/application.ac79c3b0.js"></script>
       
         
         
           
-          <script src="../../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
+          <script src="../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
           
             
               
               
-                <script src="../../assets/javascripts/lunr/lunr.es.js"></script>
+                <script src="../assets/javascripts/lunr/lunr.es.js"></script>
               
             
           
           
         
       
-      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
     
   </body>

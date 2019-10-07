@@ -38,7 +38,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
@@ -47,7 +47,7 @@
     
     
 	
-      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
       
       
     
@@ -223,7 +223,7 @@
         
       
       
-      <main class="md-main">
+      <main class="md-main" role="main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
             
@@ -309,18 +309,31 @@
             
             
 
+
+  <li class="md-nav__item">
+    <a href="../arquitectura/" title="Arquitectura" class="md-nav__link">
+      Arquitectura
+    </a>
+  </li>
+
+            <hr/>
+          
+            
+            
+            
+
   
 
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
-    <label class="md-nav__link" for="nav-2">
+    <label class="md-nav__link" for="nav-3">
       Usuarios
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-2">
+      <label class="md-nav__title" for="nav-3">
         Usuarios
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -372,13 +385,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
-    <label class="md-nav__link" for="nav-3">
+    <label class="md-nav__link" for="nav-4">
       Desarrolladores
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-3">
+      <label class="md-nav__title" for="nav-4">
         Desarrolladores
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -502,9 +515,11 @@
 <li><a href="#reporte-de-indicadores">Reporte de indicadores</a></li>
 </ul>
 </li>
+<li><a href="#reporte-de-novedades">Reporte de novedades</a></li>
 <li><a href="#creaci%C3%B3n-de-procesos">Creación de procesos</a></li>
 <li><a href="#series-de-tiempo">Series de tiempo</a></li>
 <li><a href="#importarexportar-indicadores">Importar/Exportar indicadores</a></li>
+<li><a href="#modificar-timezone-de-un-nodo">Modificar timezone de un Nodo</a></li>
 </ul>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -600,6 +615,28 @@ Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask
 Esta instancia no requiere ningun parámetro, lee los indicadores calculados en la última corrida de indicadores.
 Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:</p>
 <p><img alt="Indicators Report Task" src="../images/indicators_report.png" /></p>
+<h2 id="reporte-de-novedades">Reporte de novedades</h2>
+<p>Para hacer un reporte de novedades se puede crear el reporte manualmente (instanciando un modelo Django) o creando
+un proceso que generará reportes periódicamente <a href="#creaci%C3%B3n-de-procesos">creación de procesos</a>
+Si se quiere crear un reporte manualmente, vamos a <code>/admin/dashboard/newlyreportgenerationtask/</code> y seleccionaremos
+<strong>Agregar Newly report generation task</strong>. Podremos ver el siguiente formulario:</p>
+<p><img alt="Newly Report Generation Task" src="../images/newly_report_generation_task.png" /></p>
+<p>En este formulario solo tenemos que elegir sobre cual nodo haremos el reporte, o dejar el campo en blanco
+si queremos que se generenreportes de novedades sobre todos los nodos. Luego, se enviará un email a los
+administradores de cada nodo con la información de los datasets nuevos en ese nodo, así como otro email
+al staff con la información de <em>todos</em> los datasets nuevos.</p>
+<table>
+<thead>
+<tr>
+<th><em>IMPORTANTE: Un nuevo reporte de novedades se fija cuándo se hizo el último reporte para determinar los datasets que son nuevos. Es por esto que el primer task de reporte de novedades creado NO generará ningún reporte.</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="creacion-de-procesos">Creación de procesos</h2>
 <p>Es posible, crear procesos que engloben las tareas descriptas anteriormente y las ejecuten secuencialmente.
 Para lograr eso vamos a la ruta <code>/admin/django_datajsonar/synchronizer/</code>. Allí vamos a <code>Agregar synchronizer</code> y nos
@@ -656,6 +693,12 @@ de los DataSets y la id del catálogo al que pertenecen</li>
 <li><code>/admin/dashboard/indicadorred/series-indicadores</code>:  descarga un archivo csv con información sobre
 todos los datasets</li>
 </ul>
+<h2 id="modificar-timezone-de-un-nodo">Modificar timezone de un Nodo</h2>
+<p>Es posible modificar el timezone de un nodo si así se deseara o en caso de que sea necesario. Para esto,
+simplemente cambiamos el campo <strong>Timezone</strong> cuando creamos un nuevo nodo federador en <code>/admin/dashboard/harvestingnode/add/</code>,
+o bien un nodo en django_datajsonar en <code>/admin/django_datajsonar/node/add/</code>.
+Por defecto, el timezone es 'America/Buenos_Aires'. <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List">Aquí</a>
+se puede consultar una lista completa de los timezones que pueden usarse (columna <em>TZ database name</em>).</p>
                 
                   
                 
@@ -725,7 +768,7 @@ todos los datasets</li>
       
     </div>
     
-      <script src="../assets/javascripts/application.245445c6.js"></script>
+      <script src="../assets/javascripts/application.ac79c3b0.js"></script>
       
         
         

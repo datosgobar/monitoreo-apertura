@@ -28,7 +28,7 @@ Ambos servicios son utlizan el mismo entorno de ejecución, entorno virtual (`vi
 
 El rol de servidor de bases de datos es implementado mediante la configuración de dos motores de bases de datos:
 
-- PostgreSQL 9.6: Base de datos relacional. Utilizada por la aplicación Django para 
+- PostgreSQL 9.6: Base de datos relacional. Utilizada por la aplicación Django para guardar la información del modelo de la aplicación.
 - Redis: Servidor de base de datos en memoria utilizado como administrador de mensajes para el sistema de ejecución de tareas asincrónicas.
 
 ## Diagrama de arquitectura

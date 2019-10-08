@@ -52,7 +52,12 @@ class IndicatorQuerySet(models.QuerySet):
         return numerical
 
     def csv_panel_indicators(self):
-        lookup_field = self.model.CSV_PANEL_FIELD
+        return self._boolean_filter_on_type(self.model.CSV_PANEL_FIELD)
+
+    def series_indicators(self):
+        return self._boolean_filter_on_type(self.model.CSV_SERIES_FIELD)
+
+    def _boolean_filter_on_type(self, lookup_field):
         indicators = self.filter(**{'indicador_tipo__' + lookup_field: True})
         indicators = indicators.order_by('fecha')
         return indicators

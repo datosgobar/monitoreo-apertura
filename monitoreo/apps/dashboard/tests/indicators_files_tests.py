@@ -1,5 +1,5 @@
 #! coding: utf-8
-
+import csv
 import os
 
 from django_datajsonar.models import Node
@@ -75,7 +75,6 @@ class IndicatorGenerationsTest(TestCase):
             IndicadorFederador.objects.create(indicador_tipo=t, indicador_valor=v,
                                               jurisdiccion_id='harvest_id',
                                               jurisdiccion_nombre='harvest node')
-
         write_time_series_files()
 
     def test_network_static_series_file_is_created(self):
@@ -106,3 +105,37 @@ class IndicatorGenerationsTest(TestCase):
         filepath = os.path.join(
             settings.MEDIA_ROOT, 'indicator_files', 'federator-nodes', 'indicadores-nodos-federadores.csv.gz')
         self.assertTrue(os.path.exists(filepath))
+
+    def test_network_series_columns(self):
+        excluded_types = ('ind_c', 'ind_d', 'ind_e')
+        IndicatorType.objects.filter(nombre__in=excluded_types).update(series_red=False)
+        write_time_series_files()
+        filepath = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'indicadores-red-series.csv')
+        with open(filepath, 'r') as result_file:
+            reader = csv.reader(result_file)
+            headers = next(reader)
+            self.assertSetEqual(set(headers), {'indice_tiempo', 'ind_a', 'ind_b'})
+
+    def test_node_series_columns(self):
+        excluded_types = ('ind_a', 'ind_b', 'ind_d')
+        IndicatorType.objects.filter(nombre__in=excluded_types).update(series_nodos=False)
+        write_time_series_files()
+        dir_path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'nodes')
+        for node in Node.objects.all():
+            filepath = os.path.join(dir_path, f'indicadores-{node.catalog_id}-series.csv')
+            with open(filepath, 'r') as result_file:
+                reader = csv.reader(result_file)
+                headers = next(reader)
+                self.assertSetEqual(set(headers), {'indice_tiempo', 'ind_c', 'ind_e'})
+
+    def test_federtator_series_columns(self):
+        excluded_types = ('ind_c', 'ind_e')
+        IndicatorType.objects.filter(nombre__in=excluded_types).update(series_federadores=False)
+        write_time_series_files()
+        dir_path = os.path.join(settings.MEDIA_ROOT, 'indicator_files', 'federator-nodes')
+        for node in HarvestingNode.objects.all():
+            filepath = os.path.join(dir_path, f'indicadores-{node.catalog_id}-series.csv')
+            with open(filepath, 'r') as result_file:
+                reader = csv.reader(result_file)
+                headers = next(reader)
+                self.assertSetEqual(set(headers), {'indice_tiempo', 'ind_a', 'ind_b', 'ind_d'})

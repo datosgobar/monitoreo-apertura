@@ -31,5 +31,6 @@ class IndicatorSeriesCSVGenerator:
 
     def _write_series_file(self, identifier, dst_dir, queryset):
         filename = f'indicadores-{identifier}-series.csv'
+        queryset = queryset.series_indicators()
         with open(os.path.join(dst_dir, filename), 'w') as dst_file:
             generate_time_series(queryset, dst_file)

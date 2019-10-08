@@ -34,6 +34,7 @@ class AbstractIndicator(models.Model):
 class Indicador(AbstractIndicator):
 
     CSV_PANEL_FIELD = 'panel_nodos'
+    CSV_SERIES_FIELD = 'series_nodos'
 
     class Meta:
         # Nombre en plural para el admin panel de Django
@@ -52,6 +53,7 @@ class Indicador(AbstractIndicator):
 class IndicadorFederador(AbstractIndicator):
 
     CSV_PANEL_FIELD = 'panel_federadores'
+    CSV_SERIES_FIELD = 'series_federadores'
 
     class Meta:
         # Nombre en plural para el admin panel de Django
@@ -77,6 +79,7 @@ class IndicadorRed(models.Model):
     })
 
     CSV_PANEL_FIELD = 'panel_red'
+    CSV_SERIES_FIELD = 'series_red'
 
     class Meta:
         # Nombre en plural para el admin panel de Django

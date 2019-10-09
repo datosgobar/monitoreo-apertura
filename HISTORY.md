@@ -1,5 +1,9 @@
 Versiones
 =========
+1.2.1 (9-10-19)
+-------------------
+* Bugfix en escritura de series de tiempo para que utilicen los filtros booleanos
+
 1.2.0 (1-10-19)
 -------------------
 * Generación offline de gzip de panel de indicadores

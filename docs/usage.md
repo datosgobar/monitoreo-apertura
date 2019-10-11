@@ -230,15 +230,23 @@ acepta es csv.
 
 Además, accediendo a las siguientes rutas, se pueden descargar los siguientes dumps:
 
-- `/indicadores/indicadores-red-nodos.gz`: descarga un dump comprimido de la base de indicadores de red
-en formato.csv
-- `/indicadores/indicadores-nodos.gz`: descarga un dump de los indicadores de nodos
-- `/indicadores/indicadores-federadores.csv`: descarga un dump de los indicadores federadores
-- `/indicadores/indicadores-red-nodos-series.csv`: descarga un dump de los indicadores de nodos de series
-- `/indicadores/nodos/$nombre_archivo$.csv`: remplazando `$nombre_archivo$` con el nombre de archivo deseado, 
-descarga un dump de los nodos guardados con el nombre de archivo especificado.
-- `/indicadores/nodos-federadores/$nombre_archivo$.csv`: remplazando `$nombre_archivo$` con el nombre de archivo deseado, 
-descarga un dump de los nodos federadores guardados con el nombre de archivo especificado.
+- `/indicadores/indicadores-red-nodos.gz`: descarga un dump **comprimido** de la base de indicadores de red
+en formato `.csv`
+- `/indicadores/indicadores-nodos.gz`: descarga un dump **comprimido** de los indicadores de nodos 
+en formato `.csv`
+- `/indicadores/indicadores-nodos-federadores.gz`: descarga un dump **comprimido** de los indicadores federadores 
+en formato `.csv`.
+- `/indicadores/panel-red.csv`: estando logueado en el sistema, descarga un dump de la base de indicadores de red
+en formato `.csv`
+- `/indicadores/panel-nodos.csv`: estando logueado en el sistema, descarga un dump de los indicadores de nodos 
+en formato `.csv`
+- `/indicadores/panel-nodos-federadores.csv`: estando logueado en el sistema, descarga un dump de los indicadores federadores 
+en formato `.csv`.
+- `/indicadores/indicadores-red-nodos-series.csv`: descarga un archivo `.csv` de las series de tiempo de indicadores de red.
+- `/indicadores/nodos/indicadores-$id$-series.csv`: remplazando `$id$` con el numero identificador del nodo deseado, 
+descarga un archivo `.csv` comprimido de su serie de tiempo de indicadores.
+- `/indicadores/nodos-federadores/indicadores-$id$-series.csv`: remplazando `$id$` con el numero identificador 
+del nodo federador deseado, descarga un archivo `.csv` comprimido de su serie de tiempo de indicadores.
 - `/nodos.json`: devuelve (no descarga) la información de todos los nodos (id y nombre de los nodos,
 nombre de jurisdicción, urls de descarga de datos, etc). Se puede descargar esta información en
 formato **csv** o **xlsx** accediendo a `/nodos.csv` o `/nodos.xlsx` respectivamente

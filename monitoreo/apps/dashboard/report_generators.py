@@ -56,7 +56,7 @@ class IndicatorReportGenerator(AbstractReportGenerator):
         """
 
         start_time = self._format_date(self.indicators_task.created)
-        subject = u'[{}] Indicadores Monitoreo Apertura ({}): {}'\
+        subject = '[{}] Indicadores Monitoreo Apertura ({}): {}'\
             .format(settings.ENV_TYPE, context['target'], start_time)
         mail = self.render_templates(context)
         mail.subject = subject
@@ -154,7 +154,7 @@ class ValidationReportGenerator(AbstractReportGenerator):
         }
 
         mail = self.render_templates(context)
-        subject = u'[{}] Validacion de catálogo {}: {}'.format(
+        subject = '[{}] Validacion de catálogo {}: {}'.format(
             settings.ENV_TYPE, node.catalog_id, validation_time)
         mail.subject = subject
 
@@ -169,7 +169,7 @@ class ValidationReportGenerator(AbstractReportGenerator):
         context = {'error': error}
         validation_time = self._format_date(timezone.now())
         mail = self.render_error_templates(context)
-        subject = u'[{}] Error validando catálogo {}: {}'.format(
+        subject = '[{}] Error validando catálogo {}: {}'.format(
             settings.ENV_TYPE, node.catalog_id, validation_time)
         mail.subject = subject
         return mail

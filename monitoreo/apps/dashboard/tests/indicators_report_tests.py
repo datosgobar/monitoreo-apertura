@@ -113,7 +113,7 @@ class IndicatorReportGenerationTest(TestCase):
 
     def test_subject(self):
         start_time = timezone.localtime(self.indicators_task.created).strftime('%Y-%m-%d %H:%M:%S')
-        subject = u'[tst] Indicadores Monitoreo Apertura (Red): {}'.format(start_time)
+        subject = '[tst] Indicadores Monitoreo Apertura (Red): {}'.format(start_time)
         self.assertEqual(subject, self.mail.subject)
 
     def test_mail_header(self):

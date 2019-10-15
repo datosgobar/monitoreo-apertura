@@ -78,7 +78,7 @@ def save_network_indics(network_indics, indic_class, task):
                                               indicador_tipo=indic_type,
                                               defaults={'indicador_valor': json.dumps(value)})
 
-    IndicatorsGenerationTask.info(task, u'Calculados {} indicadores de red'.format(len(network_indics)))
+    IndicatorsGenerationTask.info(task, 'Calculados {} indicadores de red'.format(len(network_indics)))
 
 
 def save_indicators(indics_list, task, harvesting_nodes=False):
@@ -113,10 +113,10 @@ def save_indicators(indics_list, task, harvesting_nodes=False):
                 indic_models += 1
             except DataError:
                 IndicatorsGenerationTask.info(
-                    task, u"Error guardando indicador: {0} - {1}: {2}"
+                    task, "Error guardando indicador: {0} - {1}: {2}"
                     .format(catalog_name, indic_type, json.dumps(value)))
 
-    msg = u'Calculados {0} indicadores en {1} catálogos'\
+    msg = 'Calculados {0} indicadores en {1} catálogos'\
         .format(indic_models, len(indics_list))
     if harvesting_nodes:
         msg += ' federadores'

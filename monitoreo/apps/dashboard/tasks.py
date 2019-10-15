@@ -39,7 +39,7 @@ def federate_catalog(node, portal_url, apikey, task_id):
     task = FederationTask.objects.get(pk=task_id)
     catalog = get_catalog_from_node(node)
     catalog_id = node.catalog_id
-    msg = "Catálogo: %s\n" % node.catalog_id
+    msg = f"Catálogo: {node.catalog_id}\n"
     if not catalog:
         msg += UNREACHABLE_CATALOG.format(node.catalog_id)
         FederationTask.info(task, msg)

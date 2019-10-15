@@ -1,5 +1,17 @@
 Versiones
 =========
+1.2.2 (15-10-19)
+-------------------
+- Cambio de nombres de endpoints y archivos .csv
+- Errores más descriptivos en rutina de federación 
+
+1.2.1 (9-10-19)
+-------------------
+* Bump de pydatajson a 0.4.9
+* Bugfix a configuración de panel de series no aplicandose
+* Remitente de mails ahora recibe emails enviados en CCO
+
+
 1.2.0 (1-10-19)
 -------------------
 * Generación offline de gzip de panel de indicadores

@@ -10,7 +10,7 @@ class HarvestingNode(models.Model):
         verbose_name_plural = "Nodos federadores"
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return '%s' % self.name
 
     def __str__(self):
         return self.__unicode__()

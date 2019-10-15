@@ -1,15 +1,15 @@
 #! coding: utf-8
 
-UNREACHABLE_CATALOG = u"No se puede acceder al catálogo {}\n"
+UNREACHABLE_CATALOG = "No se puede acceder al catálogo {}\n"
 
-OVERALL_ASSESSMENT = u"Se federaron {} de {} datasets.\n"
+OVERALL_ASSESSMENT = "Se federaron {} de {} datasets presentes (habiendo {} datasets totales).\n"
 
-VALIDATION_ERRORS = u"{} tuvieron errores de validacion:\n {} \n"
+VALIDATION_ERRORS = "{} tuvieron errores de validacion:\n {} \n"
 
-MISSING = u"{} ausentes:\n {} \n"
+MISSING = "{} ausentes:\n {} \n"
 
-HARVESTING_ERRORS = u"{} tuvieron errores de federación:\n {} \n"
+HARVESTING_ERRORS = "{} tuvieron errores de federación:\n {} \n"
 
-TASK_ERROR = u"Error federando catalog: {} datasets: {} - Error: {}\n"
+TASK_ERROR = "Error federando catalog: {} datasets: {} - Error: {}\n"
 
-ERRORS_DIVIDER = u"####### ERRORES DE {} ####### \n"
+ERRORS_DIVIDER = "####### ERRORES DE {} ####### \n"

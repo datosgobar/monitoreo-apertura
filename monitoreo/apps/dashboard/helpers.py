@@ -25,7 +25,7 @@ def load_catalogs(task, nodes, harvesting=False):
                 catalog = DataJson(node.catalog_url,
                                    catalog_format=node.catalog_format)
         except Exception as e:
-            msg = u'Error accediendo al catálogo {}: {}'.format(node.catalog_id, str(e))
+            msg = 'Error accediendo al catálogo {}: {}'.format(node.catalog_id, str(e))
             IndicatorsGenerationTask.info(task, msg)
             continue
 
@@ -36,8 +36,10 @@ def load_catalogs(task, nodes, harvesting=False):
 
 def generate_task_log(catalog, catalog_id, invalid, missing, harvested_ids, federation_errors):
     validation = catalog.validate_catalog(only_errors=True)
-    total = Dataset.objects.filter(indexable=True, catalog__identifier=catalog_id).count()
-    log = OVERALL_ASSESSMENT.format(len(harvested_ids), total)
+    indexable_datasets = Dataset.objects.filter(indexable=True, catalog__identifier=catalog_id)
+    total = indexable_datasets.count()
+    present = indexable_datasets.filter(present=True).count()
+    log = OVERALL_ASSESSMENT.format(len(harvested_ids), present, total)
     if invalid:
         log += VALIDATION_ERRORS.format(len(invalid), list(invalid))
 
@@ -56,27 +58,27 @@ def generate_task_log(catalog, catalog_id, invalid, missing, harvested_ids, fede
 
 
 def append_federation_errors(log, errors):
-    log += ERRORS_DIVIDER.format(u'FEDERACIÓN')
+    log += ERRORS_DIVIDER.format('FEDERACIÓN')
     for dataset in errors:
-        log += dataset + u": " + errors[dataset] + u"\n"
+        log += dataset + ": " + errors[dataset] + "\n"
     return log
 
 
 def append_validation_errors(log, validation):
-    log += ERRORS_DIVIDER.format(u'VALIDACIÓN')
+    log += ERRORS_DIVIDER.format('VALIDACIÓN')
     if validation['error']['catalog']['status'] == 'ERROR':
-        log += u"Errores de catalogo: \n"
+        log += "Errores de catalogo: \n"
         log = list_errors(log, validation['error']['catalog']['errors'])
 
     for dataset in validation['error']['dataset']:
-        log += u"Errores en el dataset: {} \n".format(dataset['identifier'])
+        log += "Errores en el dataset: {} \n".format(dataset['identifier'])
         log = list_errors(log, dataset['errors'])
     return log
 
 
 def list_errors(msg, errors):
     for error in errors:
-        msg += u'\t {}: {} \n'.format(text_type(error['path']), error['message'])
+        msg += '\t {}: {} \n'.format(text_type(error['path']), error['message'])
     return msg
 
 

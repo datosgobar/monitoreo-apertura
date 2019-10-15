@@ -71,7 +71,7 @@ class ValidationReportGenerationTest(TestCase):
         self.assertEqual(['admin1@test.com'], self.mail.to)
 
     def test_subject(self):
-        subject = u'[tst] Validacion de catálogo id1: 2010-10-10 07:00:00'
+        subject = '[tst] Validacion de catálogo id1: 2010-10-10 07:00:00'
         self.assertEqual(subject, self.mail.subject)
 
     def test_mail_uses_des_from(self):

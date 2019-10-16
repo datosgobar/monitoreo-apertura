@@ -2,28 +2,27 @@
 from __future__ import unicode_literals
 
 import django
-from django.contrib import admin, messages
 from django.conf.urls import url
+from django.contrib import admin
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-
+from django_datajsonar.admin.singleton_admin import SingletonAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.formats import base_formats
 from import_export.forms import ImportForm
 
-from django_datajsonar.admin.singleton_admin import SingletonAdmin
-
 from monitoreo.apps.dashboard.management.import_utils import \
-    invalid_indicators_csv, import_from_admin
+    import_from_admin
+from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
+    IndicadorFederador
+from monitoreo.apps.dashboard.models.indicators import IndicatorsValidationConfig
 from monitoreo.apps.dashboard.models.tasks import TasksTimeouts
 from monitoreo.apps.dashboard.upload_handlers import \
     PersistentTemporaryFileUploadHandler
 from monitoreo.apps.dashboard.views import indicators_csv
-from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
-    IndicadorFederador
 
 
 @method_decorator(csrf_exempt, name='import_action')
@@ -151,4 +150,9 @@ class IndicatorRedAdmin(CustomImportAdmin):
 
 @admin.register(TasksTimeouts)
 class IndicatorConfigAdmin(SingletonAdmin):
+    pass
+
+
+@admin.register(IndicatorsValidationConfig)
+class IndicatorValidationConfigAdmin(SingletonAdmin):
     pass

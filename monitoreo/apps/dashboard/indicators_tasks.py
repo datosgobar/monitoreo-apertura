@@ -11,6 +11,7 @@ from django_rq import job
 from pydatajson.core import DataJson
 from django_datajsonar.models import Node
 
+from monitoreo.apps.dashboard.models.indicators import IndicatorsValidationConfig
 from monitoreo.apps.dashboard.series_csv_generators import IndicatorSeriesCSVGenerator
 from monitoreo.apps.dashboard.enqueue_job import enqueue_job_with_timeout
 from monitoreo.apps.dashboard.indicator_csv_zip_generator import IndicatorCSVZipGenerator
@@ -37,13 +38,14 @@ def indicators_run(_node=None):
 def generate_indicators(task):
     data_json = DataJson()
     catalogs = load_catalogs(task, Node.objects.filter(indexable=True))
+    validate_urls = IndicatorsValidationConfig.get_solo().validate_urls
     try:
         central_node = CentralNode.objects.get()
         central_catalog = urljoin(central_node.node.url, 'data.json')
     except (CentralNode.DoesNotExist, AttributeError):
         central_catalog = CENTRAL
     indics, network_indics = data_json.generate_catalogs_indicators(
-        catalogs, central_catalog, identifier_search=True)
+        catalogs, central_catalog, identifier_search=True, broken_links=validate_urls)
 
     save_indicators(indics, task)
     save_network_indics(network_indics, 'RED', task)
@@ -51,7 +53,7 @@ def generate_indicators(task):
     federator_catalogs = load_catalogs(
         task, HarvestingNode.objects.filter(enabled=True), harvesting=True)
     federator_indics, _ = data_json.generate_catalogs_indicators(
-        federator_catalogs, identifier_search=True)
+        federator_catalogs, identifier_search=True, broken_links=validate_urls)
 
     save_indicators(federator_indics, task, harvesting_nodes=True)
     # Creo columnas default si no existen

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 
 from django.db import models
+from solo.models import SingletonModel
 
 from .querysets import IndicatorQuerySet
 from .indicator_types import IndicatorType
@@ -98,3 +99,10 @@ class IndicadorRed(models.Model):
 
     def __str__(self):
         return self.__unicode__()
+
+
+class IndicatorsValidationConfig(SingletonModel):
+    validate_urls = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Configuraciones de validaciones de indicadores"

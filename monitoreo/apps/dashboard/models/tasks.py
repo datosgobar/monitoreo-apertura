@@ -47,3 +47,10 @@ class TasksTimeouts(SingletonModel):
 
     class Meta:
         verbose_name = "Timeouts de tareas"
+
+
+class TasksConfig(SingletonModel):
+    validate_urls = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Configuraciones de tareas"

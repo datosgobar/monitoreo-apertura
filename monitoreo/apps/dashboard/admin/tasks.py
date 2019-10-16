@@ -2,10 +2,12 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from django_datajsonar.admin.singleton_admin import SingletonAdmin
 from django_datajsonar.admin.tasks import AbstractTaskAdmin
 
 from monitoreo.apps.dashboard import models
 from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
+from monitoreo.apps.dashboard.models.tasks import TasksConfig
 from monitoreo.apps.dashboard.report_tasks import indicators_run, validation_run, \
     newly_report_run
 from monitoreo.apps.dashboard.tasks import federate_catalogs
@@ -74,3 +76,8 @@ class NewlyReportGenerationTaskAdmin(AbstractTaskAdmin):
     model = models.tasks.NewlyReportGenerationTask
     task = newly_report_run
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_newly_reports'
+
+
+@admin.register(TasksConfig)
+class TaskConfigAdmin(SingletonAdmin):
+    pass

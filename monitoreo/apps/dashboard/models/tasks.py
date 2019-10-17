@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 from solo.models import SingletonModel
-from django_datajsonar.models import AbstractTask
+from django_datajsonar.models import AbstractTask, Node
 
 from .nodes import HarvestingNode
 
@@ -51,6 +51,9 @@ class TasksTimeouts(SingletonModel):
 
 class TasksConfig(SingletonModel):
     validate_urls = models.BooleanField(default=True)
+
+    def get_config_for_node(self, node: Node) -> bool:
+        return self.validate_urls and node.validate_catalog_urls
 
     class Meta:
         verbose_name = "Configuraciones de tareas"

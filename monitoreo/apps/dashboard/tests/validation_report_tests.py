@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 import os
 import re
 
+from monitoreo.apps.dashboard.models.tasks import TasksConfig
+
 try:
     from mock import patch, MagicMock
 except ImportError:
@@ -130,3 +132,27 @@ class ValidationReportGenerationTest(TestCase):
         self.assertEqual(2, len(mail.outbox))
         self.assertTrue(expected_header in error_mail.body)
         self.assertTrue(expected_error in error_mail.body)
+
+    def test_reports_not_validated_with_url_if_flag_is_false(self):
+        TasksConfig.objects.update(validate_urls=False)
+
+        with patch('monitoreo.apps.dashboard.report_generators.DataJson.validate_catalog') as m:
+            send_validations()
+
+        broken_links_call_value = m.call_args_list[0][1]['broken_links']
+        self.assertFalse(broken_links_call_value)
+
+    def test_reports_validated_with_url_by_default(self):
+        with patch('monitoreo.apps.dashboard.report_generators.DataJson.validate_catalog') as m:
+            send_validations()
+
+        broken_links_call_value = m.call_args_list[0][1]['broken_links']
+        self.assertTrue(broken_links_call_value)
+
+    def test_reports_not_validated_with_url_if_node_flag_is_false(self):
+        Node.objects.update(validate_catalog_urls=False)
+        with patch('monitoreo.apps.dashboard.report_generators.DataJson.validate_catalog') as m:
+            send_validations()
+
+        broken_links_call_value = m.call_args_list[0][1]['broken_links']
+        self.assertFalse(broken_links_call_value)

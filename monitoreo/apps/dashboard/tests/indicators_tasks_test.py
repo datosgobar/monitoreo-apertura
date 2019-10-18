@@ -130,9 +130,11 @@ class IndicatorGenerationsTest(TestCase):
         task = IndicatorsGenerationTask.objects.create()
         generate_indicators(task)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
-                                   identifier_search=True)
+                                   identifier_search=True,
+                                   broken_links=True)
         mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL,
-                                   identifier_search=True)
+                                   identifier_search=True,
+                                   broken_links=True)
 
     def test_undefined_central_node_uses_default(self, mock_indic, mock_load):
         mock_load.return_value = self.catalogs
@@ -141,9 +143,11 @@ class IndicatorGenerationsTest(TestCase):
         task = IndicatorsGenerationTask.objects.create()
         generate_indicators(task)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
-                                   identifier_search=True)
+                                   identifier_search=True,
+                                   broken_links=True)
         mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL,
-                                   identifier_search=True)
+                                   identifier_search=True,
+                                   broken_links=True)
 
     def test_defined_central_node_catalog(self, mock_indic, mock_load):
         mock_load.return_value = self.catalogs
@@ -154,7 +158,9 @@ class IndicatorGenerationsTest(TestCase):
         task = IndicatorsGenerationTask.objects.create()
         generate_indicators(task)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
-                                   identifier_search=True)
+                                   identifier_search=True,
+                                   broken_links=True)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
                                    'harvest_url/data.json',
-                                   identifier_search=True)
+                                   identifier_search=True,
+                                   broken_links=True)

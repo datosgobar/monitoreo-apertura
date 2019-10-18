@@ -1,10 +1,10 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+from django_datajsonar.models import Node
 from django_rq import job
 from pydatajson.custom_exceptions import NonParseableCatalog
 from requests.exceptions import RequestException
-from django_datajsonar.models import Node
 
 from monitoreo.apps.dashboard import models
 from monitoreo.apps.dashboard.enqueue_job import enqueue_job_with_timeout

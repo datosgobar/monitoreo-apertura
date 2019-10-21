@@ -8,6 +8,10 @@
     - [Generación de archivos de configuración](#generaci%C3%B3n-de-archivos-de-configuraci%C3%B3n)
   - [Lectura de catalogos](#lectura-de-catalogos)
     - [Lectura periodica](#lectura-periodica)
+  - [Federación de datasets](#federaci%C3%B3n-de-datasets)
+    - [Action de nodos federadores](#action-de-nodos-federadores)
+    - [Task de federación](#task-de-federaci%C3%B3n)
+    - [Federación periódica](#federaci%C3%B3n-peri%C3%B3dica)
   - [Generación de indicadores](#generaci%C3%B3n-de-indicadores)
     - [Reporte de indicadores](#reporte-de-indicadores)
   - [Reporte de novedades](#reporte-de-novedades)
@@ -126,6 +130,44 @@ Antes de guardar la instancia deberiamos tener algo como:
 ![New Read DataJson Task](./images/read_datajson_synchro.png)
 
 En los campos del form podemos definir el horario a correr, los días y el nombre del synchronizer.
+
+## Federación de datasets
+
+Hay varios métodos para federar datasets a un catálogo central. Lo primero que necesitamos es crear un nodo federador.
+Con este fin entramos a `/admin/dashboard/harvestingnode/` y agregamos un nodo.
+
+![Add Harvesting Node](./images/federation/add_harvesting_node.png)
+
+Una vez creado el nodo, podemos federar los datasets de 3 distintas formas. Las tres actuarán sobre los datasets que
+marquemos como federables.
+
+### Action de nodos federadores
+
+Se puede correr como un action de nodo federador. Entramos a `/admin/dashboard/harvestingnode/` y elegimos el action
+_Correr Federación_.
+
+![Harvesting Node Action](./images/federation/harvesting_node_action.png)
+
+De esta manera federamos todos los datasets federables a los nodos seleccionados para el action.
+
+### Task de federación
+
+Otra alternativa es crear una corrida de federación. Para ello vamos a `/admin/dashboard/federationtask/` y agregamos
+un nuevo modelo.
+
+![Federation Task](./images/federation/federation_task.png)
+
+Aquí elegimos hacia que nodo apuntamos la federación. Opcionalmente, en el campo nodo podemos seleccionar un nodo en
+particular para federar. En el caso que se deje vacío, la federación corre sobre todos.
+
+### Federación periódica
+
+Finalmente, es posible definir un synchronizer para que se corran las tareas de federación de manera periódica:
+
+![Federation Synchro](./images/federation/federation_synchro.png)
+
+Con esta configuración se corren de manera periódica, a la hora determinada, federaciones sobre los nodos y datasets
+habilitados.
 
 ## Generación de indicadores
 

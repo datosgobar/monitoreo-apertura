@@ -38,7 +38,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
@@ -47,7 +47,7 @@
     
     
 	
-      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
       
       
     
@@ -223,7 +223,7 @@
         
       
       
-      <main class="md-main">
+      <main class="md-main" role="main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
             
@@ -597,6 +597,28 @@ Esta instancia ira registrando los "logs" y "resultados" del proceso. Podremos v
 <p>Antes de guardar la instancia deberiamos tener algo como:</p>
 <p><img alt="New Read DataJson Task" src="../images/read_datajson_synchro.png" /></p>
 <p>En los campos del form podemos definir el horario a correr, los días y el nombre del synchronizer.</p>
+<h2 id="federacion-de-datasets">Federación de datasets</h2>
+<p>Hay varios métodos para federar datasets a un catálogo central. Lo primero que necesitamos es crear un nodo federador.
+Con este fin entramos a <code>/admin/dashboard/harvestingnode/</code> y agregamos un nodo.</p>
+<p><img alt="Add Harvesting Node" src="../images/federation/add_harvesting_node.png" /></p>
+<p>Una vez creado el nodo, podemos federar los datasets de 3 distintas formas. Las tres actuarán sobre los datasets que
+marquemos como federables.</p>
+<h3 id="action-de-nodos-federadores">Action de nodos federadores</h3>
+<p>Se puede correr como un action de nodo federador. Entramos a <code>/admin/dashboard/harvestingnode/</code> y elegimos el action
+<em>Correr Federación</em>.</p>
+<p><img alt="Harvesting Node Action" src="../images/federation/harvesting_node_action.png" /></p>
+<p>De esta manera federamos todos los datasets federables a los nodos seleccionados para el action.</p>
+<h3 id="task-de-federacion">Task de federación</h3>
+<p>Otra alternativa es crear una corrida de federación. Para ello vamos a <code>/admin/dashboard/federationtask/</code> y agregamos
+un nuevo modelo.</p>
+<p><img alt="Federation Task" src="../images/federation/federation_task.png" /></p>
+<p>Aquí elegimos hacia que nodo apuntamos la federación. Opcionalmente, en el campo nodo podemos seleccionar un nodo en
+particular para federar. En el caso que se deje vacío, la federación corre sobre todos.</p>
+<h3 id="federacion-periodica">Federación periódica</h3>
+<p>Finalmente, es posible definir un synchronizer para que se corran las tareas de federación de manera periódica:</p>
+<p><img alt="Federation Synchro" src="../images/federation/federation_synchro.png" /></p>
+<p>Con esta configuración se corren de manera periódica, a la hora determinada, federaciones sobre los nodos y datasets
+habilitados.</p>
 <h2 id="generacion-de-indicadores">Generación de indicadores</h2>
 <p>Hay 2 formas de comenzar una corrida de generación de indicadores de la red de nodos: podemos instanciar una
 Corrida de indicadores. Para eso nos dirigimos a la ruta <code>/admin/dashboard/indicatorsgenerationtask/</code>.
@@ -781,7 +803,7 @@ se puede consultar una lista completa de los timezones que pueden usarse (column
       
     </div>
     
-      <script src="../assets/javascripts/application.245445c6.js"></script>
+      <script src="../assets/javascripts/application.ac79c3b0.js"></script>
       
         
         

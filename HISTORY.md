@@ -1,5 +1,10 @@
 Versiones
 =========
+1.2.3 (22-10-19)
+-------------------
+* Se integra la validación opcional de urls (para validaciones e indicadores)
+* Actualiza versiones de pydatajson y django-datajsonar
+
 1.2.2 (15-10-19)
 -------------------
 - Cambio de nombres de endpoints y archivos .csv

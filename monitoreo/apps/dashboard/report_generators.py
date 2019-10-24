@@ -140,7 +140,8 @@ class ValidationReportGenerator(AbstractReportGenerator):
         if not node:
             # No genera mail de staff
             return None
-        catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format)
+        catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format,
+                           verify_ssl=node.verify_ssl)
         validate_urls = TasksConfig.get_solo().get_config_for_node(node)
         validation = catalog.validate_catalog(only_errors=True,
                                               broken_links=validate_urls)

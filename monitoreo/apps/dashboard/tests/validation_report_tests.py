@@ -134,7 +134,7 @@ class ValidationReportGenerationTest(TestCase):
         self.assertTrue(expected_error in error_mail.body)
 
     def test_reports_not_validated_with_url_if_flag_is_false(self):
-        TasksConfig.objects.update(validate_urls=False)
+        TasksConfig.objects.update(validation_url_check=False)
 
         with patch('monitoreo.apps.dashboard.report_generators.DataJson.validate_catalog') as m:
             send_validations()

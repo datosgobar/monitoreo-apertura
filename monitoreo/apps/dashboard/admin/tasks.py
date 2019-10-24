@@ -10,7 +10,7 @@ from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
 from monitoreo.apps.dashboard.models.tasks import TasksConfig
 from monitoreo.apps.dashboard.report_tasks import indicators_run, validation_run, \
     newly_report_run
-from monitoreo.apps.dashboard.tasks import federate_catalogs
+from monitoreo.apps.dashboard.federation_tasks import federate_catalogs
 
 
 @admin.register(models.FederationTask)
@@ -21,7 +21,7 @@ class FederationAdmin(AbstractTaskAdmin):
 
     model = models.FederationTask
     task = federate_catalogs
-    callable_str = 'monitoreo.apps.dashboard.tasks.federation_run'
+    callable_str = 'monitoreo.apps.dashboard.federation_tasks.federation_run'
 
     def get_readonly_fields(self, request, obj=None):
         if obj:

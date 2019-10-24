@@ -321,7 +321,7 @@ DEFAULT_TASKS = [
     },
     {
         'name': 'Corrida de federación',
-        'callable': 'monitoreo.apps.dashboard.tasks.federation_run',
+        'callable': 'monitoreo.apps.dashboard.federation_tasks.federation_run',
         'start_hour': 3,
         'start_minute': 0,
         'interval': 4,
@@ -357,7 +357,7 @@ DEFAULT_PROCESSES = [
             },
             {
 
-                'callable_str': 'monitoreo.apps.dashboard.tasks.federation_run',
+                'callable_str': 'monitoreo.apps.dashboard.federation_tasks.federation_run',
                 'queue': 'federation'
             },
             {
@@ -385,7 +385,7 @@ DATAJSONAR_STAGES = {
         'task': 'django_datajsonar.models.ReadDataJsonTask',
     },
     'Federation': {
-        'callable_str': 'monitoreo.apps.dashboard.tasks.federation_run',
+        'callable_str': 'monitoreo.apps.dashboard.federation_tasks.federation_run',
         'queue': 'federation',
         'task': 'monitoreo.apps.dashboard.models.FederationTask'
     },

@@ -41,6 +41,17 @@ class NewlyReportGenerationTask(AbstractTask):
         self.save()
 
 
+class NotPresentReportGenerationTask(AbstractTask):
+    class Meta:
+        verbose_name_plural = "Reportes de datasets no presentes"
+
+    def close_task(self):
+        self.refresh_from_db()
+        self.status = self.FINISHED
+        self.finished = timezone.now()
+        self.save()
+
+
 class TasksTimeouts(SingletonModel):
     indicators_timeout = models.IntegerField(default=1800, help_text="En segundos.")
     validation_timeout = models.IntegerField(default=1800, help_text="En segundos.")

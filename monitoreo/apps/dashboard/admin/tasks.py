@@ -9,7 +9,7 @@ from monitoreo.apps.dashboard import models
 from monitoreo.apps.dashboard.indicators_tasks import generate_indicators
 from monitoreo.apps.dashboard.models.tasks import TasksConfig
 from monitoreo.apps.dashboard.report_tasks import indicators_run, validation_run, \
-    newly_report_run
+    newly_report_run, not_present_report_run
 from monitoreo.apps.dashboard.federation_tasks import federate_catalogs
 
 
@@ -76,6 +76,16 @@ class NewlyReportGenerationTaskAdmin(AbstractTaskAdmin):
     model = models.tasks.NewlyReportGenerationTask
     task = newly_report_run
     callable_str = 'monitoreo.apps.dashboard.report_tasks.send_newly_reports'
+
+
+@admin.register(models.tasks.NotPresentReportGenerationTask)
+class NotPresentDatasetReportGenerationTaskAdmin(AbstractTaskAdmin):
+    readonly_fields = ('created', 'logs', 'status', 'finished')
+    list_display = ('__unicode__',)
+
+    model = models.tasks.NotPresentReportGenerationTask
+    task = not_present_report_run
+    callable_str = 'monitoreo.apps.dashboard.report_tasks.send_not_present_reports'
 
 
 @admin.register(TasksConfig)

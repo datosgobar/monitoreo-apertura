@@ -10,7 +10,7 @@ from monitoreo.apps.dashboard import models
 from monitoreo.apps.dashboard.enqueue_job import enqueue_job_with_timeout
 from monitoreo.apps.dashboard.models.tasks import TasksTimeouts
 from monitoreo.apps.dashboard.report_generators import \
-    ValidationReportGenerator, IndicatorReportGenerator, NewlyDatasetReportGenerator
+    ValidationReportGenerator, IndicatorReportGenerator, NewlyDatasetReportGenerator, NotPresentReportGenerator
 
 
 @job('reports')
@@ -30,6 +30,13 @@ def send_validations(node=None):
 def send_newly_reports(_=None):
     newly_report_task = models.tasks.NewlyReportGenerationTask.objects.create()
     newly_report_run(newly_report_task)
+
+
+@job('reports')
+def send_not_present_reports(_=None):
+    not_present_dataset_report_task \
+        = models.tasks.NotPresentReportGenerationTask.objects.create()
+    not_present_report_run(not_present_dataset_report_task)
 
 
 @job('reports')
@@ -101,6 +108,35 @@ def newly_report_run(newly_report_task):
         return
 
     catalog_identifiers = [dataset.catalog.identifier for dataset in new_datasets]
+    nodes_to_report = Node.objects.filter(catalog_id__in=catalog_identifiers)
+
+    for node in nodes_to_report:
+        mail = generator.generate_email(node)
+        generator.send_email(mail, node)
+
+    staff_mail = generator.generate_email()
+    generator.send_email(staff_mail)
+
+    generator.close_task()
+
+
+@job('reports')
+def not_present_report_run(not_present_report_task):
+    generator = NotPresentReportGenerator(not_present_report_task)
+
+    datasets_to_update = generator.get_datasets_to_update()
+    datasets_not_presents = generator.get_not_present_datasets()
+
+    if not datasets_to_update:
+        generator.close_task()
+        return
+
+    for dataset in datasets_to_update:
+        dataset.present = dataset.dataset_present_record.present
+        dataset.save()
+
+    catalog_identifiers = [dataset.catalog.identifier
+                           for dataset in datasets_not_presents]
     nodes_to_report = Node.objects.filter(catalog_id__in=catalog_identifiers)
 
     for node in nodes_to_report:

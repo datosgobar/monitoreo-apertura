@@ -127,12 +127,14 @@ def not_present_report_run(not_present_report_task):
     datasets_to_update = generator.get_datasets_to_update()
     datasets_not_presents = generator.get_not_present_datasets()
 
+    generator.create_missing_dataset_present_record()
+
     if not datasets_to_update:
         generator.close_task()
         return
 
     for dataset in datasets_to_update:
-        dataset.present = dataset.dataset_present_record.present
+        dataset.datasetpresentrecord.present_record = dataset.present
         dataset.save()
 
     catalog_identifiers = [dataset.catalog.identifier

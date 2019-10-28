@@ -7,8 +7,8 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django_datajsonar.models import Dataset
 from pydatajson.core import DataJson
-from django_datajsonar.models import Dataset, Node, Catalog
 
 from monitoreo.apps.dashboard.email_renderer import ReportSender, EmailRenderer
 from monitoreo.apps.dashboard.helpers import create_node_and_dataset_pairs, get_datasets_for_node
@@ -226,6 +226,7 @@ class NotPresentReportGenerator(AbstractReportGenerator):
         self.report_task = report_task
         self.datasets_to_update = []
         self.datasets_not_present = []
+        self.datasets_without_present_record = []
         self.search_datasets_to_update()
         renderer = EmailRenderer('reports',
                                  'not_present_datasets.txt',
@@ -253,9 +254,16 @@ class NotPresentReportGenerator(AbstractReportGenerator):
                     if not dataset.present:
                         self.datasets_not_present.append(dataset)
             except ObjectDoesNotExist:
-                dataset.datasetpresentrecord \
-                    = DatasetPresentRecord(dataset=dataset,
-                                           present_record=False)
+                self.datasets_without_present_record.append(dataset)
+                if not dataset.present:
+                    self.datasets_not_present.append(dataset)
+
+    def create_missing_dataset_present_record(self):
+        for dataset in self.datasets_without_present_record:
+            dataset.datasetpresentrecord = DatasetPresentRecord.objects \
+                .create(dataset=dataset,
+                        present_record=dataset.present)
+            dataset.save()
 
     def generate_email(self, node=None):
         report_date = timezone.now().date()

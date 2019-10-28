@@ -141,7 +141,7 @@ class ValidationReportGenerator(AbstractReportGenerator):
             # No genera mail de staff
             return None
         catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format)
-        validate_urls = TasksConfig.get_solo().get_config_for_node(node)
+        validate_urls = TasksConfig.get_solo().get_validation_config_for_node(node)
         validation = catalog.validate_catalog(only_errors=True,
                                               broken_links=validate_urls)
         validation_time = self._format_date(timezone.now())

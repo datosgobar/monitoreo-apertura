@@ -7,6 +7,8 @@ from django_rq import job
 from pydatajson.core import DataJson
 from pydatajson.federation import harvest_catalog_to_ckan
 from django_datajsonar.models import Node, Dataset
+
+from monitoreo.apps.dashboard.models.tasks import TasksConfig
 from .helpers import generate_task_log
 from .models import HarvestingNode, FederationTask
 from .strings import UNREACHABLE_CATALOG, TASK_ERROR
@@ -65,7 +67,8 @@ def federate_catalog(node, portal_url, apikey, task_id):
 
 
 def sort_datasets_by_condition(node, catalog):
-    catalog_report = catalog.validate_catalog()
+    url_validation = TasksConfig.get_solo().federation_url_check
+    catalog_report = catalog.validate_catalog(broken_links=url_validation)
     valid_set = {ds['identifier'] for ds in catalog_report['error']['dataset'] if ds['status'] == 'OK'}
     invalid_set = {ds['identifier'] for ds in catalog_report['error']['dataset'] if ds['status'] == 'ERROR'}
     dataset_models = set(Dataset.objects.filter(catalog__identifier=node.catalog_id, indexable=True, present=True,)

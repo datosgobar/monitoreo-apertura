@@ -118,7 +118,7 @@ class ValidationReportGenerationTest(TestCase):
         self.assertEqual(1, len(mail.outbox))
 
     def test_send_error_mail(self):
-        def mock_side_effect(catalog, catalog_format=None):
+        def mock_side_effect(catalog, catalog_format=None, verify_ssl=False):
             raise NonParseableCatalog(catalog, 'Test Error')
 
         mail.outbox = []

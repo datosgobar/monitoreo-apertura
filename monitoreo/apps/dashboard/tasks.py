@@ -81,7 +81,7 @@ def sort_datasets_by_condition(node, catalog):
 
 def get_catalog_from_node(node):
     try:
-        catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format)
+        catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format, verify_ssl=node.verify_ssl)
         return catalog
 
     except Exception:

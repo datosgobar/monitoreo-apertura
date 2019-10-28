@@ -39,7 +39,8 @@ class LoadCatalogsTest(TestCase):
         self.assertTrue(indicators[0]['datasets_cant'], 'Catálogo no parseado')
 
     def test_load_catalog_json_node_format(self):
-        def mock_side_effect(catalog, catalog_format=None):
+        def mock_side_effect(catalog, catalog_format=None,
+                             verify_ssl=False):
             return {'format': catalog_format}
 
         with patch('monitoreo.apps.dashboard.helpers.DataJson',
@@ -49,7 +50,8 @@ class LoadCatalogsTest(TestCase):
                          result)
 
     def test_load_catalog_xlsx_node_format(self):
-        def mock_side_effect(catalog, catalog_format=None):
+        def mock_side_effect(catalog, catalog_format=None,
+                             verify_ssl=False):
             return {'format': catalog_format}
 
         self.node.catalog_format = 'xlsx'

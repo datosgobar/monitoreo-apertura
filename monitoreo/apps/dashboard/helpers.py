@@ -23,7 +23,8 @@ def load_catalogs(task, nodes, harvesting=False):
                 catalog = DataJson(url)
             else:
                 catalog = DataJson(node.catalog_url,
-                                   catalog_format=node.catalog_format)
+                                   catalog_format=node.catalog_format,
+                                   verify_ssl=node.verify_ssl)
         except Exception as e:
             msg = f'Error accediendo al catálogo {node.catalog_id}: {str(e)}'
             IndicatorsGenerationTask.info(task, msg)

@@ -4,12 +4,15 @@ from __future__ import unicode_literals
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django_datajsonar.models import Dataset
 from pydatajson.core import DataJson
-from django_datajsonar.models import Dataset, Node, Catalog
 
 from monitoreo.apps.dashboard.email_renderer import ReportSender, EmailRenderer
+from monitoreo.apps.dashboard.helpers import create_node_and_dataset_pairs, get_datasets_for_node
+from monitoreo.apps.dashboard.models.dataset_present_record import DatasetPresentRecord
 from monitoreo.apps.dashboard.models.tasks import TasksConfig
 from . import models
 
@@ -204,12 +207,12 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
         if not node:
             subject = f'[{settings.ENV_TYPE}] Reporte de novedades de Monitoreo Apertura' \
                       f' del {report_date}'
-            nodes_list = self._create_node_and_new_datasets_pairs(self.new_datasets)
+            nodes_list = create_node_and_dataset_pairs(self.new_datasets)
             context = {'nodes_list': nodes_list}
         else:
             subject = f'[{settings.ENV_TYPE}] Reporte de novedades de Monitoreo Apertura' \
                       f' para {node} del {report_date}'
-            datasets_list = self._get_new_datasets_for_node(node, self.new_datasets)
+            datasets_list = get_datasets_for_node(node, self.new_datasets)
             context = {
                 'node': node,
                 'datasets_list': datasets_list
@@ -218,19 +221,66 @@ class NewlyDatasetReportGenerator(AbstractReportGenerator):
         mail.subject = subject
         return mail
 
-    def _get_new_datasets_for_node(self, node, all_new_datasets):
-        catalog = Catalog.objects.get(identifier=node.catalog_id)
-        new_datasets_in_node = [dataset for dataset in catalog.dataset_set.all()
-                                if dataset in all_new_datasets]
-        return new_datasets_in_node
 
-    def _create_node_and_new_datasets_pairs(self, all_new_datasets):
-        nodes_and_datasets_pairs = []
-        catalog_identifiers = [dataset.catalog.identifier for dataset in all_new_datasets]
-        nodes_to_report = Node.objects.filter(catalog_id__in=catalog_identifiers)
+class NotPresentReportGenerator(AbstractReportGenerator):
+    def __init__(self, report_task):
+        self.report_task = report_task
+        self.datasets_to_update = []
+        self.datasets_not_present = []
+        self.datasets_without_present_record = []
+        self.search_datasets_to_update()
+        renderer = EmailRenderer('reports',
+                                 'not_present_datasets.txt',
+                                 'not_present_datasets.html')
+        super(NotPresentReportGenerator, self).__init__(report_task, renderer)
 
-        for node in nodes_to_report:
-            new_datasets_in_node = self._get_new_datasets_for_node(node, all_new_datasets)
-            nodes_and_datasets_pairs.append((node, new_datasets_in_node))
+    def close_task(self):
+        self.report_task.close_task()
 
-        return nodes_and_datasets_pairs
+    def get_datasets_to_update(self):
+        return self.datasets_to_update
+
+    def get_not_present_datasets(self):
+        return self.datasets_not_present
+
+    def search_datasets_to_update(self):
+        datasets = Dataset.objects.all()
+        self.datasets_to_update = []
+        self.datasets_not_present = []
+        for dataset in datasets:
+            try:
+                dpr = dataset.datasetpresentrecord
+                if dpr.present_record != dataset.present:
+                    self.datasets_to_update.append(dataset)
+                    if not dataset.present:
+                        self.datasets_not_present.append(dataset)
+            except ObjectDoesNotExist:
+                self.datasets_without_present_record.append(dataset)
+                if not dataset.present:
+                    self.datasets_not_present.append(dataset)
+
+    def create_missing_dataset_present_record(self):
+        for dataset in self.datasets_without_present_record:
+            dataset.datasetpresentrecord = DatasetPresentRecord.objects \
+                .create(dataset=dataset,
+                        present_record=dataset.present)
+            dataset.save()
+
+    def generate_email(self, node=None):
+        report_date = timezone.now().date()
+        if not node:
+            subject = f'[{settings.ENV_TYPE}] Reporte de datasets no presentes de Monitoreo Apertura' \
+                      f' del {report_date}'
+            nodes_list = create_node_and_dataset_pairs(self.datasets_not_present)
+            context = {'nodes_list': nodes_list}
+        else:
+            subject = f'[{settings.ENV_TYPE}] Reporte de datasets no presentes de Monitoreo Apertura' \
+                      f' para {node} del {report_date}'
+            datasets_list = get_datasets_for_node(node, self.datasets_not_present)
+            context = {
+                'node': node,
+                'datasets_list': datasets_list
+            }
+        mail = self.render_templates(context)
+        mail.subject = subject
+        return mail

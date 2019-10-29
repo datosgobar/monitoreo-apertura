@@ -41,6 +41,17 @@ class NewlyReportGenerationTask(AbstractTask):
         self.save()
 
 
+class NotPresentReportGenerationTask(AbstractTask):
+    class Meta:
+        verbose_name_plural = "Reportes de datasets no presentes"
+
+    def close_task(self):
+        self.refresh_from_db()
+        self.status = self.FINISHED
+        self.finished = timezone.now()
+        self.save()
+
+
 class TasksConfig(SingletonModel):
     validation_url_check = models.BooleanField(
         default=True, verbose_name='Activar validación de URLs con errores de descarga en los reportes')

@@ -9,7 +9,7 @@ from pydatajson import DataJson
 
 from django.http import HttpResponse
 
-from django_datajsonar.models import Dataset
+from django_datajsonar.models import Dataset, Catalog, Node
 from .models import IndicatorsGenerationTask, IndicatorType
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
@@ -116,3 +116,22 @@ def generate_time_series(indicators_queryset, output):
         indicators_table[date].update({'indice_tiempo': date})
         writer.writerow(indicators_table[date])
     return output
+
+
+def get_datasets_for_node(node, datasets):
+    catalog = Catalog.objects.get(identifier=node.catalog_id)
+    datasets_in_node = [dataset for dataset in catalog.dataset_set.all()
+                        if dataset in datasets]
+    return datasets_in_node
+
+
+def create_node_and_dataset_pairs(datasets):
+    nodes_and_datasets_pairs = []
+    catalog_identifiers = [dataset.catalog.identifier for dataset in datasets]
+    nodes_to_report = Node.objects.filter(catalog_id__in=catalog_identifiers)
+
+    for node in nodes_to_report:
+        datasets_in_node = get_datasets_for_node(node, datasets)
+        nodes_and_datasets_pairs.append((node, datasets_in_node))
+
+    return nodes_and_datasets_pairs

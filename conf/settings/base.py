@@ -6,7 +6,6 @@ from __future__ import absolute_import, unicode_literals
 from os.path import dirname
 
 import environ
-from .indicators import *
 
 SETTINGS_DIR = environ.Path(__file__) - 1
 ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)
@@ -408,6 +407,11 @@ DATAJSONAR_STAGES = {
         'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_newly_reports',
         'queue': 'reports',
         'task': 'monitoreo.apps.dashboard.models.NewlyReportGenerationTask'
+    },
+    'Not present datasets reports': {
+        'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_not_present_reports',
+        'queue': 'reports',
+        'task': 'monitoreo.apps.dashboard.models.NotPresentReportGenerationTask'
     }
 }
 

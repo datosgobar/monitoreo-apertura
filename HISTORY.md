@@ -1,5 +1,10 @@
 Versiones
 =========
+1.3.0 (29-10-19)
+-------------------
+* Parametrización del timeout para los HEAD
+* Nueva corrida de datasets no presentes
+
 1.2.3 (22-10-19)
 -------------------
 * Se integra la validación opcional de urls (para validaciones e indicadores)

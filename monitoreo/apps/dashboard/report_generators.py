@@ -143,8 +143,9 @@ class ValidationReportGenerator(AbstractReportGenerator):
         if not node:
             # No genera mail de staff
             return None
+        url_check_timeout = TasksConfig.get_solo().url_check_timeout
         catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format,
-                           verify_ssl=node.verify_ssl)
+                           verify_ssl=node.verify_ssl, url_check_timeout=url_check_timeout)
         validate_urls = TasksConfig.get_solo().get_validation_config_for_node(node)
         validation = catalog.validate_catalog(only_errors=True,
                                               broken_links=validate_urls)

@@ -35,7 +35,8 @@ def indicators_run(_node=None):
 
 @job('indicators', timeout=1800)
 def generate_indicators(task):
-    data_json = DataJson()
+    url_check_timeout = TasksConfig.get_solo().url_check_timeout
+    data_json = DataJson(url_check_timeout=url_check_timeout)
     catalogs = load_catalogs(task, Node.objects.filter(indexable=True))
     validate_urls = TasksConfig.get_solo().indicators_url_check
     try:

@@ -81,7 +81,9 @@ def sort_datasets_by_condition(node, catalog):
 
 def get_catalog_from_node(node):
     try:
-        catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format, verify_ssl=node.verify_ssl)
+        url_check_timeout = TasksConfig.get_solo().url_check_timeout
+        catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format, verify_ssl=node.verify_ssl,
+                           url_check_timeout=url_check_timeout)
         return catalog
 
     except Exception:

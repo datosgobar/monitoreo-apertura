@@ -2,6 +2,8 @@
 
 import os
 
+from monitoreo.apps.dashboard.models.tasks import TasksConfig
+
 try:
     from mock import patch, MagicMock
 except ImportError:
@@ -10,6 +12,7 @@ except ImportError:
 from django.test import TestCase
 from pydatajson.core import DataJson
 from pydatajson.constants import DEFAULT_TIMEZONE
+from pydatajson.validation import validate_catalog
 from django_datajsonar.models import Node, Catalog, Dataset
 from ..federation_tasks import federation_run, sort_datasets_by_condition
 from ..models import HarvestingNode
@@ -176,3 +179,20 @@ class HarvestRunTest(TestCase):
                                      'harvest_url', 'apikey', 'id2',
                                      ['99db6631-d1c9-470b-a73e-c62daa32c777'],
                                      origin_tz=DEFAULT_TIMEZONE, dst_tz="Africa/Abidjan")
+
+    @patch('pydatajson.core.DataJson.validate_catalog', return_value={'error': {'dataset': []}})
+    def test_federation_validation_is_true_by_default(self, mock_validation):
+        node = Node.objects.get(catalog_id='id3')
+        datajson = DataJson(self.get_sample('missing_dataset_title.json'))
+        sort_datasets_by_condition(node, datajson)
+        mock_validation.assert_called_with(broken_links=True)
+
+    @patch('pydatajson.core.DataJson.validate_catalog', return_value={'error': {'dataset': []}})
+    def test_federation_validation_takes_value_from_config(self, mock_validation):
+        node = Node.objects.get(catalog_id='id3')
+        datajson = DataJson(self.get_sample('missing_dataset_title.json'))
+        config = TasksConfig.get_solo()
+        config.federation_url_check = False
+        config.save()
+        sort_datasets_by_condition(node, datajson)
+        mock_validation.assert_called_with(broken_links=False)

@@ -52,19 +52,18 @@ class NotPresentReportGenerationTask(AbstractTask):
         self.save()
 
 
-class TasksTimeouts(SingletonModel):
+class TasksConfig(SingletonModel):
+    validation_url_check = models.BooleanField(
+        default=True, verbose_name='Activar validación de URLs con errores de descarga en los reportes')
+    indicators_url_check = models.BooleanField(
+        default=True, verbose_name='Activar generación de indicadores de URLs con errores de descarga')
+    federation_url_check = models.BooleanField(
+        default=True, verbose_name='Activar validación de URLs con errores de descarga en la federación')
     indicators_timeout = models.IntegerField(default=1800, help_text="En segundos.")
     validation_timeout = models.IntegerField(default=1800, help_text="En segundos.")
 
-    class Meta:
-        verbose_name = "Timeouts de tareas"
-
-
-class TasksConfig(SingletonModel):
-    validate_urls = models.BooleanField(default=True)
-
-    def get_config_for_node(self, node: Node) -> bool:
-        return self.validate_urls and node.validate_catalog_urls
+    def get_validation_config_for_node(self, node: Node) -> bool:
+        return self.validation_url_check and node.validate_catalog_urls
 
     class Meta:
-        verbose_name = "Configuraciones de tareas"
+        verbose_name = "Configuracion general"

@@ -118,7 +118,7 @@ class ValidationReportGenerationTest(TestCase):
         self.assertEqual(1, len(mail.outbox))
 
     def test_send_error_mail(self):
-        def mock_side_effect(catalog, catalog_format=None):
+        def mock_side_effect(catalog, catalog_format=None, verify_ssl=False):
             raise NonParseableCatalog(catalog, 'Test Error')
 
         mail.outbox = []
@@ -134,7 +134,7 @@ class ValidationReportGenerationTest(TestCase):
         self.assertTrue(expected_error in error_mail.body)
 
     def test_reports_not_validated_with_url_if_flag_is_false(self):
-        TasksConfig.objects.update(validate_urls=False)
+        TasksConfig.objects.update(validation_url_check=False)
 
         with patch('monitoreo.apps.dashboard.report_generators.DataJson.validate_catalog') as m:
             send_validations()

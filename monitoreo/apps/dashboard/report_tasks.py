@@ -8,7 +8,7 @@ from requests.exceptions import RequestException
 
 from monitoreo.apps.dashboard import models
 from monitoreo.apps.dashboard.enqueue_job import enqueue_job_with_timeout
-from monitoreo.apps.dashboard.models.tasks import TasksTimeouts
+from monitoreo.apps.dashboard.models.tasks import TasksConfig
 from monitoreo.apps.dashboard.report_generators import \
     ValidationReportGenerator, IndicatorReportGenerator, NewlyDatasetReportGenerator, NotPresentReportGenerator
 
@@ -22,7 +22,7 @@ def send_reports(node=None):
 @job('reports')
 def send_validations(node=None):
     validation_task = models.ValidationReportTask.objects.create()
-    timeout = TasksTimeouts.get_solo().validation_timeout
+    timeout = TasksConfig.get_solo().validation_timeout
     enqueue_job_with_timeout('reports', validation_run, timeout, args=(validation_task,), kwargs={'node': node})
 
 

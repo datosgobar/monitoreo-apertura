@@ -5,15 +5,15 @@ Reporte del {% now "d/m/Y" %}
 {% for node, node_datasets in nodes_list %}
 · Datasets que estaban presentes en el nodo {{ node }} y ya no lo estan:
     {% for dataset in node_datasets %}
-    - Dataset {{ dataset.title }} creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}
+    - El dataset {{ dataset.title }}, creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}, ya no se encuentra presente
     {% endfor %}
 {% endfor %}
 
 {% else %}
 
-Los siguientes datasets se agregaron al nodo {{ node }}
+Los siguientes datasets han dejado de estar presentes en el nodo {{ nodo }}:
 {% for dataset in datasets_list %}
-- Dataset {{ dataset.title }} creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}
+- El dataset {{ dataset.title }}, creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}, ya no se encuentra presente
 {% endfor %}
 
 {% endif %}

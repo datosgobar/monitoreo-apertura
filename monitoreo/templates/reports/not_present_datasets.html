@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de datasets del nodo {{ nodo }}</title>
+    <title>Reporte de datasets no presentes del nodo {{ nodo }}</title>
 </head>
 <body>
 <h3>Reporte del {% now "d/m/Y" %}</h3>
@@ -11,11 +11,11 @@
 <ul>
 {% for node, node_datasets in nodes_list %}
 <li>
-    <h2>Datasets agregados al nodo {{ node }}:</h2>
+    <h2>Datasets que estaban presentes en el nodo {{ node }} y ya no lo estan:</h2>
     <ul>
         {% for dataset in node_datasets %}
         <li>
-            <h3>Dataset {{ dataset.title }} creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}</h3>
+            <h3>El dataset {{ dataset.title }}, creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}, ya no se encuentra presente</h3>
         </li>
         {% endfor %}
     </ul>
@@ -25,11 +25,11 @@
 
 {% else %}
 
-<h2>Los siguientes datasets se agregaron al nodo {{ nodo }}</h2>
+<h2>Los siguientes datasets han dejado de estar presentes en el nodo {{ nodo }}:</h2>
 <ul>
     {% for dataset in datasets_list %}
     <li>
-        <h3>Dataset {{ dataset.title }} creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}</h3>
+        <h3>El dataset {{ dataset.title }}, creado el {{ dataset.time_created|date:"d/m/Y" }} a las {{ dataset.time_created|date:"H:i" }}, ya no se encuentra presente</h3>
     </li>
     {% endfor %}
 </ul>

@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from solo.admin import SingletonModelAdmin
 
-from monitoreo.apps.dashboard.tasks import federate_catalogs
+from monitoreo.apps.dashboard.federation_tasks import federate_catalogs
 from monitoreo.apps.dashboard.models import HarvestingNode, FederationTask, \
     CentralNode
 

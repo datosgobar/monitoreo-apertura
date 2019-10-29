@@ -134,8 +134,9 @@ def not_present_report_run(not_present_report_task):
         return
 
     for dataset in datasets_to_update:
-        dataset.datasetpresentrecord.present_record = dataset.present
-        dataset.save()
+        present_record = dataset.datasetpresentrecord
+        present_record.present_record = dataset.present
+        present_record.save()
 
     catalog_identifiers = [dataset.catalog.identifier
                            for dataset in datasets_not_presents]

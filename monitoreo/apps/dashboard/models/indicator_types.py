@@ -1,8 +1,8 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-from django.db import models
 from django.conf import settings
+from django.db import models
 from ordered_model.models import OrderedModel
 
 
@@ -19,6 +19,7 @@ class IndicatorType(OrderedModel):
     panel_federadores = models.BooleanField(default=True)
 
     class Meta(OrderedModel.Meta):
+        verbose_name = "Tipo de indicador"
         verbose_name_plural = "Tipos de indicadores"
 
     def __unicode__(self):
@@ -30,6 +31,7 @@ class IndicatorType(OrderedModel):
 
 class TableColumn(OrderedModel):
     class Meta(OrderedModel.Meta):
+        verbose_name = "Columna de la tabla de indicadores de red"
         verbose_name_plural = "Columnas de la tabla de indicadores de red"
 
     indicator = models.OneToOneField(IndicatorType, models.CASCADE)

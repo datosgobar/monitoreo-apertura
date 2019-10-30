@@ -7,6 +7,7 @@ from solo.models import SingletonModel
 
 class HarvestingNode(models.Model):
     class Meta:
+        verbose_name = "Nodo federador"
         verbose_name_plural = "Nodos federadores"
 
     def __unicode__(self):

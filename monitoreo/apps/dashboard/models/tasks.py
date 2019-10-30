@@ -3,35 +3,40 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils import timezone
-from solo.models import SingletonModel
 from django_datajsonar.models import AbstractTask, Node
+from solo.models import SingletonModel
 
 from .nodes import HarvestingNode
 
 
 class FederationTask(AbstractTask):
     class Meta:
+        verbose_name = "Corrida de federación"
         verbose_name_plural = "Corridas de federación"
     harvesting_node = models.ForeignKey(HarvestingNode, models.CASCADE, null=True)
 
 
 class IndicatorsGenerationTask(AbstractTask):
     class Meta:
+        verbose_name = "Corrida de indicadores"
         verbose_name_plural = "Corridas de indicadores"
 
 
 class ReportGenerationTask(AbstractTask):
     class Meta:
+        verbose_name = "Reporte de indicadores"
         verbose_name_plural = "Reportes de indicadores"
 
 
 class ValidationReportTask(AbstractTask):
     class Meta:
+        verbose_name = "Reporte de validación"
         verbose_name_plural = "Reportes de validación"
 
 
 class NewlyReportGenerationTask(AbstractTask):
     class Meta:
+        verbose_name = "Reporte de novedades de datasets"
         verbose_name_plural = "Reportes de novedades de datasets"
 
     def close_task(self):
@@ -43,6 +48,7 @@ class NewlyReportGenerationTask(AbstractTask):
 
 class NotPresentReportGenerationTask(AbstractTask):
     class Meta:
+        verbose_name = "Reporte de datasets no presentes"
         verbose_name_plural = "Reportes de datasets no presentes"
 
     def close_task(self):
@@ -53,6 +59,10 @@ class NotPresentReportGenerationTask(AbstractTask):
 
 
 class TasksConfig(SingletonModel):
+    class Meta:
+        verbose_name = "Configuración general"
+        verbose_name_plural = "Configuraciones generales"
+
     validation_url_check = models.BooleanField(
         default=True, verbose_name='Activar validación de URLs con errores de descarga en los reportes')
     indicators_url_check = models.BooleanField(
@@ -65,6 +75,3 @@ class TasksConfig(SingletonModel):
 
     def get_validation_config_for_node(self, node: Node) -> bool:
         return self.validation_url_check and node.validate_catalog_urls
-
-    class Meta:
-        verbose_name = "Configuracion general"

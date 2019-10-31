@@ -5,8 +5,8 @@ from collections import OrderedDict
 
 from django.db import models
 
-from .querysets import IndicatorQuerySet
 from .indicator_types import IndicatorType
+from .querysets import IndicatorQuerySet
 
 
 class AbstractIndicator(models.Model):
@@ -37,7 +37,7 @@ class Indicador(AbstractIndicator):
     CSV_SERIES_FIELD = 'series_nodos'
 
     class Meta:
-        # Nombre en plural para el admin panel de Django
+        verbose_name = "Indicador de nodos"
         verbose_name_plural = "Tabla de indicadores de nodos"
 
     def __unicode__(self):
@@ -56,7 +56,7 @@ class IndicadorFederador(AbstractIndicator):
     CSV_SERIES_FIELD = 'series_federadores'
 
     class Meta:
-        # Nombre en plural para el admin panel de Django
+        verbose_name = "Indicador de nodos federadores"
         verbose_name_plural = "Tabla de indicadores de nodos federadores"
 
     def __unicode__(self):
@@ -82,7 +82,7 @@ class IndicadorRed(models.Model):
     CSV_SERIES_FIELD = 'series_red'
 
     class Meta:
-        # Nombre en plural para el admin panel de Django
+        verbose_name = "Indicador de red"
         verbose_name_plural = "Tabla de indicadores de red"
         get_latest_by = 'fecha'
 

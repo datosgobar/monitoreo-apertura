@@ -1,4 +1,4 @@
-fecha,indicador_tipo,indicador_valor
+fecha,indicador_nombre,indicador_valor
 2100-12-31,ind_a,1337
 2100-12-31,ind_b,"[[""d3"", ""l3""], [""d4"", ""l4""]]"
 2100-12-31,ind_c,"{""k1"": 100, ""k2"": 20}"

@@ -3,12 +3,9 @@ from __future__ import unicode_literals
 import argparse
 
 from django.core.management.base import BaseCommand
-from monitoreo.apps.dashboard.management.import_utils import \
-    validate_indicators_csv
-from monitoreo.apps.dashboard.management.indicators_validator import \
-    write_problems
-from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, \
-    IndicadorFederador
+from monitoreo.apps.dashboard.management.import_utils import validate_indicators_csv
+from monitoreo.apps.dashboard.management.indicators_validator import write_problems
+from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, IndicadorFederador
 
 MODEL_CHOICES = {
     'node': Indicador,
@@ -30,8 +27,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         model = MODEL_CHOICES[options['type']]
-        with options['file'] as indicators_csv:
-            error_list = validate_indicators_csv(indicators_csv, model)
+        error_list = validate_indicators_csv(options['file'], model)
         if not error_list:
             self.stdout.write('Archivo válido')
             return

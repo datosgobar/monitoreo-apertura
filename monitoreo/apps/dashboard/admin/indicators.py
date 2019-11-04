@@ -8,7 +8,6 @@ from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from django_datajsonar.admin.singleton_admin import SingletonAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.formats import base_formats
@@ -78,10 +77,10 @@ class IndicatorResource(resources.ModelResource):
         model = Indicador
         fields = export_order = (
             'fecha',
-            'indicador_tipo',
+            'indicador_nombre',
             'indicador_valor',
-            'jurisdiccion_nombre',
-            'jurisdiccion_id',
+            'nodo_nombre',
+            'nodo_id',
         )
 
 
@@ -102,10 +101,10 @@ class IndexingIndicatorResource(resources.ModelResource):
         model = IndicadorFederador
         fields = export_order = (
             'fecha',
-            'indicador_tipo',
+            'indicador_nombre',
             'indicador_valor',
-            'jurisdiccion_id',
-            'jurisdiccion_nombre',
+            'nodo_nombre',
+            'nodo_id',
         )
 
 
@@ -127,7 +126,7 @@ class IndicadorRedResource(resources.ModelResource):
         model = IndicadorRed
         fields = export_order = (
             'fecha',
-            'indicador_tipo',
+            'indicador_nombre',
             'indicador_valor',
         )
 

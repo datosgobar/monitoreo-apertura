@@ -69,7 +69,7 @@ def import_indicators(indicators_file, model):
         with suppress_autotime(model, ['fecha']):
             with transaction.atomic():
                 for row in csv_reader:
-                    model_attributes = {FIELD_TRANSLATIONS[key]: row[key] for key in row}
+                    model_attributes = {FIELD_TRANSLATIONS[key]: value for key, value in row.items()}
                     model_attributes['indicador_tipo'] = types_mapping[model_attributes.pop('indicador_tipo')]
                     indicators.append(model(**model_attributes))
                 model.objects.all().delete()

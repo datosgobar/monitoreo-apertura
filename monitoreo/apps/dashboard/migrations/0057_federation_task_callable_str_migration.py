@@ -15,7 +15,7 @@ def convert_callable_str(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dashboard', '0055_auto_20191030_1544'),
+        ('dashboard', '0056_normalize_indicator_values_import'),
     ]
 
     operations = [

@@ -9,7 +9,7 @@ from monitoreo.apps.dashboard.normalization_utils import normalize_node_indicato
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dashboard', '0056_federation_task_callable_str_migration'),
+        ('dashboard', '0055_auto_20191030_1544'),
     ]
 
     operations = [

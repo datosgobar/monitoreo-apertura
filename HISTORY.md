@@ -1,5 +1,12 @@
 Versiones
 =========
+1.3.1 (5-11-19)
+-------------------
+* Fix en la creación de synchronizers de reportes de datasets faltantes
+* Migración en los stages que importaban desde tasks
+* Actualiza versión de django-datajsonar
+
+
 1.3.0 (29-10-19)
 -------------------
 * Parametrización del timeout para los HEAD

@@ -1,4 +1,4 @@
-fecha,indicador_tipo,indicador_valor,jurisdiccion_nombre,jurisdiccion_id
+fecha,indicador_nombre,indicador_valor,nodo_nombre,nodo_id
 ,ind_a,337,nodo1,id1
 2100-12-31,,"[[""d3"", ""l3""]]",nodo1,id1
 2100-12-31,,"{""k2"": 10}",nodo1,id1

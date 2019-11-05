@@ -11,6 +11,14 @@ from monitoreo.apps.dashboard.management.indicators_validator import \
     IndicatorValidatorGenerator
 from monitoreo.apps.dashboard.models import IndicatorType
 
+FIELD_TRANSLATIONS = {
+    'fecha': 'fecha',
+    'indicador_nombre': 'indicador_tipo',
+    'indicador_valor': 'indicador_valor',
+    'nodo_nombre': 'jurisdiccion_nombre',
+    'nodo_id': 'jurisdiccion_id'
+}
+
 
 def invalid_indicators_csv(csv_file, model):
     error_list = validate_indicators_csv(csv_file, model)
@@ -54,16 +62,15 @@ def import_indicators_tempfile(indicators_file, model, user):
 
 
 def import_indicators(indicators_file, model):
-    types_mapping = {ind_type.nombre: ind_type for
-                     ind_type in IndicatorType.objects.all()}
+    types_mapping = {ind_type.nombre: ind_type for ind_type in IndicatorType.objects.all()}
     with open(indicators_file) as indicators_csv:
         indicators = []
         csv_reader = csv.DictReader(indicators_csv)
         with suppress_autotime(model, ['fecha']):
             with transaction.atomic():
                 for row in csv_reader:
-                    row['indicador_tipo'] = \
-                        types_mapping[row.pop('indicador_tipo')]
-                    indicators.append(model(**row))
+                    model_attributes = {FIELD_TRANSLATIONS[key]: value for key, value in row.items()}
+                    model_attributes['indicador_tipo'] = types_mapping[model_attributes.pop('indicador_tipo')]
+                    indicators.append(model(**model_attributes))
                 model.objects.all().delete()
                 model.objects.bulk_create(indicators)

@@ -1,5 +1,9 @@
 Versiones
 =========
+1.3.2 (6-11-19)
+-------------------
+* Migración de corrección por typo en la anterior migración
+
 1.3.1 (5-11-19)
 -------------------
 * Fix en la creación de synchronizers de reportes de datasets faltantes

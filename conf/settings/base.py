@@ -38,7 +38,7 @@ TIME_ZONE = 'America/Argentina/Buenos_Aires'
 LANGUAGE_CODE = 'es-AR'
 
 LANGUAGES = [
-  ('es', 'Spanish'),
+    ('es', 'Spanish'),
 ]
 
 SITE_ID = 1
@@ -154,6 +154,7 @@ DJANGO_BASE_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'admin_shortcuts',
     'django.contrib.admin',
 )
 
@@ -200,8 +201,8 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'console': {
-           'class': 'logging.StreamHandler',
-           'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'level': 'INFO',
         },
     },
     'loggers': {
@@ -425,8 +426,8 @@ ADMIN_REORDER = (
     {'app': 'des',
      'label': 'Configuración correo',
      'models': (
-        {'model': 'des.DynamicEmailConfiguration',
-         'label': 'Configuración correo electrónico'},
+         {'model': 'des.DynamicEmailConfiguration',
+          'label': 'Configuración correo electrónico'},
      )
      },
     str('scheduler'),
@@ -434,3 +435,63 @@ ADMIN_REORDER = (
 )
 
 LOGIN_URL = 'admin:login'
+
+ADMIN_SHORTCUTS = [
+    {
+        'shortcuts': [
+            {
+                'title': 'Home',
+                'url_name': 'admin:index',
+            },
+            {
+                'title': 'Usuarios',
+                'url_name': 'admin:auth_user_changelist',
+            },
+            {
+                'title': 'Jurisdicciones',
+                'url_name': 'admin:django_datajsonar_jurisdiction_changelist',
+                'icon': 'file-alt',
+            },
+            {
+                'title': 'Nodos',
+                'url_name': 'admin:django_datajsonar_node_changelist',
+                'icon': 'university',
+            },
+            {
+                'title': 'Datasets',
+                'url_name': 'admin:django_datajsonar_dataset_changelist',
+                'icon': 'database',
+            }
+        ]
+    },
+    {
+        'title': 'Rutinas',
+        'shortcuts': [
+            {
+                'title': 'Lectura de nodos',
+                'url_name': 'admin:django_datajsonar_readdatajsontask_changelist',
+                'icon': 'search',
+            },
+            {
+                'title': 'Federación',
+                'url_name': 'admin:dashboard_federationtask_changelist',
+                'icon': 'lightbulb',
+            },
+            {
+                'title': 'Generación de indicadores',
+                'url_name': 'admin:dashboard_indicatorsgenerationtask_changelist',
+            },
+            {
+                'title': 'Synchronizers',
+                'url_name': 'admin:django_datajsonar_synchronizer_changelist',
+                'icon': 'cogs',
+            },
+        ]
+    },
+]
+
+ADMIN_SHORTCUTS_SETTINGS = {
+    'show_on_all_pages': True,
+    'hide_app_list': False,
+    'open_new_window': False,
+}

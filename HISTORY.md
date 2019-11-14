@@ -1,5 +1,10 @@
 Versiones
 =========
+1.4.0 (14-11-19)
+-------------------
+* Fix de migración de corrección
+* Agrega shortcuts en el admin
+
 1.3.2 (6-11-19)
 -------------------
 * Migración de corrección por typo en la anterior migración

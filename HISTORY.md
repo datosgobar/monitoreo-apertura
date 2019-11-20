@@ -1,5 +1,10 @@
 Versiones
 =========
+1.4.1 (20-11-19)
+-------------------
+* Validación de fileName de distribuciones es menos estricta
+* Agrega funcionalidad para restaurar synchronizers a como están por default
+
 1.4.0 (14-11-19)
 -------------------
 * Fix de migración de corrección

@@ -376,43 +376,54 @@ DEFAULT_PROCESSES = [
     },
 ]
 
+STAGE_TITLES = {
+    'COMPLETE_READ': 'Read Datajson (complete)',
+    'METADATA_READ': 'Read Datajson (metadata only)',
+    'FEDERATION': 'Federation',
+    'INDICATORS_GENERATION': 'Indicators',
+    'INDICATORS_REPORT': 'Indicator reports',
+    'VALIDATION_REPORT': 'Validation reports',
+    'NEWS_REPORT': 'Newly added dataset reports',
+    'MISSING_REPORT': 'Not present datasets reports',
+}
+
 DATAJSONAR_STAGES = {
-    'Read Datajson (complete)': {
+    STAGE_TITLES['COMPLETE_READ']: {
         'callable_str': 'django_datajsonar.tasks.schedule_full_read_task',
         'queue': 'indexing',
         'task': 'django_datajsonar.models.ReadDataJsonTask',
     },
-    'Read Datajson (metadata only)': {
+    STAGE_TITLES['METADATA_READ']: {
         'callable_str': 'django_datajsonar.tasks.schedule_metadata_read_task',
         'queue': 'indexing',
         'task': 'django_datajsonar.models.ReadDataJsonTask',
     },
-    'Federation': {
+    STAGE_TITLES['FEDERATION']: {
         'callable_str': 'monitoreo.apps.dashboard.federation_tasks.federation_run',
         'queue': 'federation',
         'task': 'monitoreo.apps.dashboard.models.FederationTask'
     },
-    'Indicators': {
+    STAGE_TITLES['INDICATORS_GENERATION']: {
         'callable_str': 'monitoreo.apps.dashboard.indicators_tasks.indicators_run',
         'queue': 'indicators',
         'task': 'monitoreo.apps.dashboard.models.IndicatorsGenerationTask'
     },
-    'Indicator reports': {
+    STAGE_TITLES['INDICATORS_REPORT']: {
         'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_reports',
         'queue': 'reports',
         'task': 'monitoreo.apps.dashboard.models.ReportGenerationTask'
     },
-    'Validation reports': {
+    STAGE_TITLES['VALIDATION_REPORT']: {
         'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_validations',
         'queue': 'reports',
         'task': 'monitoreo.apps.dashboard.models.ValidationReportTask'
     },
-    'Newly added dataset reports': {
+    STAGE_TITLES['NEWS_REPORT']: {
         'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_newly_reports',
         'queue': 'reports',
         'task': 'monitoreo.apps.dashboard.models.NewlyReportGenerationTask'
     },
-    'Not present datasets reports': {
+    STAGE_TITLES['MISSING_REPORT']: {
         'callable_str': 'monitoreo.apps.dashboard.report_tasks.send_not_present_reports',
         'queue': 'reports',
         'task': 'monitoreo.apps.dashboard.models.NotPresentReportGenerationTask'
@@ -495,3 +506,52 @@ ADMIN_SHORTCUTS_SETTINGS = {
     'hide_app_list': False,
     'open_new_window': False,
 }
+
+SYNCHRO_DEFAULT_CONF = [
+    {
+        'title': 'Corrida de federación',
+        'stages': [
+            STAGE_TITLES['METADATA_READ'],
+            STAGE_TITLES['FEDERATION']
+        ],
+        'scheduled_time': '06:00'
+     },
+    {
+        'title': 'Corrida de generación de indicadores',
+        'stages': [
+            STAGE_TITLES['COMPLETE_READ'],
+            STAGE_TITLES['INDICATORS_GENERATION']
+        ],
+        'scheduled_time': '22:00'
+    },
+    {
+        'title': 'Corrida de reportes de validación',
+        'stages': [
+            STAGE_TITLES['METADATA_READ'],
+            STAGE_TITLES['VALIDATION_REPORT']
+        ],
+        'scheduled_time': '08:00'
+    },
+    {
+        'title': 'Corrida de reporte de indicadores',
+        'stages': [
+            STAGE_TITLES['INDICATORS_REPORT']
+        ],
+        'scheduled_time': '09:00'
+    },
+    {
+        'title': 'Corrida de novedades',
+        'stages': [
+            STAGE_TITLES['NEWS_REPORT']
+        ],
+        'scheduled_time': '10:00'
+    },
+    {
+        'title': 'Corrida de datasets faltantes',
+        'stages': [
+            STAGE_TITLES['MISSING_REPORT']
+        ],
+        'scheduled_time': '11:00'
+    }
+
+]

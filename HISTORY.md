@@ -1,5 +1,12 @@
 Versiones
 =========
+1.4.2 (20-11-21)
+-------------------
+* Validación de formatos y extensiones es menos restrictiva.
+* Mail para catálogo ya no es obligatorio.
+* Temporal se puede usar con sólo una fecha de comienzo (sin final).
+* Se admiten espacios iniciales o finales en los mails.
+
 1.4.1 (20-11-19)
 -------------------
 * Validación de fileName de distribuciones es menos estricta

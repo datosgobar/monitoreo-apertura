@@ -1,14 +1,13 @@
 #! coding: utf-8
 import csv
 import datetime
-
 from urllib.parse import urljoin
-from six import text_type
-from pydatajson import DataJson
 
 from django.http import HttpResponse
-
 from django_datajsonar.models import Dataset, Catalog, Node
+from pydatajson import DataJson
+from six import text_type
+
 from .models import IndicatorsGenerationTask, IndicatorType
 from .strings import OVERALL_ASSESSMENT, VALIDATION_ERRORS, MISSING, HARVESTING_ERRORS, ERRORS_DIVIDER
 
@@ -35,7 +34,7 @@ def load_catalogs(task, nodes, harvesting=False):
 
 
 def generate_task_log(catalog, catalog_id, invalid, missing, harvested_ids, federation_errors):
-    validation = catalog.validate_catalog(only_errors=True)
+    validation = catalog.validate_catalog(only_errors=True, broken_links=True)
     indexable_datasets = Dataset.objects.filter(indexable=True, catalog__identifier=catalog_id)
     total = indexable_datasets.count()
     present = indexable_datasets.filter(present=True).count()

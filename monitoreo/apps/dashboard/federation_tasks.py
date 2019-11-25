@@ -48,8 +48,8 @@ def federate_catalog(node, portal_url, apikey, task_id):
         LOGGER.warning(msg)
         return msg
     catalog.generate_distribution_ids()
-    url_validation = TasksConfig.get_solo().federation_url_check
-    catalog_report = catalog.validate_catalog(broken_links=url_validation)
+    catalog_report = catalog.validate_catalog(
+        broken_links=TasksConfig.get_solo().federation_url_check)
     valid, invalid, missing = sort_datasets_by_condition(node, catalog_report)
 
     try:

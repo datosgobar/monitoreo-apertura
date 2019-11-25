@@ -2,11 +2,11 @@
 
 import json
 import logging
-from django_rq import job
 
+from django_datajsonar.models import Node, Dataset
+from django_rq import job
 from pydatajson.core import DataJson
 from pydatajson.federation import harvest_catalog_to_ckan
-from django_datajsonar.models import Node, Dataset
 
 from monitoreo.apps.dashboard.models.tasks import TasksConfig
 from .helpers import generate_task_log
@@ -48,13 +48,15 @@ def federate_catalog(node, portal_url, apikey, task_id):
         LOGGER.warning(msg)
         return msg
     catalog.generate_distribution_ids()
-    valid, invalid, missing = sort_datasets_by_condition(node, catalog)
+    catalog_report = catalog.validate_catalog(
+        broken_links=TasksConfig.get_solo().federation_url_check)
+    valid, invalid, missing = sort_datasets_by_condition(node, catalog_report)
 
     try:
         harvested_ids, federation_errors = harvest_catalog_to_ckan(catalog, portal_url, apikey, catalog_id, list(valid),
                                                                    origin_tz=node.timezone,
                                                                    dst_tz=task.harvesting_node.timezone)
-        msg += generate_task_log(catalog, catalog_id, invalid, missing, harvested_ids, federation_errors)
+        msg += generate_task_log(catalog_report, catalog_id, invalid, missing, harvested_ids, federation_errors)
         FederationTask.info(task, msg)
         LOGGER.warning(msg)
         return msg
@@ -66,9 +68,7 @@ def federate_catalog(node, portal_url, apikey, task_id):
         return msg
 
 
-def sort_datasets_by_condition(node, catalog):
-    url_validation = TasksConfig.get_solo().federation_url_check
-    catalog_report = catalog.validate_catalog(broken_links=url_validation)
+def sort_datasets_by_condition(node, catalog_report):
     valid_set = {ds['identifier'] for ds in catalog_report['error']['dataset'] if ds['status'] == 'OK'}
     invalid_set = {ds['identifier'] for ds in catalog_report['error']['dataset'] if ds['status'] == 'ERROR'}
     dataset_models = set(Dataset.objects.filter(catalog__identifier=node.catalog_id, indexable=True, present=True,)

@@ -188,12 +188,12 @@ class HarvestRunTest(TestCase):
                                      origin_tz=DEFAULT_TIMEZONE, dst_tz="Africa/Abidjan")
 
     @patch('pydatajson.core.DataJson.validate_catalog', return_value={'error': {'dataset': []}})
-    def test_federation_validation_is_true_by_default(self, mock_validation):
+    def test_federation_validation_is_false_by_default(self, mock_validation):
         node = Node.objects.get(catalog_id='id3')
         datajson = DataJson(self.get_sample('missing_dataset_title.json'))
         catalog_report = get_catalog_report(datajson)
         sort_datasets_by_condition(node, catalog_report)
-        mock_validation.assert_called_with(broken_links=True)
+        mock_validation.assert_called_with(broken_links=False)
 
     @patch('pydatajson.core.DataJson.validate_catalog', return_value={'error': {'dataset': []}})
     def test_federation_validation_takes_value_from_config(self, mock_validation):

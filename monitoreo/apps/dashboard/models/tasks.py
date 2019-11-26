@@ -64,11 +64,11 @@ class TasksConfig(SingletonModel):
         verbose_name_plural = "Configuraciones generales"
 
     validation_url_check = models.BooleanField(
-        default=True, verbose_name='Activar validación de URLs con errores de descarga en los reportes')
+        default=False, verbose_name='Activar validación de URLs con errores de descarga en los reportes')
     indicators_url_check = models.BooleanField(
-        default=True, verbose_name='Activar generación de indicadores de URLs con errores de descarga')
+        default=False, verbose_name='Activar generación de indicadores de URLs con errores de descarga')
     federation_url_check = models.BooleanField(
-        default=True, verbose_name='Activar validación de URLs con errores de descarga en la federación')
+        default=False, verbose_name='Activar validación de URLs con errores de descarga en la federación')
     indicators_timeout = models.IntegerField(default=1800, help_text="En segundos.")
     validation_timeout = models.IntegerField(default=1800, help_text="En segundos.")
     url_check_timeout = models.IntegerField(default=1, help_text="En segundos.")

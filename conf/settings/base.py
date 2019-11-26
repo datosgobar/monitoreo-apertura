@@ -8,6 +8,8 @@ from os.path import dirname
 import environ
 
 # noinspection PyUnresolvedReferences
+from django_datajsonar import strings
+
 from .indicators import *
 
 SETTINGS_DIR = environ.Path(__file__) - 1
@@ -509,13 +511,41 @@ ADMIN_SHORTCUTS_SETTINGS = {
 
 SYNCHRO_DEFAULT_CONF = [
     {
-        'title': 'Corrida de federación',
+        'title': 'Corrida de federación (1)',
         'stages': [
             STAGE_TITLES['METADATA_READ'],
             STAGE_TITLES['FEDERATION']
         ],
-        'scheduled_time': '06:00'
+        'scheduled_time': '06:00',
+        'week_days': strings.WEEK_DAYS
      },
+    {
+        'title': 'Corrida de federación (2)',
+        'stages': [
+            STAGE_TITLES['METADATA_READ'],
+            STAGE_TITLES['FEDERATION']
+        ],
+        'scheduled_time': '10:00',
+        'week_days': strings.WEEK_DAYS
+    },
+    {
+        'title': 'Corrida de federación (3)',
+        'stages': [
+            STAGE_TITLES['METADATA_READ'],
+            STAGE_TITLES['FEDERATION']
+        ],
+        'scheduled_time': '14:00',
+        'week_days': strings.WEEK_DAYS
+    },
+    {
+        'title': 'Corrida de federación (4)',
+        'stages': [
+            STAGE_TITLES['METADATA_READ'],
+            STAGE_TITLES['FEDERATION']
+        ],
+        'scheduled_time': '18:00',
+        'week_days': strings.WEEK_DAYS
+    },
     {
         'title': 'Corrida de generación de indicadores',
         'stages': [
@@ -530,28 +560,32 @@ SYNCHRO_DEFAULT_CONF = [
             STAGE_TITLES['METADATA_READ'],
             STAGE_TITLES['VALIDATION_REPORT']
         ],
-        'scheduled_time': '08:00'
+        'scheduled_time': '08:00',
+        'week_days': strings.WEEK_DAYS
     },
     {
-        'title': 'Corrida de reporte de indicadores',
+        'title': 'Corrida de reporte semanal de indicadores',
         'stages': [
             STAGE_TITLES['INDICATORS_REPORT']
         ],
-        'scheduled_time': '09:00'
+        'scheduled_time': '08:00',
+        'week_days': [strings.MON]
     },
     {
         'title': 'Corrida de novedades',
         'stages': [
             STAGE_TITLES['NEWS_REPORT']
         ],
-        'scheduled_time': '10:00'
+        'scheduled_time': '08:00',
+        'week_days': strings.WEEK_DAYS
     },
     {
         'title': 'Corrida de datasets faltantes',
         'stages': [
             STAGE_TITLES['MISSING_REPORT']
         ],
-        'scheduled_time': '11:00'
+        'scheduled_time': '08:00',
+        'week_days': strings.WEEK_DAYS
     }
 
 ]

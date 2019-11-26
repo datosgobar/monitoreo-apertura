@@ -142,12 +142,12 @@ class ValidationReportGenerationTest(TestCase):
         broken_links_call_value = m.call_args_list[0][1]['broken_links']
         self.assertFalse(broken_links_call_value)
 
-    def test_reports_validated_with_url_by_default(self):
+    def test_reports_validated_without_url_by_default(self):
         with patch('monitoreo.apps.dashboard.report_generators.DataJson.validate_catalog') as m:
             send_validations()
 
         broken_links_call_value = m.call_args_list[0][1]['broken_links']
-        self.assertTrue(broken_links_call_value)
+        self.assertFalse(broken_links_call_value)
 
     def test_reports_not_validated_with_url_if_node_flag_is_false(self):
         Node.objects.update(validate_catalog_urls=False)

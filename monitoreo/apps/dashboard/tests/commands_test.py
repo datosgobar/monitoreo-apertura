@@ -1,14 +1,18 @@
 #! coding: utf-8
 import json
 import os
-from django.test import TestCase
-from django.core.management import call_command
+
 from django.conf import settings
-from mock import patch
+from django.core.management import call_command
+from django.test import TestCase
 from django_datajsonar.models import Node
-from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, TableColumn, IndicatorsGenerationTask, HarvestingNode
-from monitoreo.apps.dashboard.helpers import load_catalogs
+from mock import patch
 from pydatajson import DataJson
+
+from monitoreo.apps.dashboard.helpers import load_catalogs
+from monitoreo.apps.dashboard.models import Indicador, IndicadorRed, TableColumn, IndicatorsGenerationTask, \
+    HarvestingNode
+from monitoreo.apps.dashboard.models.tasks import TasksConfig
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'samples')
 
@@ -55,6 +59,10 @@ class CommandTest(TestCase):
             DataJson().generate_catalogs_indicators(cls.indexing_catalogs,
                                                     identifier_search=True,
                                                     broken_links=True)
+        config = TasksConfig.get_solo()
+        config.indicators_url_check = True
+        config.save()
+
         cls.dj = DataJson()
         with patch('monitoreo.apps.dashboard.indicators_tasks.CENTRAL',
                    cls.get_sample('full_data.json')):

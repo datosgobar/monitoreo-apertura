@@ -1,6 +1,10 @@
 Versiones
 =========
-1.4.2 (20-11-21)
+1.4.3 (26-11-19)
+-------------------
+* Bump de versión de django-datajsonar 
+
+1.4.2 (21-11-19)
 -------------------
 * Validación de formatos y extensiones es menos restrictiva.
 * Mail para catálogo ya no es obligatorio.

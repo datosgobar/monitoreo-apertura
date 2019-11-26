@@ -9,4 +9,6 @@ worker_group: "{{ application_group }}"
 worker_dir: "{{ application_base_dir }}workers/"
 worker_bins_dir: "{{ worker_dir }}bins/"
 worker_run_bin: "{{ worker_bins_dir }}run_rqworker.sh"
-workers_queues: indexing federation indicators reports imports default
+run_upkeep_worker_bin: "{{ application_bins_dir }}run_upkeep_worker.sh"
+workers_queues: indexing federation indicators reports imports
+upkeep_queue: default

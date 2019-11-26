@@ -10,3 +10,8 @@
     state: restarted
   with_sequence: count={{ worker_count }}
 
+- name: Enable and restart upkeep worker
+  systemd:
+    name: upkeep_worker.service
+    enabled: yes
+    state: restarted

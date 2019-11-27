@@ -582,6 +582,7 @@ SYNCHRO_DEFAULT_CONF = [
     {
         'title': 'Corrida de datasets faltantes',
         'stages': [
+            STAGE_TITLES['METADATA_READ'],
             STAGE_TITLES['MISSING_REPORT']
         ],
         'scheduled_time': '08:00',

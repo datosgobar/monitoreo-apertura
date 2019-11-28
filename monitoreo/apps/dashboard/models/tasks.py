@@ -72,6 +72,8 @@ class TasksConfig(SingletonModel):
     indicators_timeout = models.IntegerField(default=1800, help_text="En segundos.")
     validation_timeout = models.IntegerField(default=1800, help_text="En segundos.")
     url_check_timeout = models.IntegerField(default=1, help_text="En segundos.")
+    url_check_threads = models.IntegerField(
+        default=1, verbose_name="Cantidad de threads a usar en el chequeo de links")
 
     def get_validation_config_for_node(self, node: Node) -> bool:
         return self.validation_url_check and node.validate_catalog_urls

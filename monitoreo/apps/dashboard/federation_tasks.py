@@ -49,7 +49,8 @@ def federate_catalog(node, portal_url, apikey, task_id):
         return msg
     catalog.generate_distribution_ids()
     catalog_report = catalog.validate_catalog(
-        broken_links=TasksConfig.get_solo().federation_url_check)
+        broken_links=TasksConfig.get_solo().federation_url_check,
+        broken_links_threads=TasksConfig.get_solo().url_check_threads)
     valid, invalid, missing = sort_datasets_by_condition(node, catalog_report)
 
     try:

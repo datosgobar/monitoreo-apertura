@@ -147,8 +147,10 @@ class ValidationReportGenerator(AbstractReportGenerator):
         catalog = DataJson(node.catalog_url, catalog_format=node.catalog_format,
                            verify_ssl=node.verify_ssl, url_check_timeout=url_check_timeout)
         validate_urls = TasksConfig.get_solo().get_validation_config_for_node(node)
+        url_check_threads = TasksConfig.get_solo().url_check_threads
         validation = catalog.validate_catalog(only_errors=True,
-                                              broken_links=validate_urls)
+                                              broken_links=validate_urls,
+                                              broken_links_threads=url_check_threads)
         validation_time = self._format_date(timezone.now())
         if validation['status'] == 'OK':
             msg = "Catálogo {} válido.".format(node.catalog_id)

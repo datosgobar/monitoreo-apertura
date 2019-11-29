@@ -1,5 +1,9 @@
 Versiones
 =========
+1.4.4 (29-11-19)
+-------------------
+* Agrega opción en configuración general para definir la cantidad de threads a usar en validaciones de urls.
+
 1.4.3 (26-11-19)
 -------------------
 * Bump de versión de django-datajsonar 

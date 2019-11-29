@@ -131,10 +131,12 @@ class IndicatorGenerationsTest(TestCase):
         generate_indicators(task)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
                                    identifier_search=True,
-                                   broken_links=False)
+                                   broken_links=False,
+                                   broken_links_threads=1)
         mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL,
                                    identifier_search=True,
-                                   broken_links=False)
+                                   broken_links=False,
+                                   broken_links_threads=1)
 
     def test_undefined_central_node_uses_default(self, mock_indic, mock_load):
         mock_load.return_value = self.catalogs
@@ -144,10 +146,12 @@ class IndicatorGenerationsTest(TestCase):
         generate_indicators(task)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
                                    identifier_search=True,
-                                   broken_links=False)
+                                   broken_links=False,
+                                   broken_links_threads=1)
         mock_indic.assert_any_call(DataJson(), self.catalogs, CENTRAL,
                                    identifier_search=True,
-                                   broken_links=False)
+                                   broken_links=False,
+                                   broken_links_threads=1)
 
     def test_defined_central_node_catalog(self, mock_indic, mock_load):
         mock_load.return_value = self.catalogs
@@ -159,8 +163,10 @@ class IndicatorGenerationsTest(TestCase):
         generate_indicators(task)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
                                    identifier_search=True,
-                                   broken_links=False)
+                                   broken_links=False,
+                                   broken_links_threads=1)
         mock_indic.assert_any_call(DataJson(), self.catalogs,
                                    'harvest_url/data.json',
                                    identifier_search=True,
-                                   broken_links=False)
+                                   broken_links=False,
+                                   broken_links_threads=1)

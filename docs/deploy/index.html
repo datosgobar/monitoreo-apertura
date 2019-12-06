@@ -13,7 +13,7 @@
         <meta name="description" content="Documentación de la aplicación web de monitoreo y operación de la red de nodos de datos abiertos de la Administración Pública Nacional de la República Argentina.">
       
       
-        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/developers/development/">
+        <link rel="canonical" href="https://datosgobar.github.io/monitoreo-apertura/deploy/">
       
       
         <meta name="author" content="Datos Argentina">
@@ -37,27 +37,27 @@
       
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
-      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
     
     
       
-        <title>Desarrollo - Monitoreo Apertura</title>
+        <title>Deploy - Monitoreo Apertura</title>
       
     
     
 	
-      <link rel="stylesheet" href="../../assets/stylesheets/application.0284f74d.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
       
       
     
-	<link rel="stylesheet" href="../../css/extra.css">
+	<link rel="stylesheet" href="../css/extra.css">
 
     
     
-      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.74668098.js"></script>
     
-    <script src="../../js/extra.js"></script>
+    <script src="../js/extra.js"></script>
 
     
       
@@ -66,7 +66,7 @@
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
-    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
     
@@ -131,6 +131,10 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
+      <a href="#configuracion-de-deploy-automatico" tabindex="1" class="md-skip">
+        Saltar a contenido
+      </a>
+    
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
@@ -138,7 +142,7 @@
       <div class="md-flex__cell md-flex__cell--shrink">
         <a href="https://datosgobar.github.io/monitoreo-apertura" title="Monitoreo Apertura" class="md-header-nav__button md-logo">
           
-            <img src="../../images/logo.svg" width="24" height="24">
+            <img src="../images/logo.svg" width="24" height="24">
           
         </a>
       </div>
@@ -153,7 +157,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Desarrollo
+                Deploy
               
             </span>
           
@@ -256,7 +260,7 @@
           <a href="https://datosgobar.github.io/monitoreo-apertura"
               title="Monitoreo Apertura" class="md-nav__button md-logo">
             
-              <img src="../../images/logo.svg" width="48" height="48" />
+              <img src="../images/logo.svg" width="48" height="48" />
             
           </a>
           Monitoreo Apertura
@@ -294,7 +298,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Inicio" class="md-nav__link">
+    <a href=".." title="Inicio" class="md-nav__link">
       Inicio
     </a>
   </li>
@@ -307,7 +311,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../arquitectura/" title="Arquitectura" class="md-nav__link">
+    <a href="../arquitectura/" title="Arquitectura" class="md-nav__link">
       Arquitectura
     </a>
   </li>
@@ -339,7 +343,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link">
+    <a href="../quick-start/" title="Comenzar a usar Monitoreo Apertura" class="md-nav__link">
       Comenzar a usar Monitoreo Apertura
     </a>
   </li>
@@ -351,7 +355,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../usage/" title="Manual de uso" class="md-nav__link">
+    <a href="../usage/" title="Manual de uso" class="md-nav__link">
       Manual de uso
     </a>
   </li>
@@ -390,7 +394,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../install/" title="Instalación" class="md-nav__link">
+    <a href="../developers/install/" title="Instalación" class="md-nav__link">
       Instalación
     </a>
   </li>
@@ -402,8 +406,32 @@
 
 
   <li class="md-nav__item">
-    <a href="../update/" title="Actualización" class="md-nav__link">
+    <a href="../developers/update/" title="Actualización" class="md-nav__link">
       Actualización
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/development/" title="Desarrollo" class="md-nav__link">
+      Desarrollo
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../developers/tests/" title="Tests" class="md-nav__link">
+      Tests
     </a>
   </li>
 
@@ -419,35 +447,63 @@
     
     <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
+      
     
-    <a href="./" title="Desarrollo" class="md-nav__link md-nav__link--active">
-      Desarrollo
-    </a>
     
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../tests/" title="Tests" class="md-nav__link">
-      Tests
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../deploy/" title="Deploy" class="md-nav__link">
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Deploy
+      </label>
+    
+    <a href="./" title="Deploy" class="md-nav__link md-nav__link--active">
       Deploy
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Contenidos de la sección</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scripts" title="Scripts" class="md-nav__link">
+    Scripts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" title="Variables" class="md-nav__link">
+    Variables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" title="Prepare" class="md-nav__link">
+    Prepare
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy" title="Deploy" class="md-nav__link">
+    Deploy
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -463,7 +519,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../HISTORY/" title="Historial de versiones" class="md-nav__link">
+    <a href="../HISTORY/" title="Historial de versiones" class="md-nav__link">
       Historial de versiones
     </a>
   </li>
@@ -478,17 +534,141 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Contenidos de la sección</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scripts" title="Scripts" class="md-nav__link">
+    Scripts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" title="Variables" class="md-nav__link">
+    Variables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare" title="Prepare" class="md-nav__link">
+    Prepare
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy" title="Deploy" class="md-nav__link">
+    Deploy
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/developers/development.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/datosgobar/monitoreo-apertura/edit/master/docs/deploy.md" title="Editar esta página" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                  <h1>Desarrollo</h1>
-                
-                
+                <h1 id="configuracion-de-deploy-automatico">Configuración de deploy automático</h1>
+<p>El repositorio del proyecto cuenta con una integración con <a href="http://travis-ci.org/datosgobar/">Travis-CI</a> para realizar deploys automáticos a varios servidores:</p>
+<ul>
+<li>Se actualiza la instancia de desarrollo (<em>testing</em>, o <em>dev</em>) en cada push a master.</li>
+<li>Se actualiza la instancia de staging en cada creación de un tag, o lo que es equivalente, un Release de GitHub.</li>
+</ul>
+<p>En este documento se informa en detalle el funcionamiento de esta automatización, y cómo configurarla de cero.</p>
+<h2 id="scripts">Scripts</h2>
+<p>El script principal y punto de entrada del deploy es <code>scripts/deploy/run_deploy.sh</code>. Internamente se divide en otros tres:</p>
+<ul>
+<li><code>variables.sh</code>: Lee de travis las variables de entorno necesarias para el resto del script. </li>
+<li><code>prepare.sh</code>: Realiza tareas previas a la acción de deploy en sí, como levantar VPNs y agregar claves de SSH para poder entrar al servidor</li>
+<li><code>deploy.sh</code>: Ejecuta el deploy en sí: se conecta por SSH a la máquina y corre un script ya preparado en la máquina para configurar el servidor con la última versión</li>
+</ul>
+<p>El script decide qué ambiente deployar según cómo se ejecuta. El primer parámetro de <code>run_deploy.sh</code> es el ambiente. Entonces, para deployar a testing, se ejecuta <code>./scripts/deploy/run_deploy.sh testing</code>, y para staging, <code>./scripts/deploy/run_deploy.sh staging</code>. En <code>travis.yml</code> tenemos configuradas las reglas para ejecutar estos scripts así en push a master y on tag:</p>
+<div class="codehilite"><pre><span></span><span class="nt">deploy</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">skip_cleanup</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">provider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">script</span>
+    <span class="nt">script</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scripts/deploy/run_deploy.sh testing</span>
+    <span class="nt">on</span><span class="p">:</span>
+      <span class="nt">branch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">master</span>  <span class="c1"># &lt;-- sólo en pushes a master</span>
+  <span class="p p-Indicator">-</span> <span class="nt">skip_cleanup</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">provider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">script</span>
+    <span class="nt">script</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scripts/deploy/run_deploy.sh staging</span>
+    <span class="nt">on</span><span class="p">:</span>
+      <span class="nt">tags</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>  <span class="c1"># &lt;-- sólo en pushes de tags</span>
+</pre></div>
+
+
+<h2 id="variables">Variables</h2>
+<p>En <code>variables.sh</code> se leen todas las variables configuradas en Travis. Al tener dos ambientes a los que deployar, se tienen que definir las variables para ambos ambientes, y en el momento de correr el script de deploy, usar uno de los dos grupos. Si es un push a master, se leen las de testing, si es un tag, se leen las de staging. </p>
+<p>A continuación se listan algunas variables a modo de ejemplo. Estas variables <strong>se cargan todas en travis</strong>, en la URL <code>https://travis-ci.org/datosgobar/&lt;nombre del repo&gt;/settings</code>. Las variables siguientes son para el ambiente de desarrollo, similarmente existen variables idénticas para staging</p>
+<ul>
+<li><code>$TESTING_USE_VPN</code>: Setear a cualquier valor si tenemos que configurar una VPN para acceder al servidor (en la sección de Prepare se explica cómo meter las credenciales)</li>
+<li><code>$TESTING_DEPLOY_TARGET_IP</code></li>
+<li><code>$TESTING_DEPLOY_TARGET_SSH_PORT</code></li>
+<li><code>$TESTING_DEPLOY_TARGET_USERNAME</code></li>
+<li><code>$TESTING_DEPLOY_VAULT_PASS_FILE</code>: Contraseña del vault de Ansible usado para el script de deploy (si aplica)</li>
+</ul>
+<p>Similarmente existen variables equivalentes para el ambiente de staging: </p>
+<ul>
+<li><code>$STAGING_USE_VPN</code></li>
+<li><code>$STAGING_DEPLOY_TARGET_IP</code></li>
+<li><code>$STAGING_DEPLOY_TARGET_SSH_PORT</code></li>
+<li><code>$STAGING_DEPLOY_TARGET_USERNAME</code></li>
+<li><code>$STAGING_DEPLOY_VAULT_PASS_FILE</code></li>
+</ul>
+<p>Estas variables, según el ambiente a deployar, son leídas y pasadas a nombres genéricos a usarse en los pasos siguientes.</p>
+<h2 id="prepare">Prepare</h2>
+<p>En este paso se levantan las credenciales para poder acceder al servidor. Son dos pasos: configurar la VPN, y configurar el cliente de SSH para estar autorizados a ingresar. Estos archivos se encuentran <strong>pusheados en el repo, encriptados</strong>. El archivo <code>scripts/deploy/files.tar.gz.enc</code> se desencripta y se extraen los archivos. Internamente, el directorio comprimido tiene la siguiente estructura: </p>
+<div class="codehilite"><pre><span></span><span class="n">files</span><span class="o">/</span><span class="w"></span>
+<span class="err">├──</span><span class="w"> </span><span class="n">staging</span><span class="w"></span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">build</span><span class="nv">@travis</span><span class="o">-</span><span class="n">ci</span><span class="p">.</span><span class="n">org</span><span class="w"></span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">ovpn</span><span class="w"></span>
+<span class="err">└──</span><span class="w"> </span><span class="n">testing</span><span class="w"></span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">build</span><span class="nv">@travis</span><span class="o">-</span><span class="n">ci</span><span class="p">.</span><span class="n">org</span><span class="w"></span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">ovpn</span><span class="w"></span>
+</pre></div>
+
+
+<p>La key (privada) de ssh de cada ambiente se guarda con el nombre <code>build@travis-ci.org</code>, y las credenciales de VPN con <code>client.ovpn</code>. Inicialmente, debemos armar este directorio, encriptarlo con la utilidad CLI de Travis, y pushearlo al repo, con la ruta dada, <code>scripts/deploy/files.tar.gz.enc</code>. Nosotros estamos en el caso de "Encyrpting multiple files". (<a href="https://docs.travis-ci.com/user/encrypting-files/">link</a>). Una vez hecho el paso de encriptación, debemos obtener las variables de entorno <code>$*_key</code>, <code>$*_iv</code>, y configurarlas en las líneas del script de <code>prepare.sh</code>. Las variables a setear <strong>son el nombre de las variables de encriptación</strong>, y no los valores. Ver el ejemplo:</p>
+<div class="codehilite"><pre><span></span><span class="o">#</span> <span class="k">prepare</span><span class="p">.</span><span class="n">sh</span><span class="p">,</span> <span class="n">línea</span> <span class="mi">9</span><span class="o">-</span><span class="mi">10</span><span class="p">.</span> <span class="n">Reemplazar</span> <span class="n">con</span> <span class="n">el</span> <span class="n">nombre</span> <span class="n">de</span> <span class="n">variables</span> <span class="n">dadas</span> <span class="n">por</span> <span class="n">travis</span> <span class="n">al</span> <span class="n">haber</span> <span class="n">hecho</span> <span class="n">la</span> <span class="n">encriptación</span>
+
+<span class="n">export</span> <span class="n">files_key_var_name</span><span class="o">=</span><span class="ss">&quot;encrypted_fd34314b9fa6_key&quot;</span>
+<span class="n">export</span> <span class="n">files_iv_var_name</span><span class="o">=</span><span class="ss">&quot;encrypted_fd34314b9fa6_iv&quot;</span>
+</pre></div>
+
+
+<h2 id="deploy">Deploy</h2>
+<p>Una vez configuradas las variables y el directorio encriptado, sólo resta realizar el deploy. El script <code>deploy.sh</code> agrega la clave de ssh al usuario actual, y ejecuta comandos a través de ssh. Actualmente está configurado para:</p>
+<ul>
+<li>Hacer un pull del repo</li>
+<li>Ejecutar el script de deploy de ansible dentro del repo, pasando la variable <code>$*_VAULT_PASS_FILE</code> como contraseña de vault.</li>
+</ul>
+<p>Este script puede ser modificado con cualquier acción que querramos realizar dentro de la máquina. Se recomienda dejar preparado un script de bash para simplificar la ejecución desde travis, y poder reproducir las acciones que se realizan, en caso de querer hacer un deploy manual sin pasar por el paso de integración continua.</p>
                 
                   
                 
@@ -509,7 +689,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../update/" title="Actualización" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../developers/tests/" title="Tests" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -518,19 +698,19 @@
                 <span class="md-footer-nav__direction">
                   Anterior
                 </span>
-                Actualización
+                Tests
               </span>
             </div>
           </a>
         
         
-          <a href="../tests/" title="Tests" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../HISTORY/" title="Historial de versiones" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Siguiente
                 </span>
-                Tests
+                Historial de versiones
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -558,24 +738,24 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application.245445c6.js"></script>
+      <script src="../assets/javascripts/application.245445c6.js"></script>
       
         
         
           
-          <script src="../../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
+          <script src="../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
           
             
               
               
-                <script src="../../assets/javascripts/lunr/lunr.es.js"></script>
+                <script src="../assets/javascripts/lunr/lunr.es.js"></script>
               
             
           
           
         
       
-      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
     
   </body>

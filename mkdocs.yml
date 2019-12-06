@@ -15,6 +15,7 @@ nav:
     - Actualización: 'developers/update.md'
     - Desarrollo: 'developers/development.md'
     - Tests: 'developers/tests.md'
+    - Deploy: 'deploy.md'
   - Historial de versiones: HISTORY.md
 
 theme: datosgobar_docs

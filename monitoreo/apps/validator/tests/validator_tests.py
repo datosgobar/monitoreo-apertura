@@ -14,15 +14,16 @@ class ValidatorTests(TestCase):
         cls.client = Client()
         cls.validator_url = reverse('validator')
         cls.validator_success_url = reverse('validator_success')
+        cls.fake_url = 'https://fakeurl.com/data.json'
 
     @requests_mock.mock()
     def test_valid_catalog_redirects_to_success_page(self, mock):
         with open_catalog('sample_data.json') as sample:
             sample_json = json.loads(sample.read().decode('utf-8'))
-            mock.head('https://fakeurl.com/data.json', json=sample_json, status_code=200)
-            mock.get('https://fakeurl.com/data.json', json=sample_json, status_code=200)
+            mock.head(self.fake_url, json=sample_json, status_code=200)
+            mock.get(self.fake_url, json=sample_json, status_code=200)
             form_data = {
-                'catalog_url': 'https://fakeurl.com/data.json',
+                'catalog_url': self.fake_url,
                 'format': 'json'
             }
 
@@ -34,10 +35,10 @@ class ValidatorTests(TestCase):
     def test_invalid_catalog_redirects_to_success_page_with_validation_messages(self, mock):
         with open_catalog('invalid_data.json') as sample:
             sample_json = json.loads(sample.read().decode('utf-8'))
-            mock.head('https://fakeurl.com/data.json', json=sample_json, status_code=200)
-            mock.get('https://fakeurl.com/data.json', json=sample_json, status_code=200)
+            mock.head(self.fake_url, json=sample_json, status_code=200)
+            mock.get(self.fake_url, json=sample_json, status_code=200)
             form_data = {
-                'catalog_url': 'https://fakeurl.com/data.json',
+                'catalog_url': self.fake_url,
                 'format': 'json'
             }
 
@@ -69,10 +70,10 @@ class ValidatorTests(TestCase):
     def test_redirects_to_form_if_formats_differ(self, mock):
         with open_catalog('invalid_data.json') as sample:
             sample_json = json.loads(sample.read().decode('utf-8'))
-            mock.head('https://fakeurl.com/data.json', json=sample_json, status_code=200)
-            mock.get('https://fakeurl.com/data.json', json=sample_json, status_code=200)
+            mock.head(self.fake_url, json=sample_json, status_code=200)
+            mock.get(self.fake_url, json=sample_json, status_code=200)
             form_data = {
-                'catalog_url': 'https://fakeurl.com/data.json',
+                'catalog_url': self.fake_url,
                 'format': 'xlsx'
             }
 

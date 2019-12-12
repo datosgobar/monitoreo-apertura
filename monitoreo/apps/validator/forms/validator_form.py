@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError
 from pydatajson import DataJson
 from pydatajson.custom_exceptions import NonParseableCatalog
 
+from monitoreo.apps.dashboard.models.tasks import TasksConfig
+
 
 class ValidatorForm(forms.Form):
     FORMAT_CHOICES = [
@@ -40,9 +42,11 @@ class ValidatorForm(forms.Form):
     def get_error_messages(self):
         catalog_url = self.cleaned_data['catalog_url']
         catalog_format = self.cleaned_data['format']
-        catalog = DataJson(catalog=catalog_url, catalog_format=catalog_format)
+        validate_broken_urls = TasksConfig().get_solo().validation_url_check
 
-        all_errors = catalog.validate_catalog(only_errors=True)
+        catalog = DataJson(catalog=catalog_url, catalog_format=catalog_format, )
+
+        all_errors = catalog.validate_catalog(only_errors=True, broken_links=validate_broken_urls)
         error_messages = []
 
         catalog_validation = all_errors['error']['catalog']

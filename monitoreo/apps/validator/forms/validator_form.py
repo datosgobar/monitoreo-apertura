@@ -47,12 +47,12 @@ class ValidatorForm(forms.Form):
 
         catalog_validation = all_errors['error']['catalog']
         if catalog_validation['errors']:
-            error_messages.append("En catálogo {}: {}". format(catalog_validation['title'],
-                                                               catalog_validation['errors']))
+            error_messages.append(f"En catálogo {catalog_validation['title']}:"
+                                  f" {catalog_validation['errors']}")
 
         for dataset_validation in all_errors['error']['dataset']:
             for error in dataset_validation['errors']:
-                error_messages.append("En dataset {}: {}".format(dataset_validation['title'],
-                                                                 error['message']))
+                error_messages.append(f"En dataset {dataset_validation['title']}:"
+                                      f" {error['message']}")
 
         return error_messages

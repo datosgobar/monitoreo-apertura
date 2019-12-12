@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Validador</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/icono-arg.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/poncho.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/validator_styles.css' %}"/>
+
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-top navbar-default" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'validator' %}" aria-label="Argentina.gob.ar Presidencia de la Nación">
+                        <img alt="Argentina.gob.ar" src="{% static 'img/argentinagob.svg' %}" height="50">
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <div class="index-header">
+            <h3 class="text-primary" id="validation-header">Validación de catálogos</h3>
+        </div>
+        {% if messages %}
+            <div class="row d-flex justify-content-center errors">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-danger error">
+                        {{ message|safe }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form action="" method="post">
+
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 form-group item-form">
+                    <label for="{{ form.catalog_url.id_for_label }}">URL del catálogo</label>
+                    {{ form.catalog_url }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 form-group item-form">
+                    <label for="{{ form.format.id_for_label }}">Formato</label><br>
+                    {% csrf_token %}
+                    {{ form.format }}
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <input value="Validar" type="submit" class="btn btn-primary">
+                </div>
+            </div>
+
+        </form>
+
+        <div class="col-md-8 col-md-offset-2 errors-container">
+        </div>
+
+    </div>
+
+</body>
+</html>

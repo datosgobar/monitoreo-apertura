@@ -9,6 +9,7 @@ from django.contrib.auth import views as auth_views
 
 from des import urls as des_urls
 
+from monitoreo.apps.validator.views import ValidatorView, validator_success
 
 admin.autodiscover()
 
@@ -31,5 +32,11 @@ urlpatterns = [url(r'', include('monitoreo.apps.dashboard.urls',
                    auth_views.PasswordResetCompleteView.as_view(),
                    name='password_reset_complete',),
                url(r'^admin/', include(admin.site.urls)),
+               url(r'^validator/$',
+                   ValidatorView.as_view(),
+                   name="validator"),
+               url(r'validator_success/$',
+                   validator_success,
+                   name="validator_success")
                ]\
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

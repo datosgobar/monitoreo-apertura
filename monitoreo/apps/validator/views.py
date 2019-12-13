@@ -27,7 +27,7 @@ class ValidatorView(FormView):
             messages.error(request, e)
             return self.form_invalid(form)
 
-        error_messages = form.get_error_messages()
+        error_messages = form.validate_catalog()
         for error_message in error_messages:
             messages.info(request, error_message)
         return self.form_valid(form)

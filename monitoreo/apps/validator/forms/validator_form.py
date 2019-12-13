@@ -39,7 +39,7 @@ class ValidatorForm(forms.Form):
             logging.getLogger(__file__).error(e)
             raise ValidationError(parse_error_message)
 
-    def get_error_messages(self):
+    def validate_catalog(self):
         catalog_url = self.cleaned_data['catalog_url']
         catalog_format = self.cleaned_data['format']
         validate_broken_urls = TasksConfig().get_solo().validation_url_check

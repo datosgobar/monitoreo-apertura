@@ -1,7 +1,7 @@
 import logging
 
 import requests
-from requests import RequestException
+from requests import RequestException, ConnectionError
 from django import forms
 from django.core.exceptions import ValidationError
 from pydatajson import DataJson
@@ -25,10 +25,15 @@ class ValidatorForm(forms.Form):
         url = cleaned_data.get('catalog_url')
         catalog_format = cleaned_data.get('format')
 
+        base_request_error_message = "Error descargando el catálogo: "
         try:
-            requests.head(url).raise_for_status()
+            response = requests.head(url)
+            response.raise_for_status()
+        except ConnectionError:
+            raise ValidationError(base_request_error_message + "no existe el dominio ingresado")
         except RequestException:
-            raise ValidationError("Error descargando el catálogo")
+            status_code = requests.head(url).status_code
+            raise ValidationError(base_request_error_message + f"status code {status_code}")
 
         parse_error_message = "No se pudo parsear el catálogo ingresado"
         try:

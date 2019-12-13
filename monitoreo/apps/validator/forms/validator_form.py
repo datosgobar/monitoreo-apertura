@@ -6,6 +6,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from pydatajson import DataJson
 from pydatajson.custom_exceptions import NonParseableCatalog
+from requests.exceptions import MissingSchema
 
 from monitoreo.apps.dashboard.models.tasks import TasksConfig
 
@@ -29,6 +30,9 @@ class ValidatorForm(forms.Form):
         try:
             response = requests.head(url)
             response.raise_for_status()
+        except MissingSchema:
+            raise ValidationError(base_request_error_message + "el url ingresado "
+                                                               "no es un url válido")
         except ConnectionError:
             raise ValidationError(base_request_error_message + "no existe el dominio ingresado")
         except RequestException:

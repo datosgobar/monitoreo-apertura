@@ -34,7 +34,7 @@
             <div class="row d-flex justify-content-center errors">
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }} alert-danger error">
-                        {{ message|safe }}
+                        {{ message.message.message|safe }}
                     </div>
                 {% endfor %}
             </div>

@@ -1,7 +1,8 @@
 import logging
 
 import requests
-from requests.exceptions import MissingSchema, RequestException, ConnectionError
+# pylint: disable=W0622
+from requests.exceptions import ConnectionError, MissingSchema, RequestException
 from django.core.exceptions import ValidationError
 from pydatajson import DataJson
 from pydatajson.custom_exceptions import NonParseableCatalog

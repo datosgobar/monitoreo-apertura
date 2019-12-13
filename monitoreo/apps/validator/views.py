@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views.generic import FormView
 
 from monitoreo.apps.validator.forms.validator_form import ValidatorForm
+from monitoreo.apps.validator.validator import Validator
 
 
 def validator_success(request):
@@ -21,13 +22,19 @@ class ValidatorView(FormView):
         if not form.is_valid():
             return self.form_invalid(form)
 
+        cleaned_data = form.clean()
+        catalog_url = cleaned_data.get('catalog_url')
+        catalog_format = cleaned_data.get('format')
+
+        validator = Validator(catalog_url, catalog_format)
+
         try:
-            form.validate_fields()
+            validator.validate_fields()
         except ValidationError as e:
             messages.error(request, e)
             return self.form_invalid(form)
 
-        error_messages = form.validate_catalog()
+        error_messages = validator.get_catalog_errors()
         for error_message in error_messages:
             messages.info(request, error_message)
         return self.form_valid(form)

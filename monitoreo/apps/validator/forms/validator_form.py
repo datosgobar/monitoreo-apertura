@@ -21,7 +21,7 @@ class ValidatorForm(forms.Form):
                                widget=forms.Select(attrs={'class': 'format form-control'}))
 
     def validate_fields(self):
-        cleaned_data = super().clean()
+        cleaned_data = self.clean()
         url = cleaned_data.get('catalog_url')
         catalog_format = cleaned_data.get('format')
 

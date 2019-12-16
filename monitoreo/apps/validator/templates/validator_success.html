@@ -30,9 +30,10 @@
             <h3 class="text-primary" id="validation-header">Validación de catálogos</h3>
         </div>
 
-		<h2 class="m-b-3">Se subió el catálogo</h2>
-        <div class="row">
-            <div class="col-md-6">
+		<h2 class="m-b-3" id="validation-subtitle">Se subió el catálogo</h2>
+        <div class="flex-row justify-content-center">
+            <div class="col-md-3"></div>
+            <div class="col">
                 {% if messages %}
                 <div class="info">
                     <h5>Se encontraron los siguientes errores en la validación del catálogo:</h5>
@@ -50,6 +51,7 @@
                 </div>
                 {% endif %}
             </div>
+            <div class="col-md-3"></div>
         </div>
 
     </div>

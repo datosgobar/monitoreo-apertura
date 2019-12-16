@@ -43,6 +43,7 @@
         {% endif %}
 
         <form action="" method="post">
+            {% csrf_token %}
 
             <div class="row">
                 <div class="col-md-8 col-md-offset-2 form-group item-form">
@@ -54,7 +55,6 @@
             <div class="row">
                 <div class="col-md-8 col-md-offset-2 form-group item-form">
                     <label for="{{ form.format.id_for_label }}">Formato</label><br>
-                    {% csrf_token %}
                     {{ form.format }}
                 </div>
 

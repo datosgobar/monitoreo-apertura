@@ -2,6 +2,6 @@
     padding: 30px;
 }
 
-#validation-header {
+#validation-header, #validation-subtitle {
     text-align: center;
 }

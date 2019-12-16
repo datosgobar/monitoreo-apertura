@@ -31,13 +31,15 @@
             <h3 class="text-primary" id="validation-header">Validación de catálogos</h3>
         </div>
         {% if messages %}
-            <div class="row d-flex justify-content-center errors">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-danger error">
-                        {{ message.message.message|safe }}
-                    </div>
-                {% endfor %}
+            {% for message in messages %}
+            <div class="flex-row justify-content-center errors">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 alert alert-{{ message.tags }} alert-danger error">
+                    <p>{{ message.message.message|safe }}</p>
+                </div>
+                <div class="col-md-3"></div>
             </div>
+            {% endfor %}
         {% endif %}
 
         <form action="" method="post">

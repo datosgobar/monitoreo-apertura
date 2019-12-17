@@ -82,7 +82,7 @@ class ValidationReportGenerationTest(TestCase):
 
     def test_mail_header(self):
         header, _, _ = filter(None, re.split(r'Validación datos de catálogo:|Validacion datos de datasets:', self.mail.body))
-        expected_header = 'Horario de inspección:'
+        expected_header = 'Horario de validación:'
         self.assertTrue(header.startswith(expected_header))
 
     def test_catalog_validation(self):

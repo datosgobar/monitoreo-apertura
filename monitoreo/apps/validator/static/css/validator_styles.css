@@ -5,3 +5,7 @@
 #validation-header, #validation-subtitle {
     text-align: center;
 }
+
+#return-button {
+    margin-bottom: 60px;
+}

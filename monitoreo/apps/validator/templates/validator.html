@@ -32,12 +32,10 @@
         </div>
         {% if messages %}
             {% for message in messages %}
-            <div class="flex-row justify-content-center errors">
-                <div class="col-md-3"></div>
-                <div class="col-md-6 alert alert-{{ message.tags }} alert-danger error">
+            <div class="row errors">
+                <div class="col-md-6 col-md-offset-3 alert alert-{{ message.tags }} alert-danger error">
                     <p>{{ message.message.message|safe }}</p>
                 </div>
-                <div class="col-md-3"></div>
             </div>
             {% endfor %}
         {% endif %}

@@ -172,6 +172,7 @@ VENDOR_APPS = (
 
 APPS = (
     'monitoreo.apps.dashboard',
+    'monitoreo.apps.validator',
     'django_datajsonar',
 )
 

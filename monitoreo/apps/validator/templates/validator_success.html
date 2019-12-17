@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Validador</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/icono-arg.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/poncho.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/validator_styles.css' %}"/>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-top navbar-default" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'validator' %}" aria-label="Argentina.gob.ar Presidencia de la Nación">
+                        <img alt="Argentina.gob.ar" src="{% static 'img/argentinagob.svg' %}" height="50">
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <div class="index-header">
+            <h3 class="text-primary" id="validation-header">Validación de catálogos</h3>
+        </div>
+
+		<h2 class="m-b-3" id="validation-subtitle">Se subió el catálogo</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                {% if messages %}
+                <div class="info">
+                    <h5>Se encontraron los siguientes errores en la validación del catálogo:</h5>
+                </div>
+                <div class="info">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-danger info">
+                        {{ message|safe }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="info">
+                    <h5>El catálogo subido no tiene errores de validación</h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-auto" id="return-button">
+                <a href="{% url 'validator' %}" class="center btn btn-primary">Volver</a>
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+</html>

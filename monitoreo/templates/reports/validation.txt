@@ -1,4 +1,4 @@
-Horario de inspección: {{ validation_time }}
+Horario de validación: {{ validation_time }}
 
 Status: {{ status }}
 {% if catalog.errors %}

@@ -1,5 +1,9 @@
 Versiones
 =========
+1.4.6 (18-12-19)
+-------------------
+* Cambio de texto del shortcut de "Synchronizers" a "Tareas programadas"
+
 1.4.5 (18-12-19)
 -------------------
 * Actualización de version de Datajsonar a 0.6.5

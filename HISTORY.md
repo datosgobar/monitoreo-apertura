@@ -1,5 +1,10 @@
 Versiones
 =========
+1.4.5 (18-12-19)
+-------------------
+* Actualización de version de Datajsonar a 0.6.5
+* Validador de catalogo en UI
+
 1.4.4 (29-11-19)
 -------------------
 * Agrega opción en configuración general para definir la cantidad de threads a usar en validaciones de urls.

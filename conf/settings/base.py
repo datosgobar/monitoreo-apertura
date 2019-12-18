@@ -6,11 +6,8 @@ from __future__ import absolute_import, unicode_literals
 from os.path import dirname
 
 import environ
-
 # noinspection PyUnresolvedReferences
 from django_datajsonar import strings
-
-from .indicators import *
 
 SETTINGS_DIR = environ.Path(__file__) - 1
 ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)
@@ -496,7 +493,7 @@ ADMIN_SHORTCUTS = [
                 'url_name': 'admin:dashboard_indicatorsgenerationtask_changelist',
             },
             {
-                'title': 'Synchronizers',
+                'title': 'Tareas programadas',
                 'url_name': 'admin:django_datajsonar_synchronizer_changelist',
                 'icon': 'cogs',
             },

@@ -2,7 +2,7 @@ import logging
 
 import requests
 # pylint: disable=W0622
-from requests.exceptions import ConnectionError, MissingSchema, RequestException
+from requests.exceptions import ConnectionError, MissingSchema, RequestException, InvalidSchema
 from django.core.exceptions import ValidationError
 from pydatajson import DataJson
 from pydatajson.custom_exceptions import NonParseableCatalog
@@ -19,9 +19,9 @@ class Validator:
     def validate_fields(self):
         base_request_error_message = "Error descargando el catálogo: "
         try:
-            response = requests.head(self.catalog_url)
+            response = requests.head(self.catalog_url, verify=False)
             response.raise_for_status()
-        except MissingSchema:
+        except (MissingSchema, InvalidSchema):
             raise ValidationError(base_request_error_message + "el url ingresado "
                                                                "no es un url válido")
         except ConnectionError:
@@ -40,11 +40,9 @@ class Validator:
             raise ValidationError(parse_error_message)
 
     def get_catalog_errors(self):
-        validate_broken_urls = TasksConfig().get_solo().validation_url_check
-
         catalog = DataJson(catalog=self.catalog_url, catalog_format=self.catalog_format)
 
-        all_errors = catalog.validate_catalog(only_errors=True, broken_links=validate_broken_urls)
+        all_errors = catalog.validate_catalog(only_errors=True)
         error_messages = []
 
         catalog_validation = all_errors['error']['catalog']

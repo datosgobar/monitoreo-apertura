@@ -40,11 +40,9 @@ class Validator:
             raise ValidationError(parse_error_message)
 
     def get_catalog_errors(self):
-        validate_broken_urls = TasksConfig().get_solo().validation_url_check
-
         catalog = DataJson(catalog=self.catalog_url, catalog_format=self.catalog_format)
 
-        all_errors = catalog.validate_catalog(only_errors=True, broken_links=validate_broken_urls)
+        all_errors = catalog.validate_catalog(only_errors=True)
         error_messages = []
 
         catalog_validation = all_errors['error']['catalog']

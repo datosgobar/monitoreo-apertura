@@ -60,7 +60,7 @@
 
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
-                    <button onclick="this.form.submit(); this.disabled=true; this.classList.add('state-loading');"
+                    <button onclick="loadingButton(this);"
                             type="submit" class="btn btn-primary">Validar</button>
                 </div>
             </div>
@@ -69,5 +69,6 @@
 
     </div>
 
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

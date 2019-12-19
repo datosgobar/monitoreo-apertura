@@ -60,7 +60,8 @@
 
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
-                    <input value="Validar" type="submit" class="btn btn-primary">
+                    <button onclick="this.form.submit(); this.disabled=true; this.classList.add('state-loading');"
+                            type="submit" class="btn btn-primary">Validar</button>
                 </div>
             </div>
 

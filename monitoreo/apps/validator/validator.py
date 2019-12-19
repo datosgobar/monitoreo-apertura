@@ -19,7 +19,7 @@ class Validator:
     def validate_fields(self):
         base_request_error_message = "Error descargando el catálogo: "
         try:
-            response = requests.head(self.catalog_url)
+            response = requests.head(self.catalog_url, verify=False)
             response.raise_for_status()
         except MissingSchema:
             raise ValidationError(base_request_error_message + "el url ingresado "

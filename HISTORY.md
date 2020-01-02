@@ -1,5 +1,9 @@
 Versiones
 =========
+1.4.7 (1-01-20)
+-------------------
+* Ajustes al validador
+
 1.4.6 (18-12-19)
 -------------------
 * Cambio de texto del shortcut de "Synchronizers" a "Tareas programadas"

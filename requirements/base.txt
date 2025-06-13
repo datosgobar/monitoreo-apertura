@@ -13,4 +13,5 @@ csvvalidator==1.2
 openpyxl==2.4.11
 django-async-messages==0.3.1
 django-admin-shortcuts
+rq==1.0
 

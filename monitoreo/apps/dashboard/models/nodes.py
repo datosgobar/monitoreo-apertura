@@ -19,7 +19,7 @@ class HarvestingNode(models.Model):
     catalog_id = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100)
     url = models.URLField(help_text='URL del nodo federador ej: http://datos.gob.ar')
-    apikey = models.CharField(max_length=50)
+    apikey = models.CharField(max_length=512)
     enabled = models.BooleanField(default=False)
     timezone = models.CharField(max_length=100, default="America/Buenos_Aires")
 

@@ -6,7 +6,7 @@
   - [Carga de Nodos](#carga-de-nodos)
     - [Configuración de datasets indexables](#configuraci%C3%B3n-de-datasets-indexables)
     - [Generación de archivos de configuración](#generaci%C3%B3n-de-archivos-de-configuraci%C3%B3n)
-  - [Lectura de catalogos](#lectura-de-catalogos)
+  - [Lectura de catálogos](#lectura-de-catalogos)
     - [Lectura periodica](#lectura-periodica)
   - [Federación de datasets](#federaci%C3%B3n-de-datasets)
     - [Action de nodos federadores](#action-de-nodos-federadores)
@@ -26,9 +26,9 @@
 
 ## Carga de Nodos
 
-Despues de iniciar sesion como Administrador, debemos cargar un nuevo `Node Register file`.
-Esta pagina se encuentra en la ruta `/admin/django_datajsonar/noderegisterfile/`.
-Este archivo tiene un registro de los nodos _a federar_. Ese un archivo de extencion `.yml` y
+Despées de iniciar sesión como Administrador, debemos cargar un nuevo `Node Register file`.
+Esta página se encuentra en la ruta `/admin/django_datajsonar/noderegisterfile/`.
+Este archivo tiene un registro de los nodos _a federar_. Ese un archivo de extensión `.yml` y
 tiene un aspecto como el siguiente:
 
 
@@ -46,16 +46,16 @@ transporte-bis:
 # Mas nodos...
 ```
 
-Luego de que creamos la nueva instancia, volvemos a la pagina del listado y deberiamos ver algo como 
+Luego de que creamos la nueva instancia, volvemos a la página del listado y deberíamos ver algo como 
 la siguiente imagen:
 
 ![Node register file list](./images/node_register_file.png)
 
-Luego seleccionamos la instancia y usamos la accion "Process node file", como se muestra en la imagen:
+Luego seleccionamos la instancia y usamos la acción "Process node file", como se muestra en la imagen:
 
 ![Process Node register file list](./images/process_node_register_file.png)
 
-Eso procesara el archivo (puede tardar un poco), y al terminar veremos los nodos detectados en
+Eso procesará el archivo (puede tardar un poco), y al terminar veremos los nodos detectados en
 `/admin/django_datajsonar/node/`, algo parecido a
 
 ![Nodes list](./images/nodes_list.png)
@@ -97,7 +97,7 @@ Eso procesa el archivo (puede tardar un poco), y al terminar veremos los dataset
 ### Generación de archivos de configuración
 
 Hay 2 formas de generar los archivos de configuración con los datasets indexables. La primera es entrando en la ruta:
-`admin/dataset/federacion-config.csv`. De esa manera, se descarga un csv con todos datasets marcados como indexables.
+`admin/dataset/federacion-config.csv`. De esa manera, se descarga un csv con todos los datasets marcados como indexables.
 
 La segunda es mediante una acción de Django. Podemos seleccionar un subconjunto de datasets y ejecutar la acción
 `Generar csv de configuración`
@@ -106,30 +106,30 @@ La segunda es mediante una acción de Django. Podemos seleccionar un subconjunto
 
 De esta manera conseguimos el csv de configuración con los datasets indexables del subconjunto elegido.
 
-## Lectura de catalogos
+## Lectura de catálogos
 
-Para lanzar una lectura de todos los catalogos de los nodos, podemos instancia una `ReadDataJsonTask`.
+Para lanzar una lectura de todos los catálogos de los nodos, podemos crear una instancia `ReadDataJsonTask`.
 Para eso nos dirigimos a la ruta `/admin/django_datajsonar/readdatajsontask/`.
-Esta instancia no requiere ningun parametro, ya que leera los datos necesarios de las instancias `Node`
+Esta instancia no requiere ningun parámetro, ya que leerá los datos necesarios de las instancias `Node`
 del proceso anterior.
-Esta instancia ira registrando los "logs" y "resultados" del proceso. Podremos ver algo como:
+Esta instancia irá registrando los "logs" y "resultados" del proceso. Podremos ver algo como:
 
 ![Read DataJson Task](./images/read_datajson_task.png)
 
 ### Lectura periodica 
 
-Para que la lectura de los catalogos se ejecute periodicamente, debemos crear un `Synchronizer`.
+Para que la lectura de los catálogos se ejecute periódicamente, debemos crear un `Synchronizer`.
 
-En la vista de lista de `Read Node Tasks` podemos crear un nuevo synchronizer. Accediendo en la opción
+En la vista de lista de `Read Node Tasks` podemos crear un nuevo `synchronizer`. Accediendo en la opción
 `schedule task`.
 
 ![Schedule Task](./images/schedule_read_task.png)
 
-Antes de guardar la instancia deberiamos tener algo como:
+Antes de guardar la instancia deberíamos tener algo como:
 
 ![New Read DataJson Task](./images/read_datajson_synchro.png)
 
-En los campos del form podemos definir el horario a correr, los días y el nombre del synchronizer.
+En los campos del formulario podemos definir el horario a correr, los días y el nombre del `synchronizer`.
 
 ## Federación de datasets
 
@@ -173,7 +173,7 @@ habilitados.
 
 Hay 2 formas de comenzar una corrida de generación de indicadores de la red de nodos: podemos instanciar una
 Corrida de indicadores. Para eso nos dirigimos a la ruta `/admin/dashboard/indicatorsgenerationtask/`.
-Esta instancia no requiere ningun parametro, lee los catálogos a partir de la librería de Github.
+Esta instancia no requiere ningún parámetro, lee los catálogos a partir de la librería de Github.
 Estas instancias registran los "logs" y "resultados" del proceso. Podremos ver algo como:
 
 ![Indicators Generation Task](./images/indicators_generation_task.png)
@@ -185,7 +185,7 @@ logs del `IndicatorsGenerationTask` correspondiente.
 
 ### Reporte de indicadores
 
-Los mails de reporte de red se envian al staff del proyecto. Para marcar un usuario como staff, hay que acceder
+Los correos electrónicos de reporte de red se envían al staff del proyecto. Para marcar un usuario como staff, hay que acceder
 a la ruta `/admin/auth/user/` y en la vista del usuario particular, marcar la opción:
 
 ![Marcar staff](./images/staff_checkmark.png)
@@ -208,8 +208,8 @@ Si se quiere crear un reporte manualmente, vamos a `/admin/dashboard/newlyreport
 ![Newly Report Generation Task](./images/newly_report_generation_task.png)
 
 En este formulario solo tenemos que elegir sobre cual nodo haremos el reporte, o dejar el campo en blanco
-si queremos que se generenreportes de novedades sobre todos los nodos. Luego, se enviará un email a los
-administradores de cada nodo con la información de los datasets nuevos en ese nodo, así como otro email
+si queremos que se generen reportes de novedades sobre todos los nodos. Luego, se enviará un correo electrónico a los
+administradores de cada nodo con la información de los datasets nuevos en ese nodo, así como otro correo electrónico 
 al staff con la información de *todos* los datasets nuevos.
 
 
@@ -252,18 +252,18 @@ Se pueden definir en el admin de tipos de indicadores cuales se desean mostrar e
 ## Importar/Exportar indicadores
 
 Se pueden bajar la base de indicadores e indicadores de red mediante el management command: `/manage.py export_indicators [file] [--aggregated]`.
-El argumento `file` es un path al archivo donde se van a escribir los indicadores. El parametro opcional `--aggregated` indica si se trata de
+El argumento `file` es un path al archivo donde se van a escribir los indicadores. El parámetro opcional `--aggregated` indica si se trata de
 indicadores red, por default se asume indicadores de nodos.
 
 A su vez es posible importar a la base de indicadores mediante el management command `/manage.py import_indicators [file] [--aggregated]`
 Los parámetros `file` y `--aggregated` indican lo mismo que para el comando anterior. Se espera un csv válido con la forma:
 `fecha, indicador_tipo, indicador_valor [, jurisdiccion_id, jurisdiccion_nombre]` para indicadores de red y de nodos
-respectivamente. La operación es un upsert, es decir se actualizaran los valores en caso que ya existen y se crearan
-indicadores nuevos si estos no están presentes.
+respectivamente. La operación es un upsert, es decir se actualizarán los valores en caso que ya existen y se crearan
+indicadores nuevos si éstos no están presentes.
 
 Alternativamente, se puede importar mediante UI un csv con los indicadores (**Importante**: el csv debe tener la misma forma
 que el descripto por el punto anterior). Desde la vista de lista de la tabla de indicadores correspondientes, se ingresa
-con el botón importar. Debería caer al siguiente form:
+con el botón `Importar`. Debería caer al siguiente form:
 
 ![Indicator Import](images/ui_indicator_import.png)
 
@@ -293,7 +293,7 @@ del nodo federador deseado, descarga un archivo `.csv` comprimido de su serie de
 nombre de jurisdicción, urls de descarga de datos, etc). Se puede descargar esta información en
 formato **csv** o **xlsx** accediendo a `/nodos.csv` o `/nodos.xlsx` respectivamente
 - `/nodes.json`: idem al url anterior, pero con los datos en inglés. También se pueden descargar
-en formatos **csv** o **xlsx** cambiando la extension de archivo en el url
+en formatos **csv** o **xlsx** cambiando la extensión de archivo en el url
 -  `/distribuciones.csv`: descarga un dump con toda la información de las distribuciones
 - `/admin/django_datajsonar/dataset/federacion-config.csv`: descarga un dump con los identificadores
 de los DataSets y la id del catálogo al que pertenecen
